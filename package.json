@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "supabase:generate-types": "supabase gen types typescript --linked > src/lib/database.types.ts"
+    "supabase:generate-types": "supabase gen types typescript --linked > src/lib/types/database.types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.2.0",
@@ -34,6 +34,7 @@
     "autoprefixer": "10.4.14",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "encoding": "^0.1.13",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.13",
     "framer-motion": "^10.15.1",
@@ -45,6 +46,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.4",
+    "stripe": "^11.14.0",
     "supabase": "^1.88.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",

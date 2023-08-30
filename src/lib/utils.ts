@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { NEXT_PUBLIC_URL } from "./env";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -7,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const getSitePublicUrl = (domains = {}, path = "") => {
   const { custom_domain, subdomain } = domains;
-  const publicUrl = new URL(process.env.NEXT_PUBLIC_URL);
+  const publicUrl = new URL(NEXT_PUBLIC_URL);
   return `${publicUrl.protocol}//${custom_domain || subdomain}.${
     publicUrl.host
   }/${path}`;
@@ -37,7 +38,7 @@ export const isProduction = process.env.NODE_ENV === "production";
 
 export async function fetcher<JSON = any>(
   input: RequestInfo,
-  init?: RequestInit,
+  init?: RequestInit
 ): Promise<JSON> {
   const response = await fetch(input, init || {});
 
@@ -46,7 +47,7 @@ export async function fetcher<JSON = any>(
 
 export const getPublicUrl = () => {
   try {
-    return new URL(process.env.NEXT_PUBLIC_URL);
+    return new URL(NEXT_PUBLIC_URL);
   } catch (e) {
     console.warn("No Public Url", e);
     return "";

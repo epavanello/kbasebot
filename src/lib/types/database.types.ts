@@ -65,6 +65,43 @@ export interface Database {
           }
         ]
       }
+      user_info: {
+        Row: {
+          created_at: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          customer_id: string | null
+          id: string
+          note: string | null
+          plan: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          customer_id?: string | null
+          id: string
+          note?: string | null
+          plan?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          customer_id?: string | null
+          id?: string
+          note?: string | null
+          plan?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_info_id_fkey"
+            columns: ["id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
