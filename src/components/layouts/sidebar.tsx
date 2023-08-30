@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Icon } from "@iconify/react";
 import { Badge } from "@/components/ui/badge";
 import { FC } from "react";
+import { menus } from "@/lib/config/menus";
 
 interface ItemStatus {
   className?: string;
@@ -25,13 +26,17 @@ interface SidebarProps {
   items: SidebarItem[];
 }
 
-const Sidebar: FC<SidebarProps> = ({ items }) => {
+const Sidebar: FC<SidebarProps> = () => {
   const path = usePathname();
+  const { chatbot_id } = useParams();
+
+  const items = chatbot_id
+    ? menus.sidebarNavByChatbot(chatbot_id)
+    : menus.sidebarNav;
 
   return (
     <nav className="grid items-start gap-2 p-2">
-      {items.map((item, index) => {
-        console.log({ path, ss: item.href });
+      {items.map((item: SidebarItem, index) => {
         return (
           item.href && (
             <Link

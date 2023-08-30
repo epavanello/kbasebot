@@ -28,6 +28,12 @@ export const menus = {
   // eslint-disable-next-line
   sidebarNavByChatbot: (chatbotId) => [
     {
+      title: "Go Back",
+      href: `/app`,
+      icon: "material-symbols:arrow-back-rounded",
+      className: "border-b border-gray-300 rounded-none mb-4 opacity-80",
+    },
+    {
       title: "Open Chatbot",
       href: `/app/chatbots/${chatbotId}/pages`,
       icon: "tabler:drag-drop",

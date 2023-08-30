@@ -3,10 +3,8 @@
 import * as React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { leftSidebarItems } from "@/lib/config/menu-items";
 import { useLockedBody } from "usehooks-ts";
 import Sidebar from "@/components/layouts/sidebar";
-import { menus } from "@/lib/config/menus";
 
 export type NavItem = {
   title: string;
@@ -49,7 +47,7 @@ export const MobileNav = ({ items, children }: MobileNavProps) => {
             </Link>
           ))}
 
-          <Sidebar items={menus.sidebarNav} />
+          <Sidebar />
         </nav>
         {children}
       </div>

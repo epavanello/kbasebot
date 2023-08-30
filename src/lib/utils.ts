@@ -6,20 +6,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const getSitePublicUrl = (domains = {}, path = "") => {
-  const { custom_domain, subdomain } = domains;
-  const publicUrl = new URL(NEXT_PUBLIC_URL);
-  return `${publicUrl.protocol}//${custom_domain || subdomain}.${
-    publicUrl.host
-  }/${path}`;
-};
-
-export const getHostFromUrl = (url) => {
-  const host = new URL(url)?.host?.replace("www.", "");
-
-  return isDevelopment ? host.replace("localhost:3000", "turbosite.io") : host;
-};
-
 export const capitalize = (s: string = "") => {
   if (typeof s !== "string") return "";
   return s.charAt(0).toUpperCase() + s.slice(1);
@@ -38,7 +24,7 @@ export const isProduction = process.env.NODE_ENV === "production";
 
 export async function fetcher<JSON = any>(
   input: RequestInfo,
-  init?: RequestInit
+  init?: RequestInit,
 ): Promise<JSON> {
   const response = await fetch(input, init || {});
 

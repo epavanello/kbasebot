@@ -26,7 +26,10 @@ const AddModal = () => {
 
   const { user, supabase } = useSupabaseAuth();
 
-  const canCreate = loading || (!docs?.length && text?.length > MIN_TEXT_INPUT);
+  const canCreate =
+    !loading && (!!docs?.length || text?.length > MIN_TEXT_INPUT);
+
+  console.log({ canCreate });
 
   const [error, setError] = useState("");
 
@@ -54,14 +57,18 @@ const AddModal = () => {
     }
   };
 
-  const createChatbot = async () => {
+  const createChatbot = async (e) => {
+    e.preventDefault();
+
+    console.log({ canCreate });
+
     if (!canCreate) return;
     setLoading(true);
 
     try {
       const fileNames = await uploadFiles();
 
-      const res = await axios.post("/app/chatbots/create", {
+      const res = await axios.post("/api/chatbots/create", {
         files: fileNames,
       });
 
@@ -69,7 +76,7 @@ const AddModal = () => {
 
       if (!chatbot) throw new Error("Chatbot not found");
 
-      push(`/chatbots/${chatbot.id}`);
+      push(`/app/chatbots/${chatbot.id}`);
     } catch (e) {
       console.error(e);
       setLoading(false);
@@ -131,7 +138,7 @@ const AddModal = () => {
                   type="submit"
                   size={"lg"}
                   loading={loading}
-                  disabled={canCreate}
+                  disabled={!canCreate}
                 >
                   Create
                 </Button>

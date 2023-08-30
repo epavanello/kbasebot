@@ -2,6 +2,7 @@ import { MainNav } from "@/components/layouts/navbar";
 import PageTransition from "@/components/layouts/page-transition";
 import Sidebar from "@/components/layouts/sidebar";
 import { menus } from "@/lib/config/menus";
+import { useRouter } from "next/navigation";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -19,7 +20,7 @@ const MainLayout = ({ children, seo }: DashboardLayoutProps) => {
         className="grid md:grid-cols-[200px_1fr]"
       >
         <aside className="hidden w-[200px] flex-col md:flex border-r">
-          <Sidebar items={menus.sidebarNav} />
+          <Sidebar />
         </aside>
         {/*<PageTransition>*/}
         <main className="flex w-full flex-1 flex-col overflow-scroll">

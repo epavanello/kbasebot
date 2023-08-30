@@ -7,6 +7,7 @@ import {
   SupabaseClient,
   User,
   createBrowserSupabaseClient,
+  createPagesBrowserClient,
 } from "@supabase/auth-helpers-nextjs";
 
 type SuapabaseAuthContextType = {
@@ -28,7 +29,7 @@ const useSupabaseAuth = () => {
 };
 
 const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [supabase] = useState(() => createBrowserSupabaseClient());
+  const [supabase] = useState(() => createPagesBrowserClient());
   const [session, setSession] = useState<null | Session>(null);
   const [user, setUser] = useState<undefined | User>(undefined);
   const router = useRouter();
