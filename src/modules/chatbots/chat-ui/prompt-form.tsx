@@ -1,9 +1,11 @@
+"use-client";
+
 import { UseChatHelpers } from "ai/react";
 import * as React from "react";
 import Textarea from "react-textarea-autosize";
 
 import { Button } from "@/components/ui/button";
-import { IconArrowElbow } from "@/components/ui/icons";
+
 import {
   Tooltip,
   TooltipContent,
@@ -11,10 +13,8 @@ import {
 } from "@/components/ui/tooltip";
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import { Icon } from "@/lib/module-export";
-import { DOT_LOADING_ICON } from "@/components/ui/loading";
-import { useTranslation } from "next-i18next";
+import { ArrowDownIcon } from "@radix-ui/react-icons";
+import { Icon, DOT_LOADING_ICON } from "@/components/ui/icons";
 
 export interface PromptProps
   extends Pick<UseChatHelpers, "input" | "setInput"> {
@@ -37,8 +37,6 @@ export function PromptForm({
     }
   }, []);
 
-  const { t } = useTranslation();
-
   return (
     <form
       onSubmit={async (e) => {
@@ -58,8 +56,8 @@ export function PromptForm({
           )}
         >
           <Icon
-            icon={isLoading ? DOT_LOADING_ICON : "el:magic"}
-            className="text-xl"
+            icon={isLoading ? DOT_LOADING_ICON : "fluent:bot-24-regular"}
+            className="text-2xl"
           />
         </div>
         <Textarea
@@ -69,7 +67,7 @@ export function PromptForm({
           rows={1}
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={t("sendMessage")}
+          placeholder={"Send Message"}
           spellCheck={false}
           className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
         />
@@ -81,11 +79,11 @@ export function PromptForm({
                 size="icon"
                 disabled={isLoading || input === ""}
               >
-                <IconArrowElbow />
-                <span className="sr-only">{t("askMe")}</span>
+                <Icon icon={"ant-design:send-outlined"} className="text-2xl" />
+                <span className="sr-only">Chat with me!</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{t("sendQuestion")}</TooltipContent>
+            <TooltipContent>Send</TooltipContent>
           </Tooltip>
         </div>
       </div>

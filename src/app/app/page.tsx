@@ -21,12 +21,10 @@ async function getData() {
 
   console.log({ user });
 
-  const { data: chatbots = [], error } = await supabase
+  const { data: chatbots = [] } = await supabase
     .from("chatbots")
     .select()
     .eq("user_id", user?.id);
-
-  console.log({ error });
 
   return chatbots;
 }

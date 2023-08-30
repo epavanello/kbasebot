@@ -1,31 +1,32 @@
-import { Message } from 'ai'
-import remarkGfm from 'remark-gfm'
-import remarkMath from 'remark-math'
+"use-client";
 
-import { cn } from '@/lib/utils'
-import { CodeBlock } from '@/modules/chatbot/chat-ui/codeblock'
-import { MemoizedReactMarkdown } from '@/modules/chatbot/chat-ui/markdown'
-import { IconOpenAI, IconUser } from '@/components/ui/icons'
-import { ChatMessageActions } from '@/modules/chatbot/chat-ui/chat-messages-actions'
-import CoroLogoBlueIcon from '@/components/ui/coro-logo-blue-icon'
+import { Message } from "ai";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+
+import { cn } from "@/lib/utils";
+import { CodeBlock } from "./codeblock";
+import { MemoizedReactMarkdown } from "./markdown";
+import { ChatMessageActions } from "./chat-messages-actions";
+import { MagicWandIcon, PersonIcon } from "@radix-ui/react-icons";
 
 export interface ChatMessageProps {
-  message: Message
+  message: Message;
 }
 
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
   return (
-    <div className={cn('group relative mb-4 flex items-start')} {...props}>
+    <div className={cn("group relative mb-4 flex items-start")} {...props}>
       <div
         className={cn(
-          'flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow',
-          message.role === 'user' ? 'bg-background' : 'bg-blue-100'
+          "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow",
+          message.role === "user" ? "bg-background" : "bg-blue-100",
         )}
       >
-        {message.role === 'user' ? (
-          <IconUser />
+        {message.role === "user" ? (
+          <PersonIcon />
         ) : (
-          <CoroLogoBlueIcon size={22} />
+          <MagicWandIcon className="w-6 h-6" />
         )}
       </div>
       <div className="flex-1 px-1 ml-4 space-y-2 overflow-hidden">
@@ -34,38 +35,38 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
           remarkPlugins={[remarkGfm, remarkMath]}
           components={{
             p({ children }) {
-              return <p className="mb-2 last:mb-0">{children}</p>
+              return <p className="mb-2 last:mb-0">{children}</p>;
             },
             code({ node, inline, className, children, ...props }) {
               if (children.length) {
-                if (children[0] == '▍') {
+                if (children[0] == "▍") {
                   return (
                     <span className="mt-1 cursor-default animate-pulse">▍</span>
-                  )
+                  );
                 }
 
-                children[0] = (children[0] as string).replace('`▍`', '▍')
+                children[0] = (children[0] as string).replace("`▍`", "▍");
               }
 
-              const match = /language-(\w+)/.exec(className || '')
+              const match = /language-(\w+)/.exec(className || "");
 
               if (inline) {
                 return (
                   <code className={className} {...props}>
                     {children}
                   </code>
-                )
+                );
               }
 
               return (
                 <CodeBlock
                   key={Math.random()}
-                  language={(match && match[1]) || ''}
-                  value={String(children).replace(/\n$/, '')}
+                  language={(match && match[1]) || ""}
+                  value={String(children).replace(/\n$/, "")}
                   {...props}
                 />
-              )
-            }
+              );
+            },
           }}
         >
           {message.content}
@@ -73,5 +74,5 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
         <ChatMessageActions message={message} />
       </div>
     </div>
-  )
+  );
 }

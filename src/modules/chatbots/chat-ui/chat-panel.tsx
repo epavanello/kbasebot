@@ -1,10 +1,11 @@
+"use-client";
+
 import { type UseChatHelpers } from "ai/react";
 
 import { Button } from "@/components/ui/button";
-import { PromptForm } from "@/modules/chatbot/chat-ui/prompt-form";
-import { IconRefresh, IconStop } from "@/components/ui/icons";
-import { ButtonScrollToBottom } from "@/modules/chatbot/chat-ui/button-scroll-to-bottom";
-import { useTranslation } from "next-i18next";
+import { PromptForm } from "./prompt-form";
+import { ButtonScrollToBottom } from "./button-scroll-to-bottom";
+import { ReloadIcon, StopIcon } from "@radix-ui/react-icons";
 
 export interface ChatPanelProps
   extends Pick<
@@ -31,8 +32,6 @@ export function ChatPanel({
   messages,
   chatArea,
 }: ChatPanelProps) {
-  const { t } = useTranslation();
-
   return (
     <div className="absolute my-4 inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
       <div className="mx-auto sm:max-w-2xl sm:px-4">
@@ -43,8 +42,8 @@ export function ChatPanel({
               onClick={() => stop()}
               className="bg-background"
             >
-              <IconStop className="mr-2" />
-              {t("stopGenerating")}
+              <StopIcon className="mr-2" />
+              Stop Generating
             </Button>
           ) : (
             messages?.length > 0 && (
@@ -53,8 +52,8 @@ export function ChatPanel({
                 onClick={() => reload()}
                 className="bg-background"
               >
-                <IconRefresh className="mr-2" />
-                {t("regenerateResponse")}
+                <ReloadIcon className="mr-2" />
+                Regenerate Response
               </Button>
             )
           )}

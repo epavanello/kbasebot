@@ -71,18 +71,23 @@ export const getRandomArrayValue = (arr = []) => {
 };
 
 export function getErrorMessage(e: unknown): string {
-	try {
-		if (typeof e === 'string') {
-			return e;
-		} else if (e instanceof Error) {
-			return e.message;
-		} else if (typeof e == 'object' && e && 'data' in e && typeof e.data == 'string') {
-			return JSON.parse(e.data)?.message || '';
-		}
-	} catch (error) {
-		return getErrorMessage(error);
-	}
-	return 'unknown';
+  try {
+    if (typeof e === "string") {
+      return e;
+    } else if (e instanceof Error) {
+      return e.message;
+    } else if (
+      typeof e == "object" &&
+      e &&
+      "data" in e &&
+      typeof e.data == "string"
+    ) {
+      return JSON.parse(e.data)?.message || "";
+    }
+  } catch (error) {
+    return getErrorMessage(error);
+  }
+  return "unknown";
 }
 export const toCapitalizeFirstLetter = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -97,4 +102,9 @@ export const groupBy = (arr: {}[], key: string) => {
     (acc[next[key]] = acc[next[key]] || []).push(next);
     return acc;
   }, {});
+};
+
+export const formatDate = (dateString) => {
+  const date = new Date(dateString).toUTCString();
+  return date;
 };

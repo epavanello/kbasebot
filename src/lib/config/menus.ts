@@ -34,17 +34,13 @@ export const menus = {
       className: "border-b border-gray-300 rounded-none mb-4 opacity-80",
     },
     {
-      title: "Open Chatbot",
-      href: `/app/chatbots/${chatbotId}/pages`,
+      title: "Bot Preview",
+      href: `/app/chatbots/${chatbotId}`,
       icon: "tabler:drag-drop",
-      className: "bg-indigo-100 text-indigo-700",
-      status: {
-        text: "Beta",
-      },
     },
     {
       title: "Settings",
-      href: `/app/sites/${chatbotId}/settings`,
+      href: `/app/chatbots/${chatbotId}/settings`,
       icon: "gala:settings",
     },
   ],

@@ -1,10 +1,11 @@
+"use-client";
+
 import { type Message } from "ai";
 
 import { Button } from "@/components/ui/button";
-import { IconCheck, IconCopy } from "@/components/ui/icons";
 import { useCopyToClipboard } from "@/lib/hooks/use-copy-to-clipboard";
 import { cn } from "@/lib/utils";
-import { useTranslation } from "next-i18next";
+import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 
 interface ChatMessageActionsProps extends React.ComponentProps<"div"> {
   message: Message;
@@ -21,7 +22,6 @@ export function ChatMessageActions({
     if (isCopied) return;
     copyToClipboard(message.content);
   };
-  const { t } = useTranslation();
 
   return (
     <div
@@ -37,8 +37,8 @@ export function ChatMessageActions({
         size="icon"
         onClick={onCopy}
       >
-        {isCopied ? <IconCheck /> : <IconCopy />}
-        <span className="sr-only">{t("copyMessage")}</span>
+        {isCopied ? <CheckIcon /> : <CopyIcon />}
+        <span className="sr-only">Copy</span>
       </Button>
     </div>
   );

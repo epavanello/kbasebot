@@ -1,12 +1,9 @@
+"use-client";
+
 import { type Message } from "ai";
 
 import { Separator } from "@/components/ui/separator";
 import { ChatMessage } from "./chat-message";
-import {
-  createPagesBrowserClient,
-  createPagesServerClient,
-} from "@supabase/auth-helpers-nextjs";
-import { useEffect } from "react";
 
 export interface ChatList {
   messages: Message[];
