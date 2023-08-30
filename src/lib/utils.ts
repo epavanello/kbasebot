@@ -82,3 +82,18 @@ export const getRandomArrayIndex = (arr) =>
 export const getRandomArrayValue = (arr = []) => {
   return arr[Math.floor(Math.random() * arr?.length)];
 };
+
+export const toCapitalizeFirstLetter = (str: string): string => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
+export const bytesToMb = (bytes: number): number => {
+  return Math.round(bytes / 1024 / 1024);
+};
+
+export const groupBy = (arr: {}[], key: string) => {
+  return arr.reduce((acc, next) => {
+    (acc[next[key]] = acc[next[key]] || []).push(next);
+    return acc;
+  }, {});
+};

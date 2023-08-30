@@ -2,30 +2,10 @@ import React from "react";
 
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
-import { Card, CardContent } from "@/components/ui/card";
-import dynamic from "next/dynamic";
-import Link from "next/link";
 import { sayGreeting } from "@/lib/utils";
-import ChatbotList from "@/components/chatbots/chatbot-list";
-
-// const AddModal = dynamic(() => import("@/components/sites/add.modal"), {
-//   loading: () => <p>Loading...</p>,
-//   ssr: false,
-// });
-
-const NoSitesBox = () => (
-  <Card className="bg-transparent">
-    <CardContent>
-      <div className="flex flex-col items-center justify-center py-20">
-        <h2 className="text-3xl  font-bold">Create your first Chatbot</h2>
-        <p className="mt-2 text-center text-gray-500">
-          You can train your bot with your knowledge base from different sources
-        </p>
-        {/*<AddModal />*/}
-      </div>
-    </CardContent>
-  </Card>
-);
+import ChatbotList from "@/modules/chatbots/chatbot-list";
+import NoItemsCard from "@/components/ui/no-items-card";
+import AddModal from "@/modules/chatbots/add.modal";
 
 const ChatbotIndex = ({ chatbots = [] }) => {
   // const { subscriptionDetails, refetchData } = useUser();
@@ -50,7 +30,14 @@ const ChatbotIndex = ({ chatbots = [] }) => {
           <ChatbotList chatbots={chatbots} />
         </>
       ) : (
-        <NoSitesBox />
+        <NoItemsCard
+          title={"Create your first Chatbot"}
+          text={
+            "You can train your bot with your knowledge base from different sources"
+          }
+        >
+          <AddModal />
+        </NoItemsCard>
       )}
     </DashboardShell>
   );

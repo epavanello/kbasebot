@@ -16,7 +16,7 @@ export const menus = {
   sidebarNav: [
     {
       title: "Chatbots",
-      href: "/app/",
+      href: "/app",
       icon: "layoutTemplate",
     },
     {

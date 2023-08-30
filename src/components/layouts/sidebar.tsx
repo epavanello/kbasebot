@@ -31,6 +31,7 @@ const Sidebar: FC<SidebarProps> = ({ items }) => {
   return (
     <nav className="grid items-start gap-2 p-2">
       {items.map((item, index) => {
+        console.log({ path, ss: item.href });
         return (
           item.href && (
             <Link
