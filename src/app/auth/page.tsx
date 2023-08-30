@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icons";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Provider } from "@supabase/gotrue-js";
+import { NEXT_PUBLIC_URL } from "@/lib/env";
 
 const Page = () => {
   const supabase = createClientComponentClient();
@@ -24,7 +25,7 @@ const Page = () => {
       await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${origin || ""}/app`,
+          redirectTo: `${NEXT_PUBLIC_URL}/app`,
         },
       });
     } catch (e) {
