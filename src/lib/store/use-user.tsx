@@ -1,95 +1,67 @@
-import { useEffect, useState, createContext, useContext } from "react";
+"use client";
+
+import { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
-  useUser as useSupaUser,
-  useSessionContext,
+  Session,
+  SupabaseClient,
   User,
-} from "@supabase/auth-helpers-react";
+  createBrowserSupabaseClient,
+} from "@supabase/auth-helpers-nextjs";
 
-import { ProfileDetails } from "@/types/common.types";
-
-type UserContextType = {
-  accessToken: string | null;
-  user: User | null;
-  userDetails: ProfileDetails | null;
-  isLoading: boolean;
-  refetchData: () => void;
+type SuapabaseAuthContextType = {
+  supabase: SupabaseClient;
+  session: null | Session;
+  user?: User;
 };
 
-export const UserContext = createContext<UserContextType | undefined>(
-  undefined,
-);
+const SupabaseAuthContext = createContext<SuapabaseAuthContextType>(null!);
 
-export interface Props {
-  [propName: string]: any;
-}
+const useSupabaseAuth = () => {
+  const context = useContext<SuapabaseAuthContextType>(SupabaseAuthContext);
 
-export const UserContextProvider = (props: Props) => {
-  const {
-    session,
-    isLoading: isLoadingUser,
-    supabaseClient: supabase,
-  } = useSessionContext();
-  const user = useSupaUser();
-  const accessToken = session?.access_token ?? null;
-  const [isLoadingData, setIsloadingData] = useState(false);
-  const [userDetails, setUserDetails] = useState<ProfileDetails | null>(null);
-
-  const getUserDetails = () =>
-    supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user?.id)
-      .single();
-
-  const setAuthData = () => {
-    if (user && !isLoadingData && !userDetails) {
-      setIsloadingData(true);
-      getUserDetails().then((result) => {
-        setUserDetails(result.data as ProfileDetails);
-
-        setIsloadingData(false);
-      });
-    } else if (!user && !isLoadingUser && !isLoadingData) {
-      setUserDetails(null);
-    }
-  };
-
-  const clearAuthData = () => {
-    setUserDetails(null);
-  };
-
-  useEffect(() => {
-    setAuthData();
-  }, [user, isLoadingUser]);
-
-  // useEffect(() => {
-  //   const { data: authListener } = supabase.auth?.onAuthStateChange(
-  //     async (event) => {
-  //       if (event === "SIGNED_IN") setAuthData();
-  //       if (event === "SIGNED_OUT") clearAuthData();
-  //     },
-  //   );
-  //
-  //   return () => {
-  //     authListener.subscription.unsubscribe();
-  //   };
-  // }, []);
-
-  const value = {
-    accessToken,
-    user,
-    userDetails,
-    isLoading: isLoadingUser || isLoadingData,
-    setLoading: setIsloadingData,
-  };
-
-  return <UserContext.Provider value={value} {...props} />;
-};
-
-export const useUser = () => {
-  const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error(`useUser must be used within a UserContextProvider.`);
+    throw new Error("useSupabaseAuth context was used outside of its Provider");
   }
+
   return context;
 };
+
+const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [supabase] = useState(() => createBrowserSupabaseClient());
+  const [session, setSession] = useState<null | Session>(null);
+  const [user, setUser] = useState<undefined | User>(undefined);
+  const router = useRouter();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(async (response) => {
+      const {
+        data: { session },
+      } = response;
+
+      setSession(session);
+      setUser(session?.user);
+    });
+  }, [router, supabase, supabase.auth]);
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setSession(session);
+      setUser(session?.user);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [router, supabase]);
+
+  return (
+    <SupabaseAuthContext.Provider value={{ supabase, user, session }}>
+      {children}
+    </SupabaseAuthContext.Provider>
+  );
+};
+
+export { SupabaseAuthProvider, useSupabaseAuth };

@@ -12,21 +12,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useUser } from "@/lib/store/use-user";
+import { useSupabaseAuth } from "@/lib/store/use-user";
 import { UserAvatar } from "@/components/layouts/user-avatar";
 import { Icon } from "@/components/ui/icons";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export function UserAccountNav({ className }) {
-  const { user, userDetails } = useUser();
-  const { reload, push } = useRouter();
-  const supabase = useSupabaseClient();
+  const { user } = useSupabaseAuth();
+
+  const userDetails = user?.user_metadata;
+
+  const { push } = useRouter();
+  const supabase = createClientComponentClient();
 
   const handleLogOut = async () => {
     await supabase.auth.signOut();
-    return reload();
+    return push("/auth");
   };
-
   //account
   const { email } = user || {};
   const { avatar_url, full_name } = userDetails || {};

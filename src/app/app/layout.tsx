@@ -21,11 +21,11 @@ const MainLayout = ({ children, seo }: DashboardLayoutProps) => {
         <aside className="hidden w-[200px] flex-col md:flex border-r">
           <Sidebar items={menus.sidebarNav} />
         </aside>
-        <PageTransition>
-          <main className="flex w-full flex-1 flex-col overflow-scroll">
-            {children}
-          </main>
-        </PageTransition>
+        {/*<PageTransition>*/}
+        <main className="flex w-full flex-1 flex-col overflow-scroll">
+          {children}
+        </main>
+        {/*</PageTransition>*/}
       </div>
     </div>
   );

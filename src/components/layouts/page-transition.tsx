@@ -2,7 +2,7 @@
 
 import { FC, PropsWithChildren } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const PageTransition: FC<PropsWithChildren> = ({ children }) => {
   const variants = {
@@ -23,7 +23,7 @@ const PageTransition: FC<PropsWithChildren> = ({ children }) => {
     },
   };
 
-  const { pathname } = useRouter();
+  const pathname = usePathname();
 
   return (
     <div className="effect-1">

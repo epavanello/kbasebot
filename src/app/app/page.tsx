@@ -35,26 +35,24 @@ const ChatbotIndex = ({ chatbots = [] }) => {
   // }, []);
 
   return (
-    <>
-      <DashboardShell className="container gap-0 mt-4">
-        <DashboardHeader
-          heading={sayGreeting()}
-          text="Manage your websites here"
-          className="flex-col md:flex-row"
-        >
-          {/*<AddModal />*/}
-        </DashboardHeader>
-        <div className="my-2"></div>
+    <DashboardShell className="container gap-0 mt-4">
+      <DashboardHeader
+        heading={sayGreeting()}
+        text="Manage your chatbots here"
+        className="flex-col md:flex-row"
+      >
+        {/*<AddModal />*/}
+      </DashboardHeader>
+      <div className="my-2"></div>
 
-        {chatbots?.length ? (
-          <>
-            <ChatbotList chatbots={chatbots} />
-          </>
-        ) : (
-          <NoSitesBox />
-        )}
-      </DashboardShell>
-    </>
+      {chatbots?.length ? (
+        <>
+          <ChatbotList chatbots={chatbots} />
+        </>
+      ) : (
+        <NoSitesBox />
+      )}
+    </DashboardShell>
   );
 };
 

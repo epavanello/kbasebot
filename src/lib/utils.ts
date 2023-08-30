@@ -44,7 +44,14 @@ export async function fetcher<JSON = any>(
   return response.json();
 }
 
-export const publicUrl = new URL(process.env.NEXT_PUBLIC_URL);
+export const getPublicUrl = () => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_URL);
+  } catch (e) {
+    console.warn("No Public Url", e);
+    return "";
+  }
+};
 
 export function isObjEmpty(obj) {
   if (obj === null || obj === undefined) {

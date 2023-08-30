@@ -3,15 +3,17 @@
 import React, { FC, PropsWithChildren } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
-import { UserContextProvider } from "@/lib/store/use-user";
+import { SupabaseAuthProvider } from "@/lib/store/use-user";
+import NextNProgress from "nextjs-progressbar";
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-      <UserContextProvider>
+      <SupabaseAuthProvider>
         {children}
         <Toaster />
-      </UserContextProvider>
+      </SupabaseAuthProvider>
+      <NextNProgress />
     </ThemeProvider>
   );
 };

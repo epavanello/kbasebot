@@ -43,7 +43,7 @@ const Sidebar: FC<SidebarProps> = ({ items }) => {
               <span
                 className={cn(
                   "group relative flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary",
-                  path === item.href ? "bg-slate-200" : "transparent",
+                  path === item.href ? "bg-secondary" : "transparent",
                   item.className || "",
                 )}
               >
