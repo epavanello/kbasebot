@@ -34,32 +34,136 @@ export interface Database {
   }
   public: {
     Tables: {
+      chatbots: {
+        Row: {
+          created_at: string
+          files: string[] | null
+          id: string
+          is_public: boolean | null
+          name: string | null
+          params: Json | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          files?: string[] | null
+          id?: string
+          is_public?: boolean | null
+          name?: string | null
+          params?: Json | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          files?: string[] | null
+          id?: string
+          is_public?: boolean | null
+          name?: string | null
+          params?: Json | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbots_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      conversations: {
+        Row: {
+          chatbot_id: string
+          chatbot_owner_id: string
+          created_at: string
+          entry: string | null
+          id: string
+          metadata: Json | null
+          session_id: string
+          speaker: string
+        }
+        Insert: {
+          chatbot_id: string
+          chatbot_owner_id: string
+          created_at?: string
+          entry?: string | null
+          id?: string
+          metadata?: Json | null
+          session_id?: string
+          speaker: string
+        }
+        Update: {
+          chatbot_id?: string
+          chatbot_owner_id?: string
+          created_at?: string
+          entry?: string | null
+          id?: string
+          metadata?: Json | null
+          session_id?: string
+          speaker?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_chatbot_owner_id_fkey"
+            columns: ["chatbot_owner_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       knowledge_base: {
         Row: {
+          chatbot_id: string | null
           content: string
           created_at: string | null
           embedding: string | null
           id: number
           uid: string
+          user_id: string | null
         }
         Insert: {
+          chatbot_id?: string | null
           content: string
           created_at?: string | null
           embedding?: string | null
           id?: number
           uid: string
+          user_id?: string | null
         }
         Update: {
+          chatbot_id?: string | null
           content?: string
           created_at?: string | null
           embedding?: string | null
           id?: number
           uid?: string
+          user_id?: string | null
         }
         Relationships: [
           {
+            foreignKeyName: "knowledge_base_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "knowledge_base_uid_fkey"
             columns: ["uid"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_base_user_id_fkey"
+            columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -107,6 +211,12 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      get_user_id_by_email: {
+        Args: {
+          user_email: string
+        }
+        Returns: string
+      }
       ivfflathandler: {
         Args: {
           "": unknown

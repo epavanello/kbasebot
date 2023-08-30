@@ -3,7 +3,7 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { NextRequest, NextResponse } from "next/server";
 import { Stripe } from "stripe";
 import { cookies } from "next/headers";
-import { isPaidUser } from "@/lib/db";
+import { isPaidUser } from "@/lib/supabase";
 import { Plan } from "@/lib/stripe";
 import {
   NEXT_PUBLIC_URL,
