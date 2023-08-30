@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "supabase:generate-types": "supabase gen types typescript --linked > src/lib/types/database.types.ts"
+    "supabase:generate-types": "supabase gen types typescript --linked > src/lib/types/database.types.ts",
+		"stripe:listen-local-payment": "stripe listen --forward-to localhost:3000/api/stripe"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.2.0",

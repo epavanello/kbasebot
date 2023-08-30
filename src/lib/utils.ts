@@ -70,6 +70,20 @@ export const getRandomArrayValue = (arr = []) => {
   return arr[Math.floor(Math.random() * arr?.length)];
 };
 
+export function getErrorMessage(e: unknown): string {
+	try {
+		if (typeof e === 'string') {
+			return e;
+		} else if (e instanceof Error) {
+			return e.message;
+		} else if (typeof e == 'object' && e && 'data' in e && typeof e.data == 'string') {
+			return JSON.parse(e.data)?.message || '';
+		}
+	} catch (error) {
+		return getErrorMessage(error);
+	}
+	return 'unknown';
+}
 export const toCapitalizeFirstLetter = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
