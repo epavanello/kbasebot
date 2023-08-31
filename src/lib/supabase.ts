@@ -60,8 +60,6 @@ export function handleSupabaseErrorAndGetData<
   }
 }
 
-export const supabaseAdminClient = getSupabaseClientAdmin();
-
 export function getSupabaseClientAdmin() {
   return createServerComponentClient<Database>(
     {

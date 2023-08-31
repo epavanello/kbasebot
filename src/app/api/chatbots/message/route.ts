@@ -12,7 +12,7 @@ import { ConversationLog } from "@/modules/chatbots/conversation-log";
 import { getContext } from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { templates } from "@/modules/chatbots/templates";
-import { supabaseAdminClient } from "@/lib/supabase";
+import {getSupabaseClientAdmin} from "@/lib/supabase";
 
 const config = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -41,6 +41,8 @@ export async function POST(req: NextApiRequest) {
     const { messages, sessionId, chatbotId } = await req.json();
 
     if (!sessionId && !userId) throw new Error("unauthorized");
+
+    const supabaseAdminClient = getSupabaseClientAdmin()
 
     if (!userId) {
       const {

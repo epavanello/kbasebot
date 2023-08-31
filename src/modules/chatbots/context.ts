@@ -1,6 +1,6 @@
 // Create an OpenAI API client (that's edge friendly!)
 import { Configuration, CreateEmbeddingResponse, OpenAIApi } from "openai-edge";
-import { supabaseAdminClient } from "@/lib/supabase";
+import {getSupabaseClientAdmin} from "@/lib/supabase";
 import GPT3Tokenizer from "gpt3-tokenizer";
 
 const config = new Configuration({
@@ -18,6 +18,8 @@ export const getContext = async (input: string, chatbotId) => {
   const {
     data: [{ embedding }],
   }: CreateEmbeddingResponse = await embeddingResponse.json();
+
+  const supabaseAdminClient = getSupabaseClientAdmin()
 
   // Fetching whole documents for this simple example.
   //

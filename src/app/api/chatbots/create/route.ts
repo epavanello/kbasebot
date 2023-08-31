@@ -6,7 +6,6 @@ import type { NextRequest } from "next/server";
 import { parseFile } from "@/modules/datasource/load-docs";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
-import { supabaseAdminClient } from "@/lib/supabase";
 
 // export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
@@ -67,7 +66,7 @@ export async function POST(req: NextRequest) {
     ).flat();
 
     // THE FUNCTION ABOVE FROM LANGCHAIN CAN'T ADD ADDITIONAL COLUMN, SO NEED TO DO EXTRA STEPS
-    const { error: eee } = await supabaseAdminClient
+    const { error: eee } = await supabaseServerClient
       .from("knowledge_base")
       .update({ chatbot_id: chatbot?.id, user_id: user?.id })
       .in("id", docIds)

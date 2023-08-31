@@ -1,9 +1,10 @@
 import { ChatCompletionRequestMessage } from "openai-edge";
 import { convesationLogToMessages } from "./helpers";
 import { IConversationSpeaker } from "@/lib/types/common.types";
-import { supabaseAdminClient } from "@/lib/supabase";
+import {getSupabaseClientAdmin} from "@/lib/supabase";
 
 class ConversationLog {
+  private supabaseAdminClient:any;
   constructor(
     public chatbotOwnerId: string,
     public sessionId: string,
@@ -12,6 +13,7 @@ class ConversationLog {
     this.chatbotOwnerId = chatbotOwnerId;
     this.sessionId = sessionId;
     this.chatbotId = chatbotId;
+    this.supabaseAdminClient = getSupabaseClientAdmin()
   }
 
   public async addEntry({
@@ -26,7 +28,7 @@ class ConversationLog {
     metadata?: object;
   }) {
     try {
-      await supabaseAdminClient
+      await this.supabaseAdminClient
         .from("conversations")
         .insert({
           chatbot_owner_id: this.chatbotOwnerId,
@@ -48,7 +50,7 @@ class ConversationLog {
   }: {
     limit: number;
   }): Promise<ChatCompletionRequestMessage[]> {
-    const { data: history } = await supabaseAdminClient
+    const { data: history } = await this.supabaseAdminClient
       .from("conversations")
       .select("entry, speaker, created_at")
       .eq("session_id", this.sessionId)
@@ -61,7 +63,7 @@ class ConversationLog {
   }
 
   public async clearConversation() {
-    await supabaseAdminClient
+    await this.supabaseAdminClient
       .from("conversations")
       .delete()
       .eq("session_id", this.sessionId)
