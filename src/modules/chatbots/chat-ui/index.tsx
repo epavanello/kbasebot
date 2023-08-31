@@ -99,7 +99,9 @@ export default function ChatUi({
 
   return (
     <div style={{height: `${heightPerc}vh`}} className={cn('flex flex-col w-full my-auto' , className)}>
-      <h1>asdas</h1>
+      <div className="p-4">
+        <h1 className="text-md text-primary font-bold">Name of the chat</h1>
+      </div>
       <Separator className="border"/>
       <div style={{height: `${heightPerc - 15}vh`}} className={cn("flex-1 overflow-y-scroll pt-4 md:pt-10")}>
         {isDataLoading &&
