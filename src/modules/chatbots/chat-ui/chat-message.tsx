@@ -15,23 +15,37 @@ export interface ChatMessageProps {
 }
 
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
+  const isUser = message.role === "user";
   return (
-    <div className={cn("group relative mb-4 flex items-start")} {...props}>
+    <div
+      className={cn("group relative flex items-start justify-end", {
+        "pl-10 flex-row-reverse": isUser,
+        "pr-10": !isUser,
+      })}
+      {...props}
+    >
       <div
         className={cn(
           "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow",
-          message.role === "user" ? "bg-background" : "bg-blue-100",
+          isUser ? "bg-background" : "bg-secondary",
         )}
       >
-        {message.role === "user" ? (
-          <PersonIcon />
-        ) : (
-          <MagicWandIcon className="w-6 h-6" />
-        )}
+        {isUser ? <PersonIcon /> : <MagicWandIcon className="w-4 h-4" />}
       </div>
-      <div className="flex-1 px-1 ml-4 space-y-2 overflow-hidden">
+      <div
+        className={cn("flex-1 px-1 space-y-2 overflow-hidden", {
+          "text-right mr-4": isUser,
+          "ml-4": !isUser,
+        })}
+      >
         <MemoizedReactMarkdown
-          className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
+          className={cn(
+            " text-[15px] prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 px-4 py-2 inline-block rounded-[30px]",
+            {
+              "rounded-tr bg-secondary": isUser,
+              "rounded-tl bg-primary/5": !isUser,
+            },
+          )}
           remarkPlugins={[remarkGfm, remarkMath]}
           components={{
             p({ children }) {
@@ -71,7 +85,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
         >
           {message.content}
         </MemoizedReactMarkdown>
-        <ChatMessageActions message={message} />
+        <ChatMessageActions isUser={isUser} message={message} />
       </div>
     </div>
   );

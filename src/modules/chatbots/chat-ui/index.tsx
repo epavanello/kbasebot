@@ -29,8 +29,6 @@ export default function ChatUi({
 }: ChatProps) {
   const { chatbot_id } = useParams();
 
-  console.log({ chatbot_id });
-
   const { toast } = useToast();
 
   const chatArea = useRef<any>();
@@ -96,15 +94,12 @@ export default function ChatUi({
   }, [messages?.length]);
 
   return (
-    <div className="flex">
-      <div className={cn("pb-[200px] pt-4 md:pt-10", className || "")}>
+    <div className="flex flex-col h-[80vh] w-full my-auto">
+      <div className={cn("flex-1 pt-4 md:pt-10", className || "")}>
         {messages.length ? (
           <div
             ref={chatArea}
-            className={cn(
-              "h-[50vh] w-full overflow-y-scroll",
-              chatContainerClass || "",
-            )}
+            className={cn("w-full overflow-y-scroll", chatContainerClass || "")}
           >
             <ChatList messages={messages} />
             <ChatScrollAnchor area={chatArea} trackVisibility={isLoading} />

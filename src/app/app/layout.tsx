@@ -1,8 +1,6 @@
 import { MainNav } from "@/components/layouts/navbar";
-import PageTransition from "@/components/layouts/page-transition";
 import Sidebar from "@/components/layouts/sidebar";
 import { menus } from "@/lib/config/menus";
-import { useRouter } from "next/navigation";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;

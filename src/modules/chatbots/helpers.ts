@@ -37,7 +37,7 @@ export const truncateText = (
 
 export const getChatbotPublicId = (
   id: string,
-  host = process.env.NEXT_PUBLIC_REDIRECT_TO,
+  host = process.env.NEXT_PUBLIC_URL,
 ) => {
-  return `${host}/p/chatbot-embed/${id}`;
+  return `${host}/c/${id}`;
 };

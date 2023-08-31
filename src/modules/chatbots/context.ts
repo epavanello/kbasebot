@@ -32,6 +32,23 @@ export const getContext = async (input: string, chatbotId) => {
     },
   );
 
+  // # variable_conflict use_column
+  //   BEGIN
+  //   RETURN query
+  //   SELECT
+  //   id,
+  //       content,
+  //       metadata,
+  //       embedding,
+  //   1 -(documents.embedding <=> query_embedding) AS similarity
+  //   FROM
+  //   documents
+  //   where documents.chatbot_id = chatbot_id
+  //   ORDER BY
+  //   documents.embedding <=> query_embedding
+  //   LIMIT match_count;
+  //   END;
+
   console.log({ error });
 
   const tokenizer = new GPT3Tokenizer({ type: "gpt3" });

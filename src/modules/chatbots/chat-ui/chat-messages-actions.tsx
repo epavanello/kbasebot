@@ -13,6 +13,7 @@ interface ChatMessageActionsProps extends React.ComponentProps<"div"> {
 
 export function ChatMessageActions({
   message,
+  isUser,
   className,
   ...props
 }: ChatMessageActionsProps) {
@@ -31,15 +32,17 @@ export function ChatMessageActions({
       )}
       {...props}
     >
-      <Button
-        className="bg-gray-100/90"
-        variant="ghost"
-        size="icon"
-        onClick={onCopy}
-      >
-        {isCopied ? <CheckIcon /> : <CopyIcon />}
-        <span className="sr-only">Copy</span>
-      </Button>
+      {!isUser && (
+        <Button
+          className="bg-gray-100/90"
+          variant="ghost"
+          size="icon"
+          onClick={onCopy}
+        >
+          {isCopied ? <CheckIcon /> : <CopyIcon />}
+          <span className="sr-only">Copy</span>
+        </Button>
+      )}
     </div>
   );
 }

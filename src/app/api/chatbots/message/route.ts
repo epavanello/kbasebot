@@ -6,7 +6,7 @@ import {
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
 import { cookies } from "next/headers";
 import { ConversationLog } from "@/modules/chatbots/conversation-log";
 import { getContext } from "@/modules/chatbots/context";

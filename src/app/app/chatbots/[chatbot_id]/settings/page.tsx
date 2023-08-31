@@ -22,8 +22,9 @@ import {
 import { Icon, LoadingIcon } from "@/components/ui/icons";
 import { LOADING_ICON } from "@/components/ui/icons";
 import { useSupabaseAuth } from "@/lib/store/use-user";
-import { cookies } from "next/headers";
 import { useParams } from "next/navigation";
+import { DashboardShell } from "@/components/ui/dashboard-shell";
+import { DashboardHeader } from "@/components/ui/dashboard-header";
 
 const Settings = () => {
   const [chatbot, setChatbot] = useState({});
@@ -33,7 +34,6 @@ const Settings = () => {
   const { chatbot_id } = useParams();
   const [loading, setLoading] = useState(false);
 
-  console.log({ chatbot_id });
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
@@ -103,14 +103,14 @@ const Settings = () => {
         title: "Deleted Successfully",
       });
 
-      await router.push(`/chatbots/`);
+      await router.push(`/app`);
       setDeleting(false);
     } catch (e) {
       setDeleting(false);
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request. please try again",
+        title: "Sorry for the inconvenience",
+        description: "Internal Server Error. please try again",
       });
       console.error(e);
     }
@@ -121,86 +121,85 @@ const Settings = () => {
   if (loading && !chatbot) return <LoadingIcon />;
 
   return (
-    <div className="flex flex-col gap-8 px-0 md:px-24 lg:px-36 mb-20">
-      <Card>
-        <CardHeader>
-          <CardTitle>Chatbot Settings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className=" flex flex-col relative w-full justify-start gap-2 items-center">
-            <div className=" flex relative w-full justify-start gap-2 items-center">
-              <p className="text-gray-700 font-medium text-sm">Chatbot ID</p>
-              <p className="p-2 bg-muted rounded-lg text-gray-700 text-xs">
-                {chatbot.id}
-              </p>
-              <CopyButton text={chatbot.id} />
+    <DashboardShell className="container gap-0 mt-10">
+      <DashboardHeader
+        heading={"Chatbot Settings"}
+        className="flex-col md:flex-row justify-center my-4 gap-6"
+      />
+      <div className="flex flex-col gap-8 px-0 md:px-24 lg:px-36 mb-20">
+        <Card>
+          <CardHeader>
+            <CardTitle>Chatbot Settings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className=" flex flex-col relative w-full justify-start gap-2 items-center">
+              <div className=" flex relative w-full justify-start gap-2 items-center">
+                <p className="text-gray-700 font-medium text-sm">Chatbot ID</p>
+                <p className="p-2 bg-muted rounded-lg text-gray-700 text-xs">
+                  {chatbot.id}
+                </p>
+                <CopyButton text={chatbot.id} />
+              </div>
+              <div className=" flex relative w-full justify-start gap-2 items-center">
+                <p className="text-gray-700 font-medium text-sm">Created at</p>
+                <p className="p-4 rounded-lg text-gray-700 text-xs">
+                  {formatDate(chatbot?.created_at)}
+                </p>
+              </div>
             </div>
-            <div className=" flex relative w-full justify-start gap-2 items-center">
-              <p className="text-gray-700 font-medium text-sm">Created at</p>
-              <p className="p-4 rounded-lg text-gray-700 text-xs">
-                {formatDate(chatbot?.created_at)}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      <Card className="border-red-300">
-        <CardHeader>
-          <CardTitle>Danger Zone</CardTitle>
-          <p>Delete your chatbot and all it's data</p>
-        </CardHeader>
-        <CardContent>
-          <div className="">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive">
-                  <Icon
-                    icon={deleting ? LOADING_ICON : "pajamas:remove"}
-                    className="mr-1"
-                  />
-                  Delete
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="flex gap-1 items-center">
-                    <Icon icon={"pajamas:remove"} className="mr-1" /> Are you
-                    absolutely sure?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    <p>
-                      You are deleting chatbot{" "}
-                      <span className="border-b border-red-400 text-red-400 p-1 px-3">
-                        {chatbot?.name || chatbot?.id}
-                      </span>
-                      .
-                    </p>
-                    <p className="mt-2">
-                      This action cannot be undone. This will permanently delete
-                      your chatbot and remove your data from our servers.
-                    </p>
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={deleteChatbot}
-                    className={cn(buttonVariants({ variant: "destructive" }))}
-                  >
+        <Card className="border-red-300">
+          <CardHeader>
+            <CardTitle>Danger Zone</CardTitle>
+            <p>Delete your chatbot and all it's data</p>
+          </CardHeader>
+          <CardContent>
+            <div className="">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">
                     <Icon
                       icon={deleting ? LOADING_ICON : "pajamas:remove"}
                       className="mr-1"
                     />
-                    Delete Anyway
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="flex gap-1 items-center">
+                      <Icon icon={"pajamas:remove"} className="mr-1" /> Please
+                      confirm your action
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      <p className="mt-2">
+                        you are permanently deleting your chatbot and it can not
+                        be undone
+                      </p>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={deleteChatbot}
+                      className={cn(buttonVariants({ variant: "destructive" }))}
+                    >
+                      <Icon
+                        icon={deleting ? LOADING_ICON : "pajamas:remove"}
+                        className="mr-1"
+                      />
+                      Delete Anyway
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </DashboardShell>
   );
 };
 
