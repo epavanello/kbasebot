@@ -6,6 +6,7 @@ import type { NextRequest } from "next/server";
 import { parseFile } from "@/modules/datasource/load-docs";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
+import { supabaseAdminClient } from "@/lib/supabase";
 
 // export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
@@ -48,25 +49,27 @@ export async function POST(req: NextRequest) {
       tableName: "knowledge_base",
     });
 
-    const docIds = await Promise.all(
-      documentCollection.map(async (documents) => {
-        return store.addDocuments(
-          documents.map((i) => ({
-            ...i,
-            metadata: {
-              ...(i.metadata || {}),
-              chatbot_id: chatbot?.id,
-              user_id: user?.id,
-            },
-          })),
-        );
-      }),
-    );
+    const docIds = (
+      await Promise.all(
+        documentCollection.map(async (documents) => {
+          return store.addDocuments(
+            documents.map((i) => ({
+              ...i,
+              metadata: {
+                ...(i.metadata || {}),
+                chatbot_id: chatbot?.id,
+                user_id: user?.id,
+              },
+            })),
+          );
+        }),
+      )
+    ).flat();
 
     // THE FUNCTION ABOVE FROM LANGCHAIN CAN'T ADD ADDITIONAL COLUMN, SO NEED TO DO EXTRA STEPS
-    await supabaseServerClient
+    const { error: eee } = await supabaseAdminClient
       .from("knowledge_base")
-      .update({ chatbot_id: chatbot?.id })
+      .update({ chatbot_id: chatbot?.id, user_id: user?.id })
       .in("id", docIds)
       .throwOnError();
 

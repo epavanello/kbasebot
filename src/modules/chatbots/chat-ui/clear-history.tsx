@@ -14,8 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { IconSpinner } from "@/components/ui/icons";
-import { useTranslation } from "next-i18next";
+import { LoadingIcon } from "@/components/ui/icons";
 
 interface ClearHistoryProps {
   clearChats: () => Promise<void>;
@@ -25,27 +24,24 @@ export function ClearHistory({ clearChats }: ClearHistoryProps) {
   const [open, setOpen] = React.useState(false);
   const [isPending, startTransition] = React.useTransition();
   const router = useRouter();
-  const { t } = useTranslation();
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button variant="ghost" disabled={isPending}>
-          {isPending && <IconSpinner className="mr-2" />}
-          {t("clearHistory")}
+          {isPending && <LoadingIcon className="mr-2" />}
+          Clear History
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t("areYouAbsolutelySure")}</AlertDialogTitle>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("deleteChatWarning")}
+            This will delete all chat history and it's not recoverable.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>
-            {t("cancel")}
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             disabled={isPending}
             onClick={(event) => {
@@ -64,7 +60,7 @@ export function ClearHistory({ clearChats }: ClearHistoryProps) {
             }}
           >
             {isPending && <IconSpinner className="mr-2 animate-spin" />}
-            {t("delete")}
+            Confirm
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

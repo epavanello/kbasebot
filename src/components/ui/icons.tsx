@@ -16,6 +16,7 @@ export const CloseIcon = ({ className }) => (
 );
 
 export const LOADING_ICON = "line-md:loading-loop";
+export const DOT_LOADING_ICON = "svg-spinners:3-dots-bounce";
 
 export const LoadingIcon = ({ className }) => (
   <Icon icon={LOADING_ICON} className={cn("text-2xl", className || "")} />

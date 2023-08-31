@@ -1,11 +1,12 @@
+"use-client";
+
 import { FC, memo } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 import { useCopyToClipboard } from "@/lib/hooks/use-copy-to-clipboard";
-import { IconCheck, IconCopy, IconDownload } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "next-i18next";
+import { CheckIcon, CopyIcon, DownloadIcon } from "@radix-ui/react-icons";
 
 interface Props {
   language: string;
@@ -54,7 +55,6 @@ export const generateRandomString = (length: number, lowercase = false) => {
 
 const CodeBlock: FC<Props> = memo(({ language, value }) => {
   const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 2000 });
-  const { t } = useTranslation();
 
   const downloadAsFile = () => {
     if (typeof window === "undefined") {
@@ -65,7 +65,10 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
       3,
       true,
     )}${fileExtension}`;
-    const fileName = window.prompt(t("enterFileName") || "", suggestedFileName);
+    const fileName = window.prompt(
+      "Please enter a file name",
+      suggestedFileName,
+    );
 
     if (!fileName) {
       // User pressed cancel on prompt.
@@ -100,8 +103,8 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
             onClick={downloadAsFile}
             size="icon"
           >
-            <IconDownload />
-            <span className="sr-only">{t("download")}</span>
+            <DownloadIcon />
+            <span className="sr-only">Download</span>
           </Button>
           <Button
             variant="ghost"
@@ -109,8 +112,8 @@ const CodeBlock: FC<Props> = memo(({ language, value }) => {
             className="text-xs hover:bg-zinc-800 focus-visible:ring-1 focus-visible:ring-slate-700 focus-visible:ring-offset-0"
             onClick={onCopy}
           >
-            {isCopied ? <IconCheck /> : <IconCopy />}
-            <span className="sr-only">{t("copyCode")}</span>
+            {isCopied ? <CheckIcon /> : <CopyIcon />}
+            <span className="sr-only">Copy</span>
           </Button>
         </div>
       </div>
