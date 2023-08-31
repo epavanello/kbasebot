@@ -40,9 +40,10 @@ export function ChatPanel({
             <Button
               variant="outline"
               onClick={() => stop()}
-              className="bg-background"
+              className="bg-background text-[10px] h-8"
+              size="sm"
             >
-              <StopIcon className="mr-2" />
+              <StopIcon className="mr-2 w-3 h-3" />
               Stop Generating
             </Button>
           ) : (
@@ -50,9 +51,10 @@ export function ChatPanel({
               <Button
                 variant="outline"
                 onClick={() => reload()}
-                className="bg-background"
+                className="bg-background text-[10px] h-8"
+                size="sm"
               >
-                <ReloadIcon className="mr-2" />
+                <ReloadIcon className="mr-2 w-3 h-3" />
                 Regenerate Response
               </Button>
             )
@@ -60,7 +62,7 @@ export function ChatPanel({
           <ButtonScrollToBottom area={chatArea} />
         </div>
         <div
-          className="space-y-4 bg-background px-4 py-2 md:py-4"
+          className="bg-background px-4"
           // className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4"
         >
           <PromptForm

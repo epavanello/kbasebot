@@ -15,7 +15,7 @@ export function ChatList({ messages }: ChatList) {
   }
 
   return (
-    <div className="relative flex flex-col gap-6 mx-auto w-[32rem] md:w-[42rem] px-4">
+    <div className="relative flex flex-col gap-6 mx-auto max-w-2xl px-4">
       {messages.map((message, index) => (
         <div key={index}>
           <ChatMessage message={message} />

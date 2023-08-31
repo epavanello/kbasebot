@@ -110,7 +110,7 @@ export async function POST(req: NextApiRequest) {
     // Respond with the stream
     return new StreamingTextResponse(stream);
   } catch (e) {
-    throw e;
+    console.error(e)
     return new Response("Something went wrong! please try again", {
       status: 401,
     });
