@@ -5,7 +5,7 @@ import {ChatbotEmbed} from "@/user-script/embed";
 const Page = () => {
 
     useEffect(()=> {
-        new ChatbotEmbed('s')
+        new ChatbotEmbed('40d299e1-2893-4a08-ada3-1f8cc393ac46')
     },[])
 
     return (
