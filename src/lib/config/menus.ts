@@ -36,12 +36,17 @@ export const menus = {
     {
       title: "Bot Preview",
       href: `/app/chatbots/${chatbotId}`,
-      icon: "tabler:drag-drop",
+      icon: "fluent:bot-sparkle-24-regular",
     },
     {
       title: "Settings",
       href: `/app/chatbots/${chatbotId}/settings`,
       icon: "gala:settings",
+    },
+    {
+      title: "Share",
+      href: `/app/chatbots/${chatbotId}/share`,
+      icon: "tabler:world-share",
     },
   ],
 };

@@ -897,11 +897,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.17.12.tgz#c6bd7413a13e6ad9cfb7e97dd5c4e904c1821e50"
   integrity sha512-d6xjC9fJ/nSnfDeU0AMDsaJyb1iHsqCSOdi84w4u+SlN/UgQdY5tRhpMzaFYsI4mnpvgTivEaQd0yOUhAtOnEQ==
 
-"@types/nprogress@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@types/nprogress/-/nprogress-0.2.0.tgz#86c593682d4199212a0509cc3c4d562bbbd6e45f"
-  integrity sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==
-
 "@types/phoenix@^1.5.4":
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/@types/phoenix/-/phoenix-1.6.1.tgz#9551cd77a8f4c70c5d81db899f2af762066aabde"
@@ -3534,6 +3529,13 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
+next-nprogress-bar@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/next-nprogress-bar/-/next-nprogress-bar-2.1.2.tgz#47ccfba165569a1ecd03410af432fd23d2227676"
+  integrity sha512-2Df5d7fr6uPx+BX8MkoWCfl+RjG+uWI5mA399e5sEe8mbT3q/GIUvCXLzBgJBIISpKuMmdLAOYEzqpjlsRVOWw==
+  dependencies:
+    nprogress "^0.2.0"
+
 next-themes@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/next-themes/-/next-themes-0.2.1.tgz#0c9f128e847979daf6c67f70b38e6b6567856e45"
@@ -3567,15 +3569,6 @@ next@13.4.13:
     "@next/swc-win32-arm64-msvc" "13.4.13"
     "@next/swc-win32-ia32-msvc" "13.4.13"
     "@next/swc-win32-x64-msvc" "13.4.13"
-
-nextjs-progressbar@^0.0.16:
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/nextjs-progressbar/-/nextjs-progressbar-0.0.16.tgz#d2c1e54ffc2c6d52b64282c0d764a44241fbc36e"
-  integrity sha512-GV0fD38EMD3vSDCmkq+tObmoup6QA91a6a9MxGuhJZuRk/9TNsrHGnIQQQ/sggkMkXuT4fBgF6jRjFwScDT3zA==
-  dependencies:
-    "@types/nprogress" "^0.2.0"
-    nprogress "^0.2.0"
-    prop-types "^15.8.1"
 
 node-domexception@1.0.0, node-domexception@^1.0.0:
   version "1.0.0"
