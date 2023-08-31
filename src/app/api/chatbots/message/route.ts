@@ -13,9 +13,10 @@ import { getContext } from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { templates } from "@/modules/chatbots/templates";
 import {getSupabaseClientAdmin} from "@/lib/supabase";
+import { OPENAI_API_KEY } from "@/lib/env";
 
 const config = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: OPENAI_API_KEY,
 });
 
 const openai = new OpenAIApi(config);

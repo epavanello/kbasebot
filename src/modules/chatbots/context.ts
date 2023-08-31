@@ -2,9 +2,10 @@
 import { Configuration, CreateEmbeddingResponse, OpenAIApi } from "openai-edge";
 import {getSupabaseClientAdmin} from "@/lib/supabase";
 import GPT3Tokenizer from "gpt3-tokenizer";
+import { OPENAI_API_KEY } from "@/lib/env";
 
 const config = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(config);
 

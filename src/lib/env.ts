@@ -5,3 +5,4 @@ export const STRIPE_API_KEY = process.env.STRIPE_API_KEY!;
 export const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_ENDPOINT_SECRET!;
 export const NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 export const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY!;
+export const OPENAI_API_KEY = process.env.OPENAI_API_KEY!;
