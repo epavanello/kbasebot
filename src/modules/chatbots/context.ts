@@ -58,18 +58,21 @@ export const getContext = async (input: string, chatbotId) => {
   let contextText = "";
 
   // Concat matched documents
-  for (let i = 0; i < documents.length; i++) {
+  for (let i = 0; i < documents?.length; i++) {
     const document = documents[i];
-    const content = document.content;
-    const encoded = tokenizer.encode(content);
-    tokenCount += encoded.text.length;
+    if(document?.content){
+      const content = document?.content;
+      const encoded = tokenizer.encode(content);
+      tokenCount += encoded.text.length;
 
-    // Limit context to max 1500 tokens (configurable)
-    if (tokenCount > 1500) {
-      break;
+      // Limit context to max 1500 tokens (configurable)
+      if (tokenCount > 1500) {
+        break;
+      }
+
+      contextText += `${content.trim()}\n---\n`;
     }
 
-    contextText += `${content.trim()}\n---\n`;
   }
 
   return contextText;

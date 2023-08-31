@@ -19,18 +19,22 @@ export class ChatbotEmbed {
         this.chatbotContainer.style.position = 'fixed';
         this.chatbotContainer.style.bottom = '20px';
         this.chatbotContainer.style.right = '20px';
-        this.chatbotContainer.style.zIndex = '1000';
+        this.chatbotContainer.style.zIndex = '999';
 
         // Create and style the chatbot icon
         this.chatbotIcon = document.createElement('div');
+        this.chatbotIcon.style.position = 'fixed';
+        this.chatbotIcon.style.bottom = '20px';
+        this.chatbotIcon.style.right = '20px';
+        this.chatbotIcon.style.zIndex = '1000';
         this.chatbotIcon.style.padding = '10px';
         this.chatbotIcon.style.border = '1px solid green';
         this.chatbotIcon.style.borderRadius = '50%';
         this.chatbotIcon.style.cursor = 'pointer';
-        this.chatbotIcon.innerHTML = `<img src="/bot.svg" style="width:45px; height:45px;" />`;
+        this.setChatbotIcon(); // Set initial icon
 
-        this.chatbotContainer.appendChild(this.chatbotIcon);
         document.body.appendChild(this.chatbotContainer);
+        document.body.appendChild(this.chatbotIcon);
 
         this.chatbotIcon.addEventListener('click', () => {
             if (this.shadowRoot) {
@@ -41,7 +45,17 @@ export class ChatbotEmbed {
         });
     }
 
+    setChatbotIcon(isOpen: boolean = false) {
+        if (isOpen) {
+            this.chatbotIcon.innerHTML = `<div style="display:flex; justify-content:center; align-items:center;
+width:45px; height:45px; font-size: 44px;"><span>×</span></div>`;
+        } else {
+            this.chatbotIcon.innerHTML = `<img src="/bot.svg" style="width:45px; height:45px;" />`;
+        }
+    }
+
     openChatbot() {
+        this.setChatbotIcon(true);
         if (!this.shadowRoot) {
             this.shadowRoot = this.chatbotContainer.attachShadow({ mode: 'open' });
             this.render();
@@ -55,6 +69,7 @@ export class ChatbotEmbed {
     }
 
     closeChatbot() {
+        this.setChatbotIcon(false);
         const iframe = this.shadowRoot?.querySelector('iframe');
         if (iframe) {
             iframe.style.opacity = '0';
