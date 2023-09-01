@@ -15,17 +15,21 @@ import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
 import { convesationLogToInitialMessages } from "../helpers";
 import * as React from "react";
 import { useToast } from "@/components/ui/use-toast";
+import {Skeleton} from "@/components/ui/skeleton";
+import {Separator} from "@/components/ui/separator";
 
 export interface ChatProps extends React.ComponentProps<"div"> {
   initialMessages?: Message[];
   id?: string;
   chatContainerClass?: string;
+  heightPerc?: number
 }
 
 export default function ChatUi({
   id,
   className,
   chatContainerClass,
+                                 heightPerc = 80,
 }: ChatProps) {
   const { chatbot_id } = useParams();
 
@@ -94,8 +98,21 @@ export default function ChatUi({
   }, [messages?.length]);
 
   return (
-    <div className="flex flex-col h-[80vh] w-full my-auto">
-      <div className={cn("flex-1 pt-4 md:pt-10", className || "")}>
+    <div style={{height: `${heightPerc}vh`}} className={cn('flex flex-col w-full my-auto' , className)}>
+      <div className="p-4">
+        <h1 className="text-md text-primary font-bold">Name of the chat</h1>
+      </div>
+      <Separator className="border"/>
+      <div style={{height: `${heightPerc - 15}vh`}} className={cn("flex-1 overflow-y-scroll pt-4 md:pt-10")}>
+        {isDataLoading &&
+            <div className="max-w-2xl m-auto flex flex-col gap-6">
+              {[1,2,3].map(i =>
+                  <div className="flex flex-col gap-3" key={i.toString()}>
+                  <Skeleton className="w-[70%] h-[70px] rounded-2xl self-end" />
+                  <Skeleton className="w-[70%] h-[70px] rounded-2xl" />
+              </div>)}
+            </div>
+        }
         {messages.length ? (
           <div
             ref={chatArea}

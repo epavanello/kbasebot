@@ -37,7 +37,8 @@ export class ChatbotEmbed {
         document.body.appendChild(this.chatbotIcon);
 
         this.chatbotIcon.addEventListener('click', () => {
-            if (this.shadowRoot) {
+            const iframe = this.shadowRoot?.querySelector('iframe');
+            if (iframe && iframe.style.display === 'block') {
                 this.closeChatbot();
             } else {
                 this.openChatbot();
@@ -45,27 +46,36 @@ export class ChatbotEmbed {
         });
     }
 
-    setChatbotIcon(isOpen: boolean = false) {
+    setChatbotIcon(isOpen: boolean = false, isLoading:boolean = false) {
+        if(isLoading){
+            return this.chatbotIcon.innerHTML = `<img src="/loading-loop.svg" style="width:45px; height:45px;" />`;
+        }
         if (isOpen) {
-            this.chatbotIcon.innerHTML = `<div style="display:flex; justify-content:center; align-items:center;
-width:45px; height:45px; font-size: 44px;"><span>×</span></div>`;
+            this.chatbotIcon.innerHTML = `<img src="/close.svg" style="width:45px; height:45px;" />`;
         } else {
             this.chatbotIcon.innerHTML = `<img src="/bot.svg" style="width:45px; height:45px;" />`;
         }
     }
 
     openChatbot() {
-        this.setChatbotIcon(true);
+        this.setChatbotIcon(true, true);
+        console.log({here:2})
         if (!this.shadowRoot) {
             this.shadowRoot = this.chatbotContainer.attachShadow({ mode: 'open' });
             this.render();
         }
         const iframe = this.shadowRoot?.querySelector('iframe');
+
         if (iframe) {
-            iframe.style.transform = 'scale(1)';
-            iframe.style.opacity = '1';
             iframe.style.display = 'block';
         }
+         setTimeout(()=> {
+             this.setChatbotIcon(true);
+             if(iframe){
+             iframe.style.transform = 'scale(1)';
+             iframe.style.opacity = '1';
+             }
+         },300)
     }
 
     closeChatbot() {
@@ -84,18 +94,24 @@ width:45px; height:45px; font-size: 44px;"><span>×</span></div>`;
 
         const chatbotURL = getChatbotPublicId(this.chatbot_id);
 
+        console.log({ss:this.chatbot_id})
+
         const iframe = document.createElement('iframe');
         iframe.src = chatbotURL;
         iframe.style.width = '350px';
         iframe.style.height = '650px';
+        iframe.style.overflowY = 'scroll';
         iframe.frameBorder = '0';
-        iframe.style.transform = 'scale(0.8)';
+        iframe.style.transform = 'scale(0)';
         iframe.style.opacity = '0';
         iframe.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
         iframe.style.display = 'none';
         iframe.style.position = 'absolute';
-        iframe.style.bottom = '70px';
-        iframe.style.right = '20px';
+        iframe.style.bottom = '50px';
+        iframe.style.right = '30px';
+        iframe.style.borderBottomRightRadius = '0px';
+        iframe.style.transformOrigin = 'bottom right'; // Set the origin for the transform
+
 
         this.shadowRoot.appendChild(iframe);
 
