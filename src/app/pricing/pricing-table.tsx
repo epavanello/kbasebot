@@ -9,6 +9,7 @@ import { CheckCircle2, LockIcon } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { plans, type BillingInterval } from "@/lib/stripe";
 import { useSupabaseAuth } from "@/lib/store/use-user";
+import { isPaidUser } from "@/lib/supabase";
 
 let tabs: { id: BillingInterval; label: string }[] = [
   { id: "month", label: "Month" },
@@ -104,7 +105,9 @@ export default function PricingTable() {
                 const isFree = plan.id === "free";
                 const isAgency = plan.id === "agency";
 
-                let subscribeText = "Subscribe";
+                let subscribeText = isPaidUser(subscription)
+                  ? "Change plan"
+                  : "Subscribe";
                 let route = `/subscribe?plan=${plan.id}&interval=${billingInterval}`;
 
                 if (isFree) {

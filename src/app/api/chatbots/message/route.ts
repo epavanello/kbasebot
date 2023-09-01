@@ -12,7 +12,7 @@ import { ConversationLog } from "@/modules/chatbots/conversation-log";
 import { getContext } from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { templates } from "@/modules/chatbots/templates";
-import {getSupabaseClientAdmin} from "@/lib/supabase";
+import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import { OPENAI_API_KEY } from "@/lib/env";
 
 const config = new Configuration({
@@ -43,7 +43,7 @@ export async function POST(req: NextApiRequest) {
 
     if (!sessionId && !userId) throw new Error("unauthorized");
 
-    const supabaseAdminClient = getSupabaseClientAdmin()
+    const supabaseAdminClient = getSupabaseClientAdmin();
 
     if (!userId) {
       const {
@@ -94,7 +94,7 @@ export async function POST(req: NextApiRequest) {
         ...prompt,
         ...conversationHistory.filter(
           (message: ChatCompletionRequestMessage) =>
-            message.content && message.role === "user",
+            message.content && message.role === "user"
         ),
       ],
     });
@@ -111,7 +111,7 @@ export async function POST(req: NextApiRequest) {
     // Respond with the stream
     return new StreamingTextResponse(stream);
   } catch (e) {
-    console.error(e)
+    console.error(e);
     return new Response("Something went wrong! please try again", {
       status: 401,
     });

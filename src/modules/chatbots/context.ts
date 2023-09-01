@@ -1,6 +1,6 @@
 // Create an OpenAI API client (that's edge friendly!)
 import { Configuration, CreateEmbeddingResponse, OpenAIApi } from "openai-edge";
-import {getSupabaseClientAdmin} from "@/lib/supabase";
+import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import GPT3Tokenizer from "gpt3-tokenizer";
 import { OPENAI_API_KEY } from "@/lib/env";
 
@@ -20,7 +20,7 @@ export const getContext = async (input: string, chatbotId) => {
     data: [{ embedding }],
   }: CreateEmbeddingResponse = await embeddingResponse.json();
 
-  const supabaseAdminClient = getSupabaseClientAdmin()
+  const supabaseAdminClient = getSupabaseClientAdmin();
 
   // Fetching whole documents for this simple example.
   //
@@ -32,7 +32,7 @@ export const getContext = async (input: string, chatbotId) => {
       query_embedding: embedding,
       match_count: 10, // Choose the number of matches
       chatbot: chatbotId,
-    },
+    }
   );
 
   // # variable_conflict use_column
@@ -61,7 +61,7 @@ export const getContext = async (input: string, chatbotId) => {
   // Concat matched documents
   for (let i = 0; i < documents?.length; i++) {
     const document = documents[i];
-    if(document?.content){
+    if (document?.content) {
       const content = document?.content;
       const encoded = tokenizer.encode(content);
       tokenCount += encoded.text.length;
@@ -73,7 +73,6 @@ export const getContext = async (input: string, chatbotId) => {
 
       contextText += `${content.trim()}\n---\n`;
     }
-
   }
 
   return contextText;

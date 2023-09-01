@@ -1,19 +1,19 @@
 import { ChatCompletionRequestMessage } from "openai-edge";
 import { convesationLogToMessages } from "./helpers";
 import { IConversationSpeaker } from "@/lib/types/common.types";
-import {getSupabaseClientAdmin} from "@/lib/supabase";
+import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 
 class ConversationLog {
-  private supabaseAdminClient:any;
+  private supabaseAdminClient: any;
   constructor(
     public chatbotOwnerId: string,
     public sessionId: string,
-    public chatbotId: string,
+    public chatbotId: string
   ) {
     this.chatbotOwnerId = chatbotOwnerId;
     this.sessionId = sessionId;
     this.chatbotId = chatbotId;
-    this.supabaseAdminClient = getSupabaseClientAdmin()
+    this.supabaseAdminClient = getSupabaseClientAdmin();
   }
 
   public async addEntry({

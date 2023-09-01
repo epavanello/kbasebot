@@ -3,7 +3,6 @@ import {
   SupabaseClient,
   createServerComponentClient,
 } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
 import {
   NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_URL,
@@ -60,26 +59,14 @@ export function handleSupabaseErrorAndGetData<
   }
 }
 
-export function getSupabaseClientAdmin() {
-  return createServerComponentClient<Database>(
-    {
-      cookies,
-    },
-    {
-      supabaseUrl: NEXT_PUBLIC_SUPABASE_URL,
-      supabaseKey: SUPABASE_SERVICE_KEY,
-    },
-  );
-}
-
 export async function getUserByEmail(
   email: string,
-  supabaseClientAdmin: SupabaseClient<Database>,
+  supabaseClientAdmin: SupabaseClient<Database>
 ) {
   const userID = handleSupabaseErrorAndGetData(
     await supabaseClientAdmin.rpc("get_user_id_by_email", {
       user_email: email,
-    }),
+    })
   );
 
   if (!userID) {
@@ -96,7 +83,7 @@ export async function getUserByEmail(
 
 export async function getUserByEmailAndSignin(
   email: string,
-  supabaseClientAdmin: SupabaseClient<Database>,
+  supabaseClientAdmin: SupabaseClient<Database>
 ) {
   let user = await getUserByEmail(email, supabaseClientAdmin);
 
@@ -116,7 +103,7 @@ export async function getUserByEmailAndSignin(
         options: {
           emailRedirectTo: `${NEXT_PUBLIC_URL}/app`,
         },
-      }),
+      })
     );
   }
 
