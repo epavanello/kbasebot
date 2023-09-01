@@ -3,11 +3,11 @@
 import { AvatarProps } from "@radix-ui/react-avatar";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User } from "@supabase/auth-helpers-nextjs";
 import { gradients } from "@/style/gradients";
 
 interface UserAvatarProps extends AvatarProps {
-  user: Pick<User, "image" | "name">;
+  avatar_url?: string;
+  full_name?: string;
   className?: string;
 }
 
@@ -21,7 +21,7 @@ export const UserAvatar = ({
       className={`mr-2 p-[1px] w-10 h-10 ${gradients.HYPER} ${className}`}
     >
       <AvatarImage
-        referrerpolicy="no-referrer"
+        referrerPolicy="no-referrer"
         src={avatar_url}
         alt={`${full_name} avatar`}
         className="rounded-full"

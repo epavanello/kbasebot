@@ -58,7 +58,7 @@ const SiteRemoveModal = React.forwardRef<HTMLButtonElement>(
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete
-                  your {table} and can't be recovered.
+                  your {table} and can&apos;t be recovered.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

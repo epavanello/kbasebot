@@ -116,8 +116,6 @@ const Settings = () => {
     }
   };
 
-  console.log({ chatbot });
-
   if (loading && !chatbot) return <LoadingIcon />;
 
   return (
@@ -153,7 +151,7 @@ const Settings = () => {
         <Card className="border-red-300">
           <CardHeader>
             <CardTitle>Danger Zone</CardTitle>
-            <p>Delete your chatbot and all it's data</p>
+            <p>Delete your chatbot and all it&apos;s data</p>
           </CardHeader>
           <CardContent>
             <div className="">

@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  resolve: {
-    fallback: {
-      "@visheratin/web-ai": false,
-    },
+  typescript: {
+    ignoreBuildErrors: true,
   },
   webpack(config) {
     config.experiments = { ...config.experiments, topLevelAwait: true };

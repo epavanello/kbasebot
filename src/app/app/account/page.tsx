@@ -148,11 +148,11 @@ const Page = () => {
           </CardHeader>
 
           <CardContent>
-            <Alert variant="warning">
+            <Alert variant="destructive">
               <InfoCircledIcon className="w-4 h-4" />
               <AlertTitle>Attention</AlertTitle>
               <AlertDescription>
-                This action will delete your account all it's data.
+                This action will delete your account all it&apos;s data.
               </AlertDescription>
             </Alert>
           </CardContent>

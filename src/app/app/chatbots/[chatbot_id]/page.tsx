@@ -4,10 +4,13 @@ import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import Link from "next/link";
 
-const Page = ({ params }) => {
-  const { chatbot_id } = params;
+const Page = ({
+  params: { chatbot_id },
+}: {
+  params: { chatbot_id: string };
+}) => {
   return (
-    <DashboardShell className="container gap-0 mt-10">
+    <DashboardShell className="gap-0 pt-10 h-full">
       <DashboardHeader
         heading={"Chat with your chatbot"}
         className="flex-row text-center justify-center my-4 gap-6"
@@ -19,7 +22,7 @@ const Page = ({ params }) => {
           Share
         </Link>
       </DashboardHeader>
-      <div className="flex justify-center">
+      <div className="flex justify-center h-full overflow-hidden">
         <ChatUi />
       </div>
     </DashboardShell>

@@ -4,6 +4,7 @@
 /node_modules
 /.yarn
 /.pnp
+/.parcel-cache
 .pnp.js
 
 # testing
@@ -35,3 +36,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .env
+public/embed.js

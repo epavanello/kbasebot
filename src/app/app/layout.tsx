@@ -14,14 +14,14 @@ const MainLayout = ({ children, seo }: DashboardLayoutProps) => {
         <MainNav items={menus.mainNav()} />
       </header>
       <div
-        style={{ height: "calc(100vh - 60px)" }}
+        style={{ height: "calc(100vh - 65px)" }}
         className="grid md:grid-cols-[200px_1fr]"
       >
         <aside className="hidden w-[200px] flex-col md:flex border-r">
           <Sidebar />
         </aside>
         {/*<PageTransition>*/}
-        <main className="flex w-full flex-1 flex-col overflow-scroll">
+        <main className="flex w-full flex-1 flex-col overflow-auto">
           {children}
         </main>
         {/*</PageTransition>*/}

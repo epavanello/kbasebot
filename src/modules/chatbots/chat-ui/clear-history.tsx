@@ -37,7 +37,7 @@ export function ClearHistory({ clearChats }: ClearHistoryProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will delete all chat history and it's not recoverable.
+            This will delete all chat history and it&apos;s not recoverable.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

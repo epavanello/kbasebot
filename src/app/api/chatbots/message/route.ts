@@ -6,7 +6,6 @@ import {
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { NextApiRequest } from "next";
 import { cookies } from "next/headers";
 import { ConversationLog } from "@/modules/chatbots/conversation-log";
 import { getContext } from "@/modules/chatbots/context";
@@ -14,6 +13,7 @@ import { IConversationSpeaker } from "@/lib/types/common.types";
 import { templates } from "@/modules/chatbots/templates";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import { OPENAI_API_KEY } from "@/lib/env";
+import { NextRequest } from "next/server";
 
 const config = new Configuration({
   apiKey: OPENAI_API_KEY,
@@ -25,7 +25,7 @@ const openai = new OpenAIApi(config);
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: NextRequest) {
   try {
     const cookieStore = cookies();
 
@@ -46,16 +46,16 @@ export async function POST(req: NextApiRequest) {
     const supabaseAdminClient = getSupabaseClientAdmin();
 
     if (!userId) {
-      const {
-        data: { user_id: chatbotOwnerId },
-      } = await supabaseAdminClient
+      const { data } = await supabaseAdminClient
         .from("chatbots")
         .select("user_id")
         .eq("id", chatbotId)
-        .single()
+        .single<{ user_id: string }>()
         .throwOnError();
 
-      userId = chatbotOwnerId;
+      if (!data?.user_id) throw new Error("unauthorized");
+
+      userId = data.user_id;
     }
 
     const userPrompt = messages?.length ? messages[messages.length - 1] : [];
@@ -94,7 +94,7 @@ export async function POST(req: NextApiRequest) {
         ...prompt,
         ...conversationHistory.filter(
           (message: ChatCompletionRequestMessage) =>
-            message.content && message.role === "user"
+            message.content && message.role === "user",
         ),
       ],
     });

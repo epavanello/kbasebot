@@ -29,8 +29,6 @@ const AddModal = () => {
   const canCreate =
     !loading && (!!docs?.length || text?.length > MIN_TEXT_INPUT);
 
-  console.log({ canCreate });
-
   const [error, setError] = useState("");
 
   const uploadFiles = async () => {
@@ -59,8 +57,6 @@ const AddModal = () => {
 
   const createChatbot = async (e) => {
     e.preventDefault();
-
-    console.log({ canCreate });
 
     if (!canCreate) return;
     setLoading(true);

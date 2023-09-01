@@ -19,8 +19,6 @@ async function getData() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log({ user });
-
   const { data: chatbots = [] } = await supabase
     .from("chatbots")
     .select()
