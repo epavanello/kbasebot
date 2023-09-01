@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -49,12 +48,46 @@
     --ring: 142.4 71.8% 29.2%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect:after {
+  content: "";
+  top: 0;
+  transform: translateX(100%);
+  width: 100%;
+  height: inherit;
+  position: absolute;
+  z-index: 1;
+  animation: shine-effect-slide 2s 3s infinite;
+  background: linear-gradient(
+    90deg,
+    hsla(0, 0%, 100%, 0) 0,
+    hsla(0, 0%, 100%, 0.8) 50%,
+    rgba(128, 186, 232, 0) 99%,
+    rgba(125, 185, 232, 0)
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00ffffff",endColorstr="#007db9e8",GradientType=1);
+}
+
+@keyframes shine-effect-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
   }
 }

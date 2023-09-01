@@ -5,14 +5,9 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCircle2, LockIcon, Router } from "lucide-react";
+import { CheckCircle2, LockIcon } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  plans,
-  type BillingInterval,
-  type Plan,
-  type Price,
-} from "@/lib/stripe";
+import { plans, type BillingInterval } from "@/lib/stripe";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 
 let tabs: { id: BillingInterval; label: string }[] = [
@@ -46,6 +41,12 @@ export default function PricingTable() {
     <section>
       <div className="max-w-6xl mx-auto py-2 sm:py-4 px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:flex-col sm:align-center">
+          <h1 className="text-4xl font-extrabold text-black sm:text-center sm:text-6xl">
+            Pricing Plans
+          </h1>
+          <p className="mt-6 text-center">
+            Get 2 months for free by subscribing yearly!
+          </p>
           <div className="relative self-center mt-6 bg-zinc-100 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
             {tabs.map((i) => (
               <button
@@ -133,17 +134,21 @@ export default function PricingTable() {
                     }}
                   >
                     <div className="flex justify-between items-center px-4">
-                      {highlight && (
-                        <div className="shine-effect h-4 flex justify-center items-center px-2 bg-white rounded-sm">
-                          <p className="text-[11px] text-gray-600 font-medium m-auto">
-                            Recommended
-                          </p>
-                        </div>
-                      )}
+                      <div className="shine-effect h-4 flex justify-center items-center px-2 bg-white rounded-sm">
+                        <p
+                          className={cn(
+                            "text-[11px] text-gray-600 font-medium m-auto",
+                            { "opacity-0": !highlight }
+                          )}
+                        >
+                          Recommended
+                        </p>
+                      </div>
+
                       <p
                         className={cn(
                           "mt-4 text-primary font-bold text-xs text-right mr-2 flex flex-col",
-                          { "opacity-0": !discount }
+                          { hidden: !discount }
                         )}
                       >
                         <strong className="text-xl">
@@ -157,9 +162,8 @@ export default function PricingTable() {
                       className={cn(
                         "rounded-lg shadow-sm divide-y divide-zinc-200",
                         {
-                          "border border-green-500": subscription
-                            ? plan.id === subscription?.plan
-                            : plan.id === "pro",
+                          "border border-green-500":
+                            plan.id === subscription?.plan,
                         }
                       )}
                     >
