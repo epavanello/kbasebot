@@ -10,7 +10,7 @@ import {
 } from "@/lib/env";
 import Stripe from "stripe";
 import { getErrorMessage } from "@/lib/utils";
-import { Plan } from "@/lib/stripe";
+import { PlanName } from "@/lib/stripe";
 import {
   getSupabaseClientAdmin,
   getUserByEmailAndSignin,
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        let plan: Plan;
+        let plan: PlanName;
         if (STRIPE_PRICE_ID_BASIC.split("|").includes(priceID)) {
           plan = "basic";
         } else if (STRIPE_PRICE_ID_EXTRA.split("|").includes(priceID)) {
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
         }
 
         const { error: errorUpsert } = await supabaseClientAdmin
-          .from("user_info")
+          .from("subscriptions")
           .upsert({
             id: user.id,
             current_period_start: currentPeriodStart?.toISOString(),

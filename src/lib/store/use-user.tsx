@@ -6,14 +6,17 @@ import {
   Session,
   SupabaseClient,
   User,
-  createBrowserSupabaseClient,
   createPagesBrowserClient,
 } from "@supabase/auth-helpers-nextjs";
+import { UserInfo as Subscription } from "../supabase";
+import { Database } from "../types/database.types";
 
 type SuapabaseAuthContextType = {
   supabase: SupabaseClient;
   session: null | Session;
   user?: User;
+  isLoading: boolean;
+  subscription: null | Subscription;
 };
 
 const SupabaseAuthContext = createContext<SuapabaseAuthContextType>(null!);
@@ -29,20 +32,39 @@ const useSupabaseAuth = () => {
 };
 
 const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [supabase] = useState(() => createPagesBrowserClient());
+  const [supabase] = useState(() => createPagesBrowserClient<Database>());
   const [session, setSession] = useState<null | Session>(null);
   const [user, setUser] = useState<undefined | User>(undefined);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [subscription, setSubscription] = useState<null | Subscription>(null);
+
   const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getSession().then(async (response) => {
-      const {
-        data: { session },
-      } = response;
-
-      setSession(session);
-      setUser(session?.user);
-    });
+    setIsLoading(true);
+    supabase.auth
+      .getSession()
+      .then(async ({ data: { session }, error }) => {
+        try {
+          if (error) throw error;
+          setSession(session);
+          setUser(session?.user);
+          await supabase
+            .from("subscriptions")
+            .select()
+            .single()
+            .then((response) => {
+              const { data } = response;
+              setSubscription(data);
+            });
+        } catch (error) {
+          console.log(error);
+        }
+      })
+      .then()
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [router, supabase, supabase.auth]);
 
   useEffect(() => {
@@ -59,7 +81,9 @@ const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [router, supabase]);
 
   return (
-    <SupabaseAuthContext.Provider value={{ supabase, user, session }}>
+    <SupabaseAuthContext.Provider
+      value={{ supabase, user, session, subscription, isLoading }}
+    >
       {children}
     </SupabaseAuthContext.Provider>
   );

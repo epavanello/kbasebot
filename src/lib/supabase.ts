@@ -10,7 +10,7 @@ import {
   SUPABASE_SERVICE_KEY,
 } from "./env";
 
-export type UserInfo = Database["public"]["Tables"]["user_info"]["Row"];
+export type UserInfo = Database["public"]["Tables"]["subscriptions"]["Row"];
 
 export function isPaidUser(userInfo: UserInfo | null) {
   if (!userInfo || !userInfo.current_period_end) {

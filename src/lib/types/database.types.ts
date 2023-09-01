@@ -127,7 +127,7 @@ export interface Database {
           created_at: string | null
           embedding: string | null
           id: number
-          uid: string
+          metadata: Json | null
           user_id: string | null
         }
         Insert: {
@@ -136,7 +136,7 @@ export interface Database {
           created_at?: string | null
           embedding?: string | null
           id?: number
-          uid: string
+          metadata?: Json | null
           user_id?: string | null
         }
         Update: {
@@ -145,7 +145,7 @@ export interface Database {
           created_at?: string | null
           embedding?: string | null
           id?: number
-          uid?: string
+          metadata?: Json | null
           user_id?: string | null
         }
         Relationships: [
@@ -156,12 +156,6 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "knowledge_base_uid_fkey"
-            columns: ["uid"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "knowledge_base_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "users"
@@ -169,7 +163,7 @@ export interface Database {
           }
         ]
       }
-      user_info: {
+      subscriptions: {
         Row: {
           created_at: string | null
           current_period_end: string | null
@@ -199,7 +193,7 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "user_info_id_fkey"
+            foreignKeyName: "subscriptions_id_fkey"
             columns: ["id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -226,12 +220,13 @@ export interface Database {
       match_documents: {
         Args: {
           query_embedding: string
-          match_threshold: number
-          match_count: number
+          match_count?: number
+          chatbot?: string
         }
         Returns: {
           id: number
           content: string
+          metadata: Json
           similarity: number
         }[]
       }

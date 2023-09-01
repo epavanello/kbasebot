@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Stripe } from "stripe";
 import { cookies } from "next/headers";
 import { isPaidUser } from "@/lib/supabase";
-import { Plan } from "@/lib/stripe";
+import { PlanName } from "@/lib/stripe";
 import {
   NEXT_PUBLIC_URL,
   STRIPE_API_KEY,
@@ -23,22 +23,22 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getSession();
 
     if (session) {
-      const userInfo = (await supabase.from("user_info").select().single())
+      const subscription = (await supabase.from("subscriptions").select().single())
         .data;
-      if (isPaidUser(userInfo)) {
+      if (isPaidUser(subscription)) {
         return NextResponse.redirect(`${NEXT_PUBLIC_URL}/app`);
       }
     }
 
     const { searchParams } = new URL(request.url);
-    const plan: Plan = searchParams.get("plan") as Plan;
+    const plan: PlanName = searchParams.get("plan") as PlanName;
 
     let priceID;
     switch (plan) {
       case "basic":
         priceID = STRIPE_PRICE_ID_BASIC;
         break;
-      case "extra":
+      case "pro":
         priceID = STRIPE_PRICE_ID_EXTRA;
         break;
       default:

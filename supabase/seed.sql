@@ -1,4 +1,4 @@
-create table public.user_info (
+create table public.subscriptions (
     id uuid not null,
     created_at timestamp with time zone null default now(),
     current_period_end timestamp without time zone null,
@@ -6,8 +6,8 @@ create table public.user_info (
     plan text null default '' :: text,
     note text null,
     current_period_start timestamp without time zone null,
-    constraint user_info_pkey primary key (id),
-    constraint user_info_id_fkey foreign key (id) references auth.users (id) on delete cascade
+    constraint subscriptions_pkey primary key (id),
+    constraint subscriptions_id_fkey foreign key (id) references auth.users (id) on delete cascade
 ) tablespace pg_default;
 
 create table public.knowledge_base (
