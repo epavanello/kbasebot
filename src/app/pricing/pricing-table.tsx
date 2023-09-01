@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCircle2, LockIcon } from "lucide-react";
+import { CheckCircle2, LockIcon, Router } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   plans,
@@ -26,38 +26,6 @@ export default function PricingTable() {
   const [billingInterval, setBillingInterval] = useState<BillingInterval>(
     tabs[0].id
   );
-  const [priceIdLoading, setPriceIdLoading] = useState<string>();
-
-  const handleCheckout = async (price: Price, product: any) => {
-    const { metadata, id } = product;
-
-    if (metadata?.system) {
-      if (id === "basic") return router.push("/app/account");
-
-      return router.push("/contact");
-    }
-
-    setPriceIdLoading(price.priceId);
-    if (!user?.id) {
-      return router.push("/auth/signin?from=/app/account/plan");
-    }
-    if (subscription) {
-      return router.push("/app/account");
-    }
-
-    try {
-      //   const { sessionId } = await postData({
-      //     url: "/api/stripe/create-checkout-session",
-      //     data: { price, metadata },
-      //   });
-      //   const stripe = await getStripe();
-      //   stripe?.redirectToCheckout({ sessionId });
-    } catch (error) {
-      return alert((error as Error)?.message);
-    } finally {
-      setPriceIdLoading(undefined);
-    }
-  };
 
   if (!plans.length)
     return (
@@ -132,15 +100,23 @@ export default function PricingTable() {
                 const highlight = plan.highlight;
                 const discount = price?.discount;
 
-                const isBasic = plan.id === "basic";
+                const isFree = plan.id === "free";
                 const isAgency = plan.id === "agency";
 
                 let subscribeText = "Subscribe";
+                let route = `/subscribe?plan=${plan.id}&interval=${billingInterval}`;
 
-                if (isBasic && !!user?.id) subscribeText = "Subscribed";
-                if (isAgency) subscribeText = "Contact us!";
-                else if (plan.id === subscription?.plan)
+                if (isFree) {
+                  subscribeText = "Get started";
+                  route = "/app";
+                }
+                if (isAgency) {
+                  subscribeText = "Contact us!";
+                  route = "/contact";
+                } else if (plan.id === subscription?.plan) {
                   subscribeText = "Manage";
+                  route = "/app/subscription";
+                }
 
                 return (
                   <motion.div
@@ -214,14 +190,11 @@ export default function PricingTable() {
                         <Button
                           variant="default"
                           type="button"
-                          disabled={
-                            isLoading || (plan?.id === "basic" && !!user?.id)
-                          }
-                          loading={
-                            priceIdLoading ===
-                            (price?.priceId || "not-available")
-                          }
-                          onClick={() => handleCheckout(price!, plan)}
+                          disabled={isLoading}
+                          loading={isLoading}
+                          onClick={() => {
+                            router.push(route);
+                          }}
                           className="mt-4 bg-gray-700 block w-full rounded-md py-2 text-sm font-semibold text-gray-100 text-center hover:bg-zinc-900 hover:text-gray-100"
                         >
                           {subscribeText}

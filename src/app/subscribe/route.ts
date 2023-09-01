@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Stripe } from "stripe";
 import { cookies } from "next/headers";
 import { isPaidUser } from "@/lib/supabase";
-import { PlanName } from "@/lib/stripe";
+import { BillingInterval, PlanName, plans } from "@/lib/stripe";
 import {
   NEXT_PUBLIC_URL,
   STRIPE_API_KEY,
@@ -22,27 +22,25 @@ export async function GET(request: NextRequest) {
       data: { session },
     } = await supabase.auth.getSession();
 
-    if (session) {
-      const subscription = (await supabase.from("subscriptions").select().single())
-        .data;
-      if (isPaidUser(subscription)) {
-        return NextResponse.redirect(`${NEXT_PUBLIC_URL}/app`);
-      }
-    }
-
     const { searchParams } = new URL(request.url);
     const plan: PlanName = searchParams.get("plan") as PlanName;
+    const interval = searchParams.get("interval") as BillingInterval;
 
-    let priceID;
-    switch (plan) {
-      case "basic":
-        priceID = STRIPE_PRICE_ID_BASIC;
-        break;
-      case "pro":
-        priceID = STRIPE_PRICE_ID_EXTRA;
-        break;
-      default:
-        throw new Error("Invalid plan");
+    const price = plans
+      .find((p) => p.id === plan)
+      ?.prices.find((p) => p.interval === interval);
+
+    if (!price) {
+      throw new Error("Price not found");
+    }
+
+    if (session) {
+      const subscription = (
+        await supabase.from("subscriptions").select().single()
+      ).data;
+      if (isPaidUser(subscription) && subscription?.plan === plan) {
+        return NextResponse.redirect(`${NEXT_PUBLIC_URL}/app`);
+      }
     }
 
     const stripe = new Stripe(STRIPE_API_KEY, {
@@ -51,10 +49,10 @@ export async function GET(request: NextRequest) {
 
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: `${NEXT_PUBLIC_URL}/app?payment=success&plan=${plan}`,
-      cancel_url: `${NEXT_PUBLIC_URL}/app?payment=cancel&plan=${plan}`,
+      cancel_url: `${NEXT_PUBLIC_URL}/pricing?payment=cancel&plan=${plan}`,
       line_items: [
         {
-          price: priceID,
+          price: price.priceId,
           quantity: 1,
         },
       ],

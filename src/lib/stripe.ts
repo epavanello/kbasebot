@@ -21,13 +21,19 @@ export interface Plan {
   highlight?: boolean;
 }
 
+const commonFeatures = [
+  "Upload multiple files",
+  "View chat history",
+  "Embed on your website",
+];
+
 export const plans: Plan[] = [
   {
     id: "free",
     name: "Free",
     priceText: "Start Free",
     prices: [],
-    features: ["1 Website", "10 Form Submission"],
+    features: ["1 Chatbot", "30 messages/month", ...commonFeatures],
   },
   {
     id: "basic",
@@ -36,7 +42,7 @@ export const plans: Plan[] = [
       { priceId: STRIPE_PRICE_ID_BASIC, interval: "month", unitAmount: 999 },
       { priceId: STRIPE_PRICE_ID_BASIC, interval: "year", unitAmount: 9999 },
     ],
-    features: ["5 Websites", "100 Form Submission"],
+    features: ["3 Chatbots", "2k messages/month", ...commonFeatures],
   },
   {
     id: "pro",
@@ -53,7 +59,7 @@ export const plans: Plan[] = [
         unitAmount: 19999,
       },
     ],
-    features: ["Unlimited Websites", "Unlimited Form Submission"],
+    features: ["10 Chatbots", "20k messages per month", ...commonFeatures],
     highlight: true,
   },
   {
@@ -61,6 +67,10 @@ export const plans: Plan[] = [
     name: "Agency",
     priceText: "Let's talk",
     prices: [],
-    features: ["Unlimited Websites", "Unlimited Form Submission"],
+    features: [
+      "Unlimited Chatbots",
+      "Unlimited messages/month",
+      ...commonFeatures,
+    ],
   },
 ];
