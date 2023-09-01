@@ -64,6 +64,9 @@ export async function POST(request: NextRequest) {
         if (!priceID) {
           throw new Error("Missing price id");
         }
+        if (!customer) {
+          throw new Error("Missing customer id");
+        }
 
         checkForProduction(email);
 
@@ -109,9 +112,32 @@ export async function POST(request: NextRequest) {
         if (STRIPE_PRICE_ID_BASIC.split("|").includes(priceID)) {
           plan = "basic";
         } else if (STRIPE_PRICE_ID_EXTRA.split("|").includes(priceID)) {
-          plan = "extra";
+          plan = "pro";
         } else {
           throw new Error(`Invalid price id: ${priceID}`);
+        }
+
+        const { data: actualSubscription, error: errorSelect } =
+          await supabaseClientAdmin
+            .from("subscriptions")
+            .select("*")
+            .eq("customer_id", customer)
+            .single();
+
+        if (errorSelect) {
+          throw errorSelect;
+        }
+
+        // cancel old subscription
+        if (actualSubscription) {
+          const subscriptions = await stripe.subscriptions.list({
+            customer: customer,
+          });
+          for (const subscription of subscriptions.data) {
+            if (subscription.id !== actualSubscription.id) {
+              await stripe.subscriptions.del(subscription.id);
+            }
+          }
         }
 
         const { error: errorUpsert } = await supabaseClientAdmin
