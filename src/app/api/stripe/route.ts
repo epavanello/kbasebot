@@ -11,11 +11,8 @@ import {
 import Stripe from "stripe";
 import { getErrorMessage } from "@/lib/utils";
 import { PlanName } from "@/lib/stripe";
-import {
-  getSupabaseClientAdmin,
-  getUserByEmailAndSignin,
-  handleSupabaseError,
-} from "@/lib/supabase";
+import { getUserByEmailAndSignin } from "@/lib/supabase";
+import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 
 export const dynamic = "force-dynamic";
 
@@ -75,16 +72,23 @@ export async function POST(request: NextRequest) {
         let clientReferenceID: string | null = null;
         let currentPeriodStart: Date | null = null;
         let currentPeriodEnd: Date | null = null;
-        if (typeof invoice.subscription == "string") {
-          const subscription = await stripe.subscriptions.retrieve(
+        let subscription: Stripe.Subscription | null = null;
+
+        if (typeof invoice.subscription == "object") {
+          subscription = invoice.subscription;
+        } else if (typeof invoice.subscription == "string") {
+          subscription = await stripe.subscriptions.retrieve(
             invoice.subscription
           );
-          clientReferenceID = subscription.metadata?.client_reference_id;
-          currentPeriodStart = new Date(
-            subscription.current_period_start * 1000
-          );
-          currentPeriodEnd = new Date(subscription.current_period_end * 1000);
         }
+
+        if (!subscription) {
+          throw new Error("Missing subscription");
+        }
+
+        clientReferenceID = subscription.metadata?.client_reference_id;
+        currentPeriodStart = new Date(subscription.current_period_start * 1000);
+        currentPeriodEnd = new Date(subscription.current_period_end * 1000);
 
         if (!clientReferenceID && !email) {
           throw new Error("Missing reference id and email");
@@ -117,27 +121,19 @@ export async function POST(request: NextRequest) {
           throw new Error(`Invalid price id: ${priceID}`);
         }
 
-        const { data: actualSubscription, error: errorSelect } =
-          await supabaseClientAdmin
-            .from("subscriptions")
-            .select("*")
-            .eq("customer_id", customer)
-            .single();
-
-        if (errorSelect) {
-          throw errorSelect;
-        }
+        const { data: actualSubscription } = await supabaseClientAdmin
+          .from("subscriptions")
+          .select("*")
+          .eq("id", user.id)
+          .maybeSingle()
+          .throwOnError();
 
         // cancel old subscription
-        if (actualSubscription) {
-          const subscriptions = await stripe.subscriptions.list({
-            customer: customer,
-          });
-          for (const subscription of subscriptions.data) {
-            if (subscription.id !== actualSubscription.id) {
-              await stripe.subscriptions.del(subscription.id);
-            }
-          }
+        if (
+          actualSubscription &&
+          actualSubscription.subscription_id !== subscription.id
+        ) {
+          await stripe.subscriptions.del(actualSubscription.subscription_id);
         }
 
         const { error: errorUpsert } = await supabaseClientAdmin
@@ -148,6 +144,7 @@ export async function POST(request: NextRequest) {
             current_period_end: currentPeriodEnd?.toISOString(),
             customer_id: customer,
             plan: plan,
+            subscription_id: subscription.id,
           });
 
         if (errorUpsert) {

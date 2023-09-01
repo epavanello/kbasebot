@@ -6,7 +6,7 @@ import Providers from "@/components/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Chatbot",
+  title: "KBaseBot",
   description: "Generate chatbot with ai",
 };
 

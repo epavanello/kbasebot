@@ -168,28 +168,31 @@ export interface Database {
           created_at: string | null
           current_period_end: string | null
           current_period_start: string | null
-          customer_id: string | null
+          customer_id: string
           id: string
           note: string | null
           plan: string | null
+          subscription_id: string
         }
         Insert: {
           created_at?: string | null
           current_period_end?: string | null
           current_period_start?: string | null
-          customer_id?: string | null
+          customer_id: string
           id: string
           note?: string | null
           plan?: string | null
+          subscription_id?: string
         }
         Update: {
           created_at?: string | null
           current_period_end?: string | null
           current_period_start?: string | null
-          customer_id?: string | null
+          customer_id?: string
           id?: string
           note?: string | null
           plan?: string | null
+          subscription_id?: string
         }
         Relationships: [
           {

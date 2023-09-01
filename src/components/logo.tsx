@@ -14,7 +14,7 @@ const Logo = () => {
   //     src={APP_CONFIG.logo}
   // />
 
-  return <div className="text-xl font-black">Chatbot.ai</div>;
+  return <div className="text-xl font-black">KBaseBot</div>;
 };
 
 export default Logo;
