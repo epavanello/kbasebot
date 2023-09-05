@@ -49,42 +49,43 @@ export function PromptForm({
       }}
       ref={formRef}
     >
-      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-2xl sm:border sm:px-12">
-        <div
-          className={cn(
-            "absolute left-0 top-5 h-8 w-8 rounded-full bg-background p-0 sm:left-4",
-          )}
-        >
-          <Icon
-            icon={isLoading ? DOT_LOADING_ICON : "fluent:bot-24-regular"}
-            className="text-2xl"
+      <div className="p-3">
+        <div className="relative flex max-h-60 w-full grow flex-col">
+          <Textarea
+            ref={inputRef}
+            tabIndex={0}
+            onKeyDown={onKeyDown}
+            rows={1}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={"Ask here"}
+            spellCheck={false}
+            className="w-full px-4 py-3 resize-none rounded-lg
+            border border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           />
-        </div>
-        <Textarea
-          ref={inputRef}
-          tabIndex={0}
-          onKeyDown={onKeyDown}
-          rows={1}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={"Send Message"}
-          spellCheck={false}
-          className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
-        />
-        <div className="absolute right-0 top-[10px] sm:right-4">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="submit"
-                size="icon"
-                disabled={isLoading || input === ""}
-              >
-                <Icon icon={"ant-design:send-outlined"} className="text-xl" />
-                <span className="sr-only">Click to send Message</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Send</TooltipContent>
-          </Tooltip>
+          <div className="absolute top-0 bottom-0 right-[3px] flex flex-col justify-center">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  type="submit"
+                  size="icon"
+                  disabled={isLoading || input === ""}
+
+                >
+                  <Icon
+                    icon={"ant-design:send-outlined"}
+                    className={cn("text-lg text-primary", {
+                      "text-gray-400": isLoading || input === "",
+                    })}
+                  >
+                    <span className="sr-only">Click to send Message</span>
+                  </Icon>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Send</TooltipContent>
+            </Tooltip>
+          </div>
         </div>
       </div>
     </form>

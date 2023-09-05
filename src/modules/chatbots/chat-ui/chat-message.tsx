@@ -7,8 +7,7 @@ import remarkMath from "remark-math";
 import { cn } from "@/lib/utils";
 import { CodeBlock } from "./codeblock";
 import { MemoizedReactMarkdown } from "./markdown";
-import { ChatMessageActions } from "./chat-messages-actions";
-import { MagicWandIcon, PersonIcon } from "@radix-ui/react-icons";
+import { Icon } from "@/components/ui/icons";
 
 export interface ChatMessageProps {
   message: Message;
@@ -18,32 +17,31 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
   const isUser = message.role === "user";
   return (
     <div
-      className={cn("group relative flex items-start justify-end", {
-        "pl-10 flex-row-reverse": isUser,
-        "pr-10": !isUser,
-      })}
+      className={cn("relative flex flex-col gap-2 w-full items-stretch")}
       {...props}
     >
       <div
-        className={cn(
-          "flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow",
-          isUser ? "bg-background" : "bg-secondary",
-        )}
+        className={cn({
+          "self-end": isUser,
+        })}
       >
-        {isUser ? <PersonIcon /> : <MagicWandIcon className="w-4 h-4" />}
+        {isUser ? (
+          <span className="text-xs">You</span>
+        ) : (
+          <Icon icon="fluent:bot-sparkle-24-filled" className="text-primary w-5 h-5" />
+        )}
       </div>
       <div
-        className={cn("flex-1 px-1 space-y-2 overflow-hidden", {
-          "text-right mr-4": isUser,
-          "ml-4": !isUser,
+        className={cn("overflow-auto", {
+          "text-right": isUser,
         })}
       >
         <MemoizedReactMarkdown
           className={cn(
-            " text-[15px] prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 px-4 py-2 inline-block rounded-[30px]",
+            "w-auto min-w-0 max-w-full text-[15px] prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 px-4 py-2 inline-block rounded-xl",
             {
-              "rounded-tr bg-secondary": isUser,
-              "rounded-tl bg-primary/5": !isUser,
+              "rounded-tr-none bg-primary text-white": isUser,
+              "rounded-tl-none bg-secondary": !isUser,
             },
           )}
           remarkPlugins={[remarkGfm, remarkMath]}
@@ -85,7 +83,6 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
         >
           {message.content}
         </MemoizedReactMarkdown>
-        <ChatMessageActions isUser={isUser} message={message} />
       </div>
     </div>
   );

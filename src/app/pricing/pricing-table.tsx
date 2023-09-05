@@ -20,7 +20,7 @@ export default function PricingTable() {
   const router = useRouter();
   const { user, subscription, isLoading } = useSupabaseAuth();
   const [billingInterval, setBillingInterval] = useState<BillingInterval>(
-    tabs[0].id
+    tabs[0].id,
   );
 
   if (!plans.length)
@@ -85,7 +85,7 @@ export default function PricingTable() {
             >
               {plans.map((plan, idx) => {
                 const price = plan.prices.find(
-                  (price) => price.interval === billingInterval
+                  (price) => price.interval === billingInterval,
                 );
                 // if (!price && !product?.metadata?.system) return null;
 
@@ -127,6 +127,7 @@ export default function PricingTable() {
                     key={billingInterval + plan.id}
                     className={cn("w-full rounded-xl pt-6", {
                       "border-blue-50 bg-zinc-50 border-1 shadow-md": highlight,
+                      "border border-green-500": plan.id === subscription?.plan,
                     })}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -141,7 +142,7 @@ export default function PricingTable() {
                         <p
                           className={cn(
                             "text-[11px] text-gray-600 font-medium m-auto",
-                            { "opacity-0": !highlight }
+                            { "opacity-0": !highlight },
                           )}
                         >
                           Recommended
@@ -151,7 +152,7 @@ export default function PricingTable() {
                       <p
                         className={cn(
                           "mt-4 text-primary font-bold text-xs text-right mr-2 flex flex-col",
-                          { hidden: !discount }
+                          { hidden: !discount },
                         )}
                       >
                         <strong className="text-xl">
@@ -162,13 +163,7 @@ export default function PricingTable() {
                     </div>
                     <div
                       key={plan.id}
-                      className={cn(
-                        "rounded-lg shadow-sm divide-y divide-zinc-200",
-                        {
-                          "border border-green-500":
-                            plan.id === subscription?.plan,
-                        }
-                      )}
+                      className="rounded-lg shadow-sm divide-y divide-zinc-200"
                     >
                       <div className="p-6">
                         <h2 className="text-2xl leading-6 font-semibold text-gray-500">

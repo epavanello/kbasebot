@@ -10,7 +10,7 @@ import { ChatScrollAnchor } from "./chat-scroll-anchor";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { useEffect, useRef } from "react";
 import { useLocalStorage } from "usehooks-ts";
-import { uuid } from "uuidv4";
+import { v4 as uuid } from "uuid";
 import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
 import { convesationLogToInitialMessages } from "../helpers";
 import * as React from "react";
@@ -33,25 +33,26 @@ export default function ChatUi({
 
   const { toast } = useToast();
 
-  const chatArea = useRef<any>();
+  const chatArea = useRef<HTMLDivElement | null>(null);
 
   const [sessionId, setSessionId] = useLocalStorage("session-id", uuid());
 
   const { user, supabase } = useSupabaseAuth();
 
   useEffect(() => {
-    if (user?.id) setSessionId(user?.id);
+    if (user?.id) {
+      setSessionId(user?.id);
+    }
   }, [user]);
 
   // @ts-ignore
   const { data: conversations = [], isLoading: isDataLoading } = useQuery(
-    sessionId &&
-      supabase
-        .from("conversations")
-        .select()
-        .eq("session_id", sessionId)
-        .eq("chatbot_id", chatbot_id)
-        .order("created_at", { ascending: true }),
+    supabase
+      .from("conversations")
+      .select()
+      .eq("session_id", sessionId)
+      .eq("chatbot_id", chatbot_id)
+      .order("created_at", { ascending: true }),
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -96,12 +97,12 @@ export default function ChatUi({
   }, [messages?.length]);
 
   return (
-    <div className={cn("flex flex-col w-full my-auto h-full", className)}>
-      <div className="p-4">
-        <h1 className="text-md text-primary font-bold">Name of the chat</h1>
-      </div>
+    <div className={cn("flex flex-col w-full my-auto", className)}>
       <Separator className="border" />
-      <div className={cn("flex-1 overflow-y-auto pt-4 md:pt-10")}>
+      <div
+        className={cn("flex-1 overflow-y-auto pt-4 md:pt-10")}
+        ref={chatArea}
+      >
         {isDataLoading && (
           <div className="max-w-2xl m-auto flex flex-col gap-6">
             {[1, 2, 3].map((i) => (
@@ -114,7 +115,6 @@ export default function ChatUi({
         )}
         {messages.length ? (
           <div
-            ref={chatArea}
             className={cn("w-full overflow-y-auto", chatContainerClass || "")}
           >
             <ChatList messages={messages} />

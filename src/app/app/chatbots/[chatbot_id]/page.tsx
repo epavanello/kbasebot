@@ -23,7 +23,7 @@ const Page = ({
         </Link>
       </DashboardHeader>
       <div className="flex justify-center h-full overflow-hidden">
-        <ChatUi />
+        <ChatUi className="h-full" />
       </div>
     </DashboardShell>
   );

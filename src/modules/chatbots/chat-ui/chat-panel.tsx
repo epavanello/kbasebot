@@ -19,6 +19,7 @@ export interface ChatPanelProps
     | "setInput"
   > {
   id?: string;
+  chatArea: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 export function ChatPanel({
@@ -33,51 +34,20 @@ export function ChatPanel({
   chatArea,
 }: ChatPanelProps) {
   return (
-    <div className="my-4 inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
+    <div>
       <div className="mx-auto sm:max-w-2xl sm:px-4">
-        <div className="flex h-10 items-center justify-center">
-          {isLoading ? (
-            <Button
-              variant="outline"
-              onClick={() => stop()}
-              className="bg-background text-[10px] h-8"
-              size="sm"
-            >
-              <StopIcon className="mr-2 w-3 h-3" />
-              Stop Generating
-            </Button>
-          ) : (
-            messages?.length > 0 && (
-              <Button
-                variant="outline"
-                onClick={() => reload()}
-                className="bg-background text-[10px] h-8"
-                size="sm"
-              >
-                <ReloadIcon className="mr-2 w-3 h-3" />
-                Regenerate Response
-              </Button>
-            )
-          )}
-          <ButtonScrollToBottom area={chatArea} />
-        </div>
-        <div
-          className="bg-background px-4"
-          // className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4"
-        >
-          <PromptForm
-            onSubmit={async (value) => {
-              await append({
-                id,
-                content: value,
-                role: "user",
-              });
-            }}
-            input={input}
-            setInput={setInput}
-            isLoading={isLoading}
-          />
-        </div>
+        <PromptForm
+          onSubmit={async (value) => {
+            await append({
+              id,
+              content: value,
+              role: "user",
+            });
+          }}
+          input={input}
+          setInput={setInput}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );

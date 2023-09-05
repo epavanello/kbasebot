@@ -12,7 +12,7 @@ import { UserInfo as Subscription } from "../supabase";
 import { Database } from "../types/database.types";
 
 type SuapabaseAuthContextType = {
-  supabase: SupabaseClient;
+  supabase: SupabaseClient<Database>;
   session: null | Session;
   user?: User;
   isLoading: boolean;

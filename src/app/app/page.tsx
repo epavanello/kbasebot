@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect } from "react";
 
 import { DashboardShell } from "@/components/ui/dashboard-shell";
@@ -6,29 +7,32 @@ import { sayGreeting } from "@/lib/utils";
 import ChatbotList from "@/modules/chatbots/chatbot-list";
 import NoItemsCard from "@/components/ui/no-items-card";
 import AddModal from "@/modules/chatbots/add.modal";
-import {
-  createPagesBrowserClient,
-  createServerComponentClient,
-} from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { useSupabaseAuth } from "@/lib/store/use-user";
+import { Database } from "@/lib/types/database.types";
 
-async function getData() {
-  const supabase = createServerComponentClient({ cookies });
+const ChatbotIndex = ({}) => {
+  const { user, supabase } = useSupabaseAuth();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const [chatbots, setChatbots] = React.useState<
+    Database["public"]["Tables"]["chatbots"]["Row"][]
+  >([]);
 
-  const { data: chatbots = [] } = await supabase
-    .from("chatbots")
-    .select()
-    .eq("user_id", user?.id);
-
-  return chatbots;
-}
-
-const ChatbotIndex = async ({}) => {
-  const chatbots = await getData();
+  // Client loading, because on first load on server, cookies (and then chatbots) are empty
+  useEffect(() => {
+    if (user?.id) {
+      supabase
+        .from("chatbots")
+        .select()
+        .eq("user_id", user?.id)
+        .then(({ data: chatbots = [] }) => {
+          if (!chatbots) {
+            setChatbots([]);
+          } else {
+            setChatbots(chatbots);
+          }
+        });
+    }
+  }, [user, supabase]);
 
   return (
     <DashboardShell className="container gap-0 mt-4">

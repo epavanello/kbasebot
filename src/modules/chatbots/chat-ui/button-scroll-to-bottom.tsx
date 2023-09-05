@@ -11,7 +11,7 @@ export function ButtonScrollToBottom({
   className,
   area,
   ...props
-}: ButtonProps) {
+}: ButtonProps & { area: React.MutableRefObject<HTMLDivElement | null> }) {
   const isAtBottom = useAtBottom(area);
 
   return (
