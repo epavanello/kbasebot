@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -9,15 +9,22 @@ import {
 } from "@/components/ui/card";
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icons";
+import { Icon, LoadingIcon } from "@/components/ui/icons";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Provider } from "@supabase/gotrue-js";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
+import { useSupabaseAuth } from "@/lib/store/use-user";
+import { useRouter } from "next/navigation";
+import LoadingDots from "@/components/ui/loading-dots";
 
-const Page = () => {
+const Page = ({ searchParams }) => {
   const supabase = createClientComponentClient();
 
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const { code } = searchParams;
+
+  const { push } = useRouter();
+
+  const [isLoading, setIsLoading] = React.useState<boolean>(!!code);
 
   const handleOAuth = async (provider: Provider = "google") => {
     setIsLoading(true);
@@ -25,7 +32,7 @@ const Page = () => {
       await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${NEXT_PUBLIC_URL}/app`,
+          redirectTo: `${NEXT_PUBLIC_URL}/auth`,
         },
       });
     } catch (e) {
@@ -34,6 +41,14 @@ const Page = () => {
       setIsLoading(false);
     }
   };
+
+  const { user } = useSupabaseAuth();
+
+  useEffect(() => {
+    if (user?.id) {
+      push(`/app/`);
+    }
+  }, [user, code]);
 
   return (
     <div className="flex justify-center items-center h-screen w-full">
@@ -46,15 +61,19 @@ const Page = () => {
           <small>Login/Register to create your awesome chatbot</small>
         </CardContent>
         <CardFooter className="justify-center">
-          <Button
-            onClick={() => handleOAuth("google")}
-            className="w-full"
-            variant="outline"
-            size="lg"
-          >
-            <Icon className="mr-2 text-xl" icon={"flat-color-icons:google"} />
-            Login with Google
-          </Button>
+          {isLoading ? (
+            <LoadingDots className="!w-16 !h-16" />
+          ) : (
+            <Button
+              onClick={() => handleOAuth("google")}
+              className="w-full"
+              variant="outline"
+              size="lg"
+            >
+              <Icon className="mr-2 text-xl" icon={"flat-color-icons:google"} />
+              Login with Google
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </div>

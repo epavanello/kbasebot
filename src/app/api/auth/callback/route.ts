@@ -16,7 +16,6 @@ export async function GET(request: NextRequest) {
     const supabase = createRouteHandlerClient<Database>({ cookies });
     await supabase.auth.exchangeCodeForSession(code);
     // URL to redirect to after sign in process completes
-    return NextResponse.redirect(`${NEXT_PUBLIC_URL}/app`);
   }
 
   return NextResponse.redirect(`${NEXT_PUBLIC_URL}/auth`);

@@ -39,6 +39,16 @@ export const menus = {
       icon: "fluent:bot-sparkle-24-regular",
     },
     {
+      title: "Conversations",
+      href: `/app/chatbots/${chatbotId}/conversations`,
+      icon: "jam:messages-alt",
+    },
+    {
+      title: "Customize",
+      href: `/app/chatbots/${chatbotId}/customize`,
+      icon: "clarity:design-line",
+    },
+    {
       title: "Settings",
       href: `/app/chatbots/${chatbotId}/settings`,
       icon: "gala:settings",
