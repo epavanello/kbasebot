@@ -44,6 +44,11 @@ export const menus = {
       icon: "jam:messages-alt",
     },
     {
+      title: "Customize",
+      href: `/app/chatbots/${chatbotId}/customize`,
+      icon: "clarity:design-line",
+    },
+    {
       title: "Settings",
       href: `/app/chatbots/${chatbotId}/settings`,
       icon: "gala:settings",

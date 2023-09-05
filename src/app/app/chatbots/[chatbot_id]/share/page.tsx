@@ -11,19 +11,22 @@ import CopyButton from "@/components/ui/copy-button";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 
+const CodeBlock = ({ children }) => (
+  <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 break-words">
+    <code className="text-white text-xs">{children}</code>
+  </pre>
+);
+
 const Share = ({ params }) => {
   const { chatbot_id } = params;
 
   const chatbotPublicUrl = getChatbotPublicId(chatbot_id);
 
-  const iframeCode = `
-              <iframe
-                src="${chatbotPublicUrl}"
-                width="100%"
-                style="height: 100%; min-height: 700px"
-                frameBorder="0"
-              ></iframe>
-              `;
+  const iframeCode = `<iframe 
+   src="${chatbotPublicUrl}" width="100%"
+   style="height: 100%; min-height: 700px"
+   frameBorder="0">
+</iframe>`;
 
   const scriptTag = `<script src="${process.env.NEXT_PUBLIC_URL}/embed.js?chatbot_id=${chatbot_id}"></script>`;
 
@@ -44,9 +47,7 @@ const Share = ({ params }) => {
               Paste this code to the end of the body of your website
             </CardDescription>
             <div className=" flex relative w-full justify-start gap-2 items-center">
-              <p className="p-4 bg-muted rounded-lg text-gray-700 text-xs">
-                {scriptTag}
-              </p>
+              <CodeBlock>{scriptTag}</CodeBlock>
               <div className="flex items-center gap-2">
                 <CopyButton
                   size="sm"
@@ -64,10 +65,8 @@ const Share = ({ params }) => {
             <CardTitle>Share your chatbot</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className=" flex relative w-full justify-start gap-2 items-center">
-              <p className="p-4 bg-muted rounded-lg text-gray-700 text-xs">
-                {chatbotPublicUrl}
-              </p>
+            <div className="flex relative w-full justify-start gap-2 items-center">
+              <CodeBlock>{chatbotPublicUrl}</CodeBlock>
               <div className="flex items-center gap-2">
                 <CopyButton
                   size="sm"
@@ -86,9 +85,7 @@ const Share = ({ params }) => {
           </CardHeader>
           <CardContent>
             <div className=" flex relative w-full justify-start gap-2 items-start">
-              <code className="p-4 bg-muted rounded-lg text-gray-700 text-xs max-w-md">
-                {iframeCode}
-              </code>
+              <CodeBlock>{iframeCode}</CodeBlock>
 
               <div className="flex items-center gap-2">
                 <CopyButton
