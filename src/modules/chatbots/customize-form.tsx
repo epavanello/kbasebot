@@ -1,3 +1,7 @@
+import { useSupabaseAuth } from "@/lib/store/use-user";
+
+("use-client");
+
 import React from "react";
 import {
   Card,
@@ -24,29 +28,65 @@ import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import Creatable from "react-select/creatable";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const FormSchema = z.object({
-  display_name: z.string().min(2, {
-    message: "Display Name must be at least 2 characters.",
-  }),
-  primary_color: z.string(),
-  welcome_message: z.string(),
+  display_name: z
+    .string()
+    .min(3, {
+      message: "Display Name must be at least 3 characters.",
+    })
+    .optional(),
+  welcome_message: z.string().optional(),
+  suggested_message: z.array(z.string()).optional(),
+  theme: z.string().optional(),
+  primary_color: z.string().optional(),
+  user_message_background: z.string().optional(),
 });
 
-const CustomizeForm = () => {
+const CustomizeForm = ({ chatbotId }) => {
+  const { supabase, user } = useSupabaseAuth();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const { formState } = form;
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      await supabase
+        .from("chatbot_settings")
+        .upsert(
+          {
+            chatbot_id: chatbotId,
+            user_id: user?.id,
+            ...data,
+          },
+          { onConflict: "chatbot_id" },
+        )
+        .throwOnError();
+
+      toast({
+        title: "Updated Successfully",
+        description: "",
+      });
+    } catch (e) {
+      console.error(e);
+
+      toast({
+        title: "Something went wrong",
+        description: "",
+        variant: "destructive",
+      });
+    }
   }
 
   return (
@@ -71,7 +111,6 @@ const CustomizeForm = () => {
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="welcome_message"
@@ -92,22 +131,72 @@ const CustomizeForm = () => {
                 </FormItem>
               )}
             />
-
             {/*  Suggested Message - select */}
+            <FormField
+              control={form.control}
+              name="suggested_message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Suggested Message</FormLabel>
+                  <FormControl>
+                    <Creatable
+                      placeholder="eg. how to upgrade my plan?"
+                      className="text-sm"
+                      isMulti
+                      onChange={(val) => {
+                        field.onChange(val.map((i) => i.value));
+                      }}
+                      value={field.value?.map((i) => ({
+                        label: i,
+                        value: i,
+                      }))}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    These message will be shown to your users as suggestions
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <Separator className="my-2" />
-
             {/*  Theme - select */}
+            <FormField
+              control={form.control}
+              name="theme"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Theme</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a theme" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="light">Light</SelectItem>
+                      <SelectItem value="dark">Dark</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription>
+                    Change Theme of your chatbot
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/*  Chatbot logo - select */}
 
-            {/*  user message background - color */}
-
             {/*  chat bubble color - color */}
             {/*  chat bubble icon/logo - color */}
-
             {/*  chat bubble align - color */}
 
+            {/*  primary color */}
             <FormField
               control={form.control}
               name="primary_color"
@@ -127,10 +216,36 @@ const CustomizeForm = () => {
                 </FormItem>
               )}
             />
+            {/*  user message background - color */}
+            <FormField
+              control={form.control}
+              name="user_message_background"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>User Message Background Color</FormLabel>
+                  <FormControl>
+                    <ColorPicker
+                      onChange={field.onChange}
+                      value={field.value}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Background color to show on user message
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </CardContent>
 
           <CardFooter>
-            <Button type="submit">Update</Button>
+            <Button
+              loading={formState.isSubmitting || formState.isLoading}
+              disabled={formState.isSubmitting || formState.isLoading}
+              type="submit"
+            >
+              Update
+            </Button>
           </CardFooter>
         </Card>
       </form>

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { sayGreeting } from "@/lib/utils";
@@ -24,10 +23,12 @@ async function getData() {
     .select()
     .eq("user_id", user?.id);
 
+  console.log({ user });
+
   return chatbots;
 }
 
-const ChatbotIndex = async ({}) => {
+const ChatbotIndex = async () => {
   const chatbots = await getData();
 
   return (

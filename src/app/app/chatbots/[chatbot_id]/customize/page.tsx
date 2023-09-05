@@ -28,25 +28,7 @@ const Customize = ({ params }) => {
         className="justify-center mt-10"
       />
 
-      <CustomizeForm />
-
-      <div className="flex flex-col gap-8 px-0 md:px-24 lg:px-36">
-        <Card>
-          <CardHeader>
-            <CardTitle>Share your chatbot</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className=" flex relative w-full justify-start gap-2 items-center"></div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Embed your chatbot as iframe</CardTitle>
-          </CardHeader>
-          <CardContent></CardContent>
-        </Card>
-      </div>
+      <CustomizeForm chatbotId={chatbot_id} />
     </DashboardShell>
   );
 };
