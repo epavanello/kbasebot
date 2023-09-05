@@ -13,8 +13,6 @@ async function getData(chatbotId) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log({ chatbotId });
-
   const { data: conversationsPerSession, error } = await supabase.rpc(
     "get_messages_by_session",
     {
@@ -37,7 +35,7 @@ const Conversations = async ({ params }) => {
 
   return (
     <DashboardShell className="container mt-6">
-      <DashboardHeader heading={"Conversation Logs"} text={""} />
+      <DashboardHeader heading={"Conversation Histories"} text={""} />
       <ConversationsLogs
         conversationsPerSession={conversationsPerSession}
         firstSessionId={firstSessionId}

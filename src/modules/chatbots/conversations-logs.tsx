@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatList } from "@/modules/chatbots/chat-ui/chat-list";
 import { convesationLogToInitialMessages } from "@/modules/chatbots/helpers";
 import { ChatScrollAnchor } from "@/modules/chatbots/chat-ui/chat-scroll-anchor";
+import { formatDistance } from "date-fns";
 
 const ConversationsLogs = ({
   conversationsPerSession,
@@ -17,8 +18,6 @@ const ConversationsLogs = ({
   const { supabase } = useSupabaseAuth();
 
   const [selectedSessionId, setSelectedSessionId] = useState(firstSessionId);
-
-  console.log({ selectedSessionId });
 
   // @ts-ignore
   const { data: conversations = [], isLoading: isDataLoading } = useQuery(
@@ -49,11 +48,18 @@ const ConversationsLogs = ({
               <Button
                 key={item.session_id}
                 onClick={() => setSelectedSessionId(item.session_id)}
-                className="text-xs text-left justify-start p-4"
+                className="text-xs text-left items-start py-2 px-4 flex-col h-auto"
                 size={"lg"}
-                variant={"outline"}
+                variant={
+                  item.session_id === selectedSessionId ? "default" : "outline"
+                }
               >
                 {truncate(item.user_last_message, 30)}
+                <small>
+                  {formatDistance(new Date(item.sent_at), new Date(), {
+                    addSuffix: true,
+                  })}
+                </small>
               </Button>
             );
           })}
