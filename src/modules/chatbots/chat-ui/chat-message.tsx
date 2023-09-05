@@ -1,4 +1,6 @@
-"use-client";
+import { formatDistance } from "date-fns";
+
+("use-client");
 
 import { Message } from "ai";
 import remarkGfm from "remark-gfm";
@@ -28,7 +30,10 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
         {isUser ? (
           <span className="text-xs">You</span>
         ) : (
-          <Icon icon="fluent:bot-sparkle-24-filled" className="text-primary w-5 h-5" />
+          <Icon
+            icon="fluent:bot-sparkle-24-filled"
+            className="text-primary w-5 h-5"
+          />
         )}
       </div>
       <div
@@ -84,6 +89,17 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
           {message.content}
         </MemoizedReactMarkdown>
       </div>
+      {!!message.createdAt && (
+        <small
+          className={cn("opacity-70 text-[10px]", {
+            "self-end": isUser,
+          })}
+        >
+          {formatDistance(new Date(message.createdAt), new Date(), {
+            addSuffix: true,
+          })}
+        </small>
+      )}
     </div>
   );
 }
