@@ -4,6 +4,7 @@ import React from "react";
 import ChatUi from "@/modules/chatbots/chat-ui";
 import { Icon } from "@/components/ui/icons";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
+
 const Page = () => {
   const onClose = () => {
     window.parent.postMessage({ type: "close" }, "*");

@@ -43,7 +43,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
       >
         <MemoizedReactMarkdown
           className={cn(
-            "w-auto min-w-0 max-w-full text-[15px] prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 px-4 py-2 inline-block rounded-xl",
+            "w-auto min-w-0 max-w-full text-xs prose prose-sm break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 px-4 py-2 inline-block rounded-xl",
             {
               "rounded-tr-none bg-primary text-white": isUser,
               "rounded-tl-none bg-secondary": !isUser,
