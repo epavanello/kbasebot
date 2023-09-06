@@ -32,6 +32,9 @@ const PublicChatUi = ({ settings }) => {
         .c_bg_primary {
           background: ${primary_color || "#312e2e"};
         }
+        .c_border_primary {
+          border-color: ${primary_color || "#312e2e"};
+        }
         .c_text_primary_auto {
           color: ${textColorBasedOnBg(primary_color)};
         }
