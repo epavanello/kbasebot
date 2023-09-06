@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -10,11 +11,38 @@ import { getChatbotPublicId } from "@/modules/chatbots/helpers";
 import CopyButton from "@/components/ui/copy-button";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const CodeBlock = ({ children }) => (
   <pre className="mt-2 min-w-0 overflow-auto w-full rounded-md bg-slate-950 p-4 break-words">
     <code className="text-white text-xs">{children}</code>
   </pre>
+);
+
+const CardBlock = ({ title, code, desc, footer }) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>{title}</CardTitle>
+    </CardHeader>
+    <CardContent>
+      {!!desc && <CardDescription className={"mb-4"}>{desc}</CardDescription>}
+
+      <div className="relative flex flex-wrap relative w-full justify-start gap-2 items-start">
+        <CodeBlock>{code}</CodeBlock>
+
+        <div className="absolute top-4 right-2 z-10">
+          <CopyButton
+            className="text-white"
+            size="icon"
+            variant="ghost"
+            text={code}
+          />
+        </div>
+      </div>
+    </CardContent>
+    {!!footer && <CardFooter>{footer}</CardFooter>}
+  </Card>
 );
 
 const Share = ({ params }) => {
@@ -28,7 +56,9 @@ const Share = ({ params }) => {
    frameBorder="0">
 </iframe>`;
 
-  const scriptTag = `<script src="${process.env.NEXT_PUBLIC_URL}/embed.js?chatbot_id=${chatbot_id}"></script>`;
+  const scriptTag = `<script 
+src="${process.env.NEXT_PUBLIC_URL}/embed.js?chatbot_id=${chatbot_id}">
+</script>`;
 
   return (
     <DashboardShell className="container mx-auto">
@@ -38,66 +68,28 @@ const Share = ({ params }) => {
       />
 
       <div className="flex flex-col gap-8 px-0 md:px-24 lg:px-36">
-        <Card>
-          <CardHeader>
-            <CardTitle>Add to your website</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CardDescription className={"mb-4"}>
-              Paste this code to the end of the body of your website
-            </CardDescription>
-            <div className="flex relative w-full justify-start gap-2 items-center">
-              <CodeBlock>{scriptTag}</CodeBlock>
-              <div className="flex items-center gap-2">
-                <CopyButton
-                  size="sm"
-                  variant="outline"
-                  showText
-                  text={scriptTag}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <CardBlock
+          title={"Add to your website"}
+          desc={"Paste this code to the end of the body of your website"}
+          code={scriptTag}
+        />
+        <CardBlock
+          title={"Share your chatbot"}
+          code={chatbotPublicUrl}
+          footer={
+            <Button
+              target={"_blank"}
+              as={"a"}
+              href={chatbotPublicUrl}
+              asChild
+              variant={"outline"}
+            >
+              Visit Public Url
+            </Button>
+          }
+        />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Share your chatbot</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex relative w-full justify-start gap-2 items-center">
-              <CodeBlock>{chatbotPublicUrl}</CodeBlock>
-              <div className="flex items-center gap-2">
-                <CopyButton
-                  size="sm"
-                  variant="outline"
-                  showText
-                  text={chatbotPublicUrl}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Embed your chatbot as iframe</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className=" flex relative w-full justify-start gap-2 items-start">
-              <CodeBlock>{iframeCode}</CodeBlock>
-
-              <div className="flex items-center gap-2">
-                <CopyButton
-                  size="sm"
-                  variant="outline"
-                  showText
-                  text={iframeCode}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <CardBlock title={"Embed your chatbot as iframe"} code={iframeCode} />
       </div>
     </DashboardShell>
   );
