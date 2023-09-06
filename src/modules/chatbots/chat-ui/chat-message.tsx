@@ -44,7 +44,10 @@ export function ChatMessage({
             className="rounded-full"
           />
         ) : (
-          <Icon icon="fluent:bot-sparkle-24-filled" className="w-5 h-5" />
+          <Icon
+            icon="fluent:bot-sparkle-24-filled"
+            className="w-5 h-5 c_text_primary"
+          />
         )}
       </div>
       <div

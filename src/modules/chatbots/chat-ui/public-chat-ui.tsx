@@ -6,8 +6,9 @@ import { Icon } from "@/components/ui/icons";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
 import Image from "next/image";
 import { textColorBasedOnBg } from "@/lib/utils";
+import ChatbotTheme from "@/modules/chatbots/chat-ui/chatbot-theme";
 
-const PublicChatUi = ({ settings }) => {
+const PublicChatUi = ({ settings, noCloseBtn = false }) => {
   const {
     primary_color,
     display_name,
@@ -28,20 +29,7 @@ const PublicChatUi = ({ settings }) => {
 
   return (
     <div className="h-full flex flex-col max-w-2xl rounded-2xl border overflow-hidden m-auto">
-      <style jsx global>{`
-        .c_bg_primary {
-          background: ${primary_color || "#312e2e"};
-        }
-        .c_border_primary {
-          border-color: ${primary_color || "#312e2e"};
-        }
-        .c_text_primary_auto {
-          color: ${textColorBasedOnBg(primary_color)};
-        }
-        .c_text_primary {
-          color: ${primary_color};
-        }
-      `}</style>
+      <ChatbotTheme primary_color={primary_color} />
       <div className="flex justify-between p-4 c_bg_primary">
         <div className="flex gap-2 items-center">
           {!!chatbot_logo && (
@@ -57,12 +45,15 @@ const PublicChatUi = ({ settings }) => {
             {display_name || name || "KBaseBot"}
           </h1>
         </div>
-        <div className="flex flex-row-reverse gap-4">
-          <Icon
-            icon="mi:close"
-            className="w-5 h-5 cursor-pointer hover:opacity-50 transition-opacity duration-200"
-            onClick={onClose}
-          />
+        <div className="flex flex-row-reverse gap-4 c_text_primary_auto">
+          {!noCloseBtn && (
+            <Icon
+              icon="mi:close"
+              className="w-5 h-5 cursor-pointer hover:opacity-50 transition-opacity duration-200"
+              onClick={onClose}
+            />
+          )}
+
           <Icon
             icon="fluent:arrow-sync-20-filled"
             className="w-5 h-5 cursor-pointer hover:opacity-50 transition-opacity duration-200"

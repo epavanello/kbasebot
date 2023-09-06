@@ -5,6 +5,7 @@ import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { notFound } from "next/navigation";
 import ConversationsLogs from "@/modules/chatbots/conversations-logs";
+import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
 
 async function getData(chatbotId) {
   const supabase = createServerComponentClient({ cookies });
@@ -30,13 +31,16 @@ const Conversations = async ({ params }) => {
   const { chatbot_id } = params;
 
   const conversationsPerSession = (await getData(params?.chatbot_id)) || [];
+  const settings = (await getChatbotSettings(params?.chatbot_id)) || {};
 
   const firstSessionId = conversationsPerSession?.[0]?.session_id || "";
 
   return (
     <DashboardShell className="container mt-6">
       <DashboardHeader heading={"Conversation Histories"} text={""} />
+
       <ConversationsLogs
+        settings={settings}
         conversationsPerSession={conversationsPerSession}
         firstSessionId={firstSessionId}
         chatbot_id={chatbot_id}

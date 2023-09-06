@@ -66,11 +66,20 @@ export async function POST(req: NextRequest) {
     ).flat();
 
     // THE FUNCTION ABOVE FROM LANGCHAIN CAN'T ADD ADDITIONAL COLUMN, SO NEED TO DO EXTRA STEPS
-    const { error: eee } = await supabaseServerClient
+    await supabaseServerClient
       .from("knowledge_base")
       .update({ chatbot_id: chatbot?.id, user_id: user?.id })
       .in("id", docIds)
       .throwOnError();
+
+    // default chatbot settings
+    await supabaseServerClient.from("chatbot_settings").insert({
+      chatbot_bubble_align: "right",
+      primary_color: "#29292d",
+      welcome_message: "Hello there! how can i help?",
+      chatbot_id: chatbot?.id,
+      user_id: user?.id,
+    });
 
     return NextResponse.json({ status: "done", chatbot });
   } catch (e) {

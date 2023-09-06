@@ -314,7 +314,7 @@ const CustomizeForm = ({ chatbotId, settings }) => {
       </Form>
       <div className="w-1/2 container h-[80vh] overflow-y-scroll">
         <div className=" h-[74vh]">
-          <PublicChatUi settings={formData} />
+          <PublicChatUi noCloseBtn settings={formData} />
         </div>
         <div
           className={cn("flex", {

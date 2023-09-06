@@ -9,11 +9,13 @@ import { ChatList } from "@/modules/chatbots/chat-ui/chat-list";
 import { convesationLogToInitialMessages } from "@/modules/chatbots/helpers";
 import { ChatScrollAnchor } from "@/modules/chatbots/chat-ui/chat-scroll-anchor";
 import { formatDistance } from "date-fns";
+import ChatbotTheme from "@/modules/chatbots/chat-ui/chatbot-theme";
 
 const ConversationsLogs = ({
   conversationsPerSession,
   firstSessionId,
   chatbot_id,
+  settings,
 }) => {
   const { supabase } = useSupabaseAuth();
 
@@ -40,6 +42,7 @@ const ConversationsLogs = ({
       style={{ height: "calc(100vh - 65px)" }}
       className="grid md:grid-cols-[200px_1fr]"
     >
+      <ChatbotTheme primary_color={settings.primary_color} />
       <aside className="hidden w-[200px] flex-col gap-3 p-2 md:flex border-r">
         {!!conversationsPerSession?.length &&
           conversationsPerSession.map((item) => {
