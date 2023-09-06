@@ -12,7 +12,7 @@ import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 
 const CodeBlock = ({ children }) => (
-  <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 break-words">
+  <pre className="mt-2 min-w-0 overflow-auto w-full rounded-md bg-slate-950 p-4 break-words">
     <code className="text-white text-xs">{children}</code>
   </pre>
 );
@@ -46,7 +46,7 @@ const Share = ({ params }) => {
             <CardDescription className={"mb-4"}>
               Paste this code to the end of the body of your website
             </CardDescription>
-            <div className=" flex relative w-full justify-start gap-2 items-center">
+            <div className="flex relative w-full justify-start gap-2 items-center">
               <CodeBlock>{scriptTag}</CodeBlock>
               <div className="flex items-center gap-2">
                 <CopyButton

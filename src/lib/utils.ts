@@ -109,18 +109,32 @@ export const formatDate = (dateString) => {
   return date;
 };
 
-export function getContrastYIQ(hexcolor) {
-  if (hexcolor.indexOf("#") === 0) {
-    hexcolor = hexcolor.slice(1);
+export function isContrastColorWhite(hexColor: string): boolean {
+  if (hexColor.indexOf("#") === 0) {
+    hexColor = hexColor.slice(1);
   }
-  const r = parseInt(hexcolor.substr(0, 2), 16);
-  const g = parseInt(hexcolor.substr(2, 2), 16);
-  const b = parseInt(hexcolor.substr(4, 2), 16);
-  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-  return yiq >= 128 ? "black" : "white";
+  // convert 3-digit hex to 6-digits.
+  if (hexColor.length === 3) {
+    hexColor =
+      hexColor[0] +
+      hexColor[0] +
+      hexColor[1] +
+      hexColor[1] +
+      hexColor[2] +
+      hexColor[2];
+  }
+  if (hexColor.length !== 6) {
+    throw new Error("Invalid HEX color.");
+  }
+  const r = parseInt(hexColor.slice(0, 2), 16);
+  const g = parseInt(hexColor.slice(2, 4), 16);
+  const b = parseInt(hexColor.slice(4, 6), 16);
+  // Calcolo la luminosità del colore
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance < 0.5;
 }
 
-export function textColorBasedOnBg(bgColor) {
+export function textColorBasedOnBg(bgColor: string) {
   const primaryColor = bgColor || "#262424";
-  return getContrastYIQ(primaryColor);
+  return isContrastColorWhite(primaryColor) ? "white" : "black";
 }

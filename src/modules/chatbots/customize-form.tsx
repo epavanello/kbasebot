@@ -38,7 +38,7 @@ import PublicChatUi from "@/modules/chatbots/chat-ui/public-chat-ui";
 import ImagePicker from "@/components/pickers/image.picker";
 import TabRadio from "@/components/ui/tab-radio";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn, isContrastColorWhite } from "@/lib/utils";
 
 const FormSchema = z.object({
   display_name: z
@@ -50,7 +50,7 @@ const FormSchema = z.object({
   welcome_message: z.string().optional(),
   suggested_message: z.array(z.string()).optional().nullable(),
   // theme: z.string().optional().nullable(),
-  primary_color: z.string().optional(),
+  primary_color: z.string(),
   chatbot_logo: z.string().optional().nullable(),
   chatbot_bubble_logo: z.string().optional().nullable(),
   chatbot_bubble_align: z.string().optional().nullable(),
@@ -100,12 +100,14 @@ const CustomizeForm = ({ chatbotId, settings }) => {
   const formData = form.watch();
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 flex-1 overflow-hidden">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-1/2">
-          <Card>
-            <CardHeader>{/*<CardTitle>Add logo</CardTitle>*/}</CardHeader>
-            <CardContent className="flex gap-4 flex-col h-[70vh] overflow-y-scroll">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-1/2 h-full">
+          <Card className="h-full flex flex-col">
+            <CardHeader className="border-b">
+              {/*<CardTitle>Add logo</CardTitle>*/}
+            </CardHeader>
+            <CardContent className="flex gap-4 flex-col overflow-y-scroll flex-1">
               <FormField
                 control={form.control}
                 name="display_name"
@@ -300,7 +302,7 @@ const CustomizeForm = ({ chatbotId, settings }) => {
               />
             </CardContent>
 
-            <CardFooter className="p-2">
+            <CardFooter className="p-2 border-t">
               <Button
                 loading={formState.isSubmitting || formState.isLoading}
                 disabled={formState.isSubmitting || formState.isLoading}
@@ -312,7 +314,7 @@ const CustomizeForm = ({ chatbotId, settings }) => {
           </Card>
         </form>
       </Form>
-      <div className="w-1/2 container h-[80vh] overflow-y-scroll">
+      <div className="w-1/2 container h-full">
         <div className=" h-[74vh]">
           <PublicChatUi noCloseBtn settings={formData} />
         </div>
@@ -321,17 +323,33 @@ const CustomizeForm = ({ chatbotId, settings }) => {
             "justify-end": formData.chatbot_bubble_align === "right",
           })}
         >
-          <button className="mt-2">
-            <Image
-              className="rounded-full"
-              width={56}
-              height={56}
-              src={
-                formData?.chatbot_bubble_logo ||
-                process.env.NEXT_PUBLIC_URL + "/bot.png"
-              }
-              alt={"chatbot bubble logo"}
-            />
+          <button
+            className="mt-2 w-14 h-14 rounded-full flex items-center justify-center overflow-hidden"
+            style={{
+              backgroundColor: formData?.primary_color,
+              boxShadow:
+                "rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
+            }}
+          >
+            {formData?.chatbot_bubble_logo ? (
+              <Image
+                width={32}
+                height={32}
+                src={formData?.chatbot_bubble_logo}
+                alt={"Chatbot bubble logo"}
+              />
+            ) : (
+              <Image
+                width={32}
+                height={32}
+                src={
+                  isContrastColorWhite(formData?.primary_color || "#fff")
+                    ? process.env.NEXT_PUBLIC_URL + "/bot-light.svg"
+                    : process.env.NEXT_PUBLIC_URL + "/bot-dark.svg"
+                }
+                alt={"Chatbot bubble logo"}
+              />
+            )}
           </button>
         </div>
       </div>

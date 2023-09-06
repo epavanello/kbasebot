@@ -34,6 +34,67 @@ export interface Database {
   }
   public: {
     Tables: {
+      chatbot_settings: {
+        Row: {
+          chatbot_background: string | null
+          chatbot_bubble_align: string | null
+          chatbot_bubble_logo: string | null
+          chatbot_id: string
+          chatbot_logo: string | null
+          display_name: string | null
+          id: string
+          primary_color: string
+          suggested_message: string[] | null
+          theme: string | null
+          user_id: string
+          user_message_background: string | null
+          welcome_message: string | null
+        }
+        Insert: {
+          chatbot_background?: string | null
+          chatbot_bubble_align?: string | null
+          chatbot_bubble_logo?: string | null
+          chatbot_id: string
+          chatbot_logo?: string | null
+          display_name?: string | null
+          id?: string
+          primary_color: string
+          suggested_message?: string[] | null
+          theme?: string | null
+          user_id: string
+          user_message_background?: string | null
+          welcome_message?: string | null
+        }
+        Update: {
+          chatbot_background?: string | null
+          chatbot_bubble_align?: string | null
+          chatbot_bubble_logo?: string | null
+          chatbot_id?: string
+          chatbot_logo?: string | null
+          display_name?: string | null
+          id?: string
+          primary_color?: string
+          suggested_message?: string[] | null
+          theme?: string | null
+          user_id?: string
+          user_message_background?: string | null
+          welcome_message?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_settings_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbot_settings_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       chatbots: {
         Row: {
           created_at: string
@@ -208,6 +269,18 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      get_messages_by_session: {
+        Args: {
+          p_chatbot_id: string
+        }
+        Returns: {
+          session_id: string
+          chatbot_id: string
+          user_last_message: string
+          assistant_last_message: string
+          sent_at: string
+        }[]
+      }
       get_user_id_by_email: {
         Args: {
           user_email: string

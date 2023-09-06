@@ -36,8 +36,8 @@ const Conversations = async ({ params }) => {
   const firstSessionId = conversationsPerSession?.[0]?.session_id || "";
 
   return (
-    <DashboardShell className="container mt-6">
-      <DashboardHeader heading={"Conversation Histories"} text={""} />
+    <DashboardShell className="container h-full">
+      <DashboardHeader heading={"Conversation Histories"} text={""} className="mt-6" />
 
       <ConversationsLogs
         settings={settings}

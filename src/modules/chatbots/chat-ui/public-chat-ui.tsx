@@ -5,10 +5,17 @@ import ChatUi from "@/modules/chatbots/chat-ui";
 import { Icon } from "@/components/ui/icons";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
 import Image from "next/image";
-import { textColorBasedOnBg } from "@/lib/utils";
+import { cn, isContrastColorWhite, textColorBasedOnBg } from "@/lib/utils";
 import ChatbotTheme from "@/modules/chatbots/chat-ui/chatbot-theme";
+import { Database } from "@/lib/types/database.types";
 
-const PublicChatUi = ({ settings, noCloseBtn = false }) => {
+const PublicChatUi = ({
+  settings,
+  noCloseBtn = false,
+}: {
+  settings: Database["public"]["Tables"]["chatbot_settings"]["Row"];
+  noCloseBtn?: boolean;
+}) => {
   const {
     primary_color,
     display_name,
@@ -71,12 +78,24 @@ const PublicChatUi = ({ settings, noCloseBtn = false }) => {
         <div className="flex items-center justify-center gap-1.5">
           <p className="text-sm font-medium tracking-tight text-">Powered by</p>
           <div className="flex items-center gap-1 c_text_primary">
-            <Icon icon="fluent:bot-sparkle-24-filled" />
+            <Icon
+              icon="fluent:bot-sparkle-24-filled"
+              className={cn({
+                ["drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]"]:
+                  !isContrastColorWhite(settings.primary_color),
+              })}
+            />
             <a
               target="_blank"
               rel="noopener noreferrer"
               href={`${NEXT_PUBLIC_URL}?via=widget`}
-              className="isomorphic-link isomorphic-link--external text-sm font-semibold tracking-tight hover:underline"
+              className={cn(
+                "text-sm font-semibold tracking-tight hover:underline",
+                {
+                  "drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]":
+                    !isContrastColorWhite(settings.primary_color),
+                },
+              )}
             >
               KBaseBot
             </a>

@@ -29,7 +29,7 @@ export function ChatMessage({
       {...props}
     >
       <div
-        className={cn("c_text_primary_auto", {
+        className={cn({
           "self-end": isUser,
         })}
       >

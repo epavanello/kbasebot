@@ -1,3 +1,6 @@
+import { Database } from "@/lib/types/database.types";
+import { isContrastColorWhite } from "@/lib/utils";
+
 // create an iframe
 const iframe = document.createElement("iframe");
 const button = document.createElement("button");
@@ -6,9 +9,6 @@ const img = document.createElement("img");
 // get current script chatbot id param
 const scriptURL = (document.currentScript as HTMLScriptElement).src;
 const chatbot_id = new URL(scriptURL).searchParams.get("chatbot_id");
-const chatbot_color =
-  new URL(scriptURL).searchParams.get("chatbot_color") ||
-  "hsl(142.1 76.2% 36.3%)";
 
 if (!chatbot_id) {
   throw new Error("chatbot_id is required");
@@ -19,22 +19,20 @@ iframe.src = `${process.env.NEXT_PUBLIC_URL}/c/${chatbot_id}`;
 
 iframe.style.cssText = `
   position: fixed;
-  right: 1rem;
   z-index: 9999999;
   border: none;
   width: 448px;
   bottom: 5rem;
   height: 70vh;
   border-radius: 0.75rem;
+  background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px;
-  display: none;
 `;
 
 // add hover effect to the button
 button.style.cssText = `
   overflow: hidden;
   padding: 0px;
-  background-color: ${chatbot_color};
   color: #fff;
   border-radius: 9999px;
   position: fixed;
@@ -42,7 +40,6 @@ button.style.cssText = `
   justify-content: center;
   align-items: center;
   bottom: 16px;
-  right: 16px;
   width: 56px;
   height: 56px;
   z-index: 9999998;
@@ -64,23 +61,24 @@ button.addEventListener("mouseup", () => {
   button.style.transform = "scale(1)";
 });
 
-img.src = `${process.env.NEXT_PUBLIC_URL}/bot.svg`;
 img.style.cssText = `
   width: 32px;
   height: 32px;
 `;
 
 let isOpen = false;
+let bubbleLogo = "";
+let closeLogo = "";
 
 function openChatbot() {
   iframe.style.display = "block";
-  img.src = `${process.env.NEXT_PUBLIC_URL}/close.svg`;
+  img.src = closeLogo;
   isOpen = true;
 }
 
 function closeChatbot() {
   iframe.style.display = "none";
-  img.src = `${process.env.NEXT_PUBLIC_URL}/bot.svg`;
+  img.src = bubbleLogo;
   isOpen = false;
 }
 
@@ -93,9 +91,49 @@ button.addEventListener("click", (e) => {
   e.stopPropagation();
 });
 
-// wait for dom to load
-document.addEventListener("DOMContentLoaded", () => {
-  // append the iframe to the body
+// load settings
+
+const request = fetch(
+  `${process.env.NEXT_PUBLIC_URL}/api/chatbots/settings?chatbotId=${chatbot_id}`,
+  {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  },
+);
+
+request.then(async (response) => {
+  const { settings } = (await response.json()) as {
+    settings: Database["public"]["Tables"]["chatbot_settings"]["Row"];
+  };
+  console.log(settings);
+  if (settings.chatbot_bubble_align === "right") {
+    iframe.style.right = "16px";
+    button.style.right = "16px";
+  } else {
+    iframe.style.left = "16px";
+    button.style.left = "16px";
+  }
+  button.style.backgroundColor =
+    settings.primary_color || "hsl(142.1 76.2% 36.3%)";
+
+  let contrastWhite = isContrastColorWhite(settings.primary_color);
+
+  if (settings.chatbot_bubble_logo) {
+    bubbleLogo = settings.chatbot_bubble_logo;
+  } else {
+    bubbleLogo = contrastWhite
+      ? process.env.NEXT_PUBLIC_URL + "/bot-light.svg"
+      : process.env.NEXT_PUBLIC_URL + "/bot-dark.svg";
+  }
+
+  closeLogo = contrastWhite
+    ? process.env.NEXT_PUBLIC_URL + "/close-light.svg"
+    : process.env.NEXT_PUBLIC_URL + "/close-dark.svg";
+
+  closeChatbot();
+
   button.appendChild(img);
   document.body.appendChild(iframe);
   document.body.appendChild(button);
