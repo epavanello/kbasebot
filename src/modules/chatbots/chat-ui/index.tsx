@@ -17,6 +17,8 @@ import * as React from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export interface ChatProps extends React.ComponentProps<"div"> {
   initialMessages?: Message[];
@@ -28,6 +30,9 @@ export default function ChatUi({
   id,
   className,
   chatContainerClass,
+  welcome_message,
+  suggested_message = [],
+  chatbotLogo,
 }: ChatProps) {
   const { chatbot_id } = useParams();
 
@@ -86,6 +91,7 @@ export default function ChatUi({
     },
     initialMessages: convesationLogToInitialMessages(
       conversations,
+      welcome_message,
     ) as Message[],
   });
 
@@ -104,7 +110,7 @@ export default function ChatUi({
         ref={chatArea}
       >
         {isDataLoading && (
-          <div className="max-w-2xl m-auto flex flex-col gap-6">
+          <div className="max-w-2xl m-auto flex flex-col gap-6 px-2">
             {[1, 2, 3].map((i) => (
               <div className="flex flex-col gap-3" key={i.toString()}>
                 <Skeleton className="w-[70%] h-[70px] rounded-2xl self-end" />
@@ -117,13 +123,37 @@ export default function ChatUi({
           <div
             className={cn("w-full overflow-y-auto", chatContainerClass || "")}
           >
-            <ChatList messages={messages} />
+            <ChatList chatbotLogo={chatbotLogo} messages={messages} />
             <ChatScrollAnchor area={chatArea} trackVisibility={isLoading} />
           </div>
         ) : (
           <EmptyScreen setInput={setInput} />
         )}
       </div>
+      {!!suggested_message?.length && (
+        <div className="w-full overflow-x-auto pt-2 no-scrollbar border-t">
+          <div className="flex px-2 justify-start gap-3 flex-nowrap">
+            {suggested_message.map((item, idx) => (
+              <Button
+                variant="outline"
+                title="Click to ask this"
+                className="text-[10px] px-2 py-1 h-auto rounded-2xl flex-shrink-0"
+                key={"suggested_message-" + idx.toString()}
+                onClick={async () => {
+                  await append({
+                    id,
+                    content: item,
+                    role: "user",
+                  });
+                }}
+              >
+                {item}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+
       <ChatPanel
         id={id}
         isLoading={isLoading}

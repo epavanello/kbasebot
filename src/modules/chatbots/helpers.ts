@@ -17,13 +17,41 @@ export type IMessage = {
   name?: string;
 };
 
-export const convesationLogToInitialMessages = (conv): IMessage[] =>
-  conv.map((entry) => ({
-    id: entry.id,
-    createdAt: entry.created_at,
-    role: entry.speaker,
-    content: entry.entry,
-  }));
+export const convesationLogToInitialMessages = (
+  conv,
+  welcomeMessage,
+): IMessage[] => {
+  const msgs = welcomeMessage
+    ? [
+        {
+          id: "welcome",
+          createdAt: "",
+          role: IConversationSpeaker.Assistant,
+          content: welcomeMessage,
+        },
+      ]
+    : [];
+  console.log({
+    sss: [
+      ...msgs,
+      conv.map((entry) => ({
+        id: entry.id,
+        createdAt: entry.created_at,
+        role: entry.speaker,
+        content: entry.entry,
+      })),
+    ],
+  });
+  return [
+    ...msgs,
+    ...conv.map((entry) => ({
+      id: entry.id,
+      createdAt: entry.created_at,
+      role: entry.speaker,
+      content: entry.entry,
+    })),
+  ];
+};
 
 export const truncateText = (
   inputText: string,

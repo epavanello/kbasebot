@@ -10,30 +10,41 @@ import { cn } from "@/lib/utils";
 import { CodeBlock } from "./codeblock";
 import { MemoizedReactMarkdown } from "./markdown";
 import { Icon } from "@/components/ui/icons";
+import Image from "next/image";
+import React from "react";
 
 export interface ChatMessageProps {
   message: Message;
 }
 
-export function ChatMessage({ message, ...props }: ChatMessageProps) {
+export function ChatMessage({
+  message,
+  chatbotLogo,
+  ...props
+}: ChatMessageProps) {
   const isUser = message.role === "user";
   return (
     <div
-      className={cn("relative flex flex-col gap-2 w-full items-stretch")}
+      className={cn("relative flex flex-col gap-1 w-full items-stretch")}
       {...props}
     >
       <div
-        className={cn({
+        className={cn("c_text_primary", {
           "self-end": isUser,
         })}
       >
         {isUser ? (
           <span className="text-xs">You</span>
-        ) : (
-          <Icon
-            icon="fluent:bot-sparkle-24-filled"
-            className="text-primary w-5 h-5"
+        ) : !!chatbotLogo ? (
+          <Image
+            src={chatbotLogo}
+            width={15}
+            height={15}
+            alt={"chatbot logo"}
+            className="rounded-full"
           />
+        ) : (
+          <Icon icon="fluent:bot-sparkle-24-filled" className="w-5 h-5" />
         )}
       </div>
       <div
@@ -45,7 +56,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
           className={cn(
             "w-auto min-w-0 max-w-full text-xs prose prose-sm break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 px-4 py-2 inline-block rounded-xl",
             {
-              "rounded-tr-none bg-primary text-white": isUser,
+              "rounded-tr-none c_bg_primary text-white": isUser,
               "rounded-tl-none bg-secondary": !isUser,
             },
           )}
