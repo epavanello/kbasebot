@@ -9,7 +9,8 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["gcevngqhykuaxuphcgxw.supabase.co"],
+    dangerouslyAllowSVG: true,
+    domains: ["gcevngqhykuaxuphcgxw.supabase.co", "localhost"],
   },
 };
 

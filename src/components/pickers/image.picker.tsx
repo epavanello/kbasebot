@@ -7,6 +7,7 @@ import NextImage from "next/image";
 import LoadingDots from "@/components/ui/loading-dots";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { toast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 interface IImagePickerToolbarProps {
   value?: string;
@@ -118,10 +119,15 @@ const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
     multiple: false,
   });
 
+  const deleteImage = async () => {
+    onChange?.("");
+    setImageUrl("");
+  };
+
   return (
     <>
       {!!label && <label className="text-xs font-bold">{label}</label>}
-      <div className="max-w-xl my-1" {...getRootProps()}>
+      <div className="relative max-w-xl" {...getRootProps()}>
         <label className="flex flex-col text-xs items-center justify-center w-full p-3 px-4 transition border border-gray-500  rounded-md appearance-none cursor-pointer hover:border-gray-600 focus:outline-none">
           {uploading ? (
             <LoadingDots />
@@ -140,7 +146,7 @@ const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
               {imageUrl && (
                 <div
                   className={cn(
-                    "relative mt-4 rounded-full overflow-hidden w-full h-16",
+                    "relative mt-4 overflow-hidden w-full h-16",
                     imgWrapperClass || "",
                   )}
                 >
@@ -158,7 +164,7 @@ const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
               )}
               {!imageUrl && (
                 <div className="flex justify-center items-center p-6">
-                  <ImageOff size={40} />
+                  <ImageOff size={32} />
                 </div>
               )}
             </>
@@ -173,6 +179,17 @@ const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
           />
         </label>
       </div>
+      <Button
+        disabled={!imageUrl}
+        type="button"
+        size="sm"
+        variant={"outline"}
+        onClick={deleteImage}
+        className="py-1 px-2 h-auto w-full text-xs"
+      >
+        <Icon icon={"ph:trash"} className="text-red-500 text-lg mr-1" />
+        Remove Image
+      </Button>
     </>
   );
 };
