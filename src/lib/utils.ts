@@ -108,3 +108,19 @@ export const formatDate = (dateString) => {
   const date = new Date(dateString).toUTCString();
   return date;
 };
+
+export function getContrastYIQ(hexcolor) {
+  if (hexcolor.indexOf("#") === 0) {
+    hexcolor = hexcolor.slice(1);
+  }
+  const r = parseInt(hexcolor.substr(0, 2), 16);
+  const g = parseInt(hexcolor.substr(2, 2), 16);
+  const b = parseInt(hexcolor.substr(4, 2), 16);
+  const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 128 ? "black" : "white";
+}
+
+export function textColorBasedOnBg(bgColor) {
+  const primaryColor = bgColor || "#262424";
+  return getContrastYIQ(primaryColor);
+}

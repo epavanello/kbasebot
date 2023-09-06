@@ -5,6 +5,7 @@ import ChatUi from "@/modules/chatbots/chat-ui";
 import { Icon } from "@/components/ui/icons";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
 import Image from "next/image";
+import { textColorBasedOnBg } from "@/lib/utils";
 
 const PublicChatUi = ({ settings }) => {
   const {
@@ -29,13 +30,16 @@ const PublicChatUi = ({ settings }) => {
     <div className="h-full flex flex-col max-w-2xl rounded-2xl border overflow-hidden m-auto">
       <style jsx global>{`
         .c_bg_primary {
-          background: ${primary_color};
+          background: ${primary_color || "#312e2e"};
+        }
+        .c_text_primary_auto {
+          color: ${textColorBasedOnBg(primary_color)};
         }
         .c_text_primary {
           color: ${primary_color};
         }
       `}</style>
-      <div className="flex justify-between p-4 c_bg_primary mix-blend-multiply">
+      <div className="flex justify-between p-4 c_bg_primary">
         <div className="flex gap-2 items-center">
           {!!chatbot_logo && (
             <Image
@@ -46,7 +50,7 @@ const PublicChatUi = ({ settings }) => {
               className="rounded-full"
             />
           )}
-          <h1 className="text-md font-bold">
+          <h1 className="text-md font-bold c_text_primary_auto">
             {display_name || name || "KBaseBot"}
           </h1>
         </div>

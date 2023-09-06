@@ -38,6 +38,7 @@ import PublicChatUi from "@/modules/chatbots/chat-ui/public-chat-ui";
 import ImagePicker from "@/components/pickers/image.picker";
 import TabRadio from "@/components/ui/tab-radio";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 const FormSchema = z.object({
   display_name: z
@@ -315,26 +316,12 @@ const CustomizeForm = ({ chatbotId, settings }) => {
         <div className=" h-[74vh]">
           <PublicChatUi settings={formData} />
         </div>
-        <div>
-          {/*<style jsx>*/}
-          {/*  {`*/}
-          {/*    .chatbpt_bubble {*/}
-          {/*      overflow: hidden;*/}
-          {/*      padding: 0px;*/}
-          {/*      //background-color: '';*/}
-          {/*      color: #fff;*/}
-          {/*      border-radius: 9999px;*/}
-          {/*      display: flex;*/}
-          {/*      justify-content: center;*/}
-          {/*      align-items: center;*/}
-          {/*      border: none;*/}
-          {/*      cursor: pointer;*/}
-          {/*      transition: all 0.2s ease 0s;*/}
-          {/*    }*/}
-          {/*  `}*/}
-          {/*</style>*/}
-
-          <button className="">
+        <div
+          className={cn("flex", {
+            "justify-end": formData.chatbot_bubble_align === "right",
+          })}
+        >
+          <button className="mt-2">
             <Image
               className="rounded-full"
               width={56}
