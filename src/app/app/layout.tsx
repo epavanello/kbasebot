@@ -21,7 +21,7 @@ const MainLayout = ({ children, seo }: DashboardLayoutProps) => {
           <Sidebar />
         </aside>
         {/*<PageTransition>*/}
-        <main className="flex w-full flex-1 flex-col overflow-auto">
+        <main className="flex w-full flex-1 flex-col overflow-auto h-full">
           {children}
         </main>
         {/*</PageTransition>*/}

@@ -9,7 +9,7 @@ const Customize = async ({ params }) => {
   const settings = await getChatbotSettings(chatbot_id);
 
   return (
-    <DashboardShell className="container mx-auto">
+    <DashboardShell className="container mx-auto h-full">
       <DashboardHeader
         heading={"Customize your chatbot"}
         className="justify-center mt-10"

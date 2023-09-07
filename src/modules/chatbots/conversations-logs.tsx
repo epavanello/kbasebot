@@ -39,8 +39,7 @@ const ConversationsLogs = ({
 
   return (
     <div
-      style={{ height: "calc(100vh - 65px)" }}
-      className="grid md:grid-cols-[200px_1fr]"
+      className="grid md:grid-cols-[200px_1fr] flex-1 overflow-auto"
     >
       <ChatbotTheme primary_color={settings.primary_color} />
       <aside className="hidden w-[200px] flex-col gap-3 p-2 md:flex border-r">
@@ -70,7 +69,7 @@ const ConversationsLogs = ({
 
       <section className="flex w-full flex-1 flex-col overflow-auto">
         {!!conversations?.length && (
-          <ScrollArea className="h-[50vh] w-full">
+          <ScrollArea className="w-full h-full overflow-hidden">
             <ChatList
               messages={convesationLogToInitialMessages(conversations)}
             />

@@ -15,7 +15,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 const CodeBlock = ({ children }) => (
-  <pre className="mt-2 w-full rounded-md bg-slate-950 p-4 break-words">
+  <pre className="mt-2 min-w-0 overflow-auto w-full rounded-md bg-slate-950 p-4 break-words">
     <code className="text-white text-xs">{children}</code>
   </pre>
 );
