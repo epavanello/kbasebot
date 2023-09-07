@@ -9,6 +9,7 @@ export const gradients = {
   PANDORA: "bg-gradient-to-r from-green-200 via-green-400 to-purple-700",
   SIERRA_MIST: "bg-gradient-to-r from-yellow-200 via-green-200 to-green-300",
   EARTH: "bg-gradient-to-r from-teal-200 to-lime-200",
+  HERO_LIGHT: "bg-gradient-to-r from-primary-200 to-primary-700",
 };
 
 export function getRandomGradient() {
