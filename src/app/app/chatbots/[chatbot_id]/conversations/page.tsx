@@ -7,6 +7,8 @@ import { notFound } from "next/navigation";
 import ConversationsLogs from "@/modules/chatbots/conversations-logs";
 import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
 
+export const dynamic = "force-dynamic";
+
 async function getData(chatbotId) {
   const supabase = createServerComponentClient({ cookies });
 

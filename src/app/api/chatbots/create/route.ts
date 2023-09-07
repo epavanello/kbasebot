@@ -7,7 +7,7 @@ import { parseFile } from "@/modules/datasource/load-docs";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
 
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {

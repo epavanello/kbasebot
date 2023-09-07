@@ -10,6 +10,8 @@ import {
 } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 
+export const dynamic = "force-dynamic";
+
 async function getData() {
   const supabase = createServerComponentClient({ cookies });
 
