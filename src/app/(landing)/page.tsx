@@ -5,6 +5,7 @@ import Cta from "@/components/landing/cta";
 import Benefit from "@/components/landing/benefit";
 import PublicChatUiFull from "@/modules/chatbots/chat-ui/public-chat-ui-full";
 import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
+import PricingTable from "../pricing/pricing-table";
 
 const Page = async () => {
   const chatbotId = "be45f50b-fd9e-4afd-bd6a-e01ba3c80942";
@@ -15,6 +16,7 @@ const Page = async () => {
       <Hero />
       <Features />
       <Benefit />
+      <PricingTable />
       <Cta />
       <PublicChatUiFull
         settings={settings}

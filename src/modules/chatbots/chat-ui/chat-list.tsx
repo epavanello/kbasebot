@@ -1,5 +1,3 @@
-"use-client";
-
 import { type Message } from "ai";
 import { ChatMessage } from "./chat-message";
 

@@ -1,5 +1,3 @@
-"use-client";
-
 import { UseChatHelpers } from "ai/react";
 import * as React from "react";
 import Textarea from "react-textarea-autosize";

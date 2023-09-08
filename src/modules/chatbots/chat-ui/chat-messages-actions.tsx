@@ -1,7 +1,4 @@
-"use-client";
-
 import { type Message } from "ai";
-
 import { Button } from "@/components/ui/button";
 import { useCopyToClipboard } from "@/lib/hooks/use-copy-to-clipboard";
 import { cn } from "@/lib/utils";

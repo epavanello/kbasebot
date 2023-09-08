@@ -1,4 +1,4 @@
-import { STRIPE_PRICE_ID_BASIC, STRIPE_PRICE_ID_EXTRA } from "./env";
+import { STRIPE_PRICE_ID_BASIC, STRIPE_PRICE_ID_BASIC_YEARLY, STRIPE_PRICE_ID_EXTRA, STRIPE_PRICE_ID_EXTRA_YEARLY } from "./env";
 
 export type PlanName = "free" | "basic" | "pro" | "agency";
 
@@ -40,7 +40,7 @@ export const plans: Plan[] = [
     name: "Basic",
     prices: [
       { priceId: STRIPE_PRICE_ID_BASIC, interval: "month", unitAmount: 999 },
-      { priceId: STRIPE_PRICE_ID_BASIC, interval: "year", unitAmount: 9999 },
+      { priceId: STRIPE_PRICE_ID_BASIC_YEARLY, interval: "year", unitAmount: 9999 },
     ],
     features: ["3 Chatbots", "2k messages/month", ...commonFeatures],
   },
@@ -54,7 +54,7 @@ export const plans: Plan[] = [
         unitAmount: 1999,
       },
       {
-        priceId: STRIPE_PRICE_ID_EXTRA,
+        priceId: STRIPE_PRICE_ID_EXTRA_YEARLY,
         interval: "year",
         unitAmount: 19999,
       },

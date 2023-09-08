@@ -229,6 +229,7 @@ export interface Database {
       }
       subscriptions: {
         Row: {
+          billing_interval: string
           created_at: string | null
           current_period_end: string | null
           current_period_start: string | null
@@ -239,6 +240,7 @@ export interface Database {
           subscription_id: string
         }
         Insert: {
+          billing_interval: string
           created_at?: string | null
           current_period_end?: string | null
           current_period_start?: string | null
@@ -249,6 +251,7 @@ export interface Database {
           subscription_id?: string
         }
         Update: {
+          billing_interval?: string
           created_at?: string | null
           current_period_end?: string | null
           current_period_start?: string | null

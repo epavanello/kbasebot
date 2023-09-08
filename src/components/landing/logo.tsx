@@ -8,6 +8,11 @@ export default function Logo({
   width = 135,
   height = 35,
   className,
+}: {
+  withText?: boolean;
+  width?: number;
+  height?: number;
+  className?: string;
 }) {
   return (
     <Link href="/">
