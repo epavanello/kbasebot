@@ -70,7 +70,10 @@ export const getRandomArrayValue = (arr = []) => {
   return arr[Math.floor(Math.random() * arr?.length)];
 };
 
-export function getErrorMessage(e: unknown): string {
+export function getErrorMessage(
+  e: unknown,
+  defaultMessage: string = "Unknown error",
+): string {
   try {
     if (typeof e === "string") {
       return e;
@@ -87,7 +90,7 @@ export function getErrorMessage(e: unknown): string {
   } catch (error) {
     return getErrorMessage(error);
   }
-  return "unknown";
+  return defaultMessage;
 }
 export const toCapitalizeFirstLetter = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);

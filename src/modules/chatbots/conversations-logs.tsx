@@ -10,24 +10,31 @@ import { convesationLogToInitialMessages } from "@/modules/chatbots/helpers";
 import { ChatScrollAnchor } from "@/modules/chatbots/chat-ui/chat-scroll-anchor";
 import { formatDistance } from "date-fns";
 import ChatbotTheme from "@/modules/chatbots/chat-ui/chatbot-theme";
+import { Database } from "@/lib/types/database.types";
 
 const ConversationsLogs = ({
   conversationsPerSession,
-  firstSessionId,
+  firstConversationId,
   chatbot_id,
   settings,
-}) => {
+}: {
+  conversationsPerSession: Database["public"]["Functions"]["get_messages_by_chatbot_id"]["Returns"];
+  firstConversationId: string;
+  chatbot_id: string;
+  settings: any;
+}
+) => {
   const { supabase } = useSupabaseAuth();
 
-  const [selectedSessionId, setSelectedSessionId] = useState(firstSessionId);
+  const [selectedConversationId, setSelectedConversationId] = useState(firstConversationId);
 
   // @ts-ignore
   const { data: conversations = [], isLoading: isDataLoading } = useQuery(
-    selectedSessionId
+    selectedConversationId
       ? supabase
           .from("conversations")
           .select()
-          .eq("session_id", selectedSessionId)
+          .eq("conversation_id", selectedConversationId)
           .eq("chatbot_id", chatbot_id)
           .order("created_at", { ascending: true })
       : null,
@@ -45,15 +52,14 @@ const ConversationsLogs = ({
       <aside className="hidden w-[200px] flex-col gap-3 p-2 md:flex border-r">
         {!!conversationsPerSession?.length &&
           conversationsPerSession.map((item) => {
-            console.log({ item });
             return (
               <Button
-                key={item.session_id}
-                onClick={() => setSelectedSessionId(item.session_id)}
+                key={item.conversation_id}
+                onClick={() => setSelectedConversationId(item.conversation_id)}
                 className="text-xs text-left items-start py-2 px-4 flex-col h-auto"
                 size={"lg"}
                 variant={
-                  item.session_id === selectedSessionId ? "default" : "outline"
+                  item.conversation_id === selectedConversationId ? "default" : "outline"
                 }
               >
                 {truncate(item.user_last_message, 30)}

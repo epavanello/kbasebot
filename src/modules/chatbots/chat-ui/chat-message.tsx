@@ -5,7 +5,6 @@ import { formatDistance } from "date-fns";
 import { Message } from "ai";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
-
 import { cn } from "@/lib/utils";
 import { CodeBlock } from "./codeblock";
 import { MemoizedReactMarkdown } from "./markdown";
@@ -15,6 +14,7 @@ import React from "react";
 
 export interface ChatMessageProps {
   message: Message;
+  chatbotLogo?: string;
 }
 
 export function ChatMessage({
@@ -109,7 +109,7 @@ export function ChatMessage({
             "self-end": isUser,
           })}
         >
-          {formatDistance(new Date(message.createdAt), new Date(), {
+          {formatDistance(message.createdAt, new Date(), {
             addSuffix: true,
           })}
         </small>

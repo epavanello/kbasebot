@@ -2,7 +2,7 @@ import React from "react";
 
 const Cta = () => {
   return (
-    <div className="mx-auto mt-2 container sm:mt-10 sm:px-6 lg:px-8">
+    <div className="mx-auto py-2 container sm:py-10 sm:px-6 lg:px-8">
       <div className="relative px-6 py-4 shadow-xl sm:rounded-3xl sm:px-10 sm:pb-0 sm:pt-10 md:px-12 lg:px-20 overflow-hidden">
         <div className="absolute -z-10 inset-0 bg-gray-100/60 mix-blend-multiply" />
         <div

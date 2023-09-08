@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { type Message, useChat } from "ai/react";
 import { cn } from "@/lib/utils";
 import { ChatList } from "./chat-list";
@@ -17,13 +16,17 @@ import * as React from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 export interface ChatProps extends React.ComponentProps<"div"> {
   initialMessages?: Message[];
+  chatbot_id: string;
   id?: string;
   chatContainerClass?: string;
+  welcome_message?: string;
+  suggested_message?: string[];
+  chatbotLogo?: string;
+  resetOnIncrement?: number;
 }
 
 export default function ChatUi({
@@ -33,29 +36,38 @@ export default function ChatUi({
   welcome_message,
   suggested_message = [],
   chatbotLogo,
+  chatbot_id,
+  resetOnIncrement,
 }: ChatProps) {
-  const { chatbot_id } = useParams();
-
   const { toast } = useToast();
 
   const chatArea = useRef<HTMLDivElement | null>(null);
 
-  const [sessionId, setSessionId] = useLocalStorage("session-id", uuid());
+  const [conversation_id, setConversationId] = useLocalStorage(
+    "conversation_id",
+    uuid(),
+  );
+
+  function resetChat() {
+    setConversationId(uuid());
+  }
 
   const { user, supabase } = useSupabaseAuth();
 
-  useEffect(() => {
-    if (user?.id) {
-      setSessionId(user?.id);
-    }
-  }, [user]);
+  console.log({ conversation_id });
 
-  // @ts-ignore
+  useEffect(() => {
+    if (resetOnIncrement) {
+      console.log("resetting chat");
+      resetChat();
+    }
+  }, [resetOnIncrement]);
+
   const { data: conversations = [], isLoading: isDataLoading } = useQuery(
     supabase
       .from("conversations")
       .select()
-      .eq("session_id", sessionId)
+      .eq("conversation_id", conversation_id)
       .eq("chatbot_id", chatbot_id)
       .order("created_at", { ascending: true }),
     {
@@ -74,9 +86,9 @@ export default function ChatUi({
     setInput,
   } = useChat({
     api: "/api/chatbots/message",
-    id: sessionId,
+    id: conversation_id,
     body: {
-      sessionId: sessionId,
+      conversationId: conversation_id,
       chatbotId: chatbot_id,
     },
     onResponse(response) {

@@ -7,11 +7,11 @@ class ConversationLog {
   private supabaseAdminClient: any;
   constructor(
     public chatbotOwnerId: string,
-    public sessionId: string,
-    public chatbotId: string
+    public conversationId: string,
+    public chatbotId: string,
   ) {
     this.chatbotOwnerId = chatbotOwnerId;
-    this.sessionId = sessionId;
+    this.conversationId = conversationId;
     this.chatbotId = chatbotId;
     this.supabaseAdminClient = getSupabaseClientAdmin();
   }
@@ -32,7 +32,7 @@ class ConversationLog {
         .from("conversations")
         .insert({
           chatbot_owner_id: this.chatbotOwnerId,
-          session_id: this.sessionId,
+          conversation_id: this.conversationId,
           chatbot_id: this.chatbotId,
           entry,
           speaker,
@@ -53,7 +53,7 @@ class ConversationLog {
     const { data: history } = await this.supabaseAdminClient
       .from("conversations")
       .select("entry, speaker, created_at")
-      .eq("session_id", this.sessionId)
+      .eq("conversation_id", this.conversationId)
       .order("created_at", { ascending: false })
       .limit(limit)
       .throwOnError();
@@ -66,7 +66,7 @@ class ConversationLog {
     await this.supabaseAdminClient
       .from("conversations")
       .delete()
-      .eq("session_id", this.sessionId)
+      .eq("conversation_id", this.conversationId)
       .throwOnError();
   }
 }

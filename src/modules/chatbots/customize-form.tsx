@@ -27,18 +27,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import Creatable from "react-select/creatable";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import PublicChatUi from "@/modules/chatbots/chat-ui/public-chat-ui";
 import ImagePicker from "@/components/pickers/image.picker";
 import TabRadio from "@/components/ui/tab-radio";
-import Image from "next/image";
-import { cn, isContrastColorWhite } from "@/lib/utils";
+import PublicChatUiFull from "./chat-ui/public-chat-ui-full";
 
 const FormSchema = z.object({
   display_name: z
@@ -48,15 +39,20 @@ const FormSchema = z.object({
     })
     .optional(),
   welcome_message: z.string().optional(),
-  suggested_message: z.array(z.string()).optional().nullable(),
-  // theme: z.string().optional().nullable(),
+  suggested_message: z.array(z.string()).optional(),
+  // theme: z.string().optional(),
   primary_color: z.string(),
-  chatbot_logo: z.string().optional().nullable(),
-  chatbot_bubble_logo: z.string().optional().nullable(),
-  chatbot_bubble_align: z.string().optional().nullable(),
+  chatbot_logo: z.string().optional(),
+  chatbot_bubble_logo: z.string().optional(),
+  chatbot_bubble_align: z.string().optional(),
 });
 
-const CustomizeForm = ({ chatbotId, settings }) => {
+interface CustomizeFormProps {
+  chatbotId: string;
+  settings: z.infer<typeof FormSchema>;
+}
+
+const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
   const { supabase, user } = useSupabaseAuth();
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -69,13 +65,14 @@ const CustomizeForm = ({ chatbotId, settings }) => {
   const { formState } = form;
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    if (!user?.id) return;
     try {
       await supabase
         .from("chatbot_settings")
         .upsert(
           {
             chatbot_id: chatbotId,
-            user_id: user?.id,
+            user_id: user.id,
             ...data,
           },
           { onConflict: "chatbot_id" },
@@ -314,44 +311,8 @@ const CustomizeForm = ({ chatbotId, settings }) => {
           </Card>
         </form>
       </Form>
-      <div className="w-1/2 container h-full">
-        <div className=" h-[74vh]">
-          <PublicChatUi noCloseBtn settings={formData} />
-        </div>
-        <div
-          className={cn("flex", {
-            "justify-end": formData.chatbot_bubble_align === "right",
-          })}
-        >
-          <button
-            className="mt-2 w-14 h-14 rounded-full flex items-center justify-center overflow-hidden"
-            style={{
-              backgroundColor: formData?.primary_color,
-              boxShadow:
-                "rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
-            }}
-          >
-            {formData?.chatbot_bubble_logo ? (
-              <Image
-                width={32}
-                height={32}
-                src={formData?.chatbot_bubble_logo}
-                alt={"Chatbot bubble logo"}
-              />
-            ) : (
-              <Image
-                width={32}
-                height={32}
-                src={
-                  isContrastColorWhite(formData?.primary_color || "#fff")
-                    ? process.env.NEXT_PUBLIC_URL + "/bot-light.svg"
-                    : process.env.NEXT_PUBLIC_URL + "/bot-dark.svg"
-                }
-                alt={"Chatbot bubble logo"}
-              />
-            )}
-          </button>
-        </div>
+      <div className="w-1/2 h-full container mx-auto relative">
+        <PublicChatUiFull settings={formData} noCloseBtn absolute chatbot_id={chatbotId} />
       </div>
     </div>
   );
