@@ -43,18 +43,23 @@ export default function ChatUi({
 
   const chatArea = useRef<HTMLDivElement | null>(null);
 
-  const [conversation_id, setConversationId] = useLocalStorage(
-    "conversation_id",
-    uuid(),
-  );
+  const [conversation_id, setConversationId] = useLocalStorage<
+    string | undefined
+  >("conversation_id", undefined);
 
   function resetChat() {
     setConversationId(uuid());
   }
 
-  const { user, supabase } = useSupabaseAuth();
+  const { supabase } = useSupabaseAuth();
 
   console.log({ conversation_id });
+
+  useEffect(() => {
+    if (!conversation_id) {
+      resetChat();
+    }
+  }, []);
 
   useEffect(() => {
     if (resetOnIncrement) {
@@ -67,7 +72,7 @@ export default function ChatUi({
     supabase
       .from("conversations")
       .select()
-      .eq("conversation_id", conversation_id)
+      .eq("conversation_id", conversation_id || "")
       .eq("chatbot_id", chatbot_id)
       .order("created_at", { ascending: true }),
     {
