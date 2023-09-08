@@ -9,9 +9,13 @@ import { useSupabaseAuth } from "@/lib/store/use-user";
 
 const links = [
   {
-    href: "/#",
-    label: "About",
+    href: "/#features",
+    label: "Features",
   },
+  {
+    href: "/#pricing",
+    label: "Pricing",
+  }
 ];
 
 export default function NavLinks({ isCol = false }) {
@@ -41,7 +45,7 @@ export default function NavLinks({ isCol = false }) {
               pathname === link.href ? "text-foreground" : "text-foreground/60",
             )}
           >
-            Features
+            {link.label}
           </Link>
         ))}
       </div>

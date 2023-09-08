@@ -2,26 +2,36 @@ import React from "react";
 import Info from "@/components/landing/info";
 const features = [
   {
-    name: "Design Freedom",
-    description:
-      "Craft landing pages that shine on any device, ensuring an optimal browsing experience across all screen sizes.",
+    name: "Easy to use",
+    description: "KBaseBot is easy to use and requires no coding skills.",
   },
   {
-    name: "Automatic Adjustment",
+    name: "Customizable",
     description:
-      "Our builder's auto-adjust feature ensures your design elements resize and reposition based on the viewing device, providing a seamless user experience.",
+      "KBaseBot is highly customizable and can be tailored to your needs.",
   },
   {
-    name: "Preview Before Publishing",
+    name: "Powerful",
     description:
-      "Use our preview feature to see how your landing page looks on various devices before publishing, ensuring it's perfect every time.",
+      "KBaseBot is powered by GPT-4, making it the most powerful chatbot in the market.",
+  },
+  {
+    name: "Secure",
+    description:
+      "KBaseBot is secure and reliable, with 99.99% uptime guaranteed.",
+  },
+  {
+    name: "Insightful",
+    description:
+      "KBaseBot provides you with powerful analytics to help you make data-driven decisions.",
   },
 ];
 const Benefit = () => {
   return (
     <Info
+      id="info"
       helpText={"Engage and Support Your Audience"}
-      title={"Responsive Design"}
+      title={"Suitable for every context"}
       desc={
         "With KBaseBot, you can create chatbots that engage and support your audience in a whole new way. Whether it's answering frequently asked questions, providing product recommendations, or guiding users through complex processes, KBaseBot has got you covered."
       }

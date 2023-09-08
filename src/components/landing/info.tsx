@@ -15,10 +15,21 @@ export default function Info({
   showChild = false,
   children,
   img,
+  id,
+}: {
+  helpText?: string;
+  title?: string;
+  desc?: string;
+  features: { name: string; description: string }[];
+  dir?: "ltr" | "rtl";
+  showChild?: boolean;
+  children?: React.ReactNode;
+  img: string;
+  id?: string;
 }) {
   return (
-    <div className="overflow-hidden py-24 sm:py-32 mt-12">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <div id={id} className="py-24">
+      <div className="mx-auto max-w-7xl">
         <div
           dir={dir}
           className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2"
@@ -38,16 +49,13 @@ export default function Info({
                 )}
                 {!!desc && <p className="mt-6 text-lg leading-8 ">{desc}</p>}
 
-                <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 lg:max-w-none">
+                <dl className="mt-10 max-w-xl space-y-2 text-base lg:max-w-none">
                   {features.map((feature) => (
-                    <div key={feature.name} className="relative pl-9">
-                      <dt className="inline font-semibold">
+                    <div key={feature.name} className="flex flex-col">
+                      <dt className="font-semibold whitespace-nowrap flex flex-row items-center">
                         <Icon
-                          className={cn(
-                            "text-md rounded-lg mr-1",
-                            gradients.COTTON_CANDY,
-                          )}
-                          icon={"tabler:heart-filled"}
+                          className={cn("text-md rounded-lg mr-1 text-primary")}
+                          icon={"mdi:check-bold"}
                         />
                         {feature.name}
                       </dt>{" "}

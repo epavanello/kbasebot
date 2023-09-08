@@ -23,24 +23,9 @@ export default function PricingTable() {
     tabs[0].id,
   );
 
-  if (!plans.length)
-    return (
-      <div className="pt-4">
-        <Card>
-          <div className="max-w-6xl mx-auto py-8 sm:py-24 px-4 sm:px-6 lg:px-8">
-            <div className="sm:flex sm:flex-col sm:align-center"></div>
-            <p className="flex justify-center text-2xl font-extrabold text-gray-500 sm:text-center">
-              <LockIcon className="mr-4" /> Premium plan are disabled while we
-              are in alpha
-            </p>
-          </div>
-        </Card>
-      </div>
-    );
-
   return (
-    <section>
-      <div className="max-w-6xl mx-auto py-2 sm:py-4 px-4 sm:px-6 lg:px-8">
+    <section id="pricing" className="py-24">
+      <div className="max-w-6xl mx-auto">
         <div className="sm:flex sm:flex-col sm:align-center">
           <h1 className="text-4xl font-extrabold text-black sm:text-center sm:text-6xl">
             Pricing Plans
@@ -128,7 +113,9 @@ export default function PricingTable() {
                     key={billingInterval + plan.id}
                     className={cn("w-full rounded-xl pt-6", {
                       "border-blue-50 bg-zinc-50 border-1 shadow-md": highlight,
-                      "border border-primary": plan.id === subscription?.plan && billingInterval === subscription?.billing_interval,
+                      "border border-primary":
+                        plan.id === subscription?.plan &&
+                        billingInterval === subscription?.billing_interval,
                     })}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
