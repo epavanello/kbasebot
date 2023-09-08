@@ -17,7 +17,7 @@ const PublicChatUiFull = ({
   absolute?: boolean;
   chatbot_id: string;
 }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(noCloseBtn ? true : false);
 
   return (
     settings && (
@@ -44,9 +44,9 @@ const PublicChatUiFull = ({
 
         <Bubble
           settings={settings}
-          isOpen={isOpen}
+          isOpen={noCloseBtn ? false : isOpen}
           onOpen={() => setIsOpen(true)}
-          onClose={() => setIsOpen(false)}
+          onClose={() => !noCloseBtn && setIsOpen(false)}
         ></Bubble>
       </div>
     )
