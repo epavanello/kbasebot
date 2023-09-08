@@ -9,12 +9,13 @@ interface BubbleProps {
   isOpen?: boolean;
   onOpen?: () => void;
   onClose?: () => void;
+  className?: string;
 }
 
-export function Bubble({ settings, isOpen, onClose, onOpen }: BubbleProps) {
+export function Bubble({ settings, isOpen, onClose, onOpen, className }: BubbleProps) {
   return (
     <div
-      className={cn("flex", {
+      className={cn("flex", className, {
         "justify-end": settings.chatbot_bubble_align === "right",
       })}
     >

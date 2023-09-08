@@ -23,7 +23,7 @@ const PublicChatUiFull = ({
     settings && (
       <div
         className={cn(
-          "bottom-4 h-full flex flex-col justify-end w-full max-w-md max-h-[70vh]",
+          "bottom-4 h-full flex flex-col justify-end w-full max-w-md max-h-[70vh] pointer-events-none",
           {
             "right-4": settings.chatbot_bubble_align === "right",
             "left-4": settings.chatbot_bubble_align === "left",
@@ -32,7 +32,11 @@ const PublicChatUiFull = ({
           },
         )}
       >
-        <div className="flex-1 overflow-auto">
+        <div
+          className={cn("flex-1 overflow-auto", {
+            "pointer-events-auto": isOpen,
+          })}
+        >
           <PublicChatUi
             noCloseBtn={noCloseBtn}
             settings={settings}
@@ -43,6 +47,7 @@ const PublicChatUiFull = ({
         </div>
 
         <Bubble
+          className="pointer-events-auto"
           settings={settings}
           isOpen={noCloseBtn ? false : isOpen}
           onOpen={() => setIsOpen(true)}
