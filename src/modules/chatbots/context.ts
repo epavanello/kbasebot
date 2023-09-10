@@ -3,13 +3,18 @@ import { Configuration, CreateEmbeddingResponse, OpenAIApi } from "openai-edge";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import GPT3Tokenizer from "gpt3-tokenizer";
 import { OPENAI_API_KEY } from "@/lib/env";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 const config = new Configuration({
   apiKey: OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(config);
 
-export const getContext = async (input: string, chatbotId) => {
+export const getContext = async (
+  input: string,
+  chatbotId: string,
+  cookies: () => ReadonlyRequestCookies,
+) => {
   // Generate a one-time embedding for the query itself
   const embeddingResponse = await openai.createEmbedding({
     model: "text-embedding-ada-002",
@@ -20,7 +25,7 @@ export const getContext = async (input: string, chatbotId) => {
     data: [{ embedding }],
   }: CreateEmbeddingResponse = await embeddingResponse.json();
 
-  const supabaseAdminClient = getSupabaseClientAdmin();
+  const supabaseAdminClient = getSupabaseClientAdmin(cookies);
 
   // Fetching whole documents for this simple example.
   //
@@ -32,7 +37,7 @@ export const getContext = async (input: string, chatbotId) => {
       query_embedding: embedding,
       match_count: 10, // Choose the number of matches
       chatbot: chatbotId,
-    }
+    },
   );
 
   // # variable_conflict use_column

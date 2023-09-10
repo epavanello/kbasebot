@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
 
     if (!conversationId && !userId) throw new Error("unauthorized");
 
-    const supabaseAdminClient = getSupabaseClientAdmin();
+    const supabaseAdminClient = getSupabaseClientAdmin(cookies);
 
     if (!userId) {
       const { data } = await supabaseAdminClient
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
       });
 
     // Get the context from the last message
-    const context = await getContext(userPrompt.content, chatbotId);
+    const context = await getContext(userPrompt.content, chatbotId, cookies);
 
     const prompt: ChatCompletionRequestMessage[] = [
       {

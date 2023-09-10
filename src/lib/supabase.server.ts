@@ -1,16 +1,14 @@
 import { Database } from "@/lib/types/database.types";
 import {
-  SupabaseClient,
   createServerComponentClient,
 } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
 import {
   NEXT_PUBLIC_SUPABASE_URL,
-  NEXT_PUBLIC_URL,
   SUPABASE_SERVICE_KEY,
 } from "./env";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
-export function getSupabaseClientAdmin() {
+export function getSupabaseClientAdmin(cookies: () => ReadonlyRequestCookies) {
   return createServerComponentClient<Database>(
     {
       cookies,
@@ -18,6 +16,6 @@ export function getSupabaseClientAdmin() {
     {
       supabaseUrl: NEXT_PUBLIC_SUPABASE_URL,
       supabaseKey: SUPABASE_SERVICE_KEY,
-    }
+    },
   );
 }

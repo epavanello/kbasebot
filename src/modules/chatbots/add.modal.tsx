@@ -46,12 +46,10 @@ const AddModal = () => {
 
     const uploadPromises = docs.map(async (eachFile) => {
       const fileName = `/${user?.id}/${eachFile.name}`;
-      const {
-        data: { path },
-      } = await supabase.storage.from("chatbots").upload(fileName, eachFile, {
+      const { path } = (await supabase.storage.from("chatbots").upload(fileName, eachFile, {
         cacheControl: "3600",
         upsert: true,
-      });
+      })).data || {};
       return path;
     });
 
