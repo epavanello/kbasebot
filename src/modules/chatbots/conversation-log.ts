@@ -2,6 +2,7 @@ import { ChatCompletionRequestMessage } from "openai-edge";
 import { convesationLogToMessages } from "./helpers";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
+import { cookies as cookiesType } from "next/headers";
 
 class ConversationLog {
   private supabaseAdminClient: any;
@@ -9,11 +10,12 @@ class ConversationLog {
     public chatbotOwnerId: string,
     public conversationId: string,
     public chatbotId: string,
+    public cookies: () => ReturnType<typeof cookiesType>,
   ) {
     this.chatbotOwnerId = chatbotOwnerId;
     this.conversationId = conversationId;
     this.chatbotId = chatbotId;
-    this.supabaseAdminClient = getSupabaseClientAdmin();
+    this.supabaseAdminClient = getSupabaseClientAdmin(cookies);
   }
 
   public async addEntry({

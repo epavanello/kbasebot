@@ -1,20 +1,17 @@
 const templates = {
   basic: ({
-    context
-  }) => `You are a dedicated chatbot educator, specifically designed to assist students 
-        with their study material. Based on the provided resources and guidelines, 
-        please answer the questions in markdown format. 
-        - If the answer is not explicitly available in the given resources, kindly respond with "Sorry, I'm not sure about that."
-        - respond to greetings
-        - be gentle
-        
-        
+    context,
+  }: {
+    context: string;
+  }) => `You are a dedicated chatbot(KBaseBot) based on the provided knowledge base, resources and guidelines.
+  - If the answer is not explicitly available in the given resources, kindly respond with "Sorry, I'm not sure about that."
+  - respond to greetings
+  - be gentle
+Context sections:
+${context}
 
-        Context sections:
-        ${context}
- 
-        Answer as markdown:
-      `
-}
+Answer as markdown:
+`,
+};
 
-export { templates }
+export { templates };

@@ -12,11 +12,17 @@ import { getContext } from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { templates } from "@/modules/chatbots/templates";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
-import { OPENAI_API_KEY } from "@/lib/env";
+import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
 import { NextRequest } from "next/server";
 
 const config = new Configuration({
   apiKey: OPENAI_API_KEY,
+  basePath: "https://oai.hconeai.com/v1",
+  baseOptions: {
+    headers: {
+      "Helicone-Auth": `Bearer ${HELICONE_API_KEY}`,
+    },
+  },
 });
 
 const openai = new OpenAIApi(config);
@@ -27,10 +33,8 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const cookieStore = cookies();
-
     const supabase = createRouteHandlerClient({
-      cookies: () => cookieStore,
+      cookies,
     });
     // Check if we have a session
     const {
@@ -64,7 +68,12 @@ export async function POST(req: NextRequest) {
       throw new Error("Please write a question to get answer from ai");
 
     // Retrieve the conversation log and save the user's prompt
-    const conversationLog = new ConversationLog(userId, conversationId, chatbotId);
+    const conversationLog = new ConversationLog(
+      userId,
+      conversationId,
+      chatbotId,
+      cookies,
+    );
 
     await conversationLog.addEntry({
       entry: userPrompt.content as string,
