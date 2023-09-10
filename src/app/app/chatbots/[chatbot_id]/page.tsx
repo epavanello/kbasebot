@@ -4,13 +4,16 @@ import { DashboardShell } from "@/components/ui/dashboard-shell";
 import Link from "next/link";
 import PublicChatUi from "@/modules/chatbots/chat-ui/public-chat-ui";
 import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
+import { cookies } from "next/headers";
+
+export const dynamic = "force-dynamic";
 
 const Page = async ({
   params: { chatbot_id },
 }: {
   params: { chatbot_id: string };
 }) => {
-  const settings = await getChatbotSettings(chatbot_id);
+  const settings = await getChatbotSettings(chatbot_id, cookies);
 
   return (
     <DashboardShell className="gap-0 pt-2 h-full flex flex-col">

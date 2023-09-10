@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { sayGreeting } from "@/lib/utils";

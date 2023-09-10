@@ -1,23 +1,46 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Database } from "@/lib/types/database.types";
 import { Bubble } from "../bubble";
 import PublicChatUi from "./public-chat-ui";
 import { cn } from "@/lib/utils";
 
+type Settings = Database["public"]["Tables"]["chatbot_settings"]["Row"];
+
 const PublicChatUiFull = ({
-  settings,
+  externalSettings = null,
   noCloseBtn,
   absolute,
   chatbot_id,
 }: {
-  settings: Database["public"]["Tables"]["chatbot_settings"]["Row"] | null;
+  externalSettings?: Settings | null;
   noCloseBtn?: boolean;
   absolute?: boolean;
   chatbot_id: string;
 }) => {
   const [isOpen, setIsOpen] = React.useState(noCloseBtn ? true : false);
+  const [settings, setSettings] = React.useState<Settings | null>(
+    externalSettings,
+  );
+  useEffect(() => {
+    if (!settings) {
+      fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/chatbots/settings?chatbotId=${chatbot_id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      ).then(async (res) => {
+        if (res.status === 200) {
+          const settings = (await res.json()) as Settings;
+          setSettings(settings);
+        }
+      });
+    }
+  }, [settings]);
 
   return (
     settings && (

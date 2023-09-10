@@ -2,15 +2,16 @@ import { NextResponse } from "next/server";
 
 import type { NextRequest } from "next/server";
 import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
+import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
   try {
-    const chatbotId = await new URL(req.url).searchParams.get("chatbotId");
+    const chatbotId = new URL(req.url).searchParams.get("chatbotId");
     if (!chatbotId) throw new Error("chatbotId is required");
 
     return NextResponse.json({
       status: "done",
-      settings: await getChatbotSettings(chatbotId),
+      settings: await getChatbotSettings(chatbotId, cookies),
     });
   } catch (e) {
     console.error(e);

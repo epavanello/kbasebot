@@ -34,7 +34,7 @@ const Conversations = async ({
   const { chatbot_id } = params;
 
   const conversationsPerSession = (await getData(params?.chatbot_id)) || [];
-  const settings = (await getChatbotSettings(params?.chatbot_id)) || {};
+  const settings = (await getChatbotSettings(params?.chatbot_id, cookies)) || {};
 
   const firstChatbotId = conversationsPerSession?.[0]?.chatbot_id || "";
 

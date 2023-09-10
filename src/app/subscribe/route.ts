@@ -8,8 +8,6 @@ import { BillingInterval, PlanName, plans } from "@/lib/stripe";
 import {
   NEXT_PUBLIC_URL,
   STRIPE_API_KEY,
-  STRIPE_PRICE_ID_BASIC,
-  STRIPE_PRICE_ID_EXTRA,
 } from "@/lib/env";
 import { getErrorMessage } from "@/lib/utils";
 

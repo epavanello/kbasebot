@@ -312,7 +312,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
         </form>
       </Form>
       <div className="w-1/2 h-full container mx-auto relative">
-        <PublicChatUiFull settings={formData} noCloseBtn absolute chatbot_id={chatbotId} />
+        <PublicChatUiFull externalSettings={formData} noCloseBtn absolute chatbot_id={chatbotId} />
       </div>
     </div>
   );

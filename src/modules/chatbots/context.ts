@@ -3,7 +3,7 @@ import { Configuration, CreateEmbeddingResponse, OpenAIApi } from "openai-edge";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import GPT3Tokenizer from "gpt3-tokenizer";
 import { OPENAI_API_KEY } from "@/lib/env";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import { cookies as cookiesType } from "next/headers";
 
 const config = new Configuration({
   apiKey: OPENAI_API_KEY,
@@ -13,7 +13,7 @@ const openai = new OpenAIApi(config);
 export const getContext = async (
   input: string,
   chatbotId: string,
-  cookies: () => ReadonlyRequestCookies,
+  cookies: () => ReturnType<typeof cookiesType>,
 ) => {
   // Generate a one-time embedding for the query itself
   const embeddingResponse = await openai.createEmbedding({
