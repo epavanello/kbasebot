@@ -6,6 +6,8 @@ import type { NextRequest } from "next/server";
 import { parseFile } from "@/modules/datasource/load-docs";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
+import {loadMultiUrl} from "@/modules/datasource/load-websites";
+import {loadText} from "@/modules/datasource/load-text";
 
 export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
@@ -14,9 +16,12 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { files } = body;
+    const { files = [], text = '', urls = [] } = body;
+    console.log({files,
+      text,
+      urls})
 
-    if (!files?.length) throw new Error("no-files-found");
+    if (!files?.length && !text?.length &&  !urls?.length ) throw new Error("no-datasource-found");
 
     const supabaseServerClient = createRouteHandlerClient({ cookies });
 
@@ -39,7 +44,20 @@ export async function POST(req: NextRequest) {
       .single()
       .throwOnError();
 
-    const documentCollection = await parseFile(files, supabaseServerClient);
+    const documentCollection = []
+
+    if(files?.length){
+      documentCollection.concat(await parseFile(files, supabaseServerClient));
+    }
+    if(text?.length){
+      documentCollection.push(await loadText(text));
+    }
+    if(urls?.length){
+      documentCollection.push(await loadMultiUrl(urls));
+    }
+    //
+    // return NextResponse.json({ status: "done", chatbot });
+    // console.log({documentCollection})
 
     const embeddings = new OpenAIEmbeddings();
 

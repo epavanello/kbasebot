@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {cn, truncate} from "@/lib/utils";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import DocumentUploader from "@/modules/datasource/doc-uploader";
@@ -12,6 +12,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDatasourceStore } from "@/lib/store/use-datasource-store";
 import { MIN_TEXT_INPUT } from "@/modules/datasource/docs-constant";
 import { useSupabaseAuth } from "@/lib/store/use-user";
+import {TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {Tabs} from "@radix-ui/react-tabs";
+import {Icon} from "@/components/ui/icons";
+import WebUploader from "@/modules/datasource/web-uploader";
 
 const AddModal = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false); // Step 1
@@ -19,12 +23,18 @@ const AddModal = () => {
 
   const { push } = useRouter();
 
-  const { docs, text } = useDatasourceStore((state) => ({
+  const { docs, text, urls = [] } = useDatasourceStore((state) => ({
     docs: state.docs,
     text: state.text,
+    urls: state.urls,
   }));
 
   const { user, supabase } = useSupabaseAuth();
+
+  console.log({urls})
+  const totalUrlChars = urls?.length ? urls.reduce((acc, next) => acc + (next.chars || 0), 0) : 0
+
+  console.log({totalUrlChars})
 
   const canCreate =
     !loading && (!!docs?.length || text?.length > MIN_TEXT_INPUT);
@@ -66,6 +76,8 @@ const AddModal = () => {
 
       const res = await axios.post("/api/chatbots/create", {
         files: fileNames,
+        urls,
+        text
       });
 
       const { chatbot } = res.data;
@@ -93,7 +105,7 @@ const AddModal = () => {
       <DialogTrigger
         className={cn(buttonVariants({ variant: "default" }), "mt-4")}
       >
-        Create a new site
+        New chatbot
       </DialogTrigger>
 
       <DialogContent
@@ -111,10 +123,29 @@ const AddModal = () => {
             <h1 className="mb-2 text-4xl font-black">Create New Chatbot</h1>
             <form onSubmit={createChatbot}>
               <ScrollArea className="h-[40vh] mt-4">
-                <div className="grid gap-8 grid-cols-1 md:grid-cols-2">
-                  <TextSource />
-                  <DocumentUploader />
-                </div>
+                <Tabs orientation={'vertical'} defaultValue="text" className="flex w-full">
+                  <TabsList className="flex flex-col py-4 h-full gap-2 items-start">
+                    {[
+                      {label: 'Text', value: 'text', icon: 'fluent:textbox-16-regular', desc: `${text.length} Chars`},
+                      {label: 'Files', value: 'files', icon: 'material-symbols:file-copy-outline', desc: `${docs.length} Files`},
+                      {label: 'Websites', value: 'websites', icon: 'fluent-mdl2:website', desc: `${truncate(totalUrlChars.toString(), 24)} Chars`},
+                    ].map(item =>
+                        <TabsTrigger className="w-full justify-start items-start text-sm" key={item.value} value={item.value}>
+                          <Icon icon={item.icon} className="mr-1 mt-1"/>
+                          <div className="flex flex-col items-start">
+                            <span>{item.label}</span>
+                            <small className="text-[10px]">{item.desc}</small>
+                          </div>
+                        </TabsTrigger>)}
+                  </TabsList>
+
+                  {[{Comp: TextSource, value: 'text'},{Comp: DocumentUploader, value: 'files'},{Comp: WebUploader, value: 'websites'} ].map(item =>
+                      <TabsContent className="flex-1 p-4 border-secondary border mt-0 ml-2" value={item.value}>
+                        <item.Comp/>
+                      </TabsContent>
+                  )}
+
+                </Tabs>
               </ScrollArea>
 
               <div className="flex justify-center gap-1 mt-2">

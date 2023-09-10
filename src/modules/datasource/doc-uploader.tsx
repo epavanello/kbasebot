@@ -77,7 +77,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
     <div className="w-full flex flex-col items-center max-w-3xl">
       {!!label && <label className="text-xs font-bold">{label}</label>}
       <div className="w-full my-1" {...getRootProps()}>
-        <label className="flex flex-col text-xs items-center justify-center w-full py-10 px-4 transition border border-dashed border-gray-300 rounded-md appearance-none cursor-pointer hover:border-gray-600 focus:outline-none">
+        <label className="flex flex-col text-xs items-center justify-center w-full py-14 px-4 transition border border-dashed border-gray-300 rounded-md appearance-none cursor-pointer hover:border-gray-600 focus:outline-none">
           {uploading ? (
             <LoadingIcon />
           ) : (
