@@ -1,15 +1,11 @@
 import { Database } from "@/lib/types/database.types";
-import {
-  SupabaseClient,
-  createServerComponentClient,
-} from "@supabase/auth-helpers-nextjs";
-import {
-  NEXT_PUBLIC_SUPABASE_URL,
-  NEXT_PUBLIC_URL,
-  SUPABASE_SERVICE_KEY,
-} from "./env";
+import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { NEXT_PUBLIC_URL } from "./env";
+
+export type SupabaseClientTyped = SupabaseClient<Database>;
 
 export type UserInfo = Database["public"]["Tables"]["subscriptions"]["Row"];
+export type Settings = Database["public"]["Tables"]["chatbot_settings"]["Row"];
 
 export function isPaidUser(userInfo: UserInfo | null) {
   if (!userInfo || !userInfo.current_period_end) {
@@ -61,12 +57,12 @@ export function handleSupabaseErrorAndGetData<
 
 export async function getUserByEmail(
   email: string,
-  supabaseClientAdmin: SupabaseClient<Database>
+  supabaseClientAdmin: SupabaseClient<Database>,
 ) {
   const userID = handleSupabaseErrorAndGetData(
     await supabaseClientAdmin.rpc("get_user_id_by_email", {
       user_email: email,
-    })
+    }),
   );
 
   if (!userID) {
@@ -83,7 +79,7 @@ export async function getUserByEmail(
 
 export async function getUserByEmailAndSignin(
   email: string,
-  supabaseClientAdmin: SupabaseClient<Database>
+  supabaseClientAdmin: SupabaseClient<Database>,
 ) {
   let user = await getUserByEmail(email, supabaseClientAdmin);
 
@@ -103,7 +99,7 @@ export async function getUserByEmailAndSignin(
         options: {
           emailRedirectTo: `${NEXT_PUBLIC_URL}/auth`,
         },
-      })
+      }),
     );
   }
 

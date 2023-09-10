@@ -31,14 +31,13 @@ export const getContext = async (
   //
   // Ideally for context injection, documents are chunked into
   // smaller sections at earlier pre-processing/embedding step.
-  const { data: documents = [], error } = await supabaseAdminClient.rpc(
-    "match_documents",
-    {
-      query_embedding: embedding,
-      match_count: 10, // Choose the number of matches
-      chatbot: chatbotId,
-    },
-  );
+  const { data: documents = [] } = await supabaseAdminClient
+    .rpc("match_documents", {
+      p_query_embedding: embedding,
+      p_match_count: 10, // Choose the number of matches
+      p_chatbot_id: chatbotId,
+    })
+    .throwOnError();
 
   // # variable_conflict use_column
   //   BEGIN
@@ -57,17 +56,16 @@ export const getContext = async (
   //   LIMIT match_count;
   //   END;
 
-  console.log({ error });
-
   const tokenizer = new GPT3Tokenizer({ type: "gpt3" });
   let tokenCount = 0;
   let contextText = "";
 
   // Concat matched documents
-  for (let i = 0; i < documents?.length; i++) {
+  for (let i = 0; documents && i < documents.length; i++) {
     const document = documents[i];
     if (document?.content) {
       const content = document?.content;
+      const source = (document?.metadata as Record<string, string>)["source"];
       const encoded = tokenizer.encode(content);
       tokenCount += encoded.text.length;
 
@@ -76,7 +74,7 @@ export const getContext = async (
         break;
       }
 
-      contextText += `${content.trim()}\n---\n`;
+      contextText += `source: ${source}\ncontent: ${content.trim()}\n\n---\n`;
     }
   }
 

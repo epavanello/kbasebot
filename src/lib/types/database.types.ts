@@ -313,9 +313,9 @@ export interface Database {
       }
       match_documents: {
         Args: {
-          query_embedding: string
-          match_count?: number
-          chatbot?: string
+          p_query_embedding: string
+          p_match_count: number
+          p_chatbot_id: string
         }
         Returns: {
           id: number

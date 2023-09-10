@@ -5,8 +5,7 @@ import { Database } from "@/lib/types/database.types";
 import { Bubble } from "../bubble";
 import PublicChatUi from "./public-chat-ui";
 import { cn } from "@/lib/utils";
-
-type Settings = Database["public"]["Tables"]["chatbot_settings"]["Row"];
+import type { Settings } from "@/lib/supabase";
 
 const PublicChatUiFull = ({
   externalSettings = null,
