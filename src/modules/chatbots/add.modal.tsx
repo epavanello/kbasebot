@@ -140,7 +140,7 @@ const AddModal = () => {
                   </TabsList>
 
                   {[{Comp: TextSource, value: 'text'},{Comp: DocumentUploader, value: 'files'},{Comp: WebUploader, value: 'websites'} ].map(item =>
-                      <TabsContent className="flex-1 p-4 border-secondary border mt-0 ml-2" value={item.value}>
+                      <TabsContent key={item.value} className="flex-1 p-4 border-secondary border mt-0 ml-2" value={item.value}>
                         <item.Comp/>
                       </TabsContent>
                   )}
