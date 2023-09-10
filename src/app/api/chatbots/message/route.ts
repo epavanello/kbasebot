@@ -39,9 +39,9 @@ export async function POST(req: NextRequest) {
 
     let userId = session?.user?.id;
 
-    const { messages, sessionId, chatbotId } = await req.json();
+    const { messages, conversationId, chatbotId } = await req.json();
 
-    if (!sessionId && !userId) throw new Error("unauthorized");
+    if (!conversationId && !userId) throw new Error("unauthorized");
 
     const supabaseAdminClient = getSupabaseClientAdmin();
 
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       throw new Error("Please write a question to get answer from ai");
 
     // Retrieve the conversation log and save the user's prompt
-    const conversationLog = new ConversationLog(userId, sessionId, chatbotId);
+    const conversationLog = new ConversationLog(userId, conversationId, chatbotId);
 
     await conversationLog.addEntry({
       entry: userPrompt.content as string,

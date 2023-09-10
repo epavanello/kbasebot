@@ -1,13 +1,14 @@
 import { ChatCompletionRequestMessage } from "openai-edge";
 import { IConversationSpeaker } from "@/lib/types/common.types";
+import { Database } from "@/lib/types/database.types";
 
 export const convesationLogToMessages = (
-  conv,
+  conv: Database["public"]["Tables"]["conversations"]["Row"][] | null,
 ): ChatCompletionRequestMessage[] =>
-  conv.map((entry) => ({
+  (conv || []).map((entry) => ({
     role: entry.speaker,
     content: entry.entry,
-  }));
+  })) as ChatCompletionRequestMessage[];
 
 export type IMessage = {
   id: string;
@@ -18,38 +19,27 @@ export type IMessage = {
 };
 
 export const convesationLogToInitialMessages = (
-  conv,
-  welcomeMessage,
+  conv: Database["public"]["Tables"]["conversations"]["Row"][] | null,
+  welcomeMessage?: string,
 ): IMessage[] => {
   const msgs = welcomeMessage
     ? [
         {
           id: "welcome",
-          createdAt: "",
           role: IConversationSpeaker.Assistant,
           content: welcomeMessage,
         },
       ]
     : [];
-  console.log({
-    sss: [
-      ...msgs,
-      conv.map((entry) => ({
-        id: entry.id,
-        createdAt: entry.created_at,
-        role: entry.speaker,
-        content: entry.entry,
-      })),
-    ],
-  });
+
   return [
     ...msgs,
-    ...conv.map((entry) => ({
+    ...((conv || []).map((entry) => ({
       id: entry.id,
-      createdAt: entry.created_at,
+      createdAt: entry.created_at ? new Date(entry.created_at) : undefined,
       role: entry.speaker,
       content: entry.entry,
-    })),
+    })) as IMessage[]),
   ];
 };
 

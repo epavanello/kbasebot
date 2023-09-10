@@ -6,7 +6,7 @@ import HeroAnim from "@/components/landing/hero-anim";
 
 const Hero = () => {
   return (
-    <div className="relative w-full h-[70vh] flex flex-col justify-center items-center gap-2">
+    <div className="relative w-full h-[90vh] flex flex-col justify-center items-center gap-2">
       <div
         className={cn("absolute w-full h-full -z-10")}
         style={{

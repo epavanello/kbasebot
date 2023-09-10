@@ -6,11 +6,16 @@ import Link from "next/link";
 import React from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { useSupabaseAuth } from "@/lib/store/use-user";
+import { DarkModeSwitch } from "../ui/dark-mode-switch";
 
 const links = [
   {
-    href: "/#",
-    label: "About",
+    href: "/#features",
+    label: "Features",
+  },
+  {
+    href: "/#pricing",
+    label: "Pricing",
   },
 ];
 
@@ -41,7 +46,7 @@ export default function NavLinks({ isCol = false }) {
               pathname === link.href ? "text-foreground" : "text-foreground/60",
             )}
           >
-            Features
+            {link.label}
           </Link>
         ))}
       </div>
@@ -66,14 +71,10 @@ export default function NavLinks({ isCol = false }) {
             >
               Login
             </Link>
-            <Link
-              href="/auth/"
-              className={cn(buttonVariants({ variant: "default", size: "sm" }))}
-            >
-              Signup
-            </Link>
           </>
         )}
+
+        <DarkModeSwitch />
       </div>
     </div>
   );

@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { cn, formatDate } from "@/lib/utils";

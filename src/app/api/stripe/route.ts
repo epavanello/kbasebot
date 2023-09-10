@@ -6,11 +6,13 @@ import {
   STRIPE_API_KEY,
   STRIPE_ENDPOINT_SECRET,
   STRIPE_PRICE_ID_BASIC,
+  STRIPE_PRICE_ID_BASIC_YEARLY,
   STRIPE_PRICE_ID_EXTRA,
+  STRIPE_PRICE_ID_EXTRA_YEARLY,
 } from "@/lib/env";
 import Stripe from "stripe";
 import { getErrorMessage } from "@/lib/utils";
-import { PlanName } from "@/lib/stripe";
+import { BillingInterval, PlanName } from "@/lib/stripe";
 import { getUserByEmailAndSignin } from "@/lib/supabase";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 
@@ -42,7 +44,7 @@ export async function POST(request: NextRequest) {
     const event = await stripe.webhooks.constructEventAsync(
       await request.text(),
       signature,
-      STRIPE_ENDPOINT_SECRET
+      STRIPE_ENDPOINT_SECRET,
     );
 
     const supabaseClientAdmin = getSupabaseClientAdmin();
@@ -78,7 +80,7 @@ export async function POST(request: NextRequest) {
           subscription = invoice.subscription;
         } else if (typeof invoice.subscription == "string") {
           subscription = await stripe.subscriptions.retrieve(
-            invoice.subscription
+            invoice.subscription,
           );
         }
 
@@ -108,15 +110,24 @@ export async function POST(request: NextRequest) {
 
         if (!user) {
           throw new Error(
-            `User not found: ref_id ${clientReferenceID}, email:${email}`
+            `User not found: ref_id ${clientReferenceID}, email:${email}`,
           );
         }
 
         let plan: PlanName;
+        let billingInterval: BillingInterval;
         if (STRIPE_PRICE_ID_BASIC.split("|").includes(priceID)) {
           plan = "basic";
+          billingInterval = "month";
         } else if (STRIPE_PRICE_ID_EXTRA.split("|").includes(priceID)) {
           plan = "pro";
+          billingInterval = "month";
+        } else if (STRIPE_PRICE_ID_BASIC_YEARLY.split("|").includes(priceID)) {
+          plan = "basic";
+          billingInterval = "year";
+        } else if (STRIPE_PRICE_ID_EXTRA_YEARLY.split("|").includes(priceID)) {
+          plan = "pro";
+          billingInterval = "year";
         } else {
           throw new Error(`Invalid price id: ${priceID}`);
         }
@@ -145,6 +156,7 @@ export async function POST(request: NextRequest) {
             customer_id: customer,
             plan: plan,
             subscription_id: subscription.id,
+            billing_interval: billingInterval,
           });
 
         if (errorUpsert) {
@@ -159,7 +171,7 @@ export async function POST(request: NextRequest) {
     console.error(error);
     return NextResponse.json(
       { error: getErrorMessage(error) },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

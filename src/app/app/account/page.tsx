@@ -1,7 +1,9 @@
+"use client";
+
 import React from "react";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,13 +12,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { UserAvatar } from "@/components/layouts/user-avatar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { LoadingIcon } from "@/components/ui/icons";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { useSupabaseAuth } from "@/lib/store/use-user";
+import Link from "next/link";
 
 const Page = () => {
+  const { subscription } = useSupabaseAuth();
+
   return (
     <DashboardShell className="container gap-0 mt-4">
       <DashboardHeader
@@ -96,14 +100,15 @@ const Page = () => {
               <p className="pb-4 mr-4 sm:pb-0">
                 Manage your subscription on Stripe.
               </p>
-              <Button
-              // variant={loading || !subscription ? "outline" : "default"}
-              // loading={loading}
-              // disabled={loading || !subscription}
-              // onClick={redirectToCustomerPortal}
-              >
-                Open customer portal
-              </Button>
+              {subscription ? (
+                <Link className={buttonVariants({})} href="/app/subscription">
+                  Open customer portal
+                </Link>
+              ) : (
+                <Link className={buttonVariants({})} href="/pricing">
+                  Select a plan
+                </Link>
+              )}
             </div>
           </CardFooter>
         </Card>

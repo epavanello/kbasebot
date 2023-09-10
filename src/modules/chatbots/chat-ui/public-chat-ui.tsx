@@ -11,31 +11,45 @@ import { Database } from "@/lib/types/database.types";
 
 const PublicChatUi = ({
   settings,
+  chatbot_id,
   noCloseBtn = false,
+  onClose,
+  className,
 }: {
-  settings: Database["public"]["Tables"]["chatbot_settings"]["Row"];
+  settings: Database["public"]["Tables"]["chatbot_settings"]["Row"] | null;
+  chatbot_id: string;
   noCloseBtn?: boolean;
+  className?: string;
+  onClose?: () => void;
 }) => {
   const {
-    primary_color,
+    primary_color = "#000000",
     display_name,
-    name,
     welcome_message,
     suggested_message,
     theme,
     chatbot_logo,
   } = settings || {};
 
-  console.log({ settings });
+  const [resetOnIncrement, setResetOnIncrement] = React.useState(0);
 
-  const onClose = () => {
-    window.parent.postMessage({ type: "close" }, "*");
+  const onCloseCallback =
+    onClose ||
+    (() => {
+      window.parent.postMessage({ type: "close" }, "*");
+    });
+
+  const onReload = () => {
+    setResetOnIncrement(resetOnIncrement + 1);
   };
 
-  const onReload = () => {};
-
   return (
-    <div className="h-full flex flex-col max-w-2xl rounded-2xl border overflow-hidden m-auto">
+    <div
+      className={cn(
+        "h-full flex flex-col max-w-2xl rounded-2xl border overflow-hidden m-auto bg-background",
+        className,
+      )}
+    >
       <ChatbotTheme primary_color={primary_color} />
       <div className="flex justify-between p-4 c_bg_primary">
         <div className="flex gap-2 items-center">
@@ -49,7 +63,7 @@ const PublicChatUi = ({
             />
           )}
           <h1 className="text-md font-bold c_text_primary_auto">
-            {display_name || name || "KBaseBot"}
+            {display_name || "KBaseBot"}
           </h1>
         </div>
         <div className="flex flex-row-reverse gap-4 c_text_primary_auto">
@@ -57,7 +71,7 @@ const PublicChatUi = ({
             <Icon
               icon="mi:close"
               className="w-5 h-5 cursor-pointer hover:opacity-50 transition-opacity duration-200"
-              onClick={onClose}
+              onClick={onCloseCallback}
             />
           )}
 
@@ -69,10 +83,12 @@ const PublicChatUi = ({
         </div>
       </div>
       <ChatUi
-        welcome_message={welcome_message}
-        suggested_message={suggested_message}
+        welcome_message={welcome_message || ""}
+        suggested_message={suggested_message || undefined}
         className="flex-1 min-h-0"
-        chatbotLogo={chatbot_logo}
+        chatbotLogo={chatbot_logo || undefined}
+        chatbot_id={chatbot_id}
+        resetOnIncrement={resetOnIncrement}
       />
       <footer className="shrink-0 bg-accent border-t  px-4 py-2">
         <div className="flex items-center justify-center gap-1.5">
@@ -82,7 +98,7 @@ const PublicChatUi = ({
               icon="fluent:bot-sparkle-24-filled"
               className={cn({
                 ["drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]"]:
-                  !isContrastColorWhite(settings.primary_color),
+                  !isContrastColorWhite(primary_color),
               })}
             />
             <a
@@ -93,7 +109,7 @@ const PublicChatUi = ({
                 "text-sm font-semibold tracking-tight hover:underline",
                 {
                   "drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]":
-                    !isContrastColorWhite(settings.primary_color),
+                    !isContrastColorWhite(primary_color),
                 },
               )}
             >

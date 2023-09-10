@@ -139,6 +139,7 @@ export interface Database {
         Row: {
           chatbot_id: string
           chatbot_owner_id: string
+          conversation_id: string | null
           created_at: string
           entry: string | null
           id: string
@@ -149,6 +150,7 @@ export interface Database {
         Insert: {
           chatbot_id: string
           chatbot_owner_id: string
+          conversation_id?: string | null
           created_at?: string
           entry?: string | null
           id?: string
@@ -159,6 +161,7 @@ export interface Database {
         Update: {
           chatbot_id?: string
           chatbot_owner_id?: string
+          conversation_id?: string | null
           created_at?: string
           entry?: string | null
           id?: string
@@ -226,6 +229,7 @@ export interface Database {
       }
       subscriptions: {
         Row: {
+          billing_interval: string
           created_at: string | null
           current_period_end: string | null
           current_period_start: string | null
@@ -236,6 +240,7 @@ export interface Database {
           subscription_id: string
         }
         Insert: {
+          billing_interval: string
           created_at?: string | null
           current_period_end?: string | null
           current_period_start?: string | null
@@ -246,6 +251,7 @@ export interface Database {
           subscription_id?: string
         }
         Update: {
+          billing_interval?: string
           created_at?: string | null
           current_period_end?: string | null
           current_period_start?: string | null
@@ -269,6 +275,18 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      get_messages_by_chatbot_id: {
+        Args: {
+          p_chatbot_id: string
+        }
+        Returns: {
+          conversation_id: string
+          chatbot_id: string
+          user_last_message: string
+          assistant_last_message: string
+          sent_at: string
+        }[]
+      }
       get_messages_by_session: {
         Args: {
           p_chatbot_id: string

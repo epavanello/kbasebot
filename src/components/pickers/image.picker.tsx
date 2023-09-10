@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useDropzone } from "react-dropzone";
 import { ImageOff } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import NextImage from "next/image";
 import LoadingDots from "@/components/ui/loading-dots";
 import { useSupabaseAuth } from "@/lib/store/use-user";
@@ -16,6 +16,7 @@ interface IImagePickerToolbarProps {
   imgClass?: string;
   imgWrapperClass?: string;
   imageUploading?: (data: boolean) => void;
+  bucket?: string;
 }
 
 const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
@@ -27,8 +28,8 @@ const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
   imgWrapperClass,
   imageUploading,
 }) => {
-  const inputRef = useRef<any>();
-  const imageRef = useRef();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -55,17 +56,14 @@ const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
       const img = new Image();
       img.onload = async function () {
         try {
-          let { width, height } = this;
+          let { width, height } = img;
           const aspectRatio = width / height;
 
           if (aspectRatio !== 1) {
             throw new Error("Please upload an square image");
           }
 
-          const {
-            data: { path },
-            error,
-          } = await supabase.storage
+          const { data, error } = await supabase.storage
             .from(bucket)
             .upload(`${user?.id}/${file.name}`, file, {
               cacheControl: "3600",
@@ -76,7 +74,7 @@ const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
 
           const {
             data: { publicUrl },
-          } = supabase.storage.from(bucket).getPublicUrl(path, {
+          } = supabase.storage.from(bucket).getPublicUrl(data.path, {
             // transform: {
             //   width: 150,
             //   height: 150, //FIXME: may be need pro supabase
@@ -88,10 +86,10 @@ const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
           console.log({ error });
           toast({
             title: "Error uploading image",
-            description:
-              typeof error?.message === "string"
-                ? error.message
-                : "Something went wrong, please try again",
+            description: getErrorMessage(
+              error,
+              "Something went wrong, please try again",
+            ),
             variant: "destructive",
           });
         }
@@ -102,10 +100,10 @@ const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
       console.error(error);
       toast({
         title: "Error uploading image",
-        description:
-          typeof error?.message === "string"
-            ? error.message
-            : "Something went wrong, please try again",
+        description: getErrorMessage(
+          error,
+          "Something went wrong, please try again",
+        ),
         variant: "destructive",
       });
     } finally {

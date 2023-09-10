@@ -1,11 +1,6 @@
-"use-client";
-
 import { type UseChatHelpers } from "ai/react";
 
-import { Button } from "@/components/ui/button";
 import { PromptForm } from "./prompt-form";
-import { ButtonScrollToBottom } from "./button-scroll-to-bottom";
-import { ReloadIcon, StopIcon } from "@radix-ui/react-icons";
 
 export interface ChatPanelProps
   extends Pick<

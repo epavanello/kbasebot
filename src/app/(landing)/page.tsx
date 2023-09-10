@@ -3,22 +3,24 @@ import Hero from "@/components/landing/hero";
 import Features from "@/components/landing/features";
 import Cta from "@/components/landing/cta";
 import Benefit from "@/components/landing/benefit";
-import Script from "next/script";
+import PublicChatUiFull from "@/modules/chatbots/chat-ui/public-chat-ui-full";
+import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
 import Testimonials from "@/components/landing/testimonials";
+import PricingTable from "../pricing/pricing-table";
 
-const Page = () => {
+const Page = async () => {
+  const chatbotId = "be45f50b-fd9e-4afd-bd6a-e01ba3c80942";
+  const settings = await getChatbotSettings(chatbotId);
+
   return (
     <div>
       <Hero />
       <Features />
       <Benefit />
+      <PricingTable />
       <Cta />
-
       <Testimonials />
-
-      <Script
-        src={`${process.env.NEXT_PUBLIC_URL}/embed.js?chatbot_id=be45f50b-fd9e-4afd-bd6a-e01ba3c80942`}
-      />
+      <PublicChatUiFull settings={settings} chatbot_id={chatbotId} />
     </div>
   );
 };

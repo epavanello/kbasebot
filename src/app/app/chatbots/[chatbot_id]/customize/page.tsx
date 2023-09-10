@@ -4,7 +4,13 @@ import { DashboardHeader } from "@/components/ui/dashboard-header";
 import CustomizeForm from "@/modules/chatbots/customize-form";
 import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
 
-const Customize = async ({ params }) => {
+interface CustomizeProps {
+  params: {
+    chatbot_id: string;
+  };
+}
+
+const Customize = async ({ params }: CustomizeProps) => {
   const { chatbot_id } = params;
   const settings = await getChatbotSettings(chatbot_id);
 

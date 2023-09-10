@@ -38,8 +38,8 @@ const features = [
 
 const Features = () => {
   return (
-    <div id={"features"}>
-      <div className="mx-auto mt-12 max-w-7xl px-6 sm:mt-56 lg:px-8">
+    <div id="features" className="py-24">
+      <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-2xl lg:text-center">
           <h2 className="text-base font-semibold leading-7 text-muted-foreground">
             Everything you need
