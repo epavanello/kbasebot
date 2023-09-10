@@ -37,7 +37,7 @@ const AddModal = () => {
   console.log({totalUrlChars})
 
   const canCreate =
-    !loading && (!!docs?.length || text?.length > MIN_TEXT_INPUT);
+    !loading && (!!docs?.length || text?.length > MIN_TEXT_INPUT || totalUrlChars > 0) ;
 
   const [error, setError] = useState("");
 
