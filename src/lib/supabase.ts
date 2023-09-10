@@ -90,7 +90,7 @@ export async function getUserByEmailAndSignin(
   if (!user) {
     const { data, error } =
       await supabaseClientAdmin.auth.admin.inviteUserByEmail(email, {
-        redirectTo: `${NEXT_PUBLIC_URL}/app`,
+        redirectTo: `${NEXT_PUBLIC_URL}/auth`,
       });
     if (error) {
       throw error;
@@ -101,7 +101,7 @@ export async function getUserByEmailAndSignin(
       await supabaseClientAdmin.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${NEXT_PUBLIC_URL}/app`,
+          emailRedirectTo: `${NEXT_PUBLIC_URL}/auth`,
         },
       })
     );
