@@ -34,13 +34,13 @@ const Cta = () => {
           >
             <path
               d="M-200 0h201v201h-201Z M600 0h201v201h-201Z M-400 600h201v201h-201Z M200 800h201v201h-201Z"
-              stroke-width="0"
+              strokeWidth="0"
             ></path>
           </svg>
           <rect
             width="100%"
             height="100%"
-            stroke-width="0"
+            strokeWidth="0"
             fill="url(#1d4240dd-898f-445f-932d-e2872fd12de3)"
           ></rect>
         </svg>

@@ -14,8 +14,8 @@ const Page = async () => {
       <Features />
       <Benefit />
       <PricingTable />
+      {/*<Testimonials />*/}
       <Cta />
-      <Testimonials />
       <PublicChatUiFull chatbot_id="be45f50b-fd9e-4afd-bd6a-e01ba3c80942" />
     </div>
   );

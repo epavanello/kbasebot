@@ -18,25 +18,34 @@ export const Carousel: React.FC<CarouselProps> = ({
   autoplay = false,
   speed = 1000, // default to 1 second transition speed
   delay = 3000, // default to 3 seconds delay
+  gap = 0,
 }) => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
-  const totalSlides = React.Children.count(children);
   const slideWidth = 100 / visibleItems;
+
+  const totalSlides = React.Children.count(children) * 2;
 
   const goToSlide = (index: number) => {
     if (infinite) {
-      if (index < 0) index = totalSlides - visibleItems;
-      else if (index >= totalSlides) index = 0;
+      if (index < 0)
+        index = totalSlides - visibleItems - React.Children.count(children);
+      // Consider duplicate set
+      else if (index >= totalSlides - visibleItems) {
+        index = 0;
+        setTimeout(() => setCurrentSlide(0), speed); // Quickly jump to start of original set after animation
+      }
     } else {
       if (index < 0) index = 0;
-      else if (index >= totalSlides - visibleItems)
-        index = totalSlides - visibleItems;
+      else if (index >= React.Children.count(children) - visibleItems)
+        index = React.Children.count(children) - visibleItems;
     }
     setCurrentSlide(index);
   };
 
+  const [isHovered, setIsHovered] = React.useState(false);
+
   React.useEffect(() => {
-    if (autoplay) {
+    if (autoplay && !isHovered) {
       if (delay === 0) {
         const interval = setInterval(() => {
           goToSlide(currentSlide + 0.1); // smooth scroll
@@ -51,17 +60,27 @@ export const Carousel: React.FC<CarouselProps> = ({
         return () => clearInterval(interval);
       }
     }
-  }, [currentSlide, autoplay, delay, speed]);
+  }, [currentSlide, autoplay, delay, speed, isHovered]);
 
   return (
-    <div className="relative overflow-hidden">
+    <div
+      className="relative overflow-hidden"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div
         className="flex transition-transform duration-300"
         style={{
           transform: `translateX(-${currentSlide * slideWidth}%)`,
           transitionDuration: `${speed}ms`,
+          gap: `${gap}px`, // Setting the gap here
         }}
       >
+        {/* Render original set */}
+        {React.Children.map(children, (child) => (
+          <div style={{ flex: `0 0 ${slideWidth}%` }}>{child}</div>
+        ))}
+        {/* Render duplicate set */}
         {React.Children.map(children, (child) => (
           <div style={{ flex: `0 0 ${slideWidth}%` }}>{child}</div>
         ))}
