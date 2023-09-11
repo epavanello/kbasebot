@@ -9,7 +9,13 @@ import {
 } from "@/components/ui/popover";
 import { Icon } from "@/components/ui/icons";
 
-const ColorPicker = ({ onChange, value, label, resetProp }) => {
+const ColorPicker = ({ onChange, value, label, resetProp } : {
+    onChange: (value: string) => void;
+    value: string;
+    label?: string;
+    resetProp?: () => void;
+}
+  ) => {
   const reset = () => {
     resetProp?.();
   };

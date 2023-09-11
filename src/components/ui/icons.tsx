@@ -8,7 +8,7 @@ import { Icon } from "@iconify/react";
 
 export { Icon };
 
-export const CloseIcon = ({ className }) => (
+export const CloseIcon = ({ className }: { className?: string }) => (
   <Icon
     icon="icon-park-outline:close"
     className={cn("text-2xl", className || "")}
@@ -18,6 +18,6 @@ export const CloseIcon = ({ className }) => (
 export const LOADING_ICON = "line-md:loading-loop";
 export const DOT_LOADING_ICON = "svg-spinners:3-dots-bounce";
 
-export const LoadingIcon = ({ className }) => (
+export const LoadingIcon = ({ className }: { className?: string }) => (
   <Icon icon={LOADING_ICON} className={cn("text-2xl", className || "")} />
 );

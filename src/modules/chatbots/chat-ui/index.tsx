@@ -17,6 +17,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import LoadingDots from "@/components/ui/loading-dots";
 
 export interface ChatProps extends React.ComponentProps<"div"> {
   initialMessages?: Message[];
@@ -81,6 +82,8 @@ export default function ChatUi({
     },
   );
 
+  const [responseIsStarted, setResponseIsStarted] = React.useState(false);
+
   const {
     messages = [],
     append,
@@ -104,13 +107,23 @@ export default function ChatUi({
           description:
             "There was a problem with your request. please try again",
         });
+      } else {
+        setResponseIsStarted(true);
       }
     },
+    onFinish() {},
     initialMessages: convesationLogToInitialMessages(
       conversations,
       welcome_message,
     ) as Message[],
   });
+
+  // set response is complete to false when the loading state changes
+  useEffect(() => {
+    if (!isLoading) {
+      setResponseIsStarted(false);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     chatArea?.current?.scrollTo({
@@ -122,12 +135,9 @@ export default function ChatUi({
   return (
     <div className={cn("flex flex-col w-full my-auto", className)}>
       <Separator className="border" />
-      <div
-        className={cn("flex-1 overflow-y-auto pt-4 md:pt-10")}
-        ref={chatArea}
-      >
+      <div className={cn("flex-1 overflow-y-auto py-4 px-4")} ref={chatArea}>
         {isDataLoading && (
-          <div className="max-w-2xl m-auto flex flex-col gap-6 px-2">
+          <div className="max-w-2xl m-auto flex flex-col gap-6">
             {[1, 2, 3].map((i) => (
               <div className="flex flex-col gap-3" key={i.toString()}>
                 <Skeleton className="w-[70%] h-[70px] rounded-2xl self-end" />
@@ -145,6 +155,9 @@ export default function ChatUi({
           </div>
         ) : (
           <EmptyScreen setInput={setInput} />
+        )}
+        {isLoading && !responseIsStarted && (
+          <LoadingDots className="!w-2 !h-2" />
         )}
       </div>
       {!!suggested_message?.length && (
