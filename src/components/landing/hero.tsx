@@ -1,8 +1,9 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { gradients } from "@/style/gradients";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import HeroAnim from "@/components/landing/hero-anim";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -36,9 +37,15 @@ const Hero = () => {
           provide instant support, and automate conversations with KBaseBot.
         </p>
 
-        <Button size="lg" variant={"default"} className="mt-4 py-6 px-20">
+        <Link
+          className={cn(
+            buttonVariants({ variant: "default", size: "lg" }),
+            "mt-4 py-6 px-20",
+          )}
+          href="/app"
+        >
           Get Started
-        </Button>
+        </Link>
       </div>
     </div>
   );
