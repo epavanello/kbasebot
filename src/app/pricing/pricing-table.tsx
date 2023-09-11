@@ -39,11 +39,13 @@ export default function PricingTable() {
                 key={i.id}
                 onClick={() => setBillingInterval(i.id)}
                 type="button"
-                className={`${
-                  billingInterval === i.id
-                    ? "text-white"
-                    : "hover:text-gray-400"
-                } relative mix-blend-multiply rounded-full px-3 py-1.5 text-sm font-medium outline-sky-400 transition focus-visible:outline-2`}
+                className={cn(
+                  "relative mix-blend-multiply rounded-full px-3 py-1.5 text-sm font-medium outline-sky-400 transition focus-visible:outline-2",
+                  {
+                    "text-white": billingInterval === i.id,
+                    "text-gray-500": billingInterval !== i.id,
+                  },
+                )}
                 style={{
                   WebkitTapHighlightColor: "transparent",
                 }}
@@ -92,6 +94,9 @@ export default function PricingTable() {
                   ? "Change plan"
                   : "Subscribe";
                 let route = `/subscribe?plan=${plan.id}&interval=${billingInterval}`;
+                const isActive =
+                  plan.id === subscription?.plan &&
+                  billingInterval === subscription?.billing_interval;
 
                 if (isFree) {
                   subscribeText = "Get started";
@@ -100,10 +105,7 @@ export default function PricingTable() {
                 if (isAgency) {
                   subscribeText = "Contact us!";
                   route = "/contact";
-                } else if (
-                  plan.id === subscription?.plan &&
-                  billingInterval === subscription?.billing_interval
-                ) {
+                } else if (isActive) {
                   subscribeText = "Manage";
                   route = "/app/subscription";
                 }
@@ -111,11 +113,12 @@ export default function PricingTable() {
                 return (
                   <motion.div
                     key={billingInterval + plan.id}
-                    className={cn("w-full rounded-xl pt-6", {
-                      "border-blue-50 bg-zinc-50 border-1 shadow-md": highlight,
+                    className={cn("w-full rounded-xl pt-6 dark:shadow-slate-700", {
+                      "border-blue-50 bg-zinc-50 dark:bg-zinc-900 border-1 shadow-md":
+                        highlight,
+                        "shadow-sm": !highlight,
                       "border border-primary":
-                        plan.id === subscription?.plan &&
-                        billingInterval === subscription?.billing_interval,
+                      isActive
                     })}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -126,16 +129,14 @@ export default function PricingTable() {
                     }}
                   >
                     <div className="flex justify-between items-center px-4">
-                      <div className="shine-effect h-4 flex justify-center items-center px-2 bg-white rounded-sm">
-                        <p
-                          className={cn(
-                            "text-[11px] text-gray-600 font-medium m-auto",
-                            { "opacity-0": !highlight },
-                          )}
-                        >
-                          Recommended
-                        </p>
-                      </div>
+                      <p
+                        className={cn(
+                          "self-start shine-effect h-4 px-2 bg-background rounded-sm text-[11px] text-gray-600 font-medium",
+                          { "opacity-0": !highlight },
+                        )}
+                      >
+                        Recommended
+                      </p>
 
                       <p
                         className={cn(
@@ -151,7 +152,7 @@ export default function PricingTable() {
                     </div>
                     <div
                       key={plan.id}
-                      className="rounded-lg shadow-sm divide-y divide-zinc-200"
+                      className="rounded-lg divide-y divide-zinc-200"
                     >
                       <div className="p-6">
                         <h2 className="text-2xl leading-6 font-semibold text-gray-500">
@@ -165,14 +166,14 @@ export default function PricingTable() {
 
                         <p className={cn("mt-2")}>
                           <span
-                            className={cn("text-4xl text-zinc-700 font-bold", {
+                            className={cn("text-4xl text-zinc-700 dark:text-zinc-300 font-bold", {
                               "text-gray-600": !priceString,
                             })}
                           >
                             {priceString || plan.priceText}
                           </span>
                           {priceString && (
-                            <span className="text-base font-medium text-zinc-800">
+                            <span className="text-base font-medium text-zinc-800 dark:text-zinc-200">
                               {billingInterval === "year" ? "/year" : "/month"}
                             </span>
                           )}

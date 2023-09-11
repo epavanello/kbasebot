@@ -9,11 +9,8 @@ const Hero = () => {
   return (
     <div className="relative w-full h-[90vh] flex flex-col justify-center items-center gap-2">
       <div
-        className={cn("absolute w-full h-full -z-10")}
-        style={{
-          background:
-            "radial-gradient(182.29999999999998% 69% at 50% 8.4%,#ffffff 0%,rgb(255,255,255) 28.345139819430482%,rgba(255,255,255,.88) 46.39900258832971%,hsla(0,0%,100%,0) 99.95393495930529%)",
-        }}
+        className={cn("absolute w-full h-full -z-10 bg-gradient-to-b from-white dark:from-slate-700 via-slate-100 to-background")}
+
       ></div>
       <div
         className={cn("absolute w-full h-full -z-20", gradients.HERO_LIGHT)}
@@ -40,7 +37,7 @@ const Hero = () => {
         <Link
           className={cn(
             buttonVariants({ variant: "default", size: "lg" }),
-            "mt-4 py-6 px-20",
+            "mt-4 py-6 px-10",
           )}
           href="/app"
         >

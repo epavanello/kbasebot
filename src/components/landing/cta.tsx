@@ -1,6 +1,9 @@
 import React from "react";
 import { Icon } from "../ui/icons";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { DarkModeSwitch } from "../ui/dark-mode-switch";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const Cta = () => {
   return (
@@ -65,29 +68,33 @@ const Cta = () => {
         </div>
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-bold -tracking-wide text-4xl leading-10">
-            Boost your productivity.
+            {/*Migliora l'esperienza dei tuoi clienti, inizia a usare la nostra app oggi */}
+            Improve your customer experience
             <br />
-            Start using our app today.
+            start using our app today
           </h2>
           <p className="my-2">
-            Incididunt sint fugiat pariatur cupidatat consectetur sit cillum
-            anim id veniam aliqua proident excepteur commodo do ea.
+            {/* Non perdere tempo, inizia a usare gratuitamente i nostri chatbot per il tuo sito web. */}
+            Don&apos;t waste time, start using our chatbots for your website for
+            free.
           </p>
           <div className="mt-4">
-            <Button
-              size={"lg"}
-              href="#"
-              className="adu alo arg arw awa awg axv bbn bic boy boz bpb bpp"
+            <Link
+              className={cn(
+                buttonVariants({ variant: "default", size: "lg" }),
+                "mt-4 py-6 px-10",
+              )}
+              href="/app"
             >
               Get started for free
-            </Button>
+            </Link>
           </div>
         </div>
       </div>
       <footer aria-labelledby="footer-heading" className="relative">
         <div className="mx-auto max-w-7xl px-6 pb-8 pt-4 lg:px-8">
           <div className="border-t border-black border-opacity-10 dark:border-white dark:border-opacity-10 pt-8 md:flex md:items-center md:justify-between">
-            <div className="flex gap-8 md:order-2">
+            <div className="flex items-center gap-4 md:order-2">
               <a href="#" className="text-gray-500 hover:opacity-50">
                 <Icon icon="mdi:twitter" className="w-7 h-7" />
               </a>
@@ -97,8 +104,9 @@ const Cta = () => {
               <a href="#" className="text-gray-500 hover:opacity-50">
                 <Icon icon="mdi:instagram" className="w-7 h-7" />
               </a>
+              <DarkModeSwitch />
             </div>
-            <p className="lm awc awo axp cjo ckv">
+            <p className="text-center text-xs leading-5">
               © 2023 KBaseBot, Inc. All rights reserved.
             </p>
           </div>

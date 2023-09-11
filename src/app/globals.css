@@ -82,6 +82,16 @@
   );
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00ffffff",endColorstr="#007db9e8",GradientType=1);
 }
+.dark .shine-effect:after {
+  background: linear-gradient(
+    90deg,
+    hsla(0, 0%, 0%, 0) 0,
+    hsla(0, 0%, 31%, 0.8) 50%,
+    rgba(37, 53, 66, 0) 99%,
+    rgba(18, 26, 32, 0)
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#00ffffff",endColorstr="#007db9e8",GradientType=1);
+}
 
 @keyframes shine-effect-slide {
   0% {

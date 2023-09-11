@@ -6,7 +6,6 @@ import Link from "next/link";
 import React from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { useSupabaseAuth } from "@/lib/store/use-user";
-import { DarkModeSwitch } from "../ui/dark-mode-switch";
 
 const links = [
   {
@@ -52,7 +51,7 @@ export default function NavLinks({ isCol = false }) {
       </div>
 
       <div
-        className={cn("flex gap-1", {
+        className={cn("flex items-center gap-1", {
           "flex-col space-y-2": isCol,
         })}
       >
@@ -66,15 +65,13 @@ export default function NavLinks({ isCol = false }) {
         ) : (
           <>
             <Link
-              href="/auth/"
+              href="/auth"
               className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
             >
               Login
             </Link>
           </>
         )}
-
-        <DarkModeSwitch />
       </div>
     </div>
   );
