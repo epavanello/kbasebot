@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "../ui/icons";
+import { Button } from "@/components/ui/button";
 
 const Cta = () => {
   return (
@@ -68,20 +69,18 @@ const Cta = () => {
             <br />
             Start using our app today.
           </h2>
-          <p className="gx lk uk avz awr axo">
+          <p className="my-2">
             Incididunt sint fugiat pariatur cupidatat consectetur sit cillum
             anim id veniam aliqua proident excepteur commodo do ea.
           </p>
-          <div className="kw lx yz ze aai">
-            <a
+          <div className="mt-4">
+            <Button
+              size={"lg"}
               href="#"
               className="adu alo arg arw awa awg axv bbn bic boy boz bpb bpp"
             >
-              Get started
-            </a>
-            <a href="#" className="awa awg awp bah">
-              Learn more <span aria-hidden="true">→</span>
-            </a>
+              Get started for free
+            </Button>
           </div>
         </div>
       </div>
