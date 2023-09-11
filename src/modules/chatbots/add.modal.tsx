@@ -152,7 +152,6 @@ const AddModal = () => {
                   onClick={() => setIsDialogOpen(false)}
                   size={"lg"}
                   type="button"
-                  loading={loading}
                   disabled={loading}
                   variant="ghost"
                 >

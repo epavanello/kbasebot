@@ -23,7 +23,9 @@ const PublicChatUiFull = ({
     externalSettings,
   );
   useEffect(() => {
-    if (!settings) {
+    if (externalSettings) {
+      setSettings(externalSettings);
+    } else {
       fetch(
         `${process.env.NEXT_PUBLIC_URL}/api/chatbots/settings?chatbotId=${chatbot_id}`,
         {
@@ -34,12 +36,11 @@ const PublicChatUiFull = ({
         },
       ).then(async (res) => {
         if (res.status === 200) {
-          const settings = (await res.json()) as Settings;
-          setSettings(settings);
+          setSettings((await res.json()) as Settings);
         }
       });
     }
-  }, [settings]);
+  }, [externalSettings]);
 
   return (
     settings && (

@@ -30,6 +30,7 @@ import Creatable from "react-select/creatable";
 import ImagePicker from "@/components/pickers/image.picker";
 import TabRadio from "@/components/ui/tab-radio";
 import PublicChatUiFull from "./chat-ui/public-chat-ui-full";
+import { Settings } from "@/lib/supabase";
 
 const FormSchema = z.object({
   display_name: z
@@ -38,27 +39,41 @@ const FormSchema = z.object({
       message: "Display Name must be at least 3 characters.",
     })
     .optional(),
-  welcome_message: z.string().optional(),
-  suggested_message: z.array(z.string()).optional(),
-  // theme: z.string().optional(),
+  welcome_message: z.string().default(""),
+  suggested_message: z.array(z.string()).default([]),
+  // theme: z.string().default(''),
   primary_color: z.string(),
-  chatbot_logo: z.string().optional(),
-  chatbot_bubble_logo: z.string().optional(),
-  chatbot_bubble_align: z.string().optional(),
+  chatbot_logo: z.string().default(""),
+  chatbot_bubble_logo: z.string().default(""),
+  chatbot_bubble_align: z.string().default(""),
 });
 
 interface CustomizeFormProps {
   chatbotId: string;
-  settings: z.infer<typeof FormSchema>;
+  settings: Settings | null;
 }
 
 const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
   const { supabase, user } = useSupabaseAuth();
 
+  function parseWithDefaults(
+    input: Settings | null,
+  ): z.infer<typeof FormSchema> {
+    return {
+      chatbot_bubble_align: input?.chatbot_bubble_align || "right",
+      chatbot_bubble_logo: input?.chatbot_bubble_logo || "",
+      chatbot_logo: input?.chatbot_logo || "",
+      display_name: input?.display_name || undefined,
+      primary_color: input?.primary_color || "#000000",
+      suggested_message: input?.suggested_message || [],
+      welcome_message: input?.welcome_message || "",
+    };
+  }
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      ...settings,
+      ...FormSchema.parse(parseWithDefaults(settings)),
     },
   });
 
@@ -312,7 +327,25 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
         </form>
       </Form>
       <div className="w-1/2 h-full container mx-auto relative">
-        <PublicChatUiFull externalSettings={formData} noCloseBtn absolute chatbot_id={chatbotId} />
+        <PublicChatUiFull
+          externalSettings={
+            settings
+              ? { ...settings, ...formData }
+              : {
+                  chatbot_background: null,
+                  chatbot_id: chatbotId,
+                  id: "",
+                  user_id: user?.id || "",
+                  theme: null,
+                  user_message_background: null,
+                  display_name: formData.display_name || null,
+                  ...formData,
+                }
+          }
+          noCloseBtn
+          absolute
+          chatbot_id={chatbotId}
+        />
       </div>
     </div>
   );
