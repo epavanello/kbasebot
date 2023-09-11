@@ -19,7 +19,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const { files = [], text = "", urls = [] } = body;
-    console.log({ files, text, urls });
 
     if (!files?.length && !text?.length && !urls?.length)
       throw new Error("no-datasource-found");
