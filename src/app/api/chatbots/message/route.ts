@@ -21,6 +21,7 @@ const config = new Configuration({
   baseOptions: {
     headers: {
       "Helicone-Auth": `Bearer ${HELICONE_API_KEY}`,
+      "Helicone-RateLimit-Policy": "1000;w=3600",
     },
   },
 });
