@@ -4,17 +4,14 @@ import { gradients } from "@/style/gradients";
 import { buttonVariants } from "@/components/ui/button";
 import HeroAnim from "@/components/landing/hero-anim";
 import Link from "next/link";
+import { GridBackground } from "./grid-background";
 
 const Hero = () => {
   return (
     <div className="relative w-full h-[90vh] flex flex-col justify-center items-center gap-2">
-      <div
-        className={cn("absolute w-full h-full -z-10 bg-gradient-to-b from-white dark:from-slate-700 via-slate-100 to-background")}
-
-      ></div>
-      <div
-        className={cn("absolute w-full h-full -z-20", gradients.HERO_LIGHT)}
-      ></div>
+      <div className="absolute -z-10 -mt-24 w-full h-full rotate-180">
+        <GridBackground></GridBackground>
+      </div>
 
       <div className="max-w-5xl flex flex-col items-center gap-2 text-center">
         <HeroAnim />

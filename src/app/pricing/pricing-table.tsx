@@ -27,7 +27,7 @@ export default function PricingTable() {
     <section id="pricing" className="py-24">
       <div className="max-w-6xl mx-auto">
         <div className="sm:flex sm:flex-col sm:align-center">
-          <h1 className="text-4xl font-extrabold text-black sm:text-center sm:text-6xl">
+          <h1 className="text-4xl font-extrabold text-background sm:text-center sm:text-6xl">
             Pricing Plans
           </h1>
           <p className="mt-6 text-center">
