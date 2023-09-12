@@ -10,6 +10,7 @@ import { loadMultiUrl } from "@/modules/datasource/load-websites";
 import { loadText } from "@/modules/datasource/load-text";
 import { getErrorMessage } from "@/lib/utils";
 import { Document } from "langchain/document";
+import { getPermissions } from "@/lib/permissions/plans";
 
 export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
@@ -31,6 +32,24 @@ export async function POST(req: NextRequest) {
 
     if (!user) {
       throw new Error("unauthorized");
+    }
+
+    const { data: subscription } = await supabaseServerClient
+      .from("subscriptions")
+      .select()
+      .single();
+
+    const { permission } = getPermissions(subscription);
+
+    const { count } = await supabaseServerClient
+      .from("chatbots")
+      .select("*", { count: "exact" })
+      .eq("user_id", user.id);
+
+    console.log({ count });
+
+    if (count >= permission.maxChatbots) {
+      throw new Error("max-chatbots-limit");
     }
 
     // TODO: check credits

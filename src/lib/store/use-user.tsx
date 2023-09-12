@@ -3,13 +3,19 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  createPagesBrowserClient,
   Session,
   SupabaseClient,
   User,
-  createPagesBrowserClient,
 } from "@supabase/auth-helpers-nextjs";
 import { UserInfo as Subscription } from "../supabase";
 import { Database } from "../types/database.types";
+import {
+  getPermissions,
+  Permissions,
+  Plan,
+  PLAN_PERMISSIONS,
+} from "@/lib/permissions/plans";
 
 type SuapabaseAuthContextType = {
   supabase: SupabaseClient<Database>;
@@ -17,6 +23,8 @@ type SuapabaseAuthContextType = {
   user?: User;
   isLoading: boolean;
   subscription: null | Subscription;
+  plan: Plan;
+  permission: Permissions;
 };
 
 const SupabaseAuthContext = createContext<SuapabaseAuthContextType>(null!);
@@ -37,6 +45,10 @@ const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<undefined | User>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [subscription, setSubscription] = useState<null | Subscription>(null);
+  const [permission, setPermission] = useState<Permissions>(
+    PLAN_PERMISSIONS[Plan.FREE],
+  );
+  const [plan, setPlan] = useState<Plan>(Plan.FREE);
 
   const router = useRouter();
 
@@ -80,9 +92,24 @@ const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [router, supabase]);
 
+  useEffect(() => {
+    const { permission, plan } = getPermissions(subscription);
+
+    if (permission) setPermission(permission);
+    if (plan) setPlan(plan);
+  }, [permission]);
+
   return (
     <SupabaseAuthContext.Provider
-      value={{ supabase, user, session, subscription, isLoading }}
+      value={{
+        supabase,
+        user,
+        session,
+        subscription,
+        plan,
+        permission,
+        isLoading,
+      }}
     >
       {children}
     </SupabaseAuthContext.Provider>
