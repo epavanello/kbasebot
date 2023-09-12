@@ -12,10 +12,11 @@ import {
 } from "@/lib/env";
 import Stripe from "stripe";
 import { getErrorMessage } from "@/lib/utils";
-import { BillingInterval, PlanName } from "@/lib/stripe";
+import { BillingInterval } from "@/lib/stripe";
 import { getUserByEmailAndSignin } from "@/lib/supabase";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import { cookies } from "next/headers";
+import { Plan } from "@/lib/permissions/plans";
 
 export const dynamic = "force-dynamic";
 
@@ -115,19 +116,19 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        let plan: PlanName;
+        let plan: Plan;
         let billingInterval: BillingInterval;
         if (STRIPE_PRICE_ID_BASIC.split("|").includes(priceID)) {
-          plan = "basic";
+          plan = Plan.BASIC;
           billingInterval = "month";
         } else if (STRIPE_PRICE_ID_EXTRA.split("|").includes(priceID)) {
-          plan = "pro";
+          plan = Plan.PRO;
           billingInterval = "month";
         } else if (STRIPE_PRICE_ID_BASIC_YEARLY.split("|").includes(priceID)) {
-          plan = "basic";
+          plan = Plan.BASIC;
           billingInterval = "year";
         } else if (STRIPE_PRICE_ID_EXTRA_YEARLY.split("|").includes(priceID)) {
-          plan = "pro";
+          plan = Plan.PRO;
           billingInterval = "year";
         } else {
           throw new Error(`Invalid price id: ${priceID}`);

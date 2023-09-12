@@ -95,6 +95,34 @@ export interface Database {
           }
         ]
       }
+      chatbot_urls: {
+        Row: {
+          chatbot_id: string
+          created_at: string
+          id: string
+          url: string
+        }
+        Insert: {
+          chatbot_id: string
+          created_at?: string
+          id?: string
+          url: string
+        }
+        Update: {
+          chatbot_id?: string
+          created_at?: string
+          id?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_urls_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       chatbots: {
         Row: {
           created_at: string
@@ -190,8 +218,10 @@ export interface Database {
           content: string
           created_at: string | null
           embedding: string | null
+          file_name: string | null
           id: number
           metadata: Json | null
+          url_id: string | null
           user_id: string | null
         }
         Insert: {
@@ -199,8 +229,10 @@ export interface Database {
           content: string
           created_at?: string | null
           embedding?: string | null
+          file_name?: string | null
           id?: number
           metadata?: Json | null
+          url_id?: string | null
           user_id?: string | null
         }
         Update: {
@@ -208,8 +240,10 @@ export interface Database {
           content?: string
           created_at?: string | null
           embedding?: string | null
+          file_name?: string | null
           id?: number
           metadata?: Json | null
+          url_id?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -217,6 +251,18 @@ export interface Database {
             foreignKeyName: "knowledge_base_chatbot_id_fkey"
             columns: ["chatbot_id"]
             referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_base_file_name_fkey"
+            columns: ["file_name"]
+            referencedRelation: "objects"
+            referencedColumns: ["name"]
+          },
+          {
+            foreignKeyName: "knowledge_base_url_id_fkey"
+            columns: ["url_id"]
+            referencedRelation: "chatbot_urls"
             referencedColumns: ["id"]
           },
           {
@@ -441,7 +487,7 @@ export interface Database {
           id: string
           last_accessed_at: string | null
           metadata: Json | null
-          name: string | null
+          name: string
           owner: string | null
           path_tokens: string[] | null
           updated_at: string | null
@@ -453,7 +499,7 @@ export interface Database {
           id?: string
           last_accessed_at?: string | null
           metadata?: Json | null
-          name?: string | null
+          name: string
           owner?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
@@ -465,7 +511,7 @@ export interface Database {
           id?: string
           last_accessed_at?: string | null
           metadata?: Json | null
-          name?: string | null
+          name?: string
           owner?: string | null
           path_tokens?: string[] | null
           updated_at?: string | null
@@ -473,7 +519,7 @@ export interface Database {
         }
         Relationships: [
           {
-            foreignKeyName: "objects_bucketId_fkey"
+            foreignKeyName: "objects_bucket_id_fkey"
             columns: ["bucket_id"]
             referencedRelation: "buckets"
             referencedColumns: ["id"]

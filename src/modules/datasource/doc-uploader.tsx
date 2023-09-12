@@ -30,7 +30,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
 
   const [uploading, setUploading] = useState(false);
 
-  const uploadFiles = async (uploadedFiles: any[]) => {
+  const uploadFiles = async (uploadedFiles: File[]) => {
     try {
       setUploading(true);
 
@@ -43,19 +43,25 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
         throw new Error("You can upload only one file");
 
       if (single) {
-        deleteDoc(docs[0]?.name);
+        deleteDoc(docs[0]?.file.name);
         setDocs(
           // Filter the files to check if there's any file with duplicate name
-          uploadedFiles.filter(
-            (uploadedFile) => !docs.find((f) => f.name === uploadedFile.name),
-          ),
+          uploadedFiles
+            .filter(
+              (uploadedFile) =>
+                !docs.find((f) => f.file.name === uploadedFile.name),
+            )
+            .map((file) => ({ file, uploaded: false, path: "" })),
         );
       } else {
         setDocs(
           // Filter the files to check if there's any file with duplicate name
-          uploadedFiles.filter(
-            (uploadedFile) => !docs.find((f) => f.name === uploadedFile.name),
-          ),
+          uploadedFiles
+            .filter(
+              (uploadedFile) =>
+                !docs.find((f) => f.file.name === uploadedFile.name),
+            )
+            .map((file) => ({ file, uploaded: false, path: "" })),
         );
       }
     } catch (error) {
@@ -106,18 +112,18 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
             return (
               <li
                 className="flex items-center gap-1 text-[12px] mb-1"
-                key={doc.name}
+                key={doc.file.name}
               >
                 <Icon
                   icon={
                     SUPPORTED_EXTENSIONS.find((i) => {
-                      return i.ext === doc?.type.split("/").pop();
+                      return i.ext === doc?.file.type.split("/").pop();
                     })?.icon || "bx:file"
                   }
                 />{" "}
-                {doc.name}
+                {doc.file.name}
                 <button
-                  onClick={() => deleteDoc(doc.name)}
+                  onClick={() => deleteDoc(doc.file.name)}
                   className="ml-4 text-red-400 hover:text-red-600"
                 >
                   <Icon icon={"ph:trash"} />

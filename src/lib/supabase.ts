@@ -4,10 +4,11 @@ import { NEXT_PUBLIC_URL } from "./env";
 
 export type SupabaseClientTyped = SupabaseClient<Database>;
 
-export type UserInfo = Database["public"]["Tables"]["subscriptions"]["Row"];
+export type Subscription = Database["public"]["Tables"]["subscriptions"]["Row"];
 export type Settings = Database["public"]["Tables"]["chatbot_settings"]["Row"];
+export type KnowledgeBase = Database["public"]["Tables"]["knowledge_base"]["Row"];
 
-export function isPaidUser(userInfo: UserInfo | null) {
+export function isPaidUser(userInfo: Subscription | null) {
   if (!userInfo || !userInfo.current_period_end) {
     return false;
   }

@@ -4,12 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { Stripe } from "stripe";
 import { cookies } from "next/headers";
 import { isPaidUser } from "@/lib/supabase";
-import { BillingInterval, PlanName, plans } from "@/lib/stripe";
-import {
-  NEXT_PUBLIC_URL,
-  STRIPE_API_KEY,
-} from "@/lib/env";
+import { BillingInterval, plans } from "@/lib/stripe";
+import { NEXT_PUBLIC_URL, STRIPE_API_KEY } from "@/lib/env";
 import { getErrorMessage } from "@/lib/utils";
+import { Plan } from "@/lib/permissions/plans";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +19,7 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getSession();
 
     const { searchParams } = new URL(request.url);
-    const plan: PlanName = searchParams.get("plan") as PlanName;
+    const plan: Plan = searchParams.get("plan") as Plan;
     const interval = searchParams.get("interval") as BillingInterval;
 
     const price = plans
@@ -75,7 +73,7 @@ export async function GET(request: NextRequest) {
     console.error(error);
     return NextResponse.json(
       { error: getErrorMessage(error) },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

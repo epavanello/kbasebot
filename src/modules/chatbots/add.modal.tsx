@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import DocumentUploader from "@/modules/datasource/doc-uploader";
 import TextSource from "@/modules/datasource/text-source";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useDatasourceStore } from "@/lib/store/use-datasource-store";
+import { IFile, useDatasourceStore } from "@/lib/store/use-datasource-store";
 import { MIN_TEXT_INPUT } from "@/modules/datasource/docs-constant";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,7 +19,7 @@ import WebUploader from "@/modules/datasource/web-uploader";
 import PaymentBlock from "@/components/ui/payment-block";
 import { toast } from "@/components/ui/use-toast";
 
-const AddModal = ({ chatbotsCreated }) => {
+const AddModal = ({ chatbotsCreated }: { chatbotsCreated: number }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false); // Step 1
   const [loading, setLoading] = useState(false);
 
@@ -41,62 +41,91 @@ const AddModal = ({ chatbotsCreated }) => {
     ? urls.reduce((acc, next) => acc + (next.chars || 0), 0)
     : 0;
 
-  console.log({ totalUrlChars });
-
   const canCreate =
     !loading &&
-    (!!docs?.length || text?.length > MIN_TEXT_INPUT || totalUrlChars > 0);
+    (!!docs?.length ||
+      !!urls?.length ||
+      text?.length > MIN_TEXT_INPUT ||
+      totalUrlChars > 0);
 
   const [error, setError] = useState("");
 
-  const uploadFiles = async () => {
-    if (!docs.length) return;
+  const uploadFile = async (file: File): Promise<IFile> => {
+    const fileName = `/${user?.id}/${file.name}`;
+    const res =
+      (await supabase.storage.from("chatbots").upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: true,
+      })) || {};
 
-    const uploadPromises = docs.map(async (eachFile) => {
-      const fileName = `/${user?.id}/${eachFile.name}`;
-      const { path } =
-        (
-          await supabase.storage.from("chatbots").upload(fileName, eachFile, {
-            cacheControl: "3600",
-            upsert: true,
-          })
-        ).data || {};
-      return path;
-    });
-
-    try {
-      return Promise.all(uploadPromises);
-    } catch (e) {
-      setError(
-        "File upload error, please check the file format or contact the support",
-      );
-      toast({
-        variant: "destructive",
-        title: "File upload error",
-        description: "please check the file format or contact the support",
-      });
-      console.error(e);
+    if (res.error) {
+      throw new Error(res.error.message);
     }
+
+    console.log(res);
+    const path = res.data.path;
+
+    if (!path) throw new Error("File upload error");
+
+    return { file, path, uploaded: true };
   };
 
-  const createChatbot = async (e) => {
+  const createChatbot = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!canCreate) return;
     setLoading(true);
 
     try {
-      const fileNames = await uploadFiles();
-
-      const res = await axios.post("/api/chatbots/create", {
-        files: fileNames,
-        urls,
-        text,
-      });
-
+      const res = await axios.post("/api/chatbots/create");
       const { chatbot } = res.data;
 
-      if (!chatbot) throw new Error("Chatbot not found");
+      if (!chatbot) {
+        throw new Error("Chatbot not found");
+      }
+
+      if (docs && docs.length > 0) {
+        for (let doc of docs) {
+          if (!doc.uploaded) {
+            const newDoc = await uploadFile(doc.file);
+            const res = await axios.post(
+              `/api/chatbots/upload?chatbot_id=${encodeURIComponent(
+                chatbot.id,
+              )}`,
+              {
+                file: newDoc.path,
+              },
+            );
+            if (res.status === 200) {
+              useDatasourceStore.getState().setDocUploaded(newDoc);
+            }
+          }
+        }
+      }
+
+      if (urls && urls.length > 0) {
+        for (let url of urls) {
+          if (!url.uploaded) {
+            const res = await axios.post(
+              `/api/chatbots/upload?chatbot_id=${encodeURIComponent(
+                chatbot.id,
+              )}`,
+              {
+                url: url.url,
+              },
+            );
+            if (res.status === 200) {
+              useDatasourceStore.getState().setUrlUploaded(url);
+            }
+          }
+        }
+      }
+
+      if (text && text.length > 0) {
+        const res = await axios.post(`/api/chatbots/${chatbot.id}/upload`, {
+          text,
+        });
+      }
 
       push(`/app/chatbots/${chatbot.id}`);
     } catch (e) {
@@ -130,12 +159,7 @@ const AddModal = ({ chatbotsCreated }) => {
       <DialogContent
         onPointerDownOutside={(e) => e.preventDefault()}
         overlayClass="backdrop-blur-3xl bg-white\/90 bg-center bg-no-repeat bg-contain"
-        className={cn("overflow-visible md:max-w-4xl")}
-        overlayStyle={
-          {
-            // backgroundImage: "url(/blobanimation.svg)",
-          }
-        }
+        className="overflow-visible md:max-w-4xl"
       >
         <div className="w-full m-auto">
           <h1 className="mb-2 text-4xl font-black">Create New Chatbot</h1>
@@ -213,7 +237,7 @@ const AddModal = ({ chatbotsCreated }) => {
                   Go back
                 </Button>
                 <Button
-                  className="text-white "
+                  className="text-white"
                   type="submit"
                   size={"lg"}
                   loading={loading}

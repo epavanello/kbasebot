@@ -1,7 +1,10 @@
+import { Subscription } from "../supabase";
+
 export enum Plan {
   FREE = "free",
   BASIC = "basic",
   PRO = "pro",
+  AGENCY = "agency",
 }
 
 export type Permissions = {
@@ -26,18 +29,16 @@ export const PLAN_PERMISSIONS: Record<Plan, Permissions> = {
     maxMessages: 5000,
     maxCharactersToTrain: 5_000_000,
   },
+  [Plan.AGENCY]: {
+    maxChatbots: 0,
+    maxMessages: 0,
+    maxCharactersToTrain: 0,
+  },
 };
-
-export interface Subscription {
-  id: string;
-  plan: Plan;
-  customer_id: string;
-  current_period_end: string;
-}
 
 export const getPermissions = (
   subscription: Subscription | null,
 ): { plan: Plan; permission: Permissions } => {
-  const plan = subscription?.plan || Plan.FREE;
+  const plan = (subscription?.plan || Plan.FREE) as Plan;
   return { plan, permission: PLAN_PERMISSIONS[plan] };
 };
