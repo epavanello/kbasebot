@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { CheckCircle2, LockIcon } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { plans, type BillingInterval } from "@/lib/stripe";
 import { useSupabaseAuth } from "@/lib/store/use-user";
@@ -24,10 +23,10 @@ export default function PricingTable() {
   );
 
   return (
-    <section id="pricing" className="py-24">
+    <section id="pricing" className="pt-24">
       <div className="max-w-6xl mx-auto">
         <div className="sm:flex sm:flex-col sm:align-center">
-          <h1 className="text-4xl font-extrabold text-background sm:text-center sm:text-6xl">
+          <h1 className="text-4xl font-extrabold sm:text-center sm:text-6xl">
             Pricing Plans
           </h1>
           <p className="mt-6 text-center">
@@ -65,7 +64,7 @@ export default function PricingTable() {
         <AnimatePresence mode="wait">
           {!!plans?.length && (
             <div
-              className=" mt-12 place-items-start space-y-4 sm:mt-16 sm:space-y-0 sm:grid
+              className="mt-12 place-items-start space-y-4 sm:space-y-0 sm:grid
         sm:grid-cols-2 sm:gap-6 justify-center lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4
         items-start
         "

@@ -4,8 +4,7 @@ import Features from "@/components/landing/features";
 import Cta from "@/components/landing/cta";
 import Benefit from "@/components/landing/benefit";
 import PublicChatUiFull from "@/modules/chatbots/chat-ui/public-chat-ui-full";
-import Testimonials from "@/components/landing/testimonials";
-import PricingTable from "../pricing/pricing-table";
+import PricingTable from "./pricing/pricing-table";
 
 const Page = async () => {
   return (

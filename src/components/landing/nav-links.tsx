@@ -7,18 +7,13 @@ import React from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 
-const links = [
-  {
-    href: "/#features",
-    label: "Features",
-  },
-  {
-    href: "/#pricing",
-    label: "Pricing",
-  },
-];
-
-export default function NavLinks({ isCol = false }) {
+export default function NavLinks({
+  isCol = false,
+  links = [],
+}: {
+  isCol?: boolean;
+  links?: { href: string; label: string }[];
+}) {
   const pathname = usePathname();
 
   const { user } = useSupabaseAuth();

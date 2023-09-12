@@ -1,11 +1,13 @@
 import React from "react";
 import LandingNav from "@/components/landing/landing-nav";
+import { Footer } from "@/components/landing/footer";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <LandingNav />
-      {children}
+      <div className="flex-1">{children}</div>
+      <Footer />
     </div>
   );
 };
