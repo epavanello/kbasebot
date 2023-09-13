@@ -124,7 +124,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
 
           <ul className="flex flex-col gap-2 overflow-y-auto p-2">
             {urls.map((url) => (
-              <li key={url.url} className="flex">
+              <li key={url.url} className="flex flex-row items-center gap-2">
                 <div className="relative flex-1">
                   <Input
                     className="text-sm h-8 pr-10"
@@ -136,10 +136,15 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
                     {url.chars / 1000} kb
                   </small>
                 </div>
+                {!!url.uploaded ? (
+                  <Icon icon="ph:check" className="text-green-500" />
+                ) : (
+                  <Icon icon="ic:round-upload" className="text-yellow-500" />
+                )}
 
                 <Button
                   onClick={() => handleDeleteUrl(url.url)}
-                  variant="icon"
+                  variant="ghost"
                   size={"sm"}
                   className="text-red-500"
                 >

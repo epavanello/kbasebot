@@ -52,9 +52,11 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
   appendUrls: (urls) => set((state) => ({ urls: [...state.urls, ...urls] })),
   setUrlUploaded: (url) => {
     set((state) => {
-      const index = state.urls.findIndex((i) => i === url);
       const newUrls = [...state.urls];
-      newUrls[index].uploaded = true;
+      const index = state.urls.findIndex((i) => i === url);
+      if (index !== -1) {
+        newUrls[index].uploaded = true;
+      }
       return { urls: newUrls };
     });
   },

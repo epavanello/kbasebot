@@ -19,6 +19,7 @@ const TextSource = () => {
         rows={10}
         placeholder="Type or Paste your text here."
         onChange={(e) => setText({ content: e.target.value, changed: true })}
+        value={text.content}
         className={cn({
           "ring-red-500 focus-visible:ring-red-500": isOverLimit,
         })}

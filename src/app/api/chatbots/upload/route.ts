@@ -74,7 +74,23 @@ export async function POST(req: NextRequest) {
         file_name: file,
       };
     } else if (text.length) {
+      // cleanup previous text
+      await supabaseServerClient
+        .from("knowledge_base")
+        .delete()
+        .eq("chatbot_id", chatbot_id)
+        .is("url_id", null)
+        .is("file_name", null)
+        .throwOnError();
+
       documentCollection.push(await loadText(text));
+      await supabaseServerClient
+        .from("chatbots")
+        .update({
+          text,
+        })
+        .eq("id", chatbot_id)
+        .throwOnError();
     } else if (url) {
       const documents = await loadSingleUrl(url);
       const chars = documents.reduce(
