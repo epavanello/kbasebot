@@ -10,8 +10,9 @@ import {
   SUPPORTED_EXTENSION_FOR_DROPZONE,
   SUPPORTED_EXTENSIONS,
 } from "./docs-constant";
-import { useDatasourceStore } from "@/lib/store/use-datasource-store";
+import { IFile, useDatasourceStore } from "@/lib/store/use-datasource-store";
 import { useSupabaseAuth } from "@/lib/store/use-user";
+import { Button } from "@/components/ui/button";
 
 interface IDocumentUploaderProps {
   label?: string;
@@ -34,9 +35,13 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
 
   const { supabase } = useSupabaseAuth();
 
-  const handleDeleteDoc = async (name: string) => {
-    await supabase.storage.from("files").remove([`${chatbotId}/${name}`]);
-    deleteDoc(name);
+  const handleDeleteDoc = async (doc: IFile) => {
+    if (doc.uploaded) {
+      await supabase.storage
+        .from("files")
+        .remove([`${chatbotId}/${doc.file.name}`]);
+    }
+    deleteDoc(doc.file.name);
   };
 
   const [uploading, setUploading] = useState(false);
@@ -54,7 +59,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
         throw new Error("You can upload only one file");
 
       if (single) {
-        handleDeleteDoc(docs[0]?.file.name);
+        handleDeleteDoc(docs[0]);
         appendDocs(
           // Filter the files to check if there's any file with duplicate name
           uploadedFiles
@@ -122,7 +127,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
           {docs.map((doc) => {
             return (
               <li
-                className="flex items-center gap-1 text-[12px] mb-1"
+                className="flex flex-row gap-2 items-center gap-1 text-[12px] mb-1"
                 key={doc.file.name}
               >
                 <Icon
@@ -133,12 +138,19 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
                   }
                 />{" "}
                 {doc.file.name}
-                <button
-                  onClick={() => handleDeleteDoc(doc.file.name)}
-                  className="ml-4 text-red-400 hover:text-red-600"
+                {!!doc.uploaded ? (
+                  <Icon icon="ph:check" className="text-green-500" />
+                ) : (
+                  <Icon icon="ic:round-upload" className="text-yellow-500" />
+                )}
+                <Button
+                  onClick={() => handleDeleteDoc(doc)}
+                  variant="ghost"
+                  size={"sm"}
+                  className="text-red-500"
                 >
                   <Icon icon={"ph:trash"} />
-                </button>
+                </Button>
               </li>
             );
           })}

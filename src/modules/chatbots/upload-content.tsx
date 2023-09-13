@@ -274,8 +274,8 @@ export function UploadContent({
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <ScrollArea className="h-[40vh] mt-4">
+    <form onSubmit={onSubmit} className="flex-1 overflow-auto">
+      <ScrollArea className="mt-4">
         <Tabs
           orientation={"vertical"}
           defaultValue="text"
@@ -344,7 +344,7 @@ export function UploadContent({
         </Tabs>
       </ScrollArea>
 
-      <div className="flex justify-center gap-1 mt-2">
+      <div className="flex justify-center gap-1 my-2">
         {showGoBack && (
           <Button
             className="text-gray-800"

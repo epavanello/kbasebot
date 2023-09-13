@@ -11,7 +11,7 @@ export default function Sources({
   const { chatbot_id } = params;
 
   return (
-    <DashboardShell className="container mx-auto">
+    <DashboardShell className="container mx-auto h-full">
       <DashboardHeader
         heading="Manage your chatbot sources"
         className="justify-center mt-10"

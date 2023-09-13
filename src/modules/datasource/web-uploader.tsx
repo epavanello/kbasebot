@@ -21,14 +21,16 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
 
   const { supabase } = useSupabaseAuth();
 
-  const handleDeleteUrl = async (url: string) => {
-    await supabase
-      .from("chatbot_urls")
-      .delete()
-      .eq("url", url)
-      .eq("chatbot_id", chatbotId)
-      .throwOnError();
-    deleteUrl(url);
+  const handleDeleteUrl = async (url: IUrl) => {
+    if (url.uploaded) {
+      await supabase
+        .from("chatbot_urls")
+        .delete()
+        .eq("url", url)
+        .eq("chatbot_id", chatbotId)
+        .throwOnError();
+    }
+    deleteUrl(url.url);
   };
 
   const handleDeleteAllUrls = async () => {
@@ -109,7 +111,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
       </Tabs>
 
       {!!urls?.length && (
-        <div className="w-full bg-secondary p-4 border border-dashed">
+        <div className="w-full bg-secondary p-4 border border-dashed max-h-[60vh] overflow-auto">
           <div className="flex justify-between gap-4">
             <h1 className="text-center font-bold my-1">Loaded Urls</h1>
             <Button
@@ -143,7 +145,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
                 )}
 
                 <Button
-                  onClick={() => handleDeleteUrl(url.url)}
+                  onClick={() => handleDeleteUrl(url)}
                   variant="ghost"
                   size={"sm"}
                   className="text-red-500"
