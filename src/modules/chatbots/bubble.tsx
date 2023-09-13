@@ -1,18 +1,26 @@
 "use client";
 
+import { NEXT_PUBLIC_URL } from "@/lib/env";
+import { Settings } from "@/lib/supabase";
 import { Database } from "@/lib/types/database.types";
 import { cn, isContrastColorWhite } from "@/lib/utils";
 import Image from "next/image";
 
 interface BubbleProps {
-  settings: Database["public"]["Tables"]["chatbot_settings"]["Row"];
+  settings: Settings;
   isOpen?: boolean;
   onOpen?: () => void;
   onClose?: () => void;
   className?: string;
 }
 
-export function Bubble({ settings, isOpen, onClose, onOpen, className }: BubbleProps) {
+export function Bubble({
+  settings,
+  isOpen,
+  onClose,
+  onOpen,
+  className,
+}: BubbleProps) {
   return (
     <div
       className={cn("flex", className, {
@@ -47,9 +55,9 @@ export function Bubble({ settings, isOpen, onClose, onOpen, className }: BubbleP
             height={32}
             src={
               isContrastColorWhite(settings.primary_color || "#fff")
-                ? process.env.NEXT_PUBLIC_URL +
+                ? NEXT_PUBLIC_URL +
                   (isOpen ? "/close-light.svg" : "/bot-light.svg")
-                : process.env.NEXT_PUBLIC_URL +
+                : NEXT_PUBLIC_URL +
                   (isOpen ? "close-dark.svg" : "/bot-dark.svg")
             }
             alt={"Chatbot bubble logo"}

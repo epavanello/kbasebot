@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Database } from "@/lib/types/database.types";
 import { Bubble } from "../bubble";
 import PublicChatUi from "./public-chat-ui";
 import { cn } from "@/lib/utils";
 import type { Settings } from "@/lib/supabase";
+import { NEXT_PUBLIC_URL } from "@/lib/env";
 
 const PublicChatUiFull = ({
   externalSettings = null,
@@ -27,7 +27,7 @@ const PublicChatUiFull = ({
       setSettings(externalSettings);
     } else {
       fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/chatbots/settings?chatbotId=${chatbot_id}`,
+        `${NEXT_PUBLIC_URL}/api/chatbots/settings?chatbotId=${chatbot_id}`,
         {
           method: "GET",
           headers: {

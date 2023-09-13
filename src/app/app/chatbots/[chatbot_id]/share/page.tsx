@@ -13,6 +13,7 @@ import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { NEXT_PUBLIC_URL } from "@/lib/env";
 
 const CodeBlock = ({ children }) => (
   <pre className="mt-2 min-w-0 overflow-auto w-full rounded-md bg-slate-950 p-4 break-words">
@@ -57,7 +58,7 @@ const Share = ({ params }) => {
 </iframe>`;
 
   const scriptTag = `<script 
-src="${process.env.NEXT_PUBLIC_URL}/embed.js?chatbot_id=${chatbot_id}">
+src="${NEXT_PUBLIC_URL}/embed.js?chatbot_id=${chatbot_id}">
 </script>`;
 
   return (

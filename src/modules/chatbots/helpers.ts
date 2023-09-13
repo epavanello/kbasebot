@@ -1,7 +1,7 @@
 import { ChatCompletionRequestMessage } from "openai-edge";
 import { IConversationSpeaker } from "@/lib/types/common.types";
-import { Database } from "@/lib/types/database.types";
 import { Conversation } from "@/lib/supabase";
+import { NEXT_PUBLIC_URL } from "@/lib/env";
 
 export const convesationLogToMessages = (
   conv: Pick<Conversation, "speaker" | "entry">[] | null,
@@ -54,9 +54,6 @@ export const truncateText = (
   return `${inputText?.substr(0, maxLength - 3)}...`;
 };
 
-export const getChatbotPublicId = (
-  id: string,
-  host = process.env.NEXT_PUBLIC_URL,
-) => {
+export const getChatbotPublicId = (id: string, host = NEXT_PUBLIC_URL) => {
   return `${host}/c/${id}`;
 };
