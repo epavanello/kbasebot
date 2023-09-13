@@ -5,15 +5,13 @@ import {
 } from "openai-edge";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
 import { ConversationLog } from "@/modules/chatbots/conversation-log";
 import { getContext } from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { templates } from "@/modules/chatbots/templates";
-import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseClientAdminEdge } from "@/lib/supabase.server";
 
 const config = new Configuration({
   apiKey: OPENAI_API_KEY,
@@ -33,35 +31,15 @@ export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
+  const res = NextResponse.next();
   try {
-    const supabase = createRouteHandlerClient({
-      cookies,
-    });
-    // Check if we have a session
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    let userId = session?.user?.id;
-
     const { messages, conversationId, chatbotId } = await req.json();
 
-    if (!conversationId && !userId) throw new Error("unauthorized");
-
-    const supabaseAdminClient = getSupabaseClientAdmin(cookies);
-
-    if (!userId) {
-      const { data } = await supabaseAdminClient
-        .from("chatbots")
-        .select("user_id")
-        .eq("id", chatbotId)
-        .single<{ user_id: string }>()
-        .throwOnError();
-
-      if (!data?.user_id) throw new Error("unauthorized");
-
-      userId = data.user_id;
+    if (!conversationId) {
+      throw new Error("unauthorized");
     }
+
+    const supabaseAdminClient = getSupabaseClientAdminEdge(req, res);
 
     const userPrompt = messages?.length ? messages[messages.length - 1] : [];
 
@@ -70,10 +48,9 @@ export async function POST(req: NextRequest) {
 
     // Retrieve the conversation log and save the user's prompt
     const conversationLog = new ConversationLog(
-      userId,
       conversationId,
       chatbotId,
-      cookies,
+      supabaseAdminClient,
     );
 
     await conversationLog.addEntry({
@@ -87,7 +64,11 @@ export async function POST(req: NextRequest) {
       });
 
     // Get the context from the last message
-    const context = await getContext(userPrompt.content, chatbotId, cookies);
+    const context = await getContext(
+      userPrompt.content,
+      chatbotId,
+      supabaseAdminClient,
+    );
 
     const prompt: ChatCompletionRequestMessage[] = [
       {

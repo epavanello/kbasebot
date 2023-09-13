@@ -1,9 +1,10 @@
 import { ChatCompletionRequestMessage } from "openai-edge";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { Database } from "@/lib/types/database.types";
+import { Conversation } from "@/lib/supabase";
 
 export const convesationLogToMessages = (
-  conv: Database["public"]["Tables"]["conversations"]["Row"][] | null,
+  conv: Pick<Conversation, "speaker" | "entry">[] | null,
 ): ChatCompletionRequestMessage[] =>
   (conv || []).map((entry) => ({
     role: entry.speaker,
@@ -19,7 +20,7 @@ export type IMessage = {
 };
 
 export const convesationLogToInitialMessages = (
-  conv: Database["public"]["Tables"]["conversations"]["Row"][] | null,
+  conv: Pick<Conversation, "speaker" | "entry" | "created_at" | "id">[] | null,
   welcomeMessage?: string,
 ): IMessage[] => {
   const msgs = welcomeMessage

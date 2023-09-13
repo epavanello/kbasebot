@@ -15,7 +15,7 @@ const Page = async () => {
       <PricingTable />
       {/*<Testimonials />*/}
       <Cta />
-      <PublicChatUiFull chatbot_id="be45f50b-fd9e-4afd-bd6a-e01ba3c80942" />
+      <PublicChatUiFull chatbot_id="1346fc11-82a6-45cc-b40a-69cc839b084e" />
     </div>
   );
 };

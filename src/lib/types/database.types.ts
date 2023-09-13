@@ -172,7 +172,7 @@ export interface Database {
       conversations: {
         Row: {
           chatbot_id: string
-          chatbot_owner_id: string
+          chatbot_owner_id: string | null
           conversation_id: string | null
           created_at: string
           entry: string | null
@@ -183,7 +183,7 @@ export interface Database {
         }
         Insert: {
           chatbot_id: string
-          chatbot_owner_id: string
+          chatbot_owner_id?: string | null
           conversation_id?: string | null
           created_at?: string
           entry?: string | null
@@ -194,7 +194,7 @@ export interface Database {
         }
         Update: {
           chatbot_id?: string
-          chatbot_owner_id?: string
+          chatbot_owner_id?: string | null
           conversation_id?: string | null
           created_at?: string
           entry?: string | null

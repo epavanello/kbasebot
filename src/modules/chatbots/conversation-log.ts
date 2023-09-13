@@ -1,44 +1,36 @@
 import { ChatCompletionRequestMessage } from "openai-edge";
 import { convesationLogToMessages } from "./helpers";
 import { IConversationSpeaker } from "@/lib/types/common.types";
-import { getSupabaseClientAdmin } from "@/lib/supabase.server";
-import { cookies as cookiesType } from "next/headers";
+import { SupabaseClientTyped } from "@/lib/supabase";
 
 class ConversationLog {
-  private supabaseAdminClient: any;
   constructor(
-    public chatbotOwnerId: string,
     public conversationId: string,
     public chatbotId: string,
-    public cookies: () => ReturnType<typeof cookiesType>,
+    private supabaseAdminClient: SupabaseClientTyped,
   ) {
-    this.chatbotOwnerId = chatbotOwnerId;
     this.conversationId = conversationId;
     this.chatbotId = chatbotId;
-    this.supabaseAdminClient = getSupabaseClientAdmin(cookies);
+    this.supabaseAdminClient = supabaseAdminClient;
   }
 
   public async addEntry({
     entry,
     speaker,
-    ip,
     metadata,
   }: {
     entry: string;
     speaker: IConversationSpeaker;
-    ip?: string;
-    metadata?: object;
+    metadata?: Record<string, any>;
   }) {
     try {
       await this.supabaseAdminClient
         .from("conversations")
         .insert({
-          chatbot_owner_id: this.chatbotOwnerId,
           conversation_id: this.conversationId,
           chatbot_id: this.chatbotId,
           entry,
           speaker,
-          ip,
           metadata,
         })
         .throwOnError();

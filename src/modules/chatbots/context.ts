@@ -1,9 +1,8 @@
 // Create an OpenAI API client (that's edge friendly!)
 import { Configuration, CreateEmbeddingResponse, OpenAIApi } from "openai-edge";
-import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import GPT3Tokenizer from "gpt3-tokenizer";
 import { OPENAI_API_KEY } from "@/lib/env";
-import { cookies as cookiesType } from "next/headers";
+import { SupabaseClientTyped } from "@/lib/supabase";
 
 const config = new Configuration({
   apiKey: OPENAI_API_KEY,
@@ -13,7 +12,7 @@ const openai = new OpenAIApi(config);
 export const getContext = async (
   input: string,
   chatbotId: string,
-  cookies: () => ReturnType<typeof cookiesType>,
+  supabaseAdminClient: SupabaseClientTyped,
 ) => {
   // Generate a one-time embedding for the query itself
   const embeddingResponse = await openai.createEmbedding({
@@ -24,8 +23,6 @@ export const getContext = async (
   const {
     data: [{ embedding }],
   }: CreateEmbeddingResponse = await embeddingResponse.json();
-
-  const supabaseAdminClient = getSupabaseClientAdmin(cookies);
 
   // Fetching whole documents for this simple example.
   //
@@ -66,7 +63,7 @@ export const getContext = async (
     if (document?.content) {
       const content = document?.content;
       const source = (document?.metadata as Record<string, string>)["source"];
-      const similarity= document.similarity;
+      const similarity = document.similarity;
       const encoded = tokenizer.encode(content);
       tokenCount += encoded.text.length;
 
@@ -75,7 +72,9 @@ export const getContext = async (
         break;
       }
 
-      contextText += `source: ${source|| ""}\nsimilarity:${similarity}\ncontent: ${content.trim()}\n\n---\n`;
+      contextText += `source: ${
+        source || ""
+      }\nsimilarity:${similarity}\ncontent: ${content.trim()}\n\n---\n`;
     }
   }
 

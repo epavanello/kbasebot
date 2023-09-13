@@ -5,9 +5,9 @@ import ChatUi from "@/modules/chatbots/chat-ui";
 import { Icon } from "@/components/ui/icons";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
 import Image from "next/image";
-import { cn, isContrastColorWhite, textColorBasedOnBg } from "@/lib/utils";
+import { cn, isContrastColorWhite } from "@/lib/utils";
 import ChatbotTheme from "@/modules/chatbots/chat-ui/chatbot-theme";
-import { Database } from "@/lib/types/database.types";
+import { Settings } from "@/lib/supabase";
 
 const PublicChatUi = ({
   settings,
@@ -16,7 +16,7 @@ const PublicChatUi = ({
   onClose,
   className,
 }: {
-  settings: Database["public"]["Tables"]["chatbot_settings"]["Row"] | null;
+  settings: Settings | null;
   chatbot_id: string;
   noCloseBtn?: boolean;
   className?: string;

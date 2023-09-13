@@ -8,6 +8,7 @@ export type Subscription = Database["public"]["Tables"]["subscriptions"]["Row"];
 export type Settings = Database["public"]["Tables"]["chatbot_settings"]["Row"];
 export type KnowledgeBase = Database["public"]["Tables"]["knowledge_base"]["Row"];
 export type Chatbot = Database["public"]["Tables"]["chatbots"]["Row"];
+export type Conversation = Database["public"]["Tables"]["conversations"]["Row"];
 
 export function isPaidUser(userInfo: Subscription | null) {
   if (!userInfo || !userInfo.current_period_end) {
