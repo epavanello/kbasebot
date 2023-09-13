@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { truncate } from "@/lib/utils";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import DocumentUploader from "@/modules/datasource/doc-uploader";
@@ -20,7 +19,6 @@ import { Icon } from "@/components/ui/icons";
 import WebUploader from "@/modules/datasource/web-uploader";
 import { toast } from "@/components/ui/use-toast";
 import { Chatbot } from "@/lib/supabase";
-import { resolve } from "path";
 
 export function UploadContent({
   showGoBack = false,
@@ -35,14 +33,14 @@ export function UploadContent({
 }) {
   const [loading, setLoading] = useState(false);
   const { push } = useRouter();
-  const { user, supabase } = useSupabaseAuth();
+  const { supabase } = useSupabaseAuth();
 
   //const [chatbot, setChatbot] = useState<Chatbot | null>(null);
   // chatbot as ref
-  const chatbotRef = React.useRef<Chatbot | null>(null);
+  const [chatbot, setChatbot] = useState<Chatbot | null>(null);
 
-  const { docs, text, urls, setDocs, setText, appendUrls, setUrls } =
-    useDatasourceStore((state) => ({
+  const { docs, text, urls, setDocs, setText, setUrls } = useDatasourceStore(
+    (state) => ({
       docs: state.docs,
       text: state.text,
       urls: state.urls,
@@ -50,10 +48,12 @@ export function UploadContent({
       setText: state.setText,
       appendUrls: state.appendUrls,
       setUrls: state.setUrls,
-    }));
+    }),
+  );
 
   useEffect(() => {
     if (externalChatbotId) {
+      setLoading(true);
       supabase
         .from("chatbots")
         .select("*")
@@ -61,58 +61,57 @@ export function UploadContent({
         .then(({ data, error }) => {
           if (error) {
             console.error(error);
-            return;
+          } else {
+            setChatbot(data[0]);
           }
-          chatbotRef.current = data[0];
+          setLoading(false);
         });
     }
   }, [externalChatbotId]);
 
-  // loading text
+  // loading text, urls and files
   useEffect(() => {
-    if (chatbotRef.current) {
-      setText({ content: chatbotRef.current.text || "", changed: false });
-    }
-  }, [chatbotRef.current]);
+    if (chatbot && !showCreate) {
+      setLoading(true);
 
-  // loading urls and files
-  useEffect(() => {
-    if (chatbotRef.current) {
-      supabase
-        .from("chatbot_urls")
-        .select("*")
-        .then(({ data, error }) => {
-          if (error) {
-            console.error(error);
-            return;
-          }
-          setUrls(
-            data.map((item) => ({
-              url: item.url,
-              chars: item.chars,
-              uploaded: true,
-            })),
-          );
-        });
-      // Get files from file bucket
-      supabase.storage
-        .from("files")
-        .list(`${chatbotRef.current.id}/`)
-        .then(({ data, error }) => {
-          if (error) {
-            console.error(error);
-            return;
-          }
-          setDocs(
-            data.map((item) => ({
-              file: new File([], item.name.split("/").pop() || ""),
-              path: item.name,
-              uploaded: true,
-            })),
-          );
-        });
+      setText({ content: chatbot.text || "", changed: false });
+      Promise.all([
+        supabase
+          .from("chatbot_urls")
+          .select("*")
+          .then(({ data, error }) => {
+            if (error) {
+              console.error(error);
+              return;
+            }
+            setUrls(
+              data.map((item) => ({
+                url: item.url,
+                chars: item.chars,
+                uploaded: true,
+              })),
+            );
+          }),
+        // Get files from file bucket
+        supabase.storage
+          .from("files")
+          .list(`${chatbot.id}/`)
+          .then(({ data, error }) => {
+            if (error) {
+              console.error(error);
+              return;
+            }
+            setDocs(
+              data.map((item) => ({
+                file: new File([], item.name.split("/").pop() || ""),
+                path: item.name,
+                uploaded: true,
+              })),
+            );
+          }),
+      ]).finally(() => setLoading(false));
     }
-  }, [chatbotRef.current]);
+  }, [chatbot, showCreate]);
 
   const totalUrlChars = urls?.length
     ? urls.reduce((acc, next) => acc + (next.chars || 0), 0)
@@ -127,23 +126,26 @@ export function UploadContent({
         text.content.length < MAX_TEXT_INPUT));
 
   const createChatbot = async () => {
-    if (!canSend) return;
+    if (!canSend) {
+      throw new Error("Can't create chatbot");
+    }
 
     const res = await axios.post("/api/chatbots/create");
-    const { chatbot } = res.data;
+    const data = res.data as { chatbot: Chatbot };
 
-    if (!chatbot) {
+    if (!data.chatbot) {
       throw new Error("Chatbot not found");
     }
 
-    chatbotRef.current = chatbot;
+    setChatbot(data.chatbot);
+    return data.chatbot;
   };
 
-  const uploadFile = async (file: File): Promise<IFile> => {
-    if (!chatbotRef.current) {
+  const uploadFile = async (file: File, c: Chatbot): Promise<IFile> => {
+    if (!c) {
       throw new Error("Chatbot not found");
     }
-    const fileName = `/${chatbotRef.current.id}/${file.name}`;
+    const fileName = `/${c.id}/${file.name}`;
     const { data, error } =
       (await supabase.storage.from("files").upload(fileName, file, {
         cacheControl: "3600",
@@ -161,10 +163,10 @@ export function UploadContent({
     return { file, path, uploaded: true };
   };
 
-  const uploadContent = async () => {
-    if (!chatbotRef.current) throw new Error("Chatbot not found");
+  const uploadContent = async (c: Chatbot) => {
+    if (!c) throw new Error("Chatbot not found");
     const uploadPath = `/api/chatbots/upload?chatbot_id=${encodeURIComponent(
-      chatbotRef.current.id,
+      c.id,
     )}`;
     const promises: Promise<void>[] = [];
     if (docs && docs.length > 0) {
@@ -173,7 +175,7 @@ export function UploadContent({
           promises.push(
             new Promise(async (resolve, reject) => {
               try {
-                const newDoc = await uploadFile(doc.file);
+                const newDoc = await uploadFile(doc.file, c);
                 const res = await axios.post(uploadPath, {
                   file: newDoc.path,
                 });
@@ -246,16 +248,19 @@ export function UploadContent({
     await Promise.all(promises);
   };
 
+  console.log({ loading });
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setLoading(true);
       e.preventDefault();
+      let c = chatbot;
       if (showCreate) {
-        await createChatbot();
+        c = await createChatbot();
       }
-      await uploadContent();
+      await uploadContent(c!);
       if (showCreate) {
-        push(`/app/chatbots/${chatbotRef.current?.id}`);
+        push(`/app/chatbots/${c!.id}`);
       }
     } catch (e) {
       console.error(e);
@@ -315,17 +320,17 @@ export function UploadContent({
             {
               Comp: TextSource,
               value: "text",
-              props: { chatbotId: chatbotRef.current?.id || "" },
+              props: { chatbotId: chatbot?.id || "" },
             },
             {
               Comp: DocumentUploader,
               value: "files",
-              props: { chatbotId: chatbotRef.current?.id || "" },
+              props: { chatbotId: chatbot?.id || "" },
             },
             {
               Comp: WebUploader,
               value: "websites",
-              props: { chatbotId: chatbotRef.current?.id || "" },
+              props: { chatbotId: chatbot?.id || "" },
             },
           ].map((item) => (
             <TabsContent
