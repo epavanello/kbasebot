@@ -26,7 +26,7 @@ export async function middleware(req: NextRequest) {
   return res;
 }
 
-const internalPublicRoutes = ["/api/chatbots/message", "api/chatbots/settings"];
+const internalPublicRoutes = ["/api/chatbots/message", "/api/chatbots/settings"];
 
 const includedMainPaths = ["app", "api"];
 
