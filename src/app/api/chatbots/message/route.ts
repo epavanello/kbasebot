@@ -10,8 +10,8 @@ import { getContext } from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { templates } from "@/modules/chatbots/templates";
 import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
-import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseClientAdminEdge } from "@/lib/supabase.server";
+import { NextRequest } from "next/server";
+import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 
 const config = new Configuration({
   apiKey: OPENAI_API_KEY,
@@ -31,7 +31,6 @@ export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
-  const res = NextResponse.next();
   try {
     const { messages, conversationId, chatbotId } = await req.json();
 
@@ -39,7 +38,7 @@ export async function POST(req: NextRequest) {
       throw new Error("unauthorized");
     }
 
-    const supabaseAdminClient = getSupabaseClientAdminEdge(req, res);
+    const supabaseAdminClient = getSupabaseClientAdmin();
 
     const userPrompt = messages?.length ? messages[messages.length - 1] : [];
 

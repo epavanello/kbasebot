@@ -15,7 +15,6 @@ import { getErrorMessage } from "@/lib/utils";
 import { BillingInterval } from "@/lib/stripe";
 import { getUserByEmailAndSignin } from "@/lib/supabase";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
-import { cookies } from "next/headers";
 import { Plan } from "@/lib/permissions/plans";
 
 export const dynamic = "force-dynamic";
@@ -49,7 +48,7 @@ export async function POST(request: NextRequest) {
       STRIPE_ENDPOINT_SECRET,
     );
 
-    const supabaseClientAdmin = getSupabaseClientAdmin(cookies);
+    const supabaseClientAdmin = getSupabaseClientAdmin();
 
     switch (event.type) {
       case "invoice.payment_succeeded": {
