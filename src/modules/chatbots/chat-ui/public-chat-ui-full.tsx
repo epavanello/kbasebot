@@ -5,7 +5,7 @@ import { Bubble } from "../bubble";
 import PublicChatUi from "./public-chat-ui";
 import { cn } from "@/lib/utils";
 import type { Settings } from "@/lib/supabase";
-import { NEXT_PUBLIC_URL } from "@/lib/env";
+import axios from "axios";
 
 const PublicChatUiFull = ({
   externalSettings = null,
@@ -26,19 +26,15 @@ const PublicChatUiFull = ({
     if (externalSettings) {
       setSettings(externalSettings);
     } else {
-      fetch(
-        `${NEXT_PUBLIC_URL}/api/chatbots/settings?chatbotId=${chatbot_id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      ).then(async (res) => {
-        if (res.status === 200) {
-          setSettings((await res.json()) as Settings);
-        }
-      });
+      axios
+        .get<{ settings: Settings }>(
+          `/api/chatbots/settings?chatbotId=${chatbot_id}`,
+        )
+        .then(async (res) => {
+          if (res.status === 200) {
+            setSettings(res.data.settings);
+          }
+        });
     }
   }, [externalSettings]);
 

@@ -55,10 +55,12 @@ export function Bubble({
             height={32}
             src={
               isContrastColorWhite(settings.primary_color || "#fff")
-                ? NEXT_PUBLIC_URL +
-                  (isOpen ? "/close-light.svg" : "/bot-light.svg")
-                : NEXT_PUBLIC_URL +
-                  (isOpen ? "close-dark.svg" : "/bot-dark.svg")
+                ? isOpen
+                  ? "/close-light.svg"
+                  : "/bot-light.svg"
+                : isOpen
+                ? "/close-dark.svg"
+                : "/bot-dark.svg"
             }
             alt={"Chatbot bubble logo"}
           />
