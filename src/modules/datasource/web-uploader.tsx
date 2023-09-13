@@ -111,7 +111,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
       </Tabs>
 
       {!!urls?.length && (
-        <div className="w-full bg-secondary p-4 border border-dashed max-h-[60vh] overflow-auto">
+        <div className="w-full bg-secondary p-4 border border-dashed max-h-[50vh] overflow-auto">
           <div className="flex justify-between gap-4">
             <h1 className="text-center font-bold my-1">Loaded Urls</h1>
             <Button

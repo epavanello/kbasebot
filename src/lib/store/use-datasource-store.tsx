@@ -35,7 +35,16 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
   text: { content: "", changed: false },
   urls: [],
   setDocs: (docs) => set(() => ({ docs })),
-  appendDocs: (docs) => set((state) => ({ docs: [...state.docs, ...docs] })),
+  appendDocs: (docs) =>
+    set((state) => ({
+      docs: [
+        ...state.docs,
+        ...docs.filter(
+          (newDoc) =>
+            !state.docs.find((doc) => doc.file.name === newDoc.file.name),
+        ),
+      ],
+    })),
   deleteDoc: (name) => {
     set((state) => ({ docs: state.docs.filter((i) => i.file.name !== name) }));
   },
@@ -49,7 +58,15 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
   },
   setText: (text) => set(() => ({ text })),
   setUrls: (urls) => set(() => ({ urls })),
-  appendUrls: (urls) => set((state) => ({ urls: [...state.urls, ...urls] })),
+  appendUrls: (urls) =>
+    set((state) => ({
+      urls: [
+        ...state.urls,
+        ...urls.filter(
+          (newUrl) => !state.urls.find((url) => url.url === newUrl.url),
+        ),
+      ],
+    })),
   setUrlUploaded: (url) => {
     set((state) => {
       const newUrls = [...state.urls];

@@ -127,7 +127,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
           {docs.map((doc) => {
             return (
               <li
-                className="flex flex-row gap-2 items-center gap-1 text-[12px] mb-1"
+                className="flex flex-row gap-2 items-center text-[12px] mb-1"
                 key={doc.file.name}
               >
                 <Icon
