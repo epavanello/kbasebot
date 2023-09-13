@@ -1,4 +1,4 @@
-import { Database } from "@/lib/types/database.types";
+import { Settings } from "@/lib/supabase";
 import { isContrastColorWhite } from "@/lib/utils";
 
 // create an iframe
@@ -105,7 +105,7 @@ const request = fetch(
 
 request.then(async (response) => {
   const { settings } = (await response.json()) as {
-    settings: Database["public"]["Tables"]["chatbot_settings"]["Row"];
+    settings: Settings;
   };
   console.log(settings);
   if (settings.chatbot_bubble_align === "right") {

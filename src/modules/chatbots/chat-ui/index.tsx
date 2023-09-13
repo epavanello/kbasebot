@@ -54,8 +54,6 @@ export default function ChatUi({
 
   const { supabase } = useSupabaseAuth();
 
-  console.log({ conversation_id });
-
   useEffect(() => {
     if (!conversation_id) {
       resetChat();
