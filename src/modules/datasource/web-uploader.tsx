@@ -7,16 +7,38 @@ import { Icon } from "@/components/ui/icons";
 import { Badge } from "@/components/ui/badge";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tabs } from "@radix-ui/react-tabs";
+import { useSupabaseAuth } from "@/lib/store/use-user";
 
-const WebUploader = () => {
-  const { urls, setUrls, deleteUrl, deleteAllUrls } = useDatasourceStore(
+const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
+  const { urls, appendUrls, deleteUrl, deleteAllUrls } = useDatasourceStore(
     (state) => ({
       urls: state.urls,
-      setUrls: state.setUrls,
+      appendUrls: state.appendUrls,
       deleteUrl: state.deleteUrl,
       deleteAllUrls: state.deleteAllUrls,
     }),
   );
+
+  const { supabase } = useSupabaseAuth();
+
+  const handleDeleteUrl = async (url: string) => {
+    await supabase
+      .from("chatbot_urls")
+      .delete()
+      .eq("url", url)
+      .eq("chatbot_id", chatbotId)
+      .throwOnError();
+    deleteUrl(url);
+  };
+
+  const handleDeleteAllUrls = async () => {
+    await supabase
+      .from("chatbot_urls")
+      .delete()
+      .eq("chatbot_id", chatbotId)
+      .throwOnError();
+    deleteAllUrls();
+  };
 
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +54,7 @@ const WebUploader = () => {
       );
 
       if (res.data?.length) {
-        setUrls(res.data);
+        appendUrls(res.data);
       }
 
       console.log({ res });
@@ -100,7 +122,7 @@ const WebUploader = () => {
             </Button>
           </div>
 
-          <ul className="flex flex-col gap-2 h-92 overflow-y-scroll p-2">
+          <ul className="flex flex-col gap-2 overflow-y-auto p-2">
             {urls.map((url) => (
               <li key={url.url} className="flex">
                 <div className="relative flex-1">
@@ -111,12 +133,12 @@ const WebUploader = () => {
                     readOnly
                   />
                   <small className="opacity-50 text-[10px] absolute right-0 bottom-0 px-1 py-1 bg-secondary/50 rounded-lg">
-                    {url.chars}
+                    {url.chars / 1000} kb
                   </small>
                 </div>
 
                 <Button
-                  onClick={() => deleteUrl(url.url)}
+                  onClick={() => handleDeleteUrl(url.url)}
                   variant="icon"
                   size={"sm"}
                   className="text-red-500"

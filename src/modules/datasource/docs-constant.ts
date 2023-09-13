@@ -80,6 +80,6 @@ export const SUPPORTED_EXTENSION_FOR_DROPZONE = SUPPORTED_EXTENSIONS.reduce(
 export const MAX_FILE_SIZE = 20 * 1024 * 1024; // 25 MB
 
 export const MAX_TEXT_INPUT = 20_000;
-export const MIN_TEXT_INPUT = 100;
+export const MIN_TEXT_INPUT = 1;
 
 export const MAX_UPLOADABLE_FILES = 5;

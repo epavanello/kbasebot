@@ -11,22 +11,33 @@ import {
   SUPPORTED_EXTENSIONS,
 } from "./docs-constant";
 import { useDatasourceStore } from "@/lib/store/use-datasource-store";
+import { useSupabaseAuth } from "@/lib/store/use-user";
 
 interface IDocumentUploaderProps {
   label?: string;
+  chatbotId: string;
+  single?: boolean;
 }
 
 const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
   label,
   single = false,
-}) => {
+  chatbotId,
+}: IDocumentUploaderProps) => {
   const inputRef = useRef<any>();
 
-  const { docs, setDocs, deleteDoc } = useDatasourceStore((state) => ({
+  const { docs, appendDocs, deleteDoc } = useDatasourceStore((state) => ({
     docs: state.docs,
-    setDocs: state.setDocs,
+    appendDocs: state.appendDocs,
     deleteDoc: state.deleteDoc,
   }));
+
+  const { supabase } = useSupabaseAuth();
+
+  const handleDeleteDoc = async (name: string) => {
+    await supabase.storage.from("files").remove([`${chatbotId}/${name}`]);
+    deleteDoc(name);
+  };
 
   const [uploading, setUploading] = useState(false);
 
@@ -43,8 +54,8 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
         throw new Error("You can upload only one file");
 
       if (single) {
-        deleteDoc(docs[0]?.file.name);
-        setDocs(
+        handleDeleteDoc(docs[0]?.file.name);
+        appendDocs(
           // Filter the files to check if there's any file with duplicate name
           uploadedFiles
             .filter(
@@ -54,7 +65,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
             .map((file) => ({ file, uploaded: false, path: "" })),
         );
       } else {
-        setDocs(
+        appendDocs(
           // Filter the files to check if there's any file with duplicate name
           uploadedFiles
             .filter(
@@ -123,7 +134,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
                 />{" "}
                 {doc.file.name}
                 <button
-                  onClick={() => deleteDoc(doc.file.name)}
+                  onClick={() => handleDeleteDoc(doc.file.name)}
                   className="ml-4 text-red-400 hover:text-red-600"
                 >
                   <Icon icon={"ph:trash"} />

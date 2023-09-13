@@ -7,8 +7,9 @@ import { cn, truncate } from "@/lib/utils";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { Icon } from "@/components/ui/icons";
 import { getRandomGradient } from "@/style/gradients";
+import { Chatbot } from "@/lib/supabase";
 
-const ChatbotList = ({ chatbots = [] }) => {
+const ChatbotList = ({ chatbots = [] }: { chatbots: Chatbot[] }) => {
   return (
     <div>
       <div className="grid justify-center gap-8 pt-6 mx-auto grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-6">
@@ -34,10 +35,10 @@ const ChatbotList = ({ chatbots = [] }) => {
                 </Link>
                 <CardFooter
                   className="p-2 flex justify-between"
-                  title={bot.name}
+                  title={bot.name || `Untitled ${idx + 1}`}
                 >
                   <p className="font-medium">
-                    {truncate(bot?.name, 10) || `Untitled ${idx + 1}`}
+                    {truncate(bot.name || "", 10) || `Untitled ${idx + 1}`}
                   </p>
                 </CardFooter>
               </Card>

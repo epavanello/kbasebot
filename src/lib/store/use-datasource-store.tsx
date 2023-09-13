@@ -6,17 +6,24 @@ export type IUrl = {
   uploaded?: boolean;
 };
 
+export type IText = {
+  content: string;
+  changed?: boolean;
+};
+
 export type IFile = { file: File; uploaded: boolean; path: string };
 
 export interface UseDocStore {
   docs: IFile[];
   urls: IUrl[];
-  text: string;
+  text: IText;
   setDocs: (docs: IFile[]) => void;
+  appendDocs: (docs: IFile[]) => void;
   deleteDoc: (name: string) => void;
   setDocUploaded: (file: IFile) => void;
-  setText: (text: string) => void;
+  setText: (text: IText) => void;
   setUrls: (urls: IUrl[]) => void;
+  appendUrls: (urls: IUrl[]) => void;
   setUrlUploaded: (url: IUrl) => void;
   deleteUrl: (url: string) => void;
   deleteAllUrls: () => void;
@@ -25,9 +32,10 @@ export interface UseDocStore {
 
 export const useDatasourceStore = create<UseDocStore>()((set) => ({
   docs: [],
-  text: "",
+  text: { content: "", changed: false },
   urls: [],
-  setDocs: (docs) => set((state) => ({ docs: [...state.docs, ...docs] })),
+  setDocs: (docs) => set(() => ({ docs })),
+  appendDocs: (docs) => set((state) => ({ docs: [...state.docs, ...docs] })),
   deleteDoc: (name) => {
     set((state) => ({ docs: state.docs.filter((i) => i.file.name !== name) }));
   },
@@ -40,7 +48,8 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
     });
   },
   setText: (text) => set(() => ({ text })),
-  setUrls: (urls) => set((state) => ({ urls: [...state.urls, ...urls] })),
+  setUrls: (urls) => set(() => ({ urls })),
+  appendUrls: (urls) => set((state) => ({ urls: [...state.urls, ...urls] })),
   setUrlUploaded: (url) => {
     set((state) => {
       const index = state.urls.findIndex((i) => i === url);
@@ -60,6 +69,9 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
     set(() => ({
       docs: [],
       urls: [],
-      text: "",
+      text: {
+        content: "",
+        changed: false,
+      },
     })),
 }));

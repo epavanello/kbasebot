@@ -26,7 +26,7 @@ export const menus = {
     },
   ],
   // eslint-disable-next-line
-  sidebarNavByChatbot: (chatbotId) => [
+  sidebarNavByChatbot: (chatbotId: string) => [
     {
       title: "Go Back",
       href: `/app`,
@@ -37,6 +37,11 @@ export const menus = {
       title: "Bot Preview",
       href: `/app/chatbots/${chatbotId}`,
       icon: "fluent:bot-sparkle-24-regular",
+    },
+    {
+      title: "Sources",
+      href: `/app/chatbots/${chatbotId}/sources`,
+      icon: "material-symbols:source-notes-outline-sharp",
     },
     {
       title: "Conversations",

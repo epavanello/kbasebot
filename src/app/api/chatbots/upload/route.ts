@@ -6,9 +6,7 @@ import type { NextRequest } from "next/server";
 import { parseFile } from "@/modules/datasource/load-docs";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
-import {
-  loadSingleUrl,
-} from "@/modules/datasource/load-websites";
+import { loadSingleUrl } from "@/modules/datasource/load-websites";
 import { loadText } from "@/modules/datasource/load-text";
 import { getErrorMessage } from "@/lib/utils";
 import { Document } from "langchain/document";
@@ -78,7 +76,12 @@ export async function POST(req: NextRequest) {
     } else if (text.length) {
       documentCollection.push(await loadText(text));
     } else if (url) {
-      documentCollection.push(await loadSingleUrl(url));
+      const documents = await loadSingleUrl(url);
+      const chars = documents.reduce(
+        (acc, doc) => acc + doc.pageContent.length,
+        0,
+      );
+      documentCollection.push(documents);
 
       const chatbotUrl = (
         await supabaseServerClient
@@ -86,6 +89,7 @@ export async function POST(req: NextRequest) {
           .insert({
             chatbot_id,
             url,
+            chars,
           })
           .select()
           .single()

@@ -8,6 +8,7 @@ const templates = {
   - Provide the source links for the answer if available.
   - respond to greetings
   - be gentle
+  
 Context sections:
 ${context}
 

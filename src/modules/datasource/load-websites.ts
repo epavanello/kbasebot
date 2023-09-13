@@ -4,7 +4,7 @@ import { CheerioWebBaseLoader } from "langchain/document_loaders/web/cheerio";
 import Sitemapper from "sitemapper";
 import { Document } from "langchain/document";
 
-export const loadWebsites = async (url) => {
+export const loadWebsites = async (url:string) => {
   if (!url) return null;
   const compiledConvert = compile({ wordwrap: 130 }); // returns (text: string) => string;
 
@@ -17,6 +17,7 @@ export const loadWebsites = async (url) => {
   return loader.load();
 };
 
+// TODO: use ToMarkdownLoader to get better content
 export const loadSingleUrl = async (url: string) => {
   const loader = new CheerioWebBaseLoader(url, {
     timeout: 60000,

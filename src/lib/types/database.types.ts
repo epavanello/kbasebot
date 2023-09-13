@@ -97,18 +97,21 @@ export interface Database {
       }
       chatbot_urls: {
         Row: {
+          chars: number
           chatbot_id: string
           created_at: string
           id: string
           url: string
         }
         Insert: {
+          chars: number
           chatbot_id: string
           created_at?: string
           id?: string
           url: string
         }
         Update: {
+          chars?: number
           chatbot_id?: string
           created_at?: string
           id?: string
@@ -132,6 +135,7 @@ export interface Database {
           name: string | null
           params: Json | null
           status: string | null
+          text: string | null
           user_id: string | null
         }
         Insert: {
@@ -142,6 +146,7 @@ export interface Database {
           name?: string | null
           params?: Json | null
           status?: string | null
+          text?: string | null
           user_id?: string | null
         }
         Update: {
@@ -152,6 +157,7 @@ export interface Database {
           name?: string | null
           params?: Json | null
           status?: string | null
+          text?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -263,12 +269,6 @@ export interface Database {
             foreignKeyName: "knowledge_base_url_id_fkey"
             columns: ["url_id"]
             referencedRelation: "chatbot_urls"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "knowledge_base_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
             referencedColumns: ["id"]
           }
         ]

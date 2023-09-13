@@ -25,7 +25,7 @@ export const parseFile = async (
   supabase: SupabaseClientTyped,
 ) => {
   const { data, error } = await supabase.storage
-    .from("chatbots")
+    .from("files")
     .download(file);
 
 
