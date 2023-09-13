@@ -1,6 +1,10 @@
-import { STRIPE_PRICE_ID_BASIC, STRIPE_PRICE_ID_BASIC_YEARLY, STRIPE_PRICE_ID_EXTRA, STRIPE_PRICE_ID_EXTRA_YEARLY } from "./env";
-
-export type PlanName = "free" | "basic" | "pro" | "agency";
+import {
+  STRIPE_PRICE_ID_BASIC,
+  STRIPE_PRICE_ID_BASIC_YEARLY,
+  STRIPE_PRICE_ID_EXTRA,
+  STRIPE_PRICE_ID_EXTRA_YEARLY,
+} from "./env";
+import { Plan } from "./permissions/plans";
 
 export type BillingInterval = "year" | "month";
 
@@ -11,8 +15,8 @@ export interface Price {
   discount?: string;
 }
 
-export interface Plan {
-  id: PlanName;
+export interface PlanDetails {
+  id: Plan;
   name: string;
   description?: string;
   priceText?: string;
@@ -27,25 +31,29 @@ const commonFeatures = [
   "Embed on your website",
 ];
 
-export const plans: Plan[] = [
+export const plans: PlanDetails[] = [
   {
-    id: "free",
+    id: Plan.FREE,
     name: "Free",
     priceText: "Start Free",
     prices: [],
     features: ["1 Chatbot", "30 messages/month", ...commonFeatures],
   },
   {
-    id: "basic",
+    id: Plan.BASIC,
     name: "Basic",
     prices: [
       { priceId: STRIPE_PRICE_ID_BASIC, interval: "month", unitAmount: 999 },
-      { priceId: STRIPE_PRICE_ID_BASIC_YEARLY, interval: "year", unitAmount: 9999 },
+      {
+        priceId: STRIPE_PRICE_ID_BASIC_YEARLY,
+        interval: "year",
+        unitAmount: 9999,
+      },
     ],
     features: ["3 Chatbots", "2k messages/month", ...commonFeatures],
   },
   {
-    id: "pro",
+    id: Plan.PRO,
     name: "Pro",
     prices: [
       {
@@ -63,7 +71,7 @@ export const plans: Plan[] = [
     highlight: true,
   },
   {
-    id: "agency",
+    id: Plan.AGENCY,
     name: "Agency",
     priceText: "Let's talk",
     prices: [],

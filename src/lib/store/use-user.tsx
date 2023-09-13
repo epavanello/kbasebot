@@ -8,7 +8,7 @@ import {
   SupabaseClient,
   User,
 } from "@supabase/auth-helpers-nextjs";
-import { UserInfo as Subscription } from "../supabase";
+import { Subscription } from "../supabase";
 import { Database } from "../types/database.types";
 import {
   getPermissions,

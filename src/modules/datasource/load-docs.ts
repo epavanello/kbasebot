@@ -1,7 +1,7 @@
 import { SupabaseClientTyped } from "@/lib/supabase";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 
-export const parseFile = async (
+export const parseFiles = async (
   files: string[],
   supabase: SupabaseClientTyped,
 ) => {
@@ -18,4 +18,24 @@ export const parseFile = async (
       return loader.load();
     }),
   );
+};
+
+export const parseFile = async (
+  file: string,
+  supabase: SupabaseClientTyped,
+) => {
+  const { data, error } = await supabase.storage
+    .from("files")
+    .download(file);
+
+
+  if (error) {
+    throw error;
+  }
+
+  const loader = new PDFLoader(data, {
+    splitPages: true,
+  });
+
+  return loader.loadAndSplit();
 };

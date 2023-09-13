@@ -4,25 +4,27 @@ import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { sayGreeting } from "@/lib/utils";
 import ChatbotList from "@/modules/chatbots/chatbot-list";
 import NoItemsCard from "@/components/ui/no-items-card";
-import AddModal from "@/modules/chatbots/add.modal";
+import NewChatbotModal from "@/modules/chatbots/new-chatbot.modal";
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
+import { Database } from "@/lib/types/database.types";
 
 export const dynamic = "force-dynamic";
 
 async function getData() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: chatbots = [] } = await supabase
+  const { data: chatbots } = await supabase
     .from("chatbots")
     .select()
-    .eq("user_id", user?.id);
+    .eq("user_id", user?.id!)
+    .throwOnError();
 
-  return chatbots;
+  return chatbots || [];
 }
 
 const ChatbotIndex = async () => {
@@ -35,7 +37,7 @@ const ChatbotIndex = async () => {
         text="Manage your chatbots here"
         className="flex-col md:flex-row"
       >
-        <AddModal chatbotsCreated={chatbots.length} />
+        <NewChatbotModal chatbotsCreated={chatbots.length} />
       </DashboardHeader>
       <div className="my-2"></div>
 
@@ -50,7 +52,7 @@ const ChatbotIndex = async () => {
             "You can train your bot with your knowledge base from different sources"
           }
         >
-          <AddModal chatbotsCreated={chatbots.length} />
+          <NewChatbotModal chatbotsCreated={chatbots.length} />
         </NoItemsCard>
       )}
     </DashboardShell>

@@ -11,26 +11,37 @@ import {
   SUPPORTED_EXTENSIONS,
 } from "./docs-constant";
 import { useDatasourceStore } from "@/lib/store/use-datasource-store";
+import { useSupabaseAuth } from "@/lib/store/use-user";
 
 interface IDocumentUploaderProps {
   label?: string;
+  chatbotId: string;
+  single?: boolean;
 }
 
 const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
   label,
   single = false,
-}) => {
+  chatbotId,
+}: IDocumentUploaderProps) => {
   const inputRef = useRef<any>();
 
-  const { docs, setDocs, deleteDoc } = useDatasourceStore((state) => ({
+  const { docs, appendDocs, deleteDoc } = useDatasourceStore((state) => ({
     docs: state.docs,
-    setDocs: state.setDocs,
+    appendDocs: state.appendDocs,
     deleteDoc: state.deleteDoc,
   }));
 
+  const { supabase } = useSupabaseAuth();
+
+  const handleDeleteDoc = async (name: string) => {
+    await supabase.storage.from("files").remove([`${chatbotId}/${name}`]);
+    deleteDoc(name);
+  };
+
   const [uploading, setUploading] = useState(false);
 
-  const uploadFiles = async (uploadedFiles: any[]) => {
+  const uploadFiles = async (uploadedFiles: File[]) => {
     try {
       setUploading(true);
 
@@ -43,19 +54,25 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
         throw new Error("You can upload only one file");
 
       if (single) {
-        deleteDoc(docs[0]?.name);
-        setDocs(
+        handleDeleteDoc(docs[0]?.file.name);
+        appendDocs(
           // Filter the files to check if there's any file with duplicate name
-          uploadedFiles.filter(
-            (uploadedFile) => !docs.find((f) => f.name === uploadedFile.name),
-          ),
+          uploadedFiles
+            .filter(
+              (uploadedFile) =>
+                !docs.find((f) => f.file.name === uploadedFile.name),
+            )
+            .map((file) => ({ file, uploaded: false, path: "" })),
         );
       } else {
-        setDocs(
+        appendDocs(
           // Filter the files to check if there's any file with duplicate name
-          uploadedFiles.filter(
-            (uploadedFile) => !docs.find((f) => f.name === uploadedFile.name),
-          ),
+          uploadedFiles
+            .filter(
+              (uploadedFile) =>
+                !docs.find((f) => f.file.name === uploadedFile.name),
+            )
+            .map((file) => ({ file, uploaded: false, path: "" })),
         );
       }
     } catch (error) {
@@ -106,18 +123,18 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
             return (
               <li
                 className="flex items-center gap-1 text-[12px] mb-1"
-                key={doc.name}
+                key={doc.file.name}
               >
                 <Icon
                   icon={
                     SUPPORTED_EXTENSIONS.find((i) => {
-                      return i.ext === doc?.type.split("/").pop();
+                      return i.ext === doc?.file.type.split("/").pop();
                     })?.icon || "bx:file"
                   }
                 />{" "}
-                {doc.name}
+                {doc.file.name}
                 <button
-                  onClick={() => deleteDoc(doc.name)}
+                  onClick={() => handleDeleteDoc(doc.file.name)}
                   className="ml-4 text-red-400 hover:text-red-600"
                 >
                   <Icon icon={"ph:trash"} />

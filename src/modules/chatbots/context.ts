@@ -66,6 +66,7 @@ export const getContext = async (
     if (document?.content) {
       const content = document?.content;
       const source = (document?.metadata as Record<string, string>)["source"];
+      const similarity= document.similarity;
       const encoded = tokenizer.encode(content);
       tokenCount += encoded.text.length;
 
@@ -74,7 +75,7 @@ export const getContext = async (
         break;
       }
 
-      contextText += `source: ${source}\ncontent: ${content.trim()}\n\n---\n`;
+      contextText += `source: ${source|| ""}\nsimilarity:${similarity}\ncontent: ${content.trim()}\n\n---\n`;
     }
   }
 
