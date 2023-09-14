@@ -128,7 +128,7 @@ export default function ChatUi({
       top: chatArea?.current.scrollHeight,
       behavior: "smooth",
     });
-  }, [messages?.length]);
+  }, [messages.length, messages.at(-1)?.content.split("\n").length]);
 
   return (
     <div className={cn("flex flex-col w-full my-auto", className)}>
