@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
         .eq("id", chatbot_id)
         .throwOnError();
     } else if (url) {
-      const documents = await loadSingleUrl(url);
+      const documents = await loadSingleUrl(url, true);
       const chars = documents.reduce(
         (acc, doc) => acc + doc.pageContent.length,
         0,

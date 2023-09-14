@@ -4,8 +4,10 @@ import { CheerioWebBaseLoader } from "langchain/document_loaders/web/cheerio";
 import Sitemapper from "sitemapper";
 import { Document } from "langchain/document";
 
-export const loadWebsites = async (url:string) => {
-  if (!url) return null;
+export const loadWebsites = async (url: string) => {
+  if (!url) {
+    return null;
+  }
   const compiledConvert = compile({ wordwrap: 130 }); // returns (text: string) => string;
 
   const loader = new RecursiveUrlLoader(url, {
@@ -18,15 +20,21 @@ export const loadWebsites = async (url:string) => {
 };
 
 // TODO: use ToMarkdownLoader to get better content
-export const loadSingleUrl = async (url: string) => {
+export const loadSingleUrl = async (url: string, split = false) => {
   const loader = new CheerioWebBaseLoader(url, {
     timeout: 60000,
   });
-  return loader.loadAndSplit();
+  if (split) {
+    return loader.loadAndSplit();
+  } else {
+    return loader.load();
+  }
 };
 
-export const loadMultiUrl = async (urls: { url: string }[]) => {
-  return (await Promise.all(urls.map((i) => loadSingleUrl(i.url)))).flat();
+export const loadMultiUrl = async (url: string[], split = false) => {
+  return (
+    await Promise.all(url.map((url) => loadSingleUrl(url, split)))
+  ).flat();
 };
 
 export const loadSiteMap = async (sitemapUrl: string) => {
@@ -35,11 +43,5 @@ export const loadSiteMap = async (sitemapUrl: string) => {
     timeout: 10000, // 5 seconds
   });
 
-  try {
-    const sites = await Site.fetch();
-
-    return sites;
-  } catch (error) {
-    console.log(error);
-  }
+  return await Site.fetch();
 };
