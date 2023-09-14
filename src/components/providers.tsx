@@ -17,7 +17,11 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
             {children}
             <Toaster />
           </SupabaseAuthProvider>
-          <ProgressBar />
+          <ProgressBar
+            options={{
+              showSpinner: false,
+            }}
+          />
         </TooltipProvider>
       </ThemeProvider>
     </StyledJsxRegistry>

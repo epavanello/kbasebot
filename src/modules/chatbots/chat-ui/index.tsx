@@ -144,15 +144,13 @@ export default function ChatUi({
             ))}
           </div>
         )}
-        {messages.length ? (
+        {!isDataLoading && messages.length && (
           <div
             className={cn("w-full overflow-y-auto", chatContainerClass || "")}
           >
             <ChatList chatbotLogo={chatbotLogo} messages={messages} />
             <ChatScrollAnchor area={chatArea} trackVisibility={isLoading} />
           </div>
-        ) : (
-          <EmptyScreen setInput={setInput} />
         )}
         {isLoading && !responseIsStarted && (
           <LoadingDots className="!w-2 !h-2" />
