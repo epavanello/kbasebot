@@ -40,7 +40,6 @@ export async function POST(req: NextRequest) {
           .from("chatbots")
           .select("*", { count: "exact", head: true })
           .eq("user_id", user.id)
-          .throwOnError()
       ).count || 0;
 
     console.log({ count });
