@@ -54,14 +54,14 @@ export const menus = {
       icon: "clarity:design-line",
     },
     {
-      title: "Settings",
-      href: `/app/chatbots/${chatbotId}/settings`,
-      icon: "gala:settings",
-    },
-    {
       title: "Share",
       href: `/app/chatbots/${chatbotId}/share`,
       icon: "tabler:world-share",
+    },
+    {
+      title: "Settings",
+      href: `/app/chatbots/${chatbotId}/settings`,
+      icon: "gala:settings",
     },
   ],
 };
