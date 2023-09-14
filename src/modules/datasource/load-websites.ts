@@ -2,18 +2,16 @@ import { compile } from "html-to-text";
 import { RecursiveUrlLoader } from "langchain/document_loaders/web/recursive_url";
 import { CheerioWebBaseLoader } from "langchain/document_loaders/web/cheerio";
 import Sitemapper from "sitemapper";
-import { Document } from "langchain/document";
 
 export const loadWebsites = async (url: string) => {
   if (!url) {
     return null;
   }
-  const compiledConvert = compile({ wordwrap: 130 }); // returns (text: string) => string;
+  const compiledConvert = compile({});
 
   const loader = new RecursiveUrlLoader(url, {
     extractor: compiledConvert,
-    maxDepth: 1,
-    // excludeDirs: ["https://js.langchain.com/docs/api/"],
+    maxDepth: 3,
   });
 
   return loader.load();

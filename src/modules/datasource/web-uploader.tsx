@@ -115,7 +115,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
           <div className="flex justify-between gap-4">
             <h1 className="text-center font-bold my-1">Loaded Urls</h1>
             <Button
-              onClick={() => deleteAllUrls()}
+              onClick={() => handleDeleteAllUrls()}
               variant="destructive"
               size={"sm"}
               className="text-xs h-auto bg-none"
