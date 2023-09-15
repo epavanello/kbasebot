@@ -10,7 +10,7 @@ const nextConfig = {
   },
   images: {
     dangerouslyAllowSVG: true,
-    domains: ["gcevngqhykuaxuphcgxw.supabase.co", "localhost"],
+    domains: ["gcevngqhykuaxuphcgxw.supabase.co","api.producthunt.com", "localhost"],
   },
 };
 
