@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import {
   loadMultiUrl,
+  loadSingleUrl,
   loadSiteMap,
   loadWebsites,
 } from "@/modules/datasource/load-websites";
@@ -12,9 +13,13 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as { url?: string; sitemap?: string };
+    const body = (await req.json()) as {
+      sitemap?: string;
+      crawl?: string;
+      url?: string;
+    };
 
-    const { url, sitemap } = body;
+    const { sitemap, crawl, url } = body;
 
     let data: Document<Record<string, any>>[] = [];
 
@@ -22,8 +27,11 @@ export async function POST(req: NextRequest) {
       const { sites } = await loadSiteMap(sitemap);
 
       data = await loadMultiUrl(sites);
-    } else if (url) {
-      data = (await loadWebsites(url)) || [];
+    } else if (crawl) {
+      data = (await loadWebsites(crawl)) || [];
+    }
+    if (url) {
+      data = await loadSingleUrl(url, false);
     } else {
       throw new Error("no-datasource-found");
     }
