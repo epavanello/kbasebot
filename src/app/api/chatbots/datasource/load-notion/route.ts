@@ -4,6 +4,10 @@ import {
   authenticateNotion,
   loadNotions,
 } from "@/modules/datasource/load-notions";
+import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/lib/types/database.types";
+import { cookies } from "next/headers";
+import { INotion } from "@/lib/store/use-datasource-store";
 
 export const dynamic = "force-dynamic";
 
@@ -11,10 +15,18 @@ export async function GET(request: NextRequest) {
   try {
     const requestUrl = new URL(request.url);
     const code = requestUrl.searchParams.get("code");
+    const chatbot_id = requestUrl.searchParams.get("chatbot_id");
 
     if (!code) {
       throw new Error("no-code-found");
     }
+    if (!chatbot_id) {
+      throw new Error("chatbot-id-not-found");
+    }
+
+    const supabaseServerClient = createRouteHandlerClient<Database>({
+      cookies,
+    });
 
     const notionAuth = await authenticateNotion(code);
 
@@ -33,13 +45,29 @@ export async function GET(request: NextRequest) {
         return acc;
       }, []);
 
+    await supabaseServerClient
+      .from("chatbot_notion")
+      .insert(
+        notionRes.map((document) => ({
+          chars: document.pageContent.length,
+          chatbot_id,
+          content: document.pageContent,
+          id: document.id,
+          name: document.title,
+          type: document.type,
+        })),
+      )
+      .throwOnError();
+
     return NextResponse.json(
-      notionRes.map((document) => ({
-        id: document.id,
-        type: document.type,
-        name: document.title,
-        chars: document.pageContent.length,
-      })),
+      notionRes.map(
+        (document) =>
+          ({
+            id: document.id,
+            name: document.title,
+            chars: document.pageContent.length,
+          }) as INotion,
+      ),
     );
   } catch (e) {
     console.error(e);

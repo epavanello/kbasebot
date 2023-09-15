@@ -25,7 +25,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
   const [url, setUrl] = useState("");
 
   const handleDeleteUrl = async (url: IUrl) => {
-    if (url.uploaded) {
+    if (url.trained) {
       await supabase
         .from("chatbot_urls")
         .delete()
@@ -130,7 +130,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
           value: url.url,
           chars: url.chars,
           id: url.url,
-          uploaded: url.uploaded,
+          uploaded: url.trained,
           data: url,
         }))}
         onDelete={(url) => handleDeleteUrl(url.data!)}

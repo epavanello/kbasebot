@@ -127,7 +127,7 @@ export const loadDBOrPage = async ({
       type: type,
     });
 
-    const page = await pageLoader.loadAndSplit();
+    const page = await pageLoader.load();
 
     return page.map((p) => ({
       pageContent: p.pageContent,

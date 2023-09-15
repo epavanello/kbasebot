@@ -12,6 +12,10 @@ import { getErrorMessage } from "@/lib/utils";
 import { Document } from "langchain/document";
 import { Database } from "@/lib/types/database.types";
 import { KnowledgeBase } from "@/lib/supabase";
+import {
+  authenticateNotion,
+  loadDBOrPage,
+} from "@/modules/datasource/load-notions";
 
 export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
@@ -22,6 +26,7 @@ export async function POST(req: NextRequest) {
       file?: string;
       text?: string;
       url?: string;
+      notion?: string;
     } = await req.json();
 
     const chatbot_id = req.nextUrl.searchParams.get("chatbot_id");
@@ -30,9 +35,9 @@ export async function POST(req: NextRequest) {
       throw new Error("chatbot-id-not-found");
     }
 
-    const { file = "", text = "", url = "" } = body;
+    const { file = "", text = "", url = "", notion = "" } = body;
 
-    if (!file.length && !text.length && !url.length)
+    if (!file.length && !text.length && !url.length && !notion.length)
       throw new Error("no-datasource-found");
 
     const supabaseServerClient = createRouteHandlerClient<Database>({
@@ -115,6 +120,24 @@ export async function POST(req: NextRequest) {
       knowledgeBaseRef = {
         ...knowledgeBaseRef,
         url_id: chatbotUrl.id,
+      };
+    } else if (notion) {
+      const chatbotNotion = (
+        await supabaseServerClient
+          .from("chatbot_notion")
+          .select()
+          .eq("id", notion)
+          .single()
+          .throwOnError()
+      ).data!;
+
+      documentCollection.push(
+        await loadText(chatbotNotion.name + "\n\n" + chatbotNotion.content),
+      );
+
+      knowledgeBaseRef = {
+        ...knowledgeBaseRef,
+        notion_id: chatbotNotion.id,
       };
     }
 

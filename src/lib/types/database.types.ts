@@ -38,6 +38,7 @@ export interface Database {
         Row: {
           chars: number
           chatbot_id: string
+          content: string
           created_at: string
           id: string
           name: string
@@ -46,6 +47,7 @@ export interface Database {
         Insert: {
           chars: number
           chatbot_id: string
+          content: string
           created_at?: string
           id?: string
           name: string
@@ -54,6 +56,7 @@ export interface Database {
         Update: {
           chars?: number
           chatbot_id?: string
+          content?: string
           created_at?: string
           id?: string
           name?: string
@@ -261,6 +264,7 @@ export interface Database {
           file_name: string | null
           id: number
           metadata: Json | null
+          notion_id: string | null
           url_id: string | null
           user_id: string | null
         }
@@ -272,6 +276,7 @@ export interface Database {
           file_name?: string | null
           id?: number
           metadata?: Json | null
+          notion_id?: string | null
           url_id?: string | null
           user_id?: string | null
         }
@@ -283,6 +288,7 @@ export interface Database {
           file_name?: string | null
           id?: number
           metadata?: Json | null
+          notion_id?: string | null
           url_id?: string | null
           user_id?: string | null
         }
@@ -298,6 +304,12 @@ export interface Database {
             columns: ["file_name"]
             referencedRelation: "objects"
             referencedColumns: ["name"]
+          },
+          {
+            foreignKeyName: "knowledge_base_notion_id_fkey"
+            columns: ["notion_id"]
+            referencedRelation: "chatbot_notion"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "knowledge_base_url_id_fkey"

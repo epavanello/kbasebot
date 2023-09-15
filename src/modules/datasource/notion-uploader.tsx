@@ -35,7 +35,7 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
   };
 
   const handleDeleteNotion = async (n: INotion) => {
-    if (n.uploaded) {
+    if (n.trained) {
       await supabase
         .from("chatbot_notion")
         .delete()
@@ -77,7 +77,7 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
     try {
       setLoading(true);
       const res = await axios.get<INotion[]>(
-        `/api/chatbots/datasource/load-notion?code=${encodeURIComponent(code)}`,
+        `/api/chatbots/datasource/load-notion?code=${code}&chatbot_id=${chatbotId}`,
       );
       if (res.data?.length) {
         appendNotion(res.data);
@@ -110,7 +110,7 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
           value: n.name,
           chars: n.chars,
           id: n.id,
-          uploaded: n.uploaded,
+          uploaded: n.trained,
           data: n,
         }))}
         onDelete={(url) => handleDeleteNotion(url.data!)}

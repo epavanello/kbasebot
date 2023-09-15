@@ -3,7 +3,7 @@ import { create } from "zustand";
 export type IUrl = {
   url: string;
   chars: number;
-  uploaded?: boolean;
+  trained?: boolean;
 };
 
 export type IText = {
@@ -13,42 +13,49 @@ export type IText = {
 
 export type INotion = {
   id: string;
-  type: string;
   name: string;
   chars: number;
-  uploaded?: boolean;
+  trained?: boolean;
 };
 
-export type IFile = { file: File; uploaded: boolean; path: string };
+export type IFile = { file: File; trained: boolean; path: string };
 
 export interface UseDocStore {
+  text: IText;
   docs: IFile[];
   urls: IUrl[];
   notion: INotion[];
-  text: IText;
+  setText: (text: IText) => void;
   setDocs: (docs: IFile[]) => void;
   appendDocs: (docs: IFile[]) => void;
   deleteDoc: (name: string) => void;
   setDocUploaded: (file: IFile) => void;
-  setText: (text: IText) => void;
   setUrls: (urls: IUrl[]) => void;
   appendUrls: (urls: IUrl[]) => void;
-  setNotion: (notion: INotion[]) => void;
-  appendNotion: (notion: INotion[]) => void;
-  setUrlUploaded: (url: IUrl) => void;
-  deleteNotion: (notion: INotion) => void;
-  deleteAllNotion: () => void;
   deleteUrl: (url: string) => void;
   deleteAllUrls: () => void;
+  setUrlUploaded: (url: IUrl) => void;
+  setNotion: (notion: INotion[]) => void;
+  appendNotion: (notion: INotion[]) => void;
+  deleteNotion: (notion: INotion) => void;
+  setNotionUploaded: (notion: INotion) => void;
+  deleteAllNotion: () => void;
   reset: () => void;
 }
 
 export const useDatasourceStore = create<UseDocStore>()((set) => ({
+  text: { content: "", changed: false },
   docs: [],
   urls: [],
   notion: [],
-  text: { content: "", changed: false },
+
+  // 'Set' Methods
+  setText: (text) => set(() => ({ text })),
   setDocs: (docs) => set(() => ({ docs })),
+  setUrls: (urls) => set(() => ({ urls })),
+  setNotion: (notion) => set(() => ({ notion })),
+
+  // 'Append' Methods
   appendDocs: (docs) =>
     set((state) => ({
       docs: [
@@ -59,19 +66,6 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
         ),
       ],
     })),
-  deleteDoc: (name) => {
-    set((state) => ({ docs: state.docs.filter((i) => i.file.name !== name) }));
-  },
-  setDocUploaded: (file) => {
-    set((state) => {
-      const index = state.docs.findIndex((i) => i.file.name === file.file.name);
-      const newDocs = [...state.docs];
-      newDocs[index].uploaded = true;
-      return { docs: newDocs };
-    });
-  },
-  setText: (text) => set(() => ({ text })),
-  setUrls: (urls) => set(() => ({ urls })),
   appendUrls: (urls) =>
     set((state) => ({
       urls: [
@@ -81,7 +75,6 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
         ),
       ],
     })),
-  setNotion: (notion) => set(() => ({ notion })),
   appendNotion: (notion) =>
     set((state) => ({
       notion: [
@@ -91,17 +84,19 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
         ),
       ],
     })),
-  setUrlUploaded: (url) => {
-    set((state) => {
-      const newUrls = [...state.urls];
-      const index = state.urls.findIndex((i) => i === url);
-      if (index !== -1) {
-        newUrls[index].uploaded = true;
-      }
-      return { urls: newUrls };
-    });
+
+  // 'Delete' Methods
+  deleteDoc: (name) => {
+    set((state) => ({ docs: state.docs.filter((i) => i.file.name !== name) }));
   },
-  deleteNotion: (notion) => {
+  deleteUrl: (url) => {
+    set((state) => ({ urls: state.urls.filter((i) => i.url !== url) }));
+  },
+  deleteAllUrls: () =>
+    set(() => ({
+      urls: [],
+    })),
+  deleteNotion: (notion: INotion) => {
     set((state) => ({
       notion: state.notion.filter((i) => i.id !== notion.id),
     }));
@@ -110,20 +105,46 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
     set(() => ({
       notion: [],
     })),
-  deleteUrl: (url) => {
-    set((state) => ({ urls: state.urls.filter((i) => i.url !== url) }));
+
+  // 'Upload' Methods
+  setDocUploaded: (file) => {
+    set((state) => {
+      const index = state.docs.findIndex((i) => i.file.name === file.file.name);
+      const newDocs = [...state.docs];
+      newDocs[index].trained = true;
+      return { docs: newDocs };
+    });
   },
-  deleteAllUrls: () =>
-    set(() => ({
-      urls: [],
-    })),
+  setUrlUploaded: (url) => {
+    set((state) => {
+      const newUrls = [...state.urls];
+      const index = state.urls.findIndex((i) => i === url);
+      if (index !== -1) {
+        newUrls[index].trained = true;
+      }
+      return { urls: newUrls };
+    });
+  },
+  setNotionUploaded: (notion) => {
+    set((state) => {
+      const newNotions = [...state.notion];
+      const index = state.notion.findIndex((i) => i.id === notion.id);
+      if (index !== -1) {
+        newNotions[index].trained = true;
+      }
+      return { notion: newNotions };
+    });
+  },
+
+  // 'Reset' Method
   reset: () =>
     set(() => ({
-      docs: [],
-      urls: [],
       text: {
         content: "",
         changed: false,
       },
+      docs: [],
+      urls: [],
+      notion: [],
     })),
 }));
