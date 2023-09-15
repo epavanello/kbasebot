@@ -19,6 +19,7 @@ import { Icon } from "@/components/ui/icons";
 import WebUploader from "@/modules/datasource/web-uploader";
 import { toast } from "@/components/ui/use-toast";
 import { Chatbot } from "@/lib/supabase";
+import NotionUploader from "@/modules/datasource/notion-uploader";
 
 export function UploadContent({
   showGoBack = false,
@@ -50,6 +51,8 @@ export function UploadContent({
       setUrls: state.setUrls,
     }),
   );
+
+  console.log({ docs, text, urls });
 
   useEffect(() => {
     if (externalChatbotId) {
@@ -299,6 +302,12 @@ export function UploadContent({
                 icon: "fluent-mdl2:website",
                 desc: `${totalUrlChars / 1000} kb`,
               },
+              {
+                label: "Notion",
+                value: "notion",
+                icon: "logos:notion-icon",
+                desc: `${totalUrlChars / 1000} kb`,
+              },
             ].map((item) => (
               <TabsTrigger
                 className="w-full justify-start items-start text-sm"
@@ -328,6 +337,11 @@ export function UploadContent({
             {
               Comp: WebUploader,
               value: "websites",
+              props: { chatbotId: chatbot?.id || "" },
+            },
+            {
+              Comp: NotionUploader,
+              value: "notion",
               props: { chatbotId: chatbot?.id || "" },
             },
           ].map((item) => (

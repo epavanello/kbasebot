@@ -25,7 +25,11 @@ export async function POST(req: NextRequest) {
     }
 
     const subscription = (
-      await supabaseServerClient.from("subscriptions").select().single()
+      await supabaseServerClient
+        .from("subscriptions")
+        .select()
+        .maybeSingle()
+        .throwOnError()
     ).data;
 
     const { permission } = getPermissions(subscription);
@@ -38,8 +42,6 @@ export async function POST(req: NextRequest) {
           .eq("user_id", user.id)
           .throwOnError()
       ).count || 0;
-
-    console.log({ count });
 
     if (count >= permission.maxChatbots) {
       throw new Error("max-chatbots-limit");
