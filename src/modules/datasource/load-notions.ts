@@ -80,7 +80,22 @@ export const loadNotions = async (notionAuth: INotionAuth) => {
     ),
   );
 
-  return loadedNotionItems.flat().filter(Boolean);
+  return loadedNotionItems
+    .flat()
+    .filter(Boolean)
+    .filter(
+      (document) =>
+        document &&
+        document.pageContent?.length > 0 &&
+        document.id &&
+        document.type &&
+        document.title,
+    ) as {
+    pageContent: string;
+    type: string;
+    id: string;
+    title: string;
+  }[];
 };
 
 export const loadDBOrPage = async ({
@@ -112,12 +127,12 @@ export const loadDBOrPage = async ({
       type: type,
     });
 
-    const page = await pageLoader.loadAndSplit();
+    const page = await pageLoader.load();
 
     return page.map((p) => ({
       pageContent: p.pageContent,
-      type: p.metadata.object,
-      id: p.metadata.notionId,
+      type: p.metadata.object as string,
+      id: p.metadata.notionId as string,
       title:
         type === NotionItemType.Page
           ? printTitle(

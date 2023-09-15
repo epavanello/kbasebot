@@ -40,17 +40,31 @@ export function UploadContent({
   // chatbot as ref
   const [chatbot, setChatbot] = useState<Chatbot | null>(null);
 
-  const { docs, text, urls, setDocs, setText, setUrls } = useDatasourceStore(
-    (state) => ({
-      docs: state.docs,
-      text: state.text,
-      urls: state.urls,
-      setDocs: state.setDocs,
-      setText: state.setText,
-      appendUrls: state.appendUrls,
-      setUrls: state.setUrls,
-    }),
-  );
+  const {
+    docs,
+    text,
+    urls,
+    notion,
+    setDocs,
+    setText,
+    setUrls,
+    setDocUploaded,
+    setNotion,
+    setNotionUploaded,
+    setUrlUploaded,
+  } = useDatasourceStore((state) => ({
+    docs: state.docs,
+    text: state.text,
+    urls: state.urls,
+    notion: state.notion,
+    setDocs: state.setDocs,
+    setText: state.setText,
+    setUrls: state.setUrls,
+    setNotion: state.setNotion,
+    setDocUploaded: state.setDocUploaded,
+    setUrlUploaded: state.setUrlUploaded,
+    setNotionUploaded: state.setNotionUploaded,
+  }));
 
   console.log({ docs, text, urls });
 
@@ -112,6 +126,25 @@ export function UploadContent({
               })),
             );
           }),
+        // Get notion from chatbot_notion
+        supabase
+          .from("chatbot_notion")
+          .select("*")
+          .eq("chatbot_id", chatbot.id)
+          .then(({ data, error }) => {
+            if (error) {
+              console.error(error);
+              return;
+            }
+            setNotion(
+              data.map((item) => ({
+                id: item.id,
+                name: item.name,
+                chars: item.chars,
+                uploaded: true,
+              })),
+            );
+          }),
       ]).finally(() => setLoading(false));
     }
   }, [chatbot, showCreate]);
@@ -120,16 +153,17 @@ export function UploadContent({
     ? urls.reduce((acc, next) => acc + (next.chars || 0), 0)
     : 0;
 
-  const canSend =
+  const canTrain =
     !loading &&
-    (docs.filter((doc) => !doc.uploaded).length > 0 ||
-      urls.filter((url) => !url.uploaded).length > 0 ||
+    (docs.filter((doc) => !doc.trained).length > 0 ||
+      urls.filter((url) => !url.trained).length > 0 ||
+      notion.filter((n) => !n.trained).length > 0 ||
       (text.changed &&
         text.content.length >= MIN_TEXT_INPUT &&
         text.content.length < MAX_TEXT_INPUT));
 
   const createChatbot = async () => {
-    if (!canSend) {
+    if (!canTrain) {
       throw new Error("Can't create chatbot");
     }
 
@@ -163,7 +197,7 @@ export function UploadContent({
 
     if (!path) throw new Error("File upload error");
 
-    return { file, path, uploaded: true };
+    return { file, path, trained: true };
   };
 
   const uploadContent = async (c: Chatbot) => {
@@ -174,7 +208,7 @@ export function UploadContent({
     const promises: Promise<void>[] = [];
     if (docs && docs.length > 0) {
       for (let doc of docs) {
-        if (!doc.uploaded && doc.file.size > 0) {
+        if (!doc.trained && doc.file.size > 0) {
           promises.push(
             new Promise(async (resolve, reject) => {
               try {
@@ -183,7 +217,7 @@ export function UploadContent({
                   file: newDoc.path,
                 });
                 if (res.status === 200) {
-                  useDatasourceStore.getState().setDocUploaded(newDoc);
+                  setDocUploaded(newDoc);
                 } else {
                   reject(new Error("Upload failed"));
                 }
@@ -199,7 +233,7 @@ export function UploadContent({
 
     if (urls && urls.length > 0) {
       for (let url of urls) {
-        if (!url.uploaded) {
+        if (!url.trained) {
           promises.push(
             new Promise(async (resolve, reject) => {
               try {
@@ -207,7 +241,7 @@ export function UploadContent({
                   url: url.url,
                 });
                 if (res.status === 200) {
-                  useDatasourceStore.getState().setUrlUploaded(url);
+                  setUrlUploaded(url);
                 } else {
                   reject(new Error("Upload failed"));
                 }
@@ -218,6 +252,28 @@ export function UploadContent({
             }),
           );
         }
+      }
+    }
+
+    for (let n of notion) {
+      if (!n.trained) {
+        promises.push(
+          new Promise(async (resolve, reject) => {
+            try {
+              const res = await axios.post(uploadPath, {
+                notion: n.id,
+              });
+              if (res.status === 200) {
+                setNotionUploaded(n);
+              } else {
+                reject(new Error("Upload failed"));
+              }
+              resolve();
+            } catch (e) {
+              reject(e);
+            }
+          }),
+        );
       }
     }
 
@@ -375,7 +431,7 @@ export function UploadContent({
             type="submit"
             size={"lg"}
             loading={loading}
-            disabled={!canSend}
+            disabled={!canTrain}
           >
             Create
           </Button>
@@ -385,7 +441,7 @@ export function UploadContent({
             type="submit"
             size={"lg"}
             loading={loading}
-            disabled={!canSend}
+            disabled={!canTrain}
           >
             Upload
           </Button>

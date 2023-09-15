@@ -36,7 +36,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
   const { supabase } = useSupabaseAuth();
 
   const handleDeleteDoc = async (doc: IFile) => {
-    if (doc.uploaded) {
+    if (doc.trained) {
       await supabase.storage
         .from("files")
         .remove([`${chatbotId}/${doc.file.name}`]);
@@ -138,7 +138,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
                   }
                 />{" "}
                 {doc.file.name}
-                {!!doc.uploaded ? (
+                {!!doc.trained ? (
                   <Icon icon="ph:check" className="text-green-500" />
                 ) : (
                   <Icon icon="ic:round-upload" className="text-yellow-500" />
