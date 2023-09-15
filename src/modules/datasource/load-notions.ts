@@ -1,8 +1,6 @@
 import { Client as NotionClient } from "@notionhq/client";
 import { NOTION_AUTH_REDIRECT_URL } from "@/lib/utils";
-import {
-  NotionAPILoader,
-} from "langchain/document_loaders/web/notionapi";
+import { NotionAPILoader } from "langchain/document_loaders/web/notionapi";
 import {
   DatabaseObjectResponse,
   PageObjectResponse,
@@ -57,6 +55,13 @@ async function extractNotionResRecursively(
   return nextNotionRes;
 }
 
+function printTitle(section?: string, title?: string) {
+  if (!section && !title) return "";
+  if (!section) return title || "";
+  if (!title) return section || "";
+  return `${section} / ${title}`;
+}
+
 export const loadNotions = async (notionAuth: INotionAuth) => {
   const notion = new NotionClient({ auth: notionAuth.access_token });
 
@@ -107,17 +112,19 @@ export const loadDBOrPage = async ({
       type: type,
     });
 
-    
     const page = await pageLoader.loadAndSplit();
 
     return page.map((p) => ({
       pageContent: p.pageContent,
-      type,
-      id,
+      type: p.metadata.object,
+      id: p.metadata.notionId,
       title:
         type === NotionItemType.Page
-          ? item.properties.title.title[0].plain_text
-          : item.title[0].plain_text,
+          ? printTitle(
+              item.properties.title.title[0].plain_text,
+              p.metadata?.properties?.title,
+            )
+          : printTitle(item.title[0].plain_text, p.metadata?.properties?.title),
     }));
   } catch (e) {
     return null; // we shouldn't block other process if one page doesn't load
