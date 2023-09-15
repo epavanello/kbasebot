@@ -1,7 +1,14 @@
 import { Client as NotionClient } from "@notionhq/client";
 import { NOTION_AUTH_REDIRECT_URL } from "@/lib/utils";
-import { SearchResponse } from "@notionhq/client/build/src/api-endpoints";
-import { NotionAPILoader } from "langchain/document_loaders/web/notionapi";
+import {
+  NotionAPILoader,
+} from "langchain/document_loaders/web/notionapi";
+import {
+  DatabaseObjectResponse,
+  PageObjectResponse,
+  PartialDatabaseObjectResponse,
+  PartialPageObjectResponse,
+} from "@notionhq/client/build/src/api-endpoints";
 
 interface INotionAuth {
   access_token: string;
@@ -28,42 +35,70 @@ interface INotionResultItem {
   properties: any;
 }
 
-export const loadNotions = async (notionAuth: INotionAuth) => {
-  const notion = new NotionClient({ auth: notionAuth.access_token });
-
-  const notionRes: SearchResponse = await notion.search({
-    // query: 'External tasks',
-    // filter: {
-    //   value: 'database',
-    //   property: 'object'
-    // },
+async function extractNotionResRecursively(
+  notion: NotionClient,
+  next_cursor: string | undefined,
+) {
+  const nextNotionRes = await notion.search({
     sort: {
       direction: "ascending",
       timestamp: "last_edited_time",
     },
+    start_cursor: next_cursor,
   });
+
+  if (nextNotionRes.has_more && nextNotionRes.next_cursor) {
+    const nextNotionItems = await extractNotionResRecursively(
+      notion,
+      nextNotionRes.next_cursor,
+    );
+    nextNotionRes.results.push(...nextNotionItems.results);
+  }
+  return nextNotionRes;
+}
+
+export const loadNotions = async (notionAuth: INotionAuth) => {
+  const notion = new NotionClient({ auth: notionAuth.access_token });
+
+  const notionRes = await extractNotionResRecursively(notion, undefined);
 
   const lists = notionRes.results;
 
+  // skip all partial items
+
   const loadedNotionItems = await Promise.all(
-    lists.map((item) => {
-      return loadDBOrPage({
-        id: item.id,
-        type: item.object,
+    lists.map((item) =>
+      loadDBOrPage({
         accessToken: notionAuth.access_token,
-      });
-    }),
+        item,
+      }),
+    ),
   );
 
   return loadedNotionItems.flat().filter(Boolean);
 };
 
-export const loadDBOrPage = async ({ type, id, accessToken }) => {
-  if (type !== NotionItemType.Page && type !== NotionItemType.Database)
+export const loadDBOrPage = async ({
+  item,
+  accessToken,
+}: {
+  item:
+    | PageObjectResponse
+    | DatabaseObjectResponse
+    | PartialPageObjectResponse
+    | PartialDatabaseObjectResponse;
+  accessToken: string;
+}) => {
+  const { object: type, id } = item;
+  if (
+    // skip all partial items
+    !("url" in item) ||
+    (type !== NotionItemType.Page && type !== NotionItemType.Database)
+  ) {
     return null;
+  }
 
   try {
-    console.log({ accessToken });
     const pageLoader = new NotionAPILoader({
       clientOptions: {
         auth: accessToken,
@@ -72,15 +107,26 @@ export const loadDBOrPage = async ({ type, id, accessToken }) => {
       type: type,
     });
 
-    // A page contents is likely to be more than 1000 characters, so it's split into multiple documents (important for vectorization)
+    
     const page = await pageLoader.loadAndSplit();
-    return page;
+
+    return page.map((p) => ({
+      pageContent: p.pageContent,
+      type,
+      id,
+      title:
+        type === NotionItemType.Page
+          ? item.properties.title.title[0].plain_text
+          : item.title[0].plain_text,
+    }));
   } catch (e) {
     return null; // we shouldn't block other process if one page doesn't load
   }
 };
 
-export const authenticateNotion = async (code): Promise<INotionAuth> => {
+export const authenticateNotion = async (
+  code: string,
+): Promise<INotionAuth> => {
   const encoded = Buffer.from(
     `${process.env.NOTION_CLIENT_ID}:${process.env.NOTION_CLIENT_SECRET}`,
   ).toString("base64");

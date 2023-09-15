@@ -12,13 +12,38 @@ export async function GET(request: NextRequest) {
     const requestUrl = new URL(request.url);
     const code = requestUrl.searchParams.get("code");
 
-    if (!code) throw new Error("no-code-found");
+    if (!code) {
+      throw new Error("no-code-found");
+    }
 
     const notionAuth = await authenticateNotion(code);
 
-    const notionRes = await loadNotions(notionAuth);
+    let notionRes = await loadNotions(notionAuth);
 
-    return NextResponse.json({ notionRes });
+    notionRes = notionRes.filter(
+      (document) => document?.pageContent?.length || 0 > 0,
+    );
+
+    // filter missing ids and make it unique by reducing to first occurrence and summing up the chars
+    notionRes = notionRes
+      .filter((document) => document?.id)
+      .reduce<typeof notionRes>((acc, document) => {
+        const existingDoc = acc.find((d) => d?.id === document?.id);
+        if (existingDoc) {
+          existingDoc.pageContent += document?.pageContent;
+        } else {
+          acc.push(document);
+        }
+        return acc;
+      }, []);
+
+    return NextResponse.json(
+      notionRes.map((document) => ({
+        id: document?.id,
+        page: document?.title,
+        chars: document?.pageContent?.length,
+      })),
+    );
   } catch (e) {
     console.error(e);
     if (typeof e === "string")

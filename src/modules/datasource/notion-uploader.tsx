@@ -41,7 +41,7 @@ const NotionUploader = () => {
 
   const getNotionPages = async (code) => {
     const res = await axios.get(
-      `/api/chatbots/datasource/load-notion?code=${code}`,
+      `/api/chatbots/datasource/load-notion?code=${encodeURIComponent(code)}`,
     );
 
     console.log({ data: res.data });

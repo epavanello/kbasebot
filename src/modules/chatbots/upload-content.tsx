@@ -387,7 +387,7 @@ export function UploadContent({
             loading={loading}
             disabled={!canSend}
           >
-            Update
+            Upload
           </Button>
         )}
       </div>
