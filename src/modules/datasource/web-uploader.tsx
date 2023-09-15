@@ -3,10 +3,10 @@ import { IUrl, useDatasourceStore } from "@/lib/store/use-datasource-store";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { Icon } from "@/components/ui/icons";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tabs } from "@radix-ui/react-tabs";
 import { useSupabaseAuth } from "@/lib/store/use-user";
+import ContentList from "./content-list";
 
 const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
   const { urls, appendUrls, deleteUrl, deleteAllUrls } = useDatasourceStore(
@@ -19,6 +19,10 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
   );
 
   const { supabase } = useSupabaseAuth();
+
+  const [loading, setLoading] = useState(false);
+
+  const [url, setUrl] = useState("");
 
   const handleDeleteUrl = async (url: IUrl) => {
     if (url.uploaded) {
@@ -40,10 +44,6 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
       .throwOnError();
     deleteAllUrls();
   };
-
-  const [loading, setLoading] = useState(false);
-
-  const [url, setUrl] = useState("");
 
   const addLink = async (type: "sitemap" | "crawl" | "url") => {
     setLoading(true);
@@ -124,53 +124,18 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
         </TabsContent>
       </Tabs>
 
-      {!!urls?.length && (
-        <div className="w-full bg-secondary p-4 border border-dashed max-h-[50vh] overflow-auto">
-          <div className="flex justify-between gap-4">
-            <h1 className="text-center font-bold my-1">Loaded Urls</h1>
-            <Button
-              onClick={() => handleDeleteAllUrls()}
-              variant="destructive"
-              size={"sm"}
-              className="text-xs h-auto bg-none"
-            >
-              <Icon className={"text-md mr-1"} icon={"ph:trash"} /> Delete All
-            </Button>
-          </div>
-
-          <ul className="flex flex-col gap-2 overflow-y-auto p-2">
-            {urls.map((url) => (
-              <li key={url.url} className="flex flex-row items-center gap-2">
-                <div className="relative flex-1">
-                  <Input
-                    className="text-sm h-8 pr-10"
-                    value={url.url}
-                    placeholder="url"
-                    readOnly
-                  />
-                  <small className="opacity-50 text-[10px] absolute right-0 bottom-0 px-1 py-1 bg-secondary/50 rounded-lg">
-                    {url.chars / 1000} kb
-                  </small>
-                </div>
-                {!!url.uploaded ? (
-                  <Icon icon="ph:check" className="text-green-500" />
-                ) : (
-                  <Icon icon="ic:round-upload" className="text-yellow-500" />
-                )}
-
-                <Button
-                  onClick={() => handleDeleteUrl(url)}
-                  variant="ghost"
-                  size={"sm"}
-                  className="text-red-500"
-                >
-                  <Icon icon={"ph:trash"} />
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <ContentList
+        title="Loaded Urls"
+        items={urls.map((url) => ({
+          value: url.url,
+          chars: url.chars,
+          id: url.url,
+          uploaded: url.uploaded,
+          data: url,
+        }))}
+        onDelete={(url) => handleDeleteUrl(url.data!)}
+        onDeleteAll={() => handleDeleteAllUrls()}
+      />
     </div>
   );
 };

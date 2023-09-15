@@ -20,17 +20,13 @@ export async function GET(request: NextRequest) {
 
     let notionRes = await loadNotions(notionAuth);
 
-    notionRes = notionRes.filter(
-      (document) => document?.pageContent?.length || 0 > 0,
-    );
-
     // filter missing ids and make it unique by reducing to first occurrence and summing up the chars
     notionRes = notionRes
       .filter((document) => document?.id)
       .reduce<typeof notionRes>((acc, document) => {
-        const existingDoc = acc.find((d) => d?.id === document?.id);
+        const existingDoc = acc.find((d) => d.id === document.id);
         if (existingDoc) {
-          existingDoc.pageContent += document?.pageContent;
+          existingDoc.pageContent += "\n" + document.pageContent;
         } else {
           acc.push(document);
         }
@@ -39,9 +35,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       notionRes.map((document) => ({
-        id: document?.id,
-        page: document?.title,
-        chars: document?.pageContent?.length,
+        id: document.id,
+        type: document.type,
+        name: document.title,
+        chars: document.pageContent.length,
       })),
     );
   } catch (e) {

@@ -3,10 +3,23 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NOTION_AUTH_URL, popupCenter } from "@/lib/utils";
 import axios from "axios";
-import { IUrl } from "@/lib/store/use-datasource-store";
+import ContentList from "./content-list";
+import { INotion, useDatasourceStore } from "@/lib/store/use-datasource-store";
+import { useSupabaseAuth } from "@/lib/store/use-user";
 
-const NotionUploader = () => {
+const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
   const [notionCode, setNotionCode] = useState("");
+
+  const [loading, setLoading] = useState(false);
+
+  const { notion, appendNotion, deleteNotion, deleteAllNotion } =
+    useDatasourceStore((state) => ({
+      notion: state.notion,
+      appendNotion: state.appendNotion,
+      deleteNotion: state.deleteNotion,
+      deleteAllNotion: state.deleteAllNotion,
+    }));
+  const { supabase } = useSupabaseAuth();
 
   useEffect(() => {
     console.log({ notionCode });
@@ -21,8 +34,29 @@ const NotionUploader = () => {
     });
   };
 
+  const handleDeleteNotion = async (n: INotion) => {
+    if (n.uploaded) {
+      await supabase
+        .from("chatbot_notion")
+        .delete()
+        .eq("id", n.id)
+        .eq("chatbot_id", chatbotId)
+        .throwOnError();
+    }
+    deleteNotion(n);
+  };
+
+  const handleDeleteAllNotion = async () => {
+    await supabase
+      .from("chatbot_notion")
+      .delete()
+      .eq("chatbot_id", chatbotId)
+      .throwOnError();
+    deleteAllNotion();
+  };
+
   useEffect(() => {
-    const handleMessage = (event) => {
+    const handleMessage = (event: MessageEvent) => {
       console.log("here", event.origin, process.env.NEXT_PUBLIC_URL, event);
       // Verifica l'origine del messaggio
       if (event.origin !== `${process.env.NEXT_PUBLIC_URL}`) return;
@@ -39,24 +73,49 @@ const NotionUploader = () => {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  const getNotionPages = async (code) => {
-    const res = await axios.get(
-      `/api/chatbots/datasource/load-notion?code=${encodeURIComponent(code)}`,
-    );
-
-    console.log({ data: res.data });
+  const getNotionPages = async (code: string) => {
+    try {
+      setLoading(true);
+      const res = await axios.get<INotion[]>(
+        `/api/chatbots/datasource/load-notion?code=${encodeURIComponent(code)}`,
+      );
+      if (res.data?.length) {
+        appendNotion(res.data);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex justify-center items-center h-full">
-      <Button
-        type={"button"}
-        onClick={handleNotionConnect}
-        iconAtStart={true}
-        icon={"logos:notion-icon"}
-      >
-        Upload from Notion
-      </Button>
+    <div className="flex flex-col gap-4 items-center">
+      <div className="flex justify-center items-center h-16">
+        <Button
+          type={"button"}
+          onClick={handleNotionConnect}
+          iconAtStart={true}
+          icon={"logos:notion-icon"}
+          disabled={loading}
+          loading={loading}
+        >
+          Upload from Notion
+        </Button>
+      </div>
+
+      <ContentList
+        title="Loaded pages"
+        items={notion.map((n) => ({
+          value: n.name,
+          chars: n.chars,
+          id: n.id,
+          uploaded: n.uploaded,
+          data: n,
+        }))}
+        onDelete={(url) => handleDeleteNotion(url.data!)}
+        onDeleteAll={() => handleDeleteAllNotion()}
+      />
     </div>
   );
 };

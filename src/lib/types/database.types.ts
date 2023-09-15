@@ -34,6 +34,40 @@ export interface Database {
   }
   public: {
     Tables: {
+      chatbot_notion: {
+        Row: {
+          chars: number
+          chatbot_id: string
+          created_at: string
+          id: string
+          name: string
+          type: string
+        }
+        Insert: {
+          chars: number
+          chatbot_id: string
+          created_at?: string
+          id?: string
+          name: string
+          type: string
+        }
+        Update: {
+          chars?: number
+          chatbot_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_notion_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       chatbot_settings: {
         Row: {
           chatbot_background: string | null
@@ -48,7 +82,7 @@ export interface Database {
           theme: string | null
           user_id: string
           user_message_background: string | null
-          welcome_message: string | null
+          welcome_message: string
         }
         Insert: {
           chatbot_background?: string | null
@@ -63,7 +97,7 @@ export interface Database {
           theme?: string | null
           user_id: string
           user_message_background?: string | null
-          welcome_message?: string | null
+          welcome_message: string
         }
         Update: {
           chatbot_background?: string | null
@@ -78,7 +112,7 @@ export interface Database {
           theme?: string | null
           user_id?: string
           user_message_background?: string | null
-          welcome_message?: string | null
+          welcome_message?: string
         }
         Relationships: [
           {

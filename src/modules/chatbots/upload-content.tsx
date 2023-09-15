@@ -45,10 +45,12 @@ export function UploadContent({
       docs: state.docs,
       text: state.text,
       urls: state.urls,
+      notion: state.notion,
       setDocs: state.setDocs,
       setText: state.setText,
       appendUrls: state.appendUrls,
       setUrls: state.setUrls,
+      setNotion: state.setNotion,
     }),
   );
 

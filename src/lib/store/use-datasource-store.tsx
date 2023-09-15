@@ -11,11 +11,20 @@ export type IText = {
   changed?: boolean;
 };
 
+export type INotion = {
+  id: string;
+  type: string;
+  name: string;
+  chars: number;
+  uploaded?: boolean;
+};
+
 export type IFile = { file: File; uploaded: boolean; path: string };
 
 export interface UseDocStore {
   docs: IFile[];
   urls: IUrl[];
+  notion: INotion[];
   text: IText;
   setDocs: (docs: IFile[]) => void;
   appendDocs: (docs: IFile[]) => void;
@@ -24,7 +33,11 @@ export interface UseDocStore {
   setText: (text: IText) => void;
   setUrls: (urls: IUrl[]) => void;
   appendUrls: (urls: IUrl[]) => void;
+  setNotion: (notion: INotion[]) => void;
+  appendNotion: (notion: INotion[]) => void;
   setUrlUploaded: (url: IUrl) => void;
+  deleteNotion: (notion: INotion) => void;
+  deleteAllNotion: () => void;
   deleteUrl: (url: string) => void;
   deleteAllUrls: () => void;
   reset: () => void;
@@ -32,8 +45,9 @@ export interface UseDocStore {
 
 export const useDatasourceStore = create<UseDocStore>()((set) => ({
   docs: [],
-  text: { content: "", changed: false },
   urls: [],
+  notion: [],
+  text: { content: "", changed: false },
   setDocs: (docs) => set(() => ({ docs })),
   appendDocs: (docs) =>
     set((state) => ({
@@ -67,6 +81,16 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
         ),
       ],
     })),
+  setNotion: (notion) => set(() => ({ notion })),
+  appendNotion: (notion) =>
+    set((state) => ({
+      notion: [
+        ...state.notion,
+        ...notion.filter(
+          (newNotion) => !state.notion.find((n) => n.id === newNotion.id),
+        ),
+      ],
+    })),
   setUrlUploaded: (url) => {
     set((state) => {
       const newUrls = [...state.urls];
@@ -77,6 +101,15 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
       return { urls: newUrls };
     });
   },
+  deleteNotion: (notion) => {
+    set((state) => ({
+      notion: state.notion.filter((i) => i.id !== notion.id),
+    }));
+  },
+  deleteAllNotion: () =>
+    set(() => ({
+      notion: [],
+    })),
   deleteUrl: (url) => {
     set((state) => ({ urls: state.urls.filter((i) => i.url !== url) }));
   },
