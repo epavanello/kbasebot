@@ -144,7 +144,7 @@ export default function ChatUi({
             ))}
           </div>
         )}
-        {!isDataLoading && messages.length && (
+        {!isDataLoading && !!messages.length && (
           <div
             className={cn("w-full overflow-y-auto", chatContainerClass || "")}
           >

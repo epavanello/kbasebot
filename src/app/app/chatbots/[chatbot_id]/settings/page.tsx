@@ -23,9 +23,12 @@ import { useSupabaseAuth } from "@/lib/store/use-user";
 import { useParams } from "next/navigation";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
+import { Chatbot, Conversation } from "@/lib/supabase";
 
 const Settings = () => {
-  const [chatbot, setChatbot] = useState({});
+  const [chatbot, setChatbot] = useState<
+    (Chatbot & { conversations: Conversation[] }) | null
+  >(null);
   const { supabase } = useSupabaseAuth();
   const router = useRouter();
   const { toast } = useToast();
@@ -42,7 +45,9 @@ const Settings = () => {
         .single()
         .throwOnError();
 
-      if (data) setChatbot(data);
+      if (data) {
+        setChatbot(data);
+      }
 
       setLoading(false);
     };
@@ -89,11 +94,12 @@ const Settings = () => {
 
   const deleteChatbot = async () => {
     setDeleting(true);
+    if (!chatbot) return;
     try {
       await supabase
         .from("chatbots")
         .delete()
-        .eq("id", chatbot?.id)
+        .eq("id", chatbot.id)
         .throwOnError();
 
       toast({
@@ -101,7 +107,7 @@ const Settings = () => {
         title: "Deleted Successfully",
       });
 
-      await router.push(`/app`);
+      router.push(`/app`);
       setDeleting(false);
     } catch (e) {
       setDeleting(false);
@@ -132,9 +138,9 @@ const Settings = () => {
               <div className=" flex relative w-full justify-start gap-2 items-center">
                 <p className="text-gray-700 font-medium text-sm">Chatbot ID</p>
                 <p className="p-2 bg-muted rounded-lg text-gray-700 text-xs">
-                  {chatbot.id}
+                  {chatbot?.id}
                 </p>
-                <CopyButton text={chatbot.id} />
+                <CopyButton text={chatbot?.id || ""} />
               </div>
               <div className=" flex relative w-full justify-start gap-2 items-center">
                 <p className="text-gray-700 font-medium text-sm">Created at</p>

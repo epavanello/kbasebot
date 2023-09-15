@@ -248,8 +248,6 @@ export function UploadContent({
     await Promise.all(promises);
   };
 
-  console.log({ loading });
-
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       setLoading(true);

@@ -4,15 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { Stripe } from "stripe";
 import { cookies } from "next/headers";
 
-import {
-  NEXT_PUBLIC_URL,
-  STRIPE_API_KEY,
-} from "@/lib/env";
+import { NEXT_PUBLIC_URL, STRIPE_API_KEY } from "@/lib/env";
 import { getErrorMessage } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const supabase = createRouteHandlerClient<Database>({ cookies });
     const {
@@ -24,7 +21,7 @@ export async function GET(request: NextRequest) {
     }
 
     const subscription = (
-      await supabase.from("subscriptions").select().single().throwOnError()
+      await supabase.from("subscriptions").select().maybeSingle().throwOnError()
     ).data;
 
     if (!subscription?.customer_id) {
@@ -51,7 +48,7 @@ export async function GET(request: NextRequest) {
     console.error(error);
     return NextResponse.json(
       { error: getErrorMessage(error) },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

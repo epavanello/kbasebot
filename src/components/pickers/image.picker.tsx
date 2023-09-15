@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useDropzone } from "react-dropzone";
 import { ImageOff } from "lucide-react";
@@ -19,177 +19,187 @@ interface IImagePickerToolbarProps {
   bucket?: string;
 }
 
-const ImagePicker: FunctionComponent<IImagePickerToolbarProps> = ({
-  value,
-  onChange,
-  bucket = "chatbot_assets",
-  label,
-  imgClass,
-  imgWrapperClass,
-  imageUploading,
-}) => {
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const imageRef = useRef<HTMLImageElement | null>(null);
+const ImagePicker = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & IImagePickerToolbarProps
+>(
+  (
+    {
+      value,
+      onChange,
+      bucket = "chatbot_assets",
+      label,
+      imgClass,
+      imgWrapperClass,
+      imageUploading,
+    },
+    ref,
+  ) => {
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const imageRef = useRef<HTMLImageElement | null>(null);
 
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    if (value) setImageUrl(value);
-  }, [value]);
+    useEffect(() => {
+      if (value) setImageUrl(value);
+    }, [value]);
 
-  const { supabase, user } = useSupabaseAuth();
+    const { supabase, user } = useSupabaseAuth();
 
-  const uploadImage = async (files: any[]) => {
-    try {
-      setUploading(true);
-      imageUploading && imageUploading(true);
-      // @ts-ignore
-      if (!files || !files?.length) {
-        throw new Error("You must select an image to upload.");
-      }
+    const uploadImage = async (files: any[]) => {
+      try {
+        setUploading(true);
+        imageUploading && imageUploading(true);
+        // @ts-ignore
+        if (!files || !files?.length) {
+          throw new Error("You must select an image to upload.");
+        }
 
-      const file: File = files[0];
+        const file: File = files[0];
 
-      const url = URL.createObjectURL(file);
+        const url = URL.createObjectURL(file);
 
-      const img = new Image();
-      img.onload = async function () {
-        try {
-          let { width, height } = img;
-          const aspectRatio = width / height;
+        const img = new Image();
+        img.onload = async function () {
+          try {
+            let { width, height } = img;
+            const aspectRatio = width / height;
 
-          if (aspectRatio !== 1) {
-            throw new Error("Please upload an square image");
-          }
+            if (aspectRatio !== 1) {
+              throw new Error("Please upload an square image");
+            }
 
-          const { data, error } = await supabase.storage
-            .from(bucket)
-            .upload(`${user?.id}/${file.name}`, file, {
-              cacheControl: "3600",
-              upsert: true,
+            const { data, error } = await supabase.storage
+              .from(bucket)
+              .upload(`${user?.id}/${file.name}`, file, {
+                cacheControl: "3600",
+                upsert: true,
+              });
+
+            if (error) throw new Error("File upload failed");
+
+            const {
+              data: { publicUrl },
+            } = supabase.storage.from(bucket).getPublicUrl(data.path, {
+              // transform: {
+              //   width: 150,
+              //   height: 150, //FIXME: may be need pro supabase
+              // },
             });
 
-          if (error) throw new Error("File upload failed");
+            onChange?.(publicUrl);
+          } catch (error) {
+            console.log({ error });
+            toast({
+              title: "Error uploading image",
+              description: getErrorMessage(
+                error,
+                "Something went wrong, please try again",
+              ),
+              variant: "destructive",
+            });
+          }
+        };
 
-          const {
-            data: { publicUrl },
-          } = supabase.storage.from(bucket).getPublicUrl(data.path, {
-            // transform: {
-            //   width: 150,
-            //   height: 150, //FIXME: may be need pro supabase
-            // },
-          });
+        img.src = url;
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "Error uploading image",
+          description: getErrorMessage(
+            error,
+            "Something went wrong, please try again",
+          ),
+          variant: "destructive",
+        });
+      } finally {
+        setUploading(false);
+        imageUploading && imageUploading(false);
+      }
+    };
 
-          onChange?.(publicUrl);
-        } catch (error) {
-          console.log({ error });
-          toast({
-            title: "Error uploading image",
-            description: getErrorMessage(
-              error,
-              "Something went wrong, please try again",
-            ),
-            variant: "destructive",
-          });
-        }
-      };
+    const { getRootProps, getInputProps } = useDropzone({
+      onDrop: (files) => uploadImage(files),
+      multiple: false,
+    });
 
-      img.src = url;
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Error uploading image",
-        description: getErrorMessage(
-          error,
-          "Something went wrong, please try again",
-        ),
-        variant: "destructive",
-      });
-    } finally {
-      setUploading(false);
-      imageUploading && imageUploading(false);
-    }
-  };
+    const deleteImage = async () => {
+      onChange?.("");
+      setImageUrl("");
+    };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (files) => uploadImage(files),
-    multiple: false,
-  });
-
-  const deleteImage = async () => {
-    onChange?.("");
-    setImageUrl("");
-  };
-
-  return (
-    <>
-      {!!label && <label className="text-xs font-bold">{label}</label>}
-      <div className="relative max-w-xl" {...getRootProps()}>
-        <label className="flex flex-col text-xs items-center justify-center w-full p-3 px-4 transition border border-gray-500  rounded-md appearance-none cursor-pointer hover:border-gray-600 focus:outline-none">
-          {uploading ? (
-            <LoadingDots />
-          ) : (
-            <>
-              <span className="flex items-center space-x-2">
-                <Icon
-                  className="text-2xl text-gray-700"
-                  icon="ic:outline-cloud-upload"
-                />{" "}
-                <span className="font-medium text-gray-700">
-                  Drop Image to {imageUrl ? "Change" : "Attach"}, or{" "}
-                  <span className="text-blue-600 underline">Browse</span>
+    return (
+      <>
+        {!!label && <label className="text-xs font-bold">{label}</label>}
+        <div ref={ref} className="relative max-w-xl" {...getRootProps()}>
+          <label className="flex flex-col text-xs items-center justify-center w-full p-3 px-4 transition border border-gray-500  rounded-md appearance-none cursor-pointer hover:border-gray-600 focus:outline-none">
+            {uploading ? (
+              <LoadingDots />
+            ) : (
+              <>
+                <span className="flex items-center space-x-2">
+                  <Icon
+                    className="text-2xl text-gray-700"
+                    icon="ic:outline-cloud-upload"
+                  />{" "}
+                  <span className="font-medium text-gray-700">
+                    Drop Image to {imageUrl ? "Change" : "Attach"}, or{" "}
+                    <span className="text-blue-600 underline">Browse</span>
+                  </span>
                 </span>
-              </span>
-              {imageUrl && (
-                <div
-                  className={cn(
-                    "relative mt-4 overflow-hidden w-full h-16",
-                    imgWrapperClass || "",
-                  )}
-                >
-                  <NextImage
-                    alt="image selected"
-                    fill={true}
-                    ref={imageRef}
-                    src={imageUrl}
+                {imageUrl && (
+                  <div
                     className={cn(
-                      "rounded-full object-contain",
-                      imgClass || "",
+                      "relative mt-4 overflow-hidden w-full h-16",
+                      imgWrapperClass || "",
                     )}
-                  />
-                </div>
-              )}
-              {!imageUrl && (
-                <div className="flex justify-center items-center p-6">
-                  <ImageOff size={32} />
-                </div>
-              )}
-            </>
-          )}
+                  >
+                    <NextImage
+                      alt="image selected"
+                      fill={true}
+                      ref={imageRef}
+                      src={imageUrl}
+                      className={cn(
+                        "rounded-full object-contain",
+                        imgClass || "",
+                      )}
+                    />
+                  </div>
+                )}
+                {!imageUrl && (
+                  <div className="flex justify-center items-center p-6">
+                    <ImageOff size={32} />
+                  </div>
+                )}
+              </>
+            )}
 
-          <input
-            {...getInputProps()}
-            ref={inputRef}
-            type="file"
-            name="file_upload"
-            accept="image/jpeg,image/png,image/gif,image/svg+xml"
-          />
-        </label>
-      </div>
-      <Button
-        disabled={!imageUrl}
-        type="button"
-        size="sm"
-        variant={"outline"}
-        onClick={deleteImage}
-        className="py-1 px-2 h-auto w-full text-xs"
-      >
-        <Icon icon={"ph:trash"} className="text-red-500 text-lg mr-1" />
-        Remove Image
-      </Button>
-    </>
-  );
-};
+            <input
+              {...getInputProps()}
+              ref={inputRef}
+              type="file"
+              name="file_upload"
+              accept="image/jpeg,image/png,image/gif,image/svg+xml"
+            />
+          </label>
+        </div>
+        <Button
+          disabled={!imageUrl}
+          type="button"
+          size="sm"
+          variant={"outline"}
+          onClick={deleteImage}
+          className="py-1 px-2 h-auto w-full text-xs"
+        >
+          <Icon icon={"ph:trash"} className="text-red-500 text-lg mr-1" />
+          Remove Image
+        </Button>
+      </>
+    );
+  },
+);
+
+ImagePicker.displayName = "ImagePicker";
 
 export default ImagePicker;

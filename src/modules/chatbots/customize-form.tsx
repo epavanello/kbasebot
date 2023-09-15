@@ -39,7 +39,7 @@ const FormSchema = z.object({
       message: "Display Name must be at least 3 characters.",
     })
     .optional(),
-  welcome_message: z.string().default(""),
+  welcome_message: z.string().nonempty(),
   suggested_message: z.array(z.string()).default([]),
   // theme: z.string().default(''),
   primary_color: z.string(),

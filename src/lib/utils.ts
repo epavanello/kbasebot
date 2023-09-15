@@ -82,10 +82,10 @@ export function getErrorMessage(
     } else if (
       typeof e == "object" &&
       e &&
-      "data" in e &&
-      typeof e.data == "string"
+      "message" in e &&
+      typeof e.message == "string"
     ) {
-      return JSON.parse(e.data)?.message || "";
+      return e.message;
     }
   } catch (error) {
     return getErrorMessage(error);

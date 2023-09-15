@@ -64,7 +64,7 @@ const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
           await supabase
             .from("subscriptions")
             .select()
-            .single()
+            .maybeSingle()
             .then((response) => {
               const { data } = response;
               setSubscription(data);
