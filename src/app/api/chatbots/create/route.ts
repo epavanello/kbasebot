@@ -5,6 +5,7 @@ import type { NextRequest } from "next/server";
 import { getDevErrorMessage } from "@/lib/utils";
 import { getPermissions } from "@/lib/permissions/plans";
 import { Database } from "@/lib/types/database.types";
+import { getSubscription } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
@@ -30,13 +31,7 @@ export async function POST(req: NextRequest) {
       .eq("user_id", user.id)
       .eq("status", "TEMPORARY");
 
-    const subscription = (
-      await supabaseServerClient
-        .from("subscriptions")
-        .select()
-        .maybeSingle()
-        .throwOnError()
-    ).data;
+    const subscription = await getSubscription(supabaseServerClient, user.id);
 
     const { permission } = getPermissions(subscription);
 

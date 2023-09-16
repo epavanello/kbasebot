@@ -4,7 +4,6 @@ import { type Message, useChat } from "ai/react";
 import { cn } from "@/lib/utils";
 import { ChatList } from "./chat-list";
 import { ChatPanel } from "./chat-panel";
-import { EmptyScreen } from "./empty-screen";
 import { ChatScrollAnchor } from "./chat-scroll-anchor";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { useEffect, useRef } from "react";
@@ -97,12 +96,14 @@ export default function ChatUi({
       conversationId: conversation_id,
       chatbotId: chatbot_id,
     },
-    onResponse(response) {
-      if (response.status === 401) {
+    async onResponse(response) {
+      if (response.status !== 200) {
+        const data = (await response.json()) as { error?: string };
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description:
+            data.error ||
             "There was a problem with your request. please try again",
         });
       } else {

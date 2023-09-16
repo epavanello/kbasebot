@@ -19,29 +19,22 @@ import { useSupabaseAuth } from "@/lib/store/use-user";
 import Link from "next/link";
 import { getPermissions } from "@/lib/permissions/plans";
 import { useChatbots } from "@/lib/hooks/use-chatbots";
-import { set } from "date-fns";
+import { countMonthlyConversationUsage } from "@/lib/supabase";
 
 const Page = () => {
   const { subscription, plan, user, supabase } = useSupabaseAuth();
   const { permission } = getPermissions(subscription);
-  const { chatbots, loading } = useChatbots();
-  const [messagesCount, sessionsCount] = useState(0);
+  const { chatbots } = useChatbots();
+  const [messagesCount, setMessagesCount] = useState(0);
 
   const { email } = user || {};
   const { avatar_url, full_name } = user?.user_metadata || {};
 
   useEffect(() => {
-    if (supabase) {
-      supabase
-        .from("conversations")
-        .select("*", { count: "exact", head: true })
-        .eq("chatbot_owner_id", user?.id || "")
-        .throwOnError()
-        .then(({ count }) => {
-          sessionsCount(count || 0);
-        });
+    if (supabase && user) {
+      countMonthlyConversationUsage(supabase, user.id).then(setMessagesCount);
     }
-  }, [supabase]);
+  }, [supabase, user]);
 
   return (
     <DashboardShell className="container gap-0 mt-4">

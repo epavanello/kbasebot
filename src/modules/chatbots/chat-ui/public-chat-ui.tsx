@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import ChatUi from "@/modules/chatbots/chat-ui";
 import { Icon } from "@/components/ui/icons";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
@@ -8,6 +8,7 @@ import Image from "next/image";
 import { cn, isContrastColorWhite } from "@/lib/utils";
 import ChatbotTheme from "@/modules/chatbots/chat-ui/chatbot-theme";
 import { Settings } from "@/lib/supabase";
+import { useTheme } from "next-themes";
 
 const PublicChatUi = ({
   settings,
@@ -15,12 +16,14 @@ const PublicChatUi = ({
   noCloseBtn = false,
   onClose,
   className,
+  forceTheme,
 }: {
   settings: Settings | null;
   chatbot_id: string;
   noCloseBtn?: boolean;
   className?: string;
   onClose?: () => void;
+  forceTheme?: boolean;
 }) => {
   const {
     primary_color = "#000000",
@@ -32,6 +35,14 @@ const PublicChatUi = ({
   } = settings || {};
 
   const [resetOnIncrement, setResetOnIncrement] = React.useState(0);
+
+  const { theme: currentTheme, setTheme } = useTheme();
+
+  useEffect(() => {
+    if (forceTheme) {
+      setTheme(theme || "light");
+    }
+  }, [forceTheme, theme]);
 
   const onCloseCallback =
     onClose ||

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import type { Database } from "@/lib/types/database.types";
 
-const internalPublicRoutes = ["/api/chatbots/message"];
+const internalPublicRoutes = ["/api/chatbots/message", "/api/chatbots/settings"];
 
 export const config = {
   matcher: [`/app/:path*`, `/api/:path*`],

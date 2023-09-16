@@ -3,7 +3,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
 import { cookies } from "next/headers";
-import { getDevErrorMessage } from "@/lib/utils";
+import { getDevErrorMessage, isDevelopment } from "@/lib/utils";
+
+export const revalidate = isDevelopment ? 0 : 3600;
 
 export async function GET(req: NextRequest) {
   try {

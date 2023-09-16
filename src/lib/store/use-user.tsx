@@ -8,7 +8,7 @@ import {
   SupabaseClient,
   User,
 } from "@supabase/auth-helpers-nextjs";
-import { Subscription } from "../supabase";
+import { Subscription, getSubscription } from "../supabase";
 import { Database } from "../types/database.types";
 import {
   getPermissions,
@@ -61,14 +61,8 @@ const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (error) throw error;
           setSession(session);
           setUser(session?.user);
-          await supabase
-            .from("subscriptions")
-            .select()
-            .maybeSingle()
-            .then((response) => {
-              const { data } = response;
-              setSubscription(data);
-            });
+
+          getSubscription(supabase, session?.user.id).then(setSubscription);
         } catch (error) {
           console.log(error);
         }

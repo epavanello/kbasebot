@@ -31,6 +31,14 @@ import ImagePicker from "@/components/pickers/image.picker";
 import TabRadio from "@/components/ui/tab-radio";
 import PublicChatUiFull from "./chat-ui/public-chat-ui-full";
 import { Settings } from "@/lib/supabase";
+import { useTheme } from "next-themes";
+import { Select } from "@radix-ui/react-select";
+import {
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const FormSchema = z.object({
   display_name: z
@@ -41,7 +49,7 @@ const FormSchema = z.object({
     .optional(),
   welcome_message: z.string().nonempty(),
   suggested_message: z.array(z.string()).default([]),
-  // theme: z.string().default(''),
+  theme: z.string(),
   primary_color: z.string(),
   chatbot_logo: z.string().default(""),
   chatbot_bubble_logo: z.string().default(""),
@@ -55,6 +63,7 @@ interface CustomizeFormProps {
 
 const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
   const { supabase, user } = useSupabaseAuth();
+  const { theme } = useTheme();
 
   function parseWithDefaults(
     input: Settings | null,
@@ -66,6 +75,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
       display_name: input?.display_name || undefined,
       primary_color: input?.primary_color || "#000000",
       suggested_message: input?.suggested_message || [],
+      theme: input?.theme || theme || "light",
       welcome_message: input?.welcome_message || "",
     };
   }
@@ -207,34 +217,33 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                 )}
               />
 
-              {/*  Theme - select */}
-              {/*<FormField*/}
-              {/*  control={form.control}*/}
-              {/*  name="theme"*/}
-              {/*  render={({ field }) => (*/}
-              {/*    <FormItem>*/}
-              {/*      <FormLabel>Theme</FormLabel>*/}
-              {/*      <Select*/}
-              {/*        onValueChange={field.onChange}*/}
-              {/*        defaultValue={field.value}*/}
-              {/*      >*/}
-              {/*        <FormControl>*/}
-              {/*          <SelectTrigger>*/}
-              {/*            <SelectValue placeholder="Select a theme" />*/}
-              {/*          </SelectTrigger>*/}
-              {/*        </FormControl>*/}
-              {/*        <SelectContent>*/}
-              {/*          <SelectItem value="light">Light</SelectItem>*/}
-              {/*          <SelectItem value="dark">Dark</SelectItem>*/}
-              {/*        </SelectContent>*/}
-              {/*      </Select>*/}
-              {/*      <FormDescription>*/}
-              {/*        Change Theme of your chatbot*/}
-              {/*      </FormDescription>*/}
-              {/*      <FormMessage />*/}
-              {/*    </FormItem>*/}
-              {/*  )}*/}
-              {/*/>*/}
+              <FormField
+                control={form.control}
+                name="theme"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Theme</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a theme" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="light">Light</SelectItem>
+                        <SelectItem value="dark">Dark</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      Change Theme of your chatbot
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <div className="flex gap-8">
                 <div className="w-44">

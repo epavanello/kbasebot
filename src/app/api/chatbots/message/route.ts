@@ -10,9 +10,11 @@ import { getContext } from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { templates } from "@/modules/chatbots/templates";
 import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
-import { getDevErrorMessage } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/utils";
+import { countMonthlyConversationUsage, getSubscription } from "@/lib/supabase";
+import { getPermissions } from "@/lib/permissions/plans";
 
 const config = new Configuration({
   apiKey: OPENAI_API_KEY,
@@ -36,7 +38,7 @@ export async function POST(req: NextRequest) {
     const { messages, conversationId, chatbotId } = await req.json();
 
     if (!conversationId) {
-      throw new Error("unauthorized");
+      throw new Error("conversationId is required");
     }
 
     const supabaseAdminClient = getSupabaseClientAdmin();
@@ -44,22 +46,36 @@ export async function POST(req: NextRequest) {
     const userPrompt = messages?.length ? messages[messages.length - 1] : [];
 
     if (!userPrompt?.content?.length)
-      throw new Error("Please write a question to get answer from ai");
+      throw new Error("Please write a question");
 
-    const chatbot = (
+    const ownerId = (
       await supabaseAdminClient
         .from("chatbots")
         .select("user_id")
         .eq("id", chatbotId)
         .single()
         .throwOnError()
-    ).data!;
+    ).data!.user_id;
+
+    const ownerSubscription = await getSubscription(
+      supabaseAdminClient,
+      ownerId,
+    );
+
+    const permission = getPermissions(ownerSubscription);
+
+    if (
+      (await countMonthlyConversationUsage(supabaseAdminClient, ownerId)) >
+      permission.permission.maxMessages
+    ) {
+      throw new Error("The chatbot has reached the monthly limit");
+    }
 
     // Retrieve the conversation log and save the user's prompt
     const conversationLog = new ConversationLog(
       conversationId,
       chatbotId,
-      chatbot.user_id!,
+      ownerId,
       supabaseAdminClient,
     );
 
@@ -113,8 +129,10 @@ export async function POST(req: NextRequest) {
     return new StreamingTextResponse(stream);
   } catch (e) {
     console.error(e);
-    return new Response(
-      getDevErrorMessage(e, "Something went wrong! please try again"),
+    return NextResponse.json(
+      {
+        error: getErrorMessage(e, "Something went wrong! please try again"),
+      },
       {
         status: 401,
       },

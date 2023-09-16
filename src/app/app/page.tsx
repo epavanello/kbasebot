@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, {  } from "react";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { sayGreeting } from "@/lib/utils";
 import ChatbotList from "@/modules/chatbots/chatbot-list";
 import NoItemsCard from "@/components/ui/no-items-card";
 import NewChatbotModal from "@/modules/chatbots/new-chatbot.modal";
-import { useSupabaseAuth } from "@/lib/store/use-user";
 import LoadingDots from "@/components/ui/loading-dots";
-import { Chatbot } from "@/lib/supabase";
 import { useChatbots } from "@/lib/hooks/use-chatbots";
 
 const ChatbotIndex = () => {

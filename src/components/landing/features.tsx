@@ -3,36 +3,42 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import { gradients } from "@/style/gradients";
 
-const features = [
+/**
+ * 6. Features list for KBaseBot, a no-code chatbot for knowledge base and customer support, trainable with pdf, docx, notion, and more. Powered by GPT-4 and GPT-3.
+ * It can get leads, automate conversations, and save time.
+ * It have free plan, it's customizable, and it's embeddable on your website with a single line of code.
+ * You can view the conversation logs, and it's GDPR compliant.
+ */
+const features: { icon: string; title: string; desc: string }[] = [
   {
-    title: "Secure Hosting",
-    desc: "Experience the reliability and security of our hosting solution powered by Vercel, guaranteeing consistent uptime for your landing pages.",
-    icon: "devicon:vercel-wordmark",
+    icon: "fluent:bot-sparkle-24-filled",
+    title: "Automated Conversations",
+    desc: "KBaseBot can automate conversations with your customers, and save you time.",
   },
   {
-    title: "Powered By GPT-4",
-    desc: "Leverage the prowess of AI for insightful, tailor-made landing pages.",
-    icon: "ri:openai-fill",
+    icon: "mdi:leads-outline",
+    title: "Lead Generation",
+    desc: "KBaseBot can generate leads for you, and help you grow your business.",
   },
   {
-    title: "Customizable Chatbot Design",
-    desc: "Create professional landing pages effortlessly, regardless of your coding skill level.",
-    icon: "tabler:drag-drop",
+    icon: "icomoon-free:embed2",
+    title: "Embeddable",
+    desc: "KBaseBot can be embedded on your website with a single line of code.",
   },
   {
-    title: "Powerful Analytics",
-    desc: "Gain crucial insights with our robust analytics, driving data-informed decisions for superior outcomes. (Plausible Analytics)",
-    icon: "streamline:interface-content-chart-product-data-analysis-analytics-graph-line-business-board-chart",
+    icon: "gridicons:customize",
+    title: "Customizable",
+    desc: "KBaseBot can be customized to fit your needs, and your brand.",
   },
   {
-    title: "Collect Leads",
-    desc: "Gather invaluable user data seamlessly with our integrated form feature.",
-    icon: "fluent:form-24-regular",
+    icon: "bxs:chat",
+    title: "Conversation Logs",
+    desc: "KBaseBot can log all conversations, and you can view them.",
   },
   {
-    title: "A/B Testing Tools",
-    desc: "Integrate KBaseBot seamlessly with your existing systems and databases to provide personalized and context-aware responses.",
-    icon: "mdi:ab-testing",
+    icon: "octicon:law-16",
+    title: "GDPR Compliant",
+    desc: "KBaseBot is GDPR compliant, and you can delete all data.",
   },
 ];
 
@@ -58,19 +64,19 @@ const Features = () => {
             <div className="max-w-xl"></div>
 
             <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
-              {features.map((i) => (
-                <div key={i.icon} className="flex items-start gap-4">
-                  <span className="shrink-0 rounded-lg bg-indigo-100 p-1">
+              {features.map((feature) => (
+                <div key={feature.icon} className="flex items-start gap-4">
+                  <span className="shrink-0 rounded-lg p-1">
                     <Icon
-                      className={"text-4xl rounded-lg p-2 " + gradients.SEAFOAM}
-                      icon={i.icon}
+                      className={"text-4xl rounded-lg text-black p-2 " + gradients.SEAFOAM}
+                      icon={feature.icon}
                     />
                   </span>
 
                   <div>
-                    <h2 className="text-lg font-bold">{i.title}</h2>
+                    <h2 className="text-lg font-bold">{feature.title}</h2>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                      {i.desc}
+                      {feature.desc}
                     </p>
                   </div>
                 </div>

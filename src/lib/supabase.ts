@@ -1,6 +1,7 @@
 import { Database } from "@/lib/types/database.types";
-import { SupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { SupabaseClient, User } from "@supabase/auth-helpers-nextjs";
 import { NEXT_PUBLIC_URL } from "./env";
+import { set } from "date-fns";
 
 export type SupabaseClientTyped = SupabaseClient<Database>;
 
@@ -10,7 +11,8 @@ export type KnowledgeBase =
   Database["public"]["Tables"]["knowledge_base"]["Row"];
 export type Chatbot = Database["public"]["Tables"]["chatbots"]["Row"];
 export type ChatbotUrl = Database["public"]["Tables"]["chatbot_urls"]["Row"];
-export type ChatbotNotion = Database["public"]["Tables"]["chatbot_notion"]["Row"];
+export type ChatbotNotion =
+  Database["public"]["Tables"]["chatbot_notion"]["Row"];
 export type Conversation = Database["public"]["Tables"]["conversations"]["Row"];
 
 export function isPaidUser(userInfo: Subscription | null) {
@@ -114,4 +116,38 @@ export async function getUserByEmailAndSignin(
   }
 
   return user;
+}
+
+export async function countMonthlyConversationUsage(
+  supabase: SupabaseClientTyped,
+  userId: string,
+) {
+  return (
+    (
+      await supabase
+        .from("conversations")
+        .select("*", { count: "exact", head: true })
+        .eq("chatbot_owner_id", userId)
+        // Count messages created in the last 30 days
+        .gte("created_at", set(new Date(), { date: -30 }).toISOString())
+        .throwOnError()
+    ).count!
+  );
+}
+
+export async function getSubscription(
+  supabase: SupabaseClientTyped,
+  userId?: string,
+) {
+  if (!userId) {
+    return null;
+  }
+  return (
+    await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("id", userId)
+      .maybeSingle()
+      .throwOnError()
+  ).data;
 }

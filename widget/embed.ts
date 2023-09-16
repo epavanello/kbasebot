@@ -107,7 +107,9 @@ request.then(async (response) => {
   const { settings } = (await response.json()) as {
     settings: Settings;
   };
-  console.log(settings);
+  if (!settings) {
+    throw new Error("Chatbot settings not found");
+  }
   if (settings.chatbot_bubble_align === "right") {
     iframe.style.right = "16px";
     button.style.right = "16px";

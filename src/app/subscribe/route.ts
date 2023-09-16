@@ -3,7 +3,7 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { NextRequest, NextResponse } from "next/server";
 import { Stripe } from "stripe";
 import { cookies } from "next/headers";
-import { isPaidUser } from "@/lib/supabase";
+import { getSubscription, isPaidUser } from "@/lib/supabase";
 import { BillingInterval, plans } from "@/lib/stripe";
 import { NEXT_PUBLIC_URL, STRIPE_API_KEY } from "@/lib/env";
 import { getDevErrorMessage } from "@/lib/utils";
@@ -31,9 +31,8 @@ export async function GET(request: NextRequest) {
     }
 
     if (session) {
-      const subscription = (
-        await supabase.from("subscriptions").select().single()
-      ).data;
+      const subscription = await getSubscription(supabase, session.user.id);
+
       if (isPaidUser(subscription) && subscription?.plan === plan) {
         return NextResponse.redirect(`${NEXT_PUBLIC_URL}/app`);
       }

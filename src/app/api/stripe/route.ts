@@ -13,7 +13,7 @@ import {
 import Stripe from "stripe";
 import { getErrorMessage, isProduction } from "@/lib/utils";
 import { BillingInterval } from "@/lib/stripe";
-import { getUserByEmailAndSignin } from "@/lib/supabase";
+import { getSubscription, getUserByEmailAndSignin } from "@/lib/supabase";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import { Plan } from "@/lib/permissions/plans";
 
@@ -133,12 +133,10 @@ export async function POST(request: NextRequest) {
           throw new Error(`Invalid price id: ${priceID}`);
         }
 
-        const { data: actualSubscription } = await supabaseClientAdmin
-          .from("subscriptions")
-          .select("*")
-          .eq("id", user.id)
-          .maybeSingle()
-          .throwOnError();
+        const actualSubscription = await getSubscription(
+          supabaseClientAdmin,
+          user.id
+        );
 
         // cancel old subscription
         if (
