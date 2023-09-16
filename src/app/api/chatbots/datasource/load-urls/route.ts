@@ -51,10 +51,13 @@ export async function POST(req: NextRequest) {
       throw new Error("no-datasource-found");
     }
 
-    const loadedUrls = data.filter(Boolean).map((i) => ({
-      content: i.pageContent,
-      url: i.metadata.source,
-    }));
+    const loadedUrls = data
+      .filter(Boolean)
+      .filter((url) => url.pageContent.length > 0)
+      .map((i) => ({
+        content: i.pageContent,
+        url: i.metadata.source,
+      }));
 
     await supabaseServerClient
       .from("chatbot_urls")

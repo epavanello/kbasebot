@@ -28,7 +28,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
     await supabase
       .from("chatbot_urls")
       .delete()
-      .eq("url", url)
+      .eq("url", url.url)
       .eq("chatbot_id", chatbotId)
       .throwOnError();
     deleteUrl(url.url);

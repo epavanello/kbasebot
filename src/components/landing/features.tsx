@@ -3,12 +3,6 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import { gradients } from "@/style/gradients";
 
-/**
- * 6. Features list for KBaseBot, a no-code chatbot for knowledge base and customer support, trainable with pdf, docx, notion, and more. Powered by GPT-4 and GPT-3.
- * It can get leads, automate conversations, and save time.
- * It have free plan, it's customizable, and it's embeddable on your website with a single line of code.
- * You can view the conversation logs, and it's GDPR compliant.
- */
 const features: { icon: string; title: string; desc: string }[] = [
   {
     icon: "fluent:bot-sparkle-24-filled",

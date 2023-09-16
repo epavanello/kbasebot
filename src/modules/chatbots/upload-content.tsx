@@ -41,7 +41,6 @@ export function UploadContent({
   const { push } = useRouter();
   const { supabase } = useSupabaseAuth();
 
-  //const [chatbot, setChatbot] = useState<Chatbot | null>(null);
   // chatbot as ref
   const [chatbot, setChatbot] = useState<Chatbot | null>(null);
 
@@ -293,7 +292,6 @@ export function UploadContent({
       e.preventDefault();
       await uploadContent(chatbot);
 
-      resetDatasource();
       if (showCreate) {
         push(`/app/chatbots/${chatbot.id}`);
       }
