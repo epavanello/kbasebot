@@ -25,7 +25,7 @@
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
   }
- 
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -48,7 +48,6 @@
     --ring: 224.3 76.3% 48%;
   }
 }
-
 
 @layer base {
   * {
@@ -112,17 +111,17 @@
 
     /* Hide scrollbar for IE, Edge and Firefox */
     .no-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
     }
   }
 }
 
 @layer components {
-  .stroke-100{
+  .stroke-100 {
     stroke-dasharray: 100;
   }
-  .stroke-15{
+  .stroke-15 {
     stroke-dasharray: 25;
   }
 }
@@ -154,18 +153,34 @@
   height: 100%;
 }
 
-
 /* Border animation */
 
 .border_run {
   --border-size: 1px;
   --border-angle: 0turn;
-  background-image: conic-gradient(from var(--border-angle), #213, #112 50%, #213), conic-gradient(from var(--border-angle), transparent 20%, #08e0c0, #f03);
-  background-size: calc(100% - (var(--border-size) * 2)) calc(100% - (var(--border-size) * 2)), cover;
+  background-image: conic-gradient(
+      from var(--border-angle),
+      #ffffff,
+      #f5f5f5 50%,
+      #ffffff
+    ),
+    conic-gradient(from var(--border-angle), transparent 20%, #08e0c0, #f03);
+  background-size:
+    calc(100% - (var(--border-size) * 2)) calc(100% - (var(--border-size) * 2)),
+    cover;
   background-position: center center;
   background-repeat: no-repeat;
   -webkit-animation: bg-spin 3s linear infinite;
   animation: bg-spin 3s linear infinite;
+}
+.dark .border_run {
+  background-image: conic-gradient(
+      from var(--border-angle),
+      #213,
+      #112 50%,
+      #213
+    ),
+    conic-gradient(from var(--border-angle), transparent 20%, #08e0c0, #f03);
 }
 @-webkit-keyframes bg-spin {
   to {
@@ -186,4 +201,24 @@
   syntax: "<angle>";
   inherits: true;
   initial-value: 0turn;
+}
+#first-circle {
+  @apply stroke-[#07F9BF];
+}
+
+#second-circle,
+#third-circle {
+  @apply stroke-[#d4d4d4] dark:stroke-[#3E3737];
+}
+
+.circle {
+  @apply fill-[#d4d4d481] dark:fill-[#e9e9e928];
+}
+
+.icon {
+  @apply fill-[#1a1a1a] dark:fill-[#D7DFE7];
+}
+
+.icon-stroke {
+  @apply stroke-[#1a1a1a] dark:stroke-[#D7DFE7];
 }

@@ -49,7 +49,7 @@ const Hero = () => {
         <Link
           className={cn(
             buttonVariants({ variant: "default", size: "lg" }),
-            "mt-4 py-6 px-10 hover:opacity-90 shine-effect", gradients.SEAFOAM
+            "mt-4 py-6 px-10 hover:opacity-90 shine-effect text-black", gradients.SEAFOAM
           )}
           href="/app"
         >

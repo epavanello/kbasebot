@@ -6,6 +6,7 @@ import Link from "next/link";
 import React from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { useSupabaseAuth } from "@/lib/store/use-user";
+import { DarkModeSwitch } from "../ui/dark-mode-switch";
 
 export default function NavLinks({
   isCol = false,
@@ -67,6 +68,7 @@ export default function NavLinks({
             </Link>
           </>
         )}
+        <DarkModeSwitch />
       </div>
     </div>
   );
