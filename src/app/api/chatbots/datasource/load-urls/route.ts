@@ -41,7 +41,6 @@ export async function POST(req: NextRequest) {
 
     if (sitemap) {
       const { sites } = await loadSiteMap(sitemap);
-
       data = await loadMultiUrl(sites);
     } else if (crawl) {
       data = (await loadWebsites(crawl)) || [];

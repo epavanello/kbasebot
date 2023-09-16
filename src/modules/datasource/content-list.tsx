@@ -44,7 +44,7 @@ export default function ContentList<T>({
           <li key={item.id} className="flex flex-row items-center gap-2">
             <div className="relative flex-1">
               <Input className="text-sm h-8" value={item.value} readOnly />
-              <small className="text-[10px] text-gray-500 leading-none absolute right-1 bottom-1 bg-white/90 rounded-lg">
+              <small className="text-[10px] text-gray-500 dark:text-gray-200 leading-none absolute right-1 bottom-1 bg-white/90 dark:bg-black/80 rounded-lg">
                 {item.chars} chars
               </small>
             </div>
