@@ -17,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import LoadingDots from "@/components/ui/loading-dots";
+import { ChatMessage } from "./chat-message";
 
 export interface ChatProps extends React.ComponentProps<"div"> {
   initialMessages?: Message[];
@@ -154,7 +155,11 @@ export default function ChatUi({
           </div>
         )}
         {isLoading && !responseIsStarted && (
-          <LoadingDots className="!w-2 !h-2" />
+          <ChatMessage
+            message={{ role: "assistant", content: "", id: "loading" }}
+          >
+            <LoadingDots className="!w-2 !h-2" />
+          </ChatMessage>
         )}
       </div>
       {!!suggested_message?.length && (

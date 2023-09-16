@@ -11,13 +11,9 @@ export function ChatList({ messages, chatbotLogo }: ChatList) {
     return null;
   }
 
-  return (
-    <div className="relative flex flex-col gap-0 mx-auto max-w-2xl">
-      {messages.map((message, index) => (
-        <div key={index}>
-          <ChatMessage chatbotLogo={chatbotLogo} message={message} />
-        </div>
-      ))}
+  return messages.map((message, index) => (
+    <div key={index}>
+      <ChatMessage chatbotLogo={chatbotLogo} message={message} />
     </div>
-  );
+  ));
 }

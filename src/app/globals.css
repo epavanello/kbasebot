@@ -229,7 +229,7 @@
 }
 
 .circle {
-  @apply fill-[#d4d4d481] dark:fill-[#e9e9e928];
+  @apply fill-[#d4d4d452] dark:fill-[#e9e9e928];
 }
 
 .icon {
