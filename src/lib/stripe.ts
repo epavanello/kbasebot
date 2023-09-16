@@ -1,10 +1,10 @@
 import {
   STRIPE_PRICE_ID_BASIC,
   STRIPE_PRICE_ID_BASIC_YEARLY,
-  STRIPE_PRICE_ID_EXTRA,
-  STRIPE_PRICE_ID_EXTRA_YEARLY,
+  STRIPE_PRICE_ID_PRO,
+  STRIPE_PRICE_ID_PRO_YEARLY,
 } from "./env";
-import { Plan } from "./permissions/plans";
+import { PLAN_PERMISSIONS, Plan, getPermissions } from "./permissions/plans";
 
 export type BillingInterval = "year" | "month";
 
@@ -37,42 +37,54 @@ export const plans: PlanDetails[] = [
     name: "Free",
     priceText: "Start Free",
     prices: [],
-    features: ["1 Chatbot", "30 messages/month", ...commonFeatures],
+    features: [
+      "1 Chatbot",
+      `${PLAN_PERMISSIONS[Plan.FREE].maxMessages} messages/month`,
+      ...commonFeatures,
+    ],
   },
   {
     id: Plan.BASIC,
     name: "Basic",
     prices: [
-      { priceId: STRIPE_PRICE_ID_BASIC, interval: "month", unitAmount: 999 },
+      { priceId: STRIPE_PRICE_ID_BASIC, interval: "month", unitAmount: 1499 },
       {
         priceId: STRIPE_PRICE_ID_BASIC_YEARLY,
         interval: "year",
-        unitAmount: 9999,
+        unitAmount: 14999,
       },
     ],
-    features: ["3 Chatbots", "2k messages/month", ...commonFeatures],
+    features: [
+      "3 Chatbots",
+      `${PLAN_PERMISSIONS[Plan.BASIC].maxMessages / 1000}k messages/month`,
+      ...commonFeatures,
+    ],
   },
   {
     id: Plan.PRO,
     name: "Pro",
     prices: [
       {
-        priceId: STRIPE_PRICE_ID_EXTRA,
+        priceId: STRIPE_PRICE_ID_PRO,
         interval: "month",
-        unitAmount: 1999,
+        unitAmount: 3999,
       },
       {
-        priceId: STRIPE_PRICE_ID_EXTRA_YEARLY,
+        priceId: STRIPE_PRICE_ID_PRO_YEARLY,
         interval: "year",
-        unitAmount: 19999,
+        unitAmount: 39999,
       },
     ],
-    features: ["10 Chatbots", "20k messages per month", ...commonFeatures],
+    features: [
+      "10 Chatbots",
+      `${PLAN_PERMISSIONS[Plan.PRO].maxMessages / 1000}k messages/month`,
+      ...commonFeatures,
+    ],
     highlight: true,
   },
   {
-    id: Plan.AGENCY,
-    name: "Agency",
+    id: Plan.ENTERPRISE,
+    name: "Enterprise",
     priceText: "Let's talk",
     prices: [],
     features: [

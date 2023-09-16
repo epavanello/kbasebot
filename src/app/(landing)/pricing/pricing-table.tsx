@@ -87,7 +87,7 @@ export default function PricingTable() {
                 const discount = price?.discount;
 
                 const isFree = plan.id === "free";
-                const isAgency = plan.id === "agency";
+                const isEnterprise = plan.id === "enterprise";
 
                 let subscribeText = isPaidUser(subscription)
                   ? "Change plan"
@@ -101,7 +101,7 @@ export default function PricingTable() {
                   subscribeText = "Get started";
                   route = "/app";
                 }
-                if (isAgency) {
+                if (isEnterprise) {
                   subscribeText = "Contact us!";
                   route = "/contact";
                 } else if (isActive) {

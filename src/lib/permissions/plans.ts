@@ -4,7 +4,7 @@ export enum Plan {
   FREE = "free",
   BASIC = "basic",
   PRO = "pro",
-  AGENCY = "agency",
+  ENTERPRISE = "enterprise",
 }
 
 export type Permissions = {
@@ -21,20 +21,21 @@ export const PLAN_PERMISSIONS: Record<Plan, Permissions> = {
   },
   [Plan.BASIC]: {
     maxChatbots: 5,
-    maxMessages: 1000,
+    maxMessages: 3_000,
     maxCharactersToTrain: 800_000,
   },
   [Plan.PRO]: {
     maxChatbots: 20,
-    maxMessages: 5000,
+    maxMessages: 20_000,
     maxCharactersToTrain: 5_000_000,
   },
-  [Plan.AGENCY]: {
+  [Plan.ENTERPRISE]: {
     maxChatbots: 0,
     maxMessages: 0,
     maxCharactersToTrain: 0,
   },
 };
+
 
 export const getPermissions = (
   subscription: Subscription | null,
