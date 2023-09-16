@@ -23,7 +23,7 @@ export default function PricingTable() {
   );
 
   return (
-    <section id="pricing" className="pt-24">
+    <section id="pricing" className="pt-12 sm:pt-24">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col align-center">
           <h1 className="text-4xl font-extrabold sm:text-center sm:text-6xl">

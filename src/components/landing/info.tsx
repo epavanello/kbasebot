@@ -28,7 +28,7 @@ export default function Info({
   id?: string;
 }) {
   return (
-    <div id={id} className="py-24">
+    <div id={id} className="pt-12 sm:pt-24">
       <div className="mx-auto max-w-7xl">
         <div
           dir={dir}

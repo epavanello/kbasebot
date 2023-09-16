@@ -8,7 +8,7 @@ import PricingTable from "./pricing/pricing-table";
 
 const Page = async () => {
   return (
-    <div>
+    <div className="px-2 sm:px-0">
       <Hero />
       <Features />
       <Benefit />

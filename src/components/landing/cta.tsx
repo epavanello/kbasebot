@@ -6,7 +6,7 @@ import { buttonVariants } from "../ui/button";
 
 const Cta = () => {
   return (
-    <div id="cta" className="pt-24">
+    <div id="cta" className="pt-12 sm:pt-24">
       <div className="relative isolate px-6 py-32 sm:py-40 lg:px-8">
         <GridBackground></GridBackground>
         <div className="mx-auto max-w-2xl text-center">
