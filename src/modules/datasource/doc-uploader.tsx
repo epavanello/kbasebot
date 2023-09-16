@@ -139,7 +139,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
                 <Icon className="text-4xl text-gray-700" icon="tabler:upload" />{" "}
                 <span className="font-medium text-gray-700">
                   Drop files here or{" "}
-                  <span className="text-blue-600 underline">Browse File</span>
+                  <span className="text-blue-600 underline">Browse Files</span>
                 </span>
               </span>
               <div className="text-gray-400">

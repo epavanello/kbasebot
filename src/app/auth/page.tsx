@@ -8,7 +8,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import Logo from "@/components/logo";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Icon, LoadingIcon } from "@/components/ui/icons";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Provider } from "@supabase/gotrue-js";
@@ -16,6 +16,8 @@ import { NEXT_PUBLIC_URL } from "@/lib/env";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { useRouter } from "next/navigation";
 import LoadingDots from "@/components/ui/loading-dots";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const Page = ({ searchParams }) => {
   const supabase = createClientComponentClient();
@@ -51,8 +53,8 @@ const Page = ({ searchParams }) => {
   }, [user, code]);
 
   return (
-    <div className="flex justify-center items-center h-screen w-full">
-      <Card className="bg-transparent border-4 border-b-primary p-10">
+    <div className="flex justify-center items-center h-screen w-full relative">
+      <Card className="bg-transparent border-4 border-b-primary p-10 border_run">
         <CardHeader className="flex justify-center items-center">
           <Logo />
         </CardHeader>
@@ -76,6 +78,15 @@ const Page = ({ searchParams }) => {
           )}
         </CardFooter>
       </Card>
+      <Link
+        href="/"
+        className={cn(
+          buttonVariants({ variant: "ghost", size: "sm" }),
+          "absolute right-4 top-4 md:right-8 md:top-8",
+        )}
+      >
+        Go back
+      </Link>
     </div>
   );
 };
