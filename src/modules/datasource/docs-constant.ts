@@ -10,7 +10,7 @@ export const SUPPORTED_EXTENSIONS = [
   { ext: "txt", type: "text", mime: "text/plain" },
   { ext: "csv", type: "text", mime: "text/csv" },
   { ext: "json", type: "text", mime: "application/json" },
-  { ext: "epub", type: "text", mime: "application/epub+zip" },
+  // { ext: "epub", type: "text", mime: "application/epub+zip" },
   // {
   //   ext: "doc",
   //   type: "text",
@@ -29,12 +29,12 @@ export const SUPPORTED_EXTENSIONS = [
   //   mime: "application/vnd.oasis.opendocument.text",
   //   icon: "material-symbols:odt-outline"
   // },
-  {
-    ext: "pptx",
-    type: "presentation",
-    mime: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    icon: "icon-park-outline:ppt",
-  },
+  // {
+  //   ext: "pptx",
+  //   type: "presentation",
+  //   mime: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  //   icon: "icon-park-outline:ppt",
+  // },
   // {
   //   ext: "ppt",
   //   type: "presentation",

@@ -53,7 +53,7 @@ enum IMimeType {
 //   return loader.loadAndSplit();
 // };
 
-const fileLoadersByExt = (file) => {
+const fileLoadersByExt = (file: File) => {
   return {
     [IMimeType.pdf]: () => {
       const loader = new PDFLoader(file);
@@ -71,10 +71,10 @@ const fileLoadersByExt = (file) => {
       const loader = new TextLoader(file);
       return loader.load();
     },
-    [IMimeType.epub]: () => {
-      const loader = new EPubLoader(file);
-      return loader.load();
-    },
+    // [IMimeType.epub]: () => {
+    //   const loader = new EPubLoader(file);
+    //   return loader.load();
+    // },
     [IMimeType.csv]: () => {
       const loader = new CSVLoader(file);
       return loader.load();
