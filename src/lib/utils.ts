@@ -70,6 +70,14 @@ export const getRandomArrayValue = (arr = []) => {
   return arr[Math.floor(Math.random() * arr?.length)];
 };
 
+export function getDevErrorMessage(e: unknown, defaultMessage: string): string {
+  if (isDevelopment) {
+    return getErrorMessage(e);
+  } else {
+    return defaultMessage;
+  }
+}
+
 export function getErrorMessage(
   e: unknown,
   defaultMessage: string = "Unknown error",

@@ -25,14 +25,12 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
   const [url, setUrl] = useState("");
 
   const handleDeleteUrl = async (url: IUrl) => {
-    if (url.trained) {
-      await supabase
-        .from("chatbot_urls")
-        .delete()
-        .eq("url", url)
-        .eq("chatbot_id", chatbotId)
-        .throwOnError();
-    }
+    await supabase
+      .from("chatbot_urls")
+      .delete()
+      .eq("url", url)
+      .eq("chatbot_id", chatbotId)
+      .throwOnError();
     deleteUrl(url.url);
   };
 
@@ -49,7 +47,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
     setLoading(true);
     try {
       const res = await axios.post<IUrl[]>(
-        "/api/chatbots/datasource/load-urls",
+        `/api/chatbots/datasource/load-urls?chatbot_id=${chatbotId}`,
         { [type]: url },
       );
 
@@ -130,7 +128,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
           value: url.url,
           chars: url.chars,
           id: url.url,
-          uploaded: url.trained,
+          trained: url.trained,
           data: url,
         }))}
         onDelete={(url) => handleDeleteUrl(url.data!)}

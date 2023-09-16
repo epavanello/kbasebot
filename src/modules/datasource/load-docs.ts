@@ -11,7 +11,7 @@ export const parseFiles = async (
         .from("chatbots")
         .download(fileUrl);
 
-      const loader = new PDFLoader(data, {
+      const loader = new PDFLoader(data!, {
         splitPages: true,
       });
 
@@ -24,10 +24,7 @@ export const parseFile = async (
   file: string,
   supabase: SupabaseClientTyped,
 ) => {
-  const { data, error } = await supabase.storage
-    .from("files")
-    .download(file);
-
+  const { data, error } = await supabase.storage.from("files").download(file);
 
   if (error) {
     throw error;
@@ -38,4 +35,10 @@ export const parseFile = async (
   });
 
   return loader.loadAndSplit();
+};
+
+export const loadPdf = async (file: File) => {
+  const loader = new PDFLoader(file);
+
+  return loader.load();
 };

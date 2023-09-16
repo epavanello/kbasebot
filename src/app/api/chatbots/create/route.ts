@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import type { NextRequest } from "next/server";
-import { getErrorMessage } from "@/lib/utils";
+import { getDevErrorMessage } from "@/lib/utils";
 import { getPermissions } from "@/lib/permissions/plans";
 import { Database } from "@/lib/types/database.types";
 
@@ -69,10 +69,10 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ status: "done", chatbot });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     return NextResponse.json(
-      { error: getErrorMessage(error) },
+      { error: getDevErrorMessage(e, "Chatbot create error") },
       { status: 500 },
     );
   }

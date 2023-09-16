@@ -11,7 +11,7 @@ import {
   STRIPE_PRICE_ID_EXTRA_YEARLY,
 } from "@/lib/env";
 import Stripe from "stripe";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage, isProduction } from "@/lib/utils";
 import { BillingInterval } from "@/lib/stripe";
 import { getUserByEmailAndSignin } from "@/lib/supabase";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
@@ -20,7 +20,7 @@ import { Plan } from "@/lib/permissions/plans";
 export const dynamic = "force-dynamic";
 
 function checkForProduction(email: string) {
-  if (process.env.NODE_ENV !== "production") {
+  if (!isProduction) {
     if (
       email !== "pavanello.emanuele@gmail.com" &&
       email !== "dev.nilooy@gmail.com"
@@ -168,11 +168,8 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ done: true });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: getErrorMessage(error) },
-      { status: 500 },
-    );
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: getErrorMessage(e) }, { status: 500 });
   }
 }

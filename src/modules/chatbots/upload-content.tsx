@@ -7,7 +7,12 @@ import { useRouter } from "next/navigation";
 import DocumentUploader from "@/modules/datasource/doc-uploader";
 import TextSource from "@/modules/datasource/text-source";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { IFile, useDatasourceStore } from "@/lib/store/use-datasource-store";
+import {
+  IFile,
+  INotion,
+  IUrl,
+  useDatasourceStore,
+} from "@/lib/store/use-datasource-store";
 import {
   MAX_TEXT_INPUT,
   MIN_TEXT_INPUT,
@@ -48,10 +53,10 @@ export function UploadContent({
     setDocs,
     setText,
     setUrls,
-    setDocUploaded,
+    setDocTrained,
     setNotion,
-    setNotionUploaded,
-    setUrlUploaded,
+    setNotionTrained,
+    setUrlTrained,
   } = useDatasourceStore((state) => ({
     docs: state.docs,
     text: state.text,
@@ -61,12 +66,10 @@ export function UploadContent({
     setText: state.setText,
     setUrls: state.setUrls,
     setNotion: state.setNotion,
-    setDocUploaded: state.setDocUploaded,
-    setUrlUploaded: state.setUrlUploaded,
-    setNotionUploaded: state.setNotionUploaded,
+    setDocTrained: state.setDocTrained,
+    setUrlTrained: state.setUrlTrained,
+    setNotionTrained: state.setNotionTrained,
   }));
-
-  console.log({ docs, text, urls });
 
   useEffect(() => {
     if (externalChatbotId) {
@@ -86,7 +89,7 @@ export function UploadContent({
     }
   }, [externalChatbotId]);
 
-  // loading text, urls and files
+  // loading text, urls, notions and files
   useEffect(() => {
     if (chatbot && !showCreate) {
       setLoading(true);
@@ -95,41 +98,48 @@ export function UploadContent({
       Promise.all([
         supabase
           .from("chatbot_urls")
-          .select("*")
+          .select("*, knowledge_base(id)")
           .then(({ data, error }) => {
             if (error) {
               console.error(error);
               return;
             }
             setUrls(
-              data.map((item) => ({
-                url: item.url,
-                chars: item.chars,
-                uploaded: true,
-              })),
+              data.map(
+                (item) =>
+                  ({
+                    url: item.url,
+                    chars: item.chars,
+                    trained: item.knowledge_base.length > 0,
+                  }) as IUrl,
+              ),
             );
           }),
-        // Get files from file bucket
-        supabase.storage
-          .from("files")
-          .list(`${chatbot.id}/`)
+        supabase
+          .from("chatbot_docs")
+          .select("*, knowledge_base(id)")
+          .eq("chatbot_id", chatbot.id)
           .then(({ data, error }) => {
             if (error) {
               console.error(error);
               return;
             }
             setDocs(
-              data.map((item) => ({
-                file: new File([], item.name.split("/").pop() || ""),
-                path: item.name,
-                uploaded: true,
-              })),
+              data.map(
+                (item) =>
+                  ({
+                    id: item.id,
+                    name: item.file_name.split("/").pop() || "",
+                    chars: item.chars,
+                    trained: item.knowledge_base.length > 0,
+                  }) as IFile,
+              ),
             );
           }),
         // Get notion from chatbot_notion
         supabase
           .from("chatbot_notion")
-          .select("*")
+          .select("*, knowledge_base(id)")
           .eq("chatbot_id", chatbot.id)
           .then(({ data, error }) => {
             if (error) {
@@ -137,21 +147,29 @@ export function UploadContent({
               return;
             }
             setNotion(
-              data.map((item) => ({
-                id: item.id,
-                name: item.name,
-                chars: item.chars,
-                uploaded: true,
-              })),
+              data.map(
+                (item) =>
+                  ({
+                    id: item.id,
+                    name: item.name,
+                    chars: item.chars,
+                    trained: item.knowledge_base.length > 0,
+                  }) as INotion,
+              ),
             );
           }),
       ]).finally(() => setLoading(false));
     }
   }, [chatbot, showCreate]);
 
-  const totalUrlChars = urls?.length
-    ? urls.reduce((acc, next) => acc + (next.chars || 0), 0)
-    : 0;
+  const totalDocChars = docs.reduce((acc, next) => acc + (next.chars || 0), 0);
+
+  const totalUrlChars = urls.reduce((acc, next) => acc + (next.chars || 0), 0);
+
+  const totalNotionChars = notion.reduce(
+    (acc, next) => acc + (next.chars || 0),
+    0,
+  );
 
   const canTrain =
     !loading &&
@@ -178,80 +196,53 @@ export function UploadContent({
     return data.chatbot;
   };
 
-  const uploadFile = async (file: File, c: Chatbot): Promise<IFile> => {
-    if (!c) {
-      throw new Error("Chatbot not found");
-    }
-    const fileName = `/${c.id}/${file.name}`;
-    const { data, error } =
-      (await supabase.storage.from("files").upload(fileName, file, {
-        cacheControl: "3600",
-        upsert: true,
-      })) || {};
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    const path = data.path;
-
-    if (!path) throw new Error("File upload error");
-
-    return { file, path, trained: true };
-  };
-
   const uploadContent = async (c: Chatbot) => {
     if (!c) throw new Error("Chatbot not found");
-    const uploadPath = `/api/chatbots/upload?chatbot_id=${encodeURIComponent(
+    const uploadPath = `/api/chatbots/train?chatbot_id=${encodeURIComponent(
       c.id,
     )}`;
     const promises: Promise<void>[] = [];
-    if (docs && docs.length > 0) {
-      for (let doc of docs) {
-        if (!doc.trained && doc.file.size > 0) {
-          promises.push(
-            new Promise(async (resolve, reject) => {
-              try {
-                const newDoc = await uploadFile(doc.file, c);
-                const res = await axios.post(uploadPath, {
-                  file: newDoc.path,
-                });
-                if (res.status === 200) {
-                  setDocUploaded(newDoc);
-                } else {
-                  reject(new Error("Upload failed"));
-                }
-                resolve();
-              } catch (e) {
-                reject(e);
+    for (let doc of docs) {
+      if (!doc.trained) {
+        promises.push(
+          new Promise(async (resolve, reject) => {
+            try {
+              const res = await axios.post(uploadPath, {
+                file: doc.id,
+              });
+              if (res.status === 200) {
+                setDocTrained(doc);
+              } else {
+                reject(new Error("Training failed"));
               }
-            }),
-          );
-        }
+              resolve();
+            } catch (e) {
+              reject(e);
+            }
+          }),
+        );
       }
     }
 
-    if (urls && urls.length > 0) {
-      for (let url of urls) {
-        if (!url.trained) {
-          promises.push(
-            new Promise(async (resolve, reject) => {
-              try {
-                const res = await axios.post(uploadPath, {
-                  url: url.url,
-                });
-                if (res.status === 200) {
-                  setUrlUploaded(url);
-                } else {
-                  reject(new Error("Upload failed"));
-                }
-                resolve();
-              } catch (e) {
-                reject(e);
+    for (let url of urls) {
+      if (!url.trained) {
+        promises.push(
+          new Promise(async (resolve, reject) => {
+            try {
+              const res = await axios.post(uploadPath, {
+                url: url.url,
+              });
+              if (res.status === 200) {
+                setUrlTrained(url);
+              } else {
+                reject(new Error("Training failed"));
               }
-            }),
-          );
-        }
+              resolve();
+            } catch (e) {
+              reject(e);
+            }
+          }),
+        );
       }
     }
 
@@ -264,9 +255,9 @@ export function UploadContent({
                 notion: n.id,
               });
               if (res.status === 200) {
-                setNotionUploaded(n);
+                setNotionTrained(n);
               } else {
-                reject(new Error("Upload failed"));
+                reject(new Error("Training failed"));
               }
               resolve();
             } catch (e) {
@@ -350,19 +341,19 @@ export function UploadContent({
                 label: "Files",
                 value: "files",
                 icon: "material-symbols:file-copy-outline",
-                desc: `${docs.length} Files`,
+                desc: `${totalDocChars} chars`,
               },
               {
                 label: "Websites",
                 value: "websites",
                 icon: "fluent-mdl2:website",
-                desc: `${totalUrlChars / 1000} kb`,
+                desc: `${totalUrlChars} chars`,
               },
               {
                 label: "Notion",
                 value: "notion",
                 icon: "logos:notion-icon",
-                desc: `${totalUrlChars / 1000} kb`,
+                desc: `${totalNotionChars} chars`,
               },
             ].map((item) => (
               <TabsTrigger
@@ -443,7 +434,7 @@ export function UploadContent({
             loading={loading}
             disabled={!canTrain}
           >
-            Upload
+            Train
           </Button>
         )}
       </div>

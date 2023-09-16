@@ -34,6 +34,46 @@ export interface Database {
   }
   public: {
     Tables: {
+      chatbot_docs: {
+        Row: {
+          chars: number
+          chatbot_id: string
+          content: string
+          created_at: string
+          file_name: string
+          id: string
+        }
+        Insert: {
+          chars: number
+          chatbot_id: string
+          content: string
+          created_at?: string
+          file_name: string
+          id?: string
+        }
+        Update: {
+          chars?: number
+          chatbot_id?: string
+          content?: string
+          created_at?: string
+          file_name?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_docs_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbot_docs_file_name_fkey"
+            columns: ["file_name"]
+            referencedRelation: "objects"
+            referencedColumns: ["name"]
+          }
+        ]
+      }
       chatbot_notion: {
         Row: {
           chars: number
@@ -136,6 +176,7 @@ export interface Database {
         Row: {
           chars: number
           chatbot_id: string
+          content: string
           created_at: string
           id: string
           url: string
@@ -143,6 +184,7 @@ export interface Database {
         Insert: {
           chars: number
           chatbot_id: string
+          content: string
           created_at?: string
           id?: string
           url: string
@@ -150,6 +192,7 @@ export interface Database {
         Update: {
           chars?: number
           chatbot_id?: string
+          content?: string
           created_at?: string
           id?: string
           url?: string
@@ -260,6 +303,7 @@ export interface Database {
           chatbot_id: string | null
           content: string
           created_at: string | null
+          doc_id: string | null
           embedding: string | null
           file_name: string | null
           id: number
@@ -272,6 +316,7 @@ export interface Database {
           chatbot_id?: string | null
           content: string
           created_at?: string | null
+          doc_id?: string | null
           embedding?: string | null
           file_name?: string | null
           id?: number
@@ -284,6 +329,7 @@ export interface Database {
           chatbot_id?: string | null
           content?: string
           created_at?: string | null
+          doc_id?: string | null
           embedding?: string | null
           file_name?: string | null
           id?: number
@@ -297,6 +343,12 @@ export interface Database {
             foreignKeyName: "knowledge_base_chatbot_id_fkey"
             columns: ["chatbot_id"]
             referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_base_doc_id_fkey"
+            columns: ["doc_id"]
+            referencedRelation: "chatbot_docs"
             referencedColumns: ["id"]
           },
           {

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NOTION_AUTH_URL, popupCenter } from "@/lib/utils";
 import axios from "axios";
-import ContentList from "./content-list";
+import ContentList, { Item } from "./content-list";
 import { INotion, useDatasourceStore } from "@/lib/store/use-datasource-store";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 
@@ -35,14 +35,12 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
   };
 
   const handleDeleteNotion = async (n: INotion) => {
-    if (n.trained) {
-      await supabase
-        .from("chatbot_notion")
-        .delete()
-        .eq("id", n.id)
-        .eq("chatbot_id", chatbotId)
-        .throwOnError();
-    }
+    await supabase
+      .from("chatbot_notion")
+      .delete()
+      .eq("id", n.id)
+      .eq("chatbot_id", chatbotId)
+      .throwOnError();
     deleteNotion(n);
   };
 
@@ -106,13 +104,16 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
 
       <ContentList
         title="Loaded pages"
-        items={notion.map((n) => ({
-          value: n.name,
-          chars: n.chars,
-          id: n.id,
-          uploaded: n.trained,
-          data: n,
-        }))}
+        items={notion.map(
+          (n) =>
+            ({
+              value: n.name,
+              chars: n.chars,
+              id: n.id,
+              trained: n.trained,
+              data: n,
+            }) as Item<INotion>,
+        )}
         onDelete={(url) => handleDeleteNotion(url.data!)}
         onDeleteAll={() => handleDeleteAllNotion()}
       />

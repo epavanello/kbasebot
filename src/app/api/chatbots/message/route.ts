@@ -12,6 +12,7 @@ import { templates } from "@/modules/chatbots/templates";
 import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
 import { NextRequest } from "next/server";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
+import { getDevErrorMessage } from "@/lib/utils";
 
 const config = new Configuration({
   apiKey: OPENAI_API_KEY,
@@ -102,8 +103,11 @@ export async function POST(req: NextRequest) {
     return new StreamingTextResponse(stream);
   } catch (e) {
     console.error(e);
-    return new Response("Something went wrong! please try again", {
-      status: 401,
-    });
+    return new Response(
+      getDevErrorMessage(e, "Something went wrong! please try again"),
+      {
+        status: 401,
+      },
+    );
   }
 }

@@ -12,7 +12,8 @@ import {
 } from "./docs-constant";
 import { IFile, useDatasourceStore } from "@/lib/store/use-datasource-store";
 import { useSupabaseAuth } from "@/lib/store/use-user";
-import { Button } from "@/components/ui/button";
+import ContentList from "./content-list";
+import axios from "axios";
 
 interface IDocumentUploaderProps {
   label?: string;
@@ -27,21 +28,55 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
 }: IDocumentUploaderProps) => {
   const inputRef = useRef<any>();
 
-  const { docs, appendDocs, deleteDoc } = useDatasourceStore((state) => ({
-    docs: state.docs,
-    appendDocs: state.appendDocs,
-    deleteDoc: state.deleteDoc,
-  }));
+  const { docs, appendDocs, deleteDoc, deleteAllDocs } = useDatasourceStore(
+    (state) => ({
+      docs: state.docs,
+      appendDocs: state.appendDocs,
+      deleteDoc: state.deleteDoc,
+      deleteAllDocs: state.deleteAllDocs,
+    }),
+  );
 
   const { supabase } = useSupabaseAuth();
 
+  const handleUploadFiles = async (files: File[]) => {
+    files.forEach(async (file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await axios.post<IFile>(
+        `/api/chatbots/datasource/load-files?chatbot_id=${chatbotId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      if (res.status !== 200) {
+        throw new Error(res.statusText);
+      }
+
+      if (res.data) {
+        appendDocs([
+          {
+            id: res.data.id,
+            name: res.data.name,
+            chars: res.data.chars,
+          } as IFile,
+        ]);
+      }
+    });
+  };
+
   const handleDeleteDoc = async (doc: IFile) => {
-    if (doc.trained) {
-      await supabase.storage
-        .from("files")
-        .remove([`${chatbotId}/${doc.file.name}`]);
-    }
-    deleteDoc(doc.file.name);
+    await supabase.storage.from("files").remove([`${chatbotId}/${doc.name}`]);
+    deleteDoc(doc.name);
+  };
+
+  const handleDeleteAllDocs = async () => {
+    await supabase.storage.from("files").remove([`${chatbotId}/*`]);
+    deleteAllDocs();
   };
 
   const [uploading, setUploading] = useState(false);
@@ -59,25 +94,21 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
         throw new Error("You can upload only one file");
 
       if (single) {
-        handleDeleteDoc(docs[0]);
-        appendDocs(
+        if (docs.length > 0) {
+          handleDeleteAllDocs();
+        }
+        handleUploadFiles(
           // Filter the files to check if there's any file with duplicate name
-          uploadedFiles
-            .filter(
-              (uploadedFile) =>
-                !docs.find((f) => f.file.name === uploadedFile.name),
-            )
-            .map((file) => ({ file, uploaded: false, path: "" })),
+          uploadedFiles.filter(
+            (uploadedFile) => !docs.find((f) => f.name === uploadedFile.name),
+          ),
         );
       } else {
-        appendDocs(
+        handleUploadFiles(
           // Filter the files to check if there's any file with duplicate name
-          uploadedFiles
-            .filter(
-              (uploadedFile) =>
-                !docs.find((f) => f.file.name === uploadedFile.name),
-            )
-            .map((file) => ({ file, uploaded: false, path: "" })),
+          uploadedFiles.filter(
+            (uploadedFile) => !docs.find((f) => f.name === uploadedFile.name),
+          ),
         );
       }
     } catch (error) {
@@ -99,7 +130,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
     <div className="w-full flex flex-col items-center max-w-3xl">
       {!!label && <label className="text-xs font-bold">{label}</label>}
       <div className="w-full my-1" {...getRootProps()}>
-        <label className="flex flex-col text-xs items-center justify-center w-full py-14 px-4 transition border border-dashed border-gray-300 rounded-md appearance-none cursor-pointer hover:border-gray-600 focus:outline-none">
+        <label className="flex flex-col gap-4 text-xs items-center justify-center w-full pt-14 pb-8 px-4 transition border border-dashed border-gray-300 rounded-md appearance-none cursor-pointer hover:border-gray-600 focus:outline-none">
           {uploading ? (
             <LoadingIcon />
           ) : (
@@ -111,6 +142,16 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
                   <span className="text-blue-600 underline">Browse File</span>
                 </span>
               </span>
+              <div className="text-gray-400">
+                <p className="text-[13px] mb-1 mt-2 font-bold">
+                  You can upload {bytesToMb(MAX_FILE_SIZE)}MB Max
+                </p>
+                <div className="flex gap-2 flex-wrap text-[12px]">
+                  {SUPPORTED_EXTENSIONS.map((item) => (
+                    <small key={item.ext}>.{item.ext}</small>
+                  ))}
+                </div>
+              </div>
             </>
           )}
 
@@ -122,50 +163,18 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
           />
         </label>
       </div>
-      {!!docs.length && (
-        <ul className="relative mt-4 w-full flex flex-col gap-1">
-          {docs.map((doc) => {
-            return (
-              <li
-                className="flex flex-row gap-2 items-center text-[12px] mb-1"
-                key={doc.file.name}
-              >
-                <Icon
-                  icon={
-                    SUPPORTED_EXTENSIONS.find((i) => {
-                      return i.ext === doc?.file.type.split("/").pop();
-                    })?.icon || "bx:file"
-                  }
-                />{" "}
-                {doc.file.name}
-                {!!doc.trained ? (
-                  <Icon icon="ph:check" className="text-green-500" />
-                ) : (
-                  <Icon icon="ic:round-upload" className="text-yellow-500" />
-                )}
-                <Button
-                  onClick={() => handleDeleteDoc(doc)}
-                  variant="ghost"
-                  size={"sm"}
-                  className="text-red-500"
-                >
-                  <Icon icon={"ph:trash"} />
-                </Button>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-      <div className="text-gray-400">
-        <p className="text-[13px] mb-1 mt-2 font-bold">
-          You can upload {bytesToMb(MAX_FILE_SIZE)}MB Max
-        </p>
-        <div className="flex gap-2 flex-wrap text-[12px]">
-          {SUPPORTED_EXTENSIONS.map((item) => (
-            <small key={item.ext}>.{item.ext}</small>
-          ))}
-        </div>
-      </div>
+      <ContentList
+        title="Loaded files"
+        items={docs.map((doc) => ({
+          value: doc.name,
+          chars: doc.chars,
+          id: doc.id,
+          trained: doc.trained,
+          data: doc,
+        }))}
+        onDelete={(doc) => handleDeleteDoc(doc.data!)}
+        onDeleteAll={() => handleDeleteAllDocs()}
+      />
     </div>
   );
 };

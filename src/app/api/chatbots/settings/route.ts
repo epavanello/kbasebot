@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
 import { cookies } from "next/headers";
+import { getDevErrorMessage } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   try {
@@ -15,13 +16,8 @@ export async function GET(req: NextRequest) {
     });
   } catch (e) {
     console.error(e);
-    if (typeof e === "string")
-      return new Response(e, {
-        status: 500,
-      });
-    else
-      return new Response("Chatbot create error", {
-        status: 500,
-      });
+    return new Response(getDevErrorMessage(e, "Chatbot create error"), {
+      status: 500,
+    });
   }
 }

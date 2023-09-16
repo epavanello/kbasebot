@@ -1,11 +1,11 @@
 import { Database } from "@/lib/types/database.types";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Stripe } from "stripe";
 import { cookies } from "next/headers";
 
 import { NEXT_PUBLIC_URL, STRIPE_API_KEY } from "@/lib/env";
-import { getErrorMessage } from "@/lib/utils";
+import { getDevErrorMessage } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -44,10 +44,10 @@ export async function GET() {
         cause: stripeSession,
       });
     }
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     return NextResponse.json(
-      { error: getErrorMessage(error) },
+      { error: getDevErrorMessage(e, "Subscription portal error") },
       { status: 500 },
     );
   }

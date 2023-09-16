@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import { isPaidUser } from "@/lib/supabase";
 import { BillingInterval, plans } from "@/lib/stripe";
 import { NEXT_PUBLIC_URL, STRIPE_API_KEY } from "@/lib/env";
-import { getErrorMessage } from "@/lib/utils";
+import { getDevErrorMessage } from "@/lib/utils";
 import { Plan } from "@/lib/permissions/plans";
 
 export const dynamic = "force-dynamic";
@@ -69,10 +69,10 @@ export async function GET(request: NextRequest) {
         cause: stripeSession,
       });
     }
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     return NextResponse.json(
-      { error: getErrorMessage(error) },
+      { error: getDevErrorMessage(e, "Checkout error") },
       { status: 500 },
     );
   }

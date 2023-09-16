@@ -6,8 +6,11 @@ export type SupabaseClientTyped = SupabaseClient<Database>;
 
 export type Subscription = Database["public"]["Tables"]["subscriptions"]["Row"];
 export type Settings = Database["public"]["Tables"]["chatbot_settings"]["Row"];
-export type KnowledgeBase = Database["public"]["Tables"]["knowledge_base"]["Row"];
+export type KnowledgeBase =
+  Database["public"]["Tables"]["knowledge_base"]["Row"];
 export type Chatbot = Database["public"]["Tables"]["chatbots"]["Row"];
+export type ChatbotUrl = Database["public"]["Tables"]["chatbot_urls"]["Row"];
+export type ChatbotNotion = Database["public"]["Tables"]["chatbot_notion"]["Row"];
 export type Conversation = Database["public"]["Tables"]["conversations"]["Row"];
 
 export function isPaidUser(userInfo: Subscription | null) {

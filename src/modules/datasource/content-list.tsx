@@ -2,11 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Icon } from "@/components/ui/icons";
 
-interface Item<T> {
+export interface Item<T> {
   id: string;
   value: string;
   chars: number;
-  uploaded?: boolean;
+  trained?: boolean;
   data?: T;
 }
 interface Props<T> {
@@ -27,6 +27,7 @@ export default function ContentList<T>({
         <div className="flex justify-between gap-4">
           <h1 className="text-center font-bold my-1">{title}</h1>
           <Button
+            type="button"
             onClick={() => onDeleteAll()}
             variant="destructive"
             size={"sm"}
@@ -42,22 +43,23 @@ export default function ContentList<T>({
         {items.map((item) => (
           <li key={item.id} className="flex flex-row items-center gap-2">
             <div className="relative flex-1">
-              <Input
-                className="text-sm h-8 pr-10"
-                value={item.value}
-                readOnly
-              />
-              <small className="opacity-50 text-[10px] absolute right-0 bottom-0 px-1 py-1 bg-secondary/50 rounded-lg">
-                {item.chars / 1000} kb
+              <Input className="text-sm h-8" value={item.value} readOnly />
+              <small className="text-[10px] text-gray-500 leading-none absolute right-1 bottom-1 bg-white/90 rounded-lg">
+                {item.chars} chars
               </small>
             </div>
-            {!!item.uploaded ? (
+            {!!item.trained ? (
               <Icon icon="ph:check" className="text-green-500" />
             ) : (
-              <Icon icon="ic:round-upload" className="text-yellow-500" />
+              // cloud
+              <Icon
+                icon="material-symbols:cloud-outline"
+                className="text-yellow-500"
+              />
             )}
 
             <Button
+              type="button"
               onClick={() => onDelete(item)}
               variant="ghost"
               size={"sm"}

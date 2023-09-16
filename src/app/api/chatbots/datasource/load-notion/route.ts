@@ -8,6 +8,8 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/lib/types/database.types";
 import { cookies } from "next/headers";
 import { INotion } from "@/lib/store/use-datasource-store";
+import { ChatbotNotion } from "@/lib/supabase";
+import { getDevErrorMessage } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -48,14 +50,17 @@ export async function GET(request: NextRequest) {
     await supabaseServerClient
       .from("chatbot_notion")
       .insert(
-        notionRes.map((document) => ({
-          chars: document.pageContent.length,
-          chatbot_id,
-          content: document.pageContent,
-          id: document.id,
-          name: document.title,
-          type: document.type,
-        })),
+        notionRes.map(
+          (document) =>
+            ({
+              chars: document.pageContent.length,
+              chatbot_id,
+              content: document.pageContent,
+              id: document.id,
+              name: document.title,
+              type: document.type,
+            }) as ChatbotNotion,
+        ),
       )
       .throwOnError();
 
@@ -71,13 +76,8 @@ export async function GET(request: NextRequest) {
     );
   } catch (e) {
     console.error(e);
-    if (typeof e === "string")
-      return new Response(e, {
-        status: 500,
-      });
-    else
-      return new Response("Chatbot datasource error", {
-        status: 500,
-      });
+    return new Response(getDevErrorMessage(e, "Chatbot datasource error"), {
+      status: 500,
+    });
   }
 }

@@ -3,19 +3,13 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import type { NextRequest } from "next/server";
-import { parseFile } from "@/modules/datasource/load-docs";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
-import { loadSingleUrl } from "@/modules/datasource/load-websites";
 import { loadText } from "@/modules/datasource/load-text";
-import { getErrorMessage } from "@/lib/utils";
+import { getDevErrorMessage } from "@/lib/utils";
 import { Document } from "langchain/document";
 import { Database } from "@/lib/types/database.types";
 import { KnowledgeBase } from "@/lib/supabase";
-import {
-  authenticateNotion,
-  loadDBOrPage,
-} from "@/modules/datasource/load-notions";
 
 export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
@@ -72,13 +66,7 @@ export async function POST(req: NextRequest) {
 
     const documentCollection: Document[][] = [];
 
-    if (file.length) {
-      documentCollection.push(await parseFile(file, supabaseServerClient));
-      knowledgeBaseRef = {
-        ...knowledgeBaseRef,
-        file_name: file,
-      };
-    } else if (text.length) {
+    if (text.length) {
       // cleanup previous text
       await supabaseServerClient
         .from("knowledge_base")
@@ -86,6 +74,8 @@ export async function POST(req: NextRequest) {
         .eq("chatbot_id", chatbot_id)
         .is("url_id", null)
         .is("file_name", null)
+        .is("doc_id", null)
+        .is("notion_id", null)
         .throwOnError();
 
       documentCollection.push(await loadText(text));
@@ -96,26 +86,35 @@ export async function POST(req: NextRequest) {
         })
         .eq("id", chatbot_id)
         .throwOnError();
-    } else if (url) {
-      const documents = await loadSingleUrl(url, true);
-      const chars = documents.reduce(
-        (acc, doc) => acc + doc.pageContent.length,
-        0,
-      );
-      documentCollection.push(documents);
-
-      const chatbotUrl = (
+    } else if (file) {
+      const chatbotDoc = (
         await supabaseServerClient
-          .from("chatbot_urls")
-          .insert({
-            chatbot_id,
-            url,
-            chars,
-          })
+          .from("chatbot_docs")
           .select()
+          .eq("chatbot_id", chatbot_id)
+          .eq("id", file)
           .single()
           .throwOnError()
       ).data!;
+
+      documentCollection.push(await loadText(chatbotDoc.content));
+
+      knowledgeBaseRef = {
+        ...knowledgeBaseRef,
+        doc_id: chatbotDoc.id,
+      };
+    } else if (url) {
+      const chatbotUrl = (
+        await supabaseServerClient
+          .from("chatbot_urls")
+          .select()
+          .eq("chatbot_id", chatbot_id)
+          .eq("url", url)
+          .single()
+          .throwOnError()
+      ).data!;
+
+      documentCollection.push(await loadText(chatbotUrl.content));
 
       knowledgeBaseRef = {
         ...knowledgeBaseRef,
@@ -126,6 +125,7 @@ export async function POST(req: NextRequest) {
         await supabaseServerClient
           .from("chatbot_notion")
           .select()
+          .eq("chatbot_id", chatbot_id)
           .eq("id", notion)
           .single()
           .throwOnError()
@@ -198,10 +198,10 @@ export async function POST(req: NextRequest) {
       .eq("id", chatbot_id);
 
     return NextResponse.json({ status: "done" });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     return NextResponse.json(
-      { error: getErrorMessage(error) },
+      { error: getDevErrorMessage(e, "Chatbot upload error") },
       { status: 500 },
     );
   }

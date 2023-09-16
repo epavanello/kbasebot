@@ -18,7 +18,12 @@ export type INotion = {
   trained?: boolean;
 };
 
-export type IFile = { file: File; trained: boolean; path: string };
+export type IFile = {
+  id: string;
+  name: string;
+  chars: number;
+  trained?: boolean;
+};
 
 export interface UseDocStore {
   text: IText;
@@ -29,16 +34,17 @@ export interface UseDocStore {
   setDocs: (docs: IFile[]) => void;
   appendDocs: (docs: IFile[]) => void;
   deleteDoc: (name: string) => void;
-  setDocUploaded: (file: IFile) => void;
+  deleteAllDocs: () => void;
+  setDocTrained: (file: IFile) => void;
   setUrls: (urls: IUrl[]) => void;
   appendUrls: (urls: IUrl[]) => void;
   deleteUrl: (url: string) => void;
   deleteAllUrls: () => void;
-  setUrlUploaded: (url: IUrl) => void;
+  setUrlTrained: (url: IUrl) => void;
   setNotion: (notion: INotion[]) => void;
   appendNotion: (notion: INotion[]) => void;
   deleteNotion: (notion: INotion) => void;
-  setNotionUploaded: (notion: INotion) => void;
+  setNotionTrained: (notion: INotion) => void;
   deleteAllNotion: () => void;
   reset: () => void;
 }
@@ -61,8 +67,7 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
       docs: [
         ...state.docs,
         ...docs.filter(
-          (newDoc) =>
-            !state.docs.find((doc) => doc.file.name === newDoc.file.name),
+          (newDoc) => !state.docs.find((doc) => doc.id === newDoc.id),
         ),
       ],
     })),
@@ -87,8 +92,12 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
 
   // 'Delete' Methods
   deleteDoc: (name) => {
-    set((state) => ({ docs: state.docs.filter((i) => i.file.name !== name) }));
+    set((state) => ({ docs: state.docs.filter((i) => i.id !== name) }));
   },
+  deleteAllDocs: () =>
+    set(() => ({
+      docs: [],
+    })),
   deleteUrl: (url) => {
     set((state) => ({ urls: state.urls.filter((i) => i.url !== url) }));
   },
@@ -107,15 +116,15 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
     })),
 
   // 'Upload' Methods
-  setDocUploaded: (file) => {
+  setDocTrained: (file) => {
     set((state) => {
-      const index = state.docs.findIndex((i) => i.file.name === file.file.name);
+      const index = state.docs.findIndex((i) => i.id === file.id);
       const newDocs = [...state.docs];
       newDocs[index].trained = true;
       return { docs: newDocs };
     });
   },
-  setUrlUploaded: (url) => {
+  setUrlTrained: (url) => {
     set((state) => {
       const newUrls = [...state.urls];
       const index = state.urls.findIndex((i) => i === url);
@@ -125,7 +134,7 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
       return { urls: newUrls };
     });
   },
-  setNotionUploaded: (notion) => {
+  setNotionTrained: (notion) => {
     set((state) => {
       const newNotions = [...state.notion];
       const index = state.notion.findIndex((i) => i.id === notion.id);
