@@ -33,7 +33,11 @@ export async function GET(request: NextRequest) {
     if (session) {
       const subscription = await getSubscription(supabase, session.user.id);
 
-      if (isPaidUser(subscription) && subscription?.plan === plan) {
+      if (
+        isPaidUser(subscription) &&
+        subscription?.plan === plan &&
+        subscription.billing_interval === interval
+      ) {
         return NextResponse.redirect(`${NEXT_PUBLIC_URL}/app`);
       }
     }
@@ -54,6 +58,7 @@ export async function GET(request: NextRequest) {
 
       customer_email: session?.user.email,
       subscription_data: {
+        trial_from_plan: true,
         metadata: {
           client_reference_id: session?.user.id || null,
         },
