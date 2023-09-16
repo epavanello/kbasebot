@@ -266,10 +266,9 @@ export interface Database {
           is_public: boolean | null
           name: string | null
           params: Json | null
-          ready: boolean
           status: string | null
           text: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string
@@ -278,10 +277,9 @@ export interface Database {
           is_public?: boolean | null
           name?: string | null
           params?: Json | null
-          ready?: boolean
           status?: string | null
           text?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           created_at?: string
@@ -290,10 +288,9 @@ export interface Database {
           is_public?: boolean | null
           name?: string | null
           params?: Json | null
-          ready?: boolean
           status?: string | null
           text?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -307,7 +304,7 @@ export interface Database {
       conversations: {
         Row: {
           chatbot_id: string
-          chatbot_owner_id: string | null
+          chatbot_owner_id: string
           conversation_id: string | null
           created_at: string
           entry: string | null
@@ -318,7 +315,7 @@ export interface Database {
         }
         Insert: {
           chatbot_id: string
-          chatbot_owner_id?: string | null
+          chatbot_owner_id: string
           conversation_id?: string | null
           created_at?: string
           entry?: string | null
@@ -329,7 +326,7 @@ export interface Database {
         }
         Update: {
           chatbot_id?: string
-          chatbot_owner_id?: string | null
+          chatbot_owner_id?: string
           conversation_id?: string | null
           created_at?: string
           entry?: string | null

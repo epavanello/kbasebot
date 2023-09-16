@@ -10,36 +10,10 @@ import NewChatbotModal from "@/modules/chatbots/new-chatbot.modal";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import LoadingDots from "@/components/ui/loading-dots";
 import { Chatbot } from "@/lib/supabase";
+import { useChatbots } from "@/lib/hooks/use-chatbots";
 
 const ChatbotIndex = () => {
-  const [chatbots, setChatbots] = useState<Chatbot[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  const { supabase, user } = useSupabaseAuth();
-
-  useEffect(() => {
-    async function getChatbots() {
-      setLoading(true);
-      try {
-        if (chatbots)
-          setChatbots(
-            (
-              await supabase
-                .from("chatbots")
-                .select()
-                .eq("user_id", user?.id!)
-                .eq("status", "READY")
-                .throwOnError()
-            ).data!,
-          );
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    }
-    if (user?.id) getChatbots();
-  }, [user?.id]);
+  const { chatbots, loading } = useChatbots();
 
   return (
     <DashboardShell className="container gap-0 mt-4">

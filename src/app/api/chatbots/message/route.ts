@@ -46,10 +46,20 @@ export async function POST(req: NextRequest) {
     if (!userPrompt?.content?.length)
       throw new Error("Please write a question to get answer from ai");
 
+    const chatbot = (
+      await supabaseAdminClient
+        .from("chatbots")
+        .select("user_id")
+        .eq("id", chatbotId)
+        .single()
+        .throwOnError()
+    ).data!;
+
     // Retrieve the conversation log and save the user's prompt
     const conversationLog = new ConversationLog(
       conversationId,
       chatbotId,
+      chatbot.user_id!,
       supabaseAdminClient,
     );
 

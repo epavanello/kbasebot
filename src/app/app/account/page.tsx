@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -17,12 +17,31 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import Link from "next/link";
+import { getPermissions } from "@/lib/permissions/plans";
+import { useChatbots } from "@/lib/hooks/use-chatbots";
+import { set } from "date-fns";
 
 const Page = () => {
-  const { subscription, plan, user } = useSupabaseAuth();
+  const { subscription, plan, user, supabase } = useSupabaseAuth();
+  const { permission } = getPermissions(subscription);
+  const { chatbots, loading } = useChatbots();
+  const [messagesCount, sessionsCount] = useState(0);
 
   const { email } = user || {};
   const { avatar_url, full_name } = user?.user_metadata || {};
+
+  useEffect(() => {
+    if (supabase) {
+      supabase
+        .from("conversations")
+        .select("*", { count: "exact", head: true })
+        .eq("chatbot_owner_id", user?.id || "")
+        .throwOnError()
+        .then(({ count }) => {
+          sessionsCount(count || 0);
+        });
+    }
+  }, [supabase]);
 
   return (
     <DashboardShell className="container gap-0 mt-4">
@@ -112,19 +131,15 @@ const Page = () => {
             <CardTitle>Account Details</CardTitle>
           </CardHeader>
 
-          {/*<CardContent>*/}
-          {/*  Usage*/}
-          {/*  /!*<div className="text-sm font-semibold text-gray-600 ">*!/*/}
-          {/*  /!*  Websites created: {subscriptionDetails?.numberOfWebsite} /{" "}*!/*/}
-          {/*  /!*  {subscriptionDetails?.numberOfSitesAllowed}*!/*/}
-          {/*  /!*</div>*!/*/}
-          {/*  /!*{subscriptionDetails?.numberOfDomainsAllowed && (*!/*/}
-          {/*  /!*    <div className="text-sm font-semibold text-gray-600 ">*!/*/}
-          {/*  /!*      Custom domains registered: {subscriptionDetails?.numberOfDomains}{" "}*!/*/}
-          {/*  /!*      / {subscriptionDetails?.numberOfDomainsAllowed}*!/*/}
-          {/*  /!*    </div>*!/*/}
-          {/*  /!*)}*!/*/}
-          {/*</CardContent>*/}
+          <CardContent>
+            Usage
+            <div className="text-sm font-semibold text-gray-600 ">
+              Chatbot created: {permission.maxChatbots} / {chatbots.length}
+            </div>
+            <div className="text-sm font-semibold text-gray-600 ">
+              Messages/month: {permission.maxMessages} / {messagesCount}
+            </div>
+          </CardContent>
           <CardContent>
             <div className="flex items-center">
               <UserAvatar
