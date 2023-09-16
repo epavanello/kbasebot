@@ -19,7 +19,10 @@ import { useSupabaseAuth } from "@/lib/store/use-user";
 import Link from "next/link";
 
 const Page = () => {
-  const { subscription } = useSupabaseAuth();
+  const { subscription, plan, user } = useSupabaseAuth();
+
+  const { email } = user || {};
+  const { avatar_url, full_name } = user?.user_metadata || {};
 
   return (
     <DashboardShell className="container gap-0 mt-4">
@@ -34,16 +37,7 @@ const Page = () => {
           <CardHeader>
             <CardTitle>Billing</CardTitle>
             <CardDescription>
-              {" "}
-              Your Plan
-              {/*{subscription?.stripe_prices?.stripe_products?.name && (*/}
-              {/*    <>*/}
-              {/*      <p>You are currently on the </p>*/}
-              {/*      <p className="text-lg font-bold">*/}
-              {/*        {subscription?.stripe_prices?.stripe_products?.name} plan.*/}
-              {/*      </p>*/}
-              {/*    </>*/}
-              {/*)}*/}
+              You are currently on the {plan} plan
             </CardDescription>
           </CardHeader>
 
@@ -118,25 +112,30 @@ const Page = () => {
             <CardTitle>Account Details</CardTitle>
           </CardHeader>
 
+          {/*<CardContent>*/}
+          {/*  Usage*/}
+          {/*  /!*<div className="text-sm font-semibold text-gray-600 ">*!/*/}
+          {/*  /!*  Websites created: {subscriptionDetails?.numberOfWebsite} /{" "}*!/*/}
+          {/*  /!*  {subscriptionDetails?.numberOfSitesAllowed}*!/*/}
+          {/*  /!*</div>*!/*/}
+          {/*  /!*{subscriptionDetails?.numberOfDomainsAllowed && (*!/*/}
+          {/*  /!*    <div className="text-sm font-semibold text-gray-600 ">*!/*/}
+          {/*  /!*      Custom domains registered: {subscriptionDetails?.numberOfDomains}{" "}*!/*/}
+          {/*  /!*      / {subscriptionDetails?.numberOfDomainsAllowed}*!/*/}
+          {/*  /!*    </div>*!/*/}
+          {/*  /!*)}*!/*/}
+          {/*</CardContent>*/}
           <CardContent>
-            Usage
-            {/*<div className="text-sm font-semibold text-gray-600 ">*/}
-            {/*  Websites created: {subscriptionDetails?.numberOfWebsite} /{" "}*/}
-            {/*  {subscriptionDetails?.numberOfSitesAllowed}*/}
-            {/*</div>*/}
-            {/*{subscriptionDetails?.numberOfDomainsAllowed && (*/}
-            {/*    <div className="text-sm font-semibold text-gray-600 ">*/}
-            {/*      Custom domains registered: {subscriptionDetails?.numberOfDomains}{" "}*/}
-            {/*      / {subscriptionDetails?.numberOfDomainsAllowed}*/}
-            {/*    </div>*/}
-            {/*)}*/}
-          </CardContent>
-          <CardContent>
-            <UserAvatar
-              className="w-16 h-16 mt-2 shadow-xl"
-              // avatar_url={userDetails?.avatar_url}
-              full_name={"@Name"}
-            />
+            <div className="flex items-center">
+              <UserAvatar
+                avatar_url={avatar_url}
+                full_name={full_name || "@"}
+              />
+              <div className="flex flex-col mr-1">
+                <span className="font-bold">{full_name}</span>
+                <span className="text-sm">{email}</span>
+              </div>
+            </div>
           </CardContent>
 
           <CardFooter>

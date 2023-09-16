@@ -7,7 +7,6 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import Logo from "@/components/logo";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Icon, LoadingIcon } from "@/components/ui/icons";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -18,6 +17,7 @@ import { useRouter } from "next/navigation";
 import LoadingDots from "@/components/ui/loading-dots";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Logo from "@/components/landing/logo";
 
 const Page = ({ searchParams }) => {
   const supabase = createClientComponentClient();

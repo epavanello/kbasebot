@@ -6,7 +6,7 @@ import { Database } from "@/lib/types/database.types";
 import { cookies } from "next/headers";
 import { getDevErrorMessage } from "@/lib/utils";
 import { IFile } from "@/lib/store/use-datasource-store";
-import { loadPdf } from "@/modules/datasource/load-docs";
+import { loadFIlesByExtension } from "@/modules/datasource/load-docs";
 export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
 
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       throw new Error(error.message);
     }
 
-    const document = await loadPdf(file);
+    const document = await loadFIlesByExtension(file);
 
     if (document.length === 0) {
       throw new Error("no-document-found");

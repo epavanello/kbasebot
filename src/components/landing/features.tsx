@@ -62,17 +62,16 @@ const Features = () => {
                 <div key={i.icon} className="flex items-start gap-4">
                   <span className="shrink-0 rounded-lg bg-indigo-100 p-1">
                     <Icon
-                      className={
-                        "text-4xl rounded-lg text-gray-200 p-2 " +
-                        gradients.HYPER
-                      }
+                      className={"text-4xl rounded-lg p-2 " + gradients.SEAFOAM}
                       icon={i.icon}
                     />
                   </span>
 
                   <div>
                     <h2 className="text-lg font-bold">{i.title}</h2>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{i.desc}</p>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                      {i.desc}
+                    </p>
                   </div>
                 </div>
               ))}

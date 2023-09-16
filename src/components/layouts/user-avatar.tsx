@@ -18,7 +18,7 @@ export const UserAvatar = ({
 }: UserAvatarProps) => {
   return (
     <Avatar
-      className={`mr-2 p-[1px] w-10 h-10 ${gradients.HYPER} ${className}`}
+      className={`mr-2 p-[1px] w-10 h-10 ${gradients.SEAFOAM} ${className}`}
     >
       <AvatarImage
         referrerPolicy="no-referrer"
@@ -26,7 +26,7 @@ export const UserAvatar = ({
         alt={`${full_name} avatar`}
         className="rounded-full"
       />
-      <AvatarFallback className={gradients.HYPER}>
+      <AvatarFallback className={gradients.SEAFOAM}>
         <p className="text-white text-lg">{full_name?.[0]}</p>
       </AvatarFallback>
     </Avatar>
