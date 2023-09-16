@@ -130,7 +130,7 @@ export default function PricingTable() {
                     <div className="flex justify-between items-center px-4">
                       <p
                         className={cn(
-                          "self-start shine-effect h-4 px-2 bg-background rounded-sm text-[11px] text-gray-600 font-medium",
+                          "self-start shine-effect-flat h-4 px-2 bg-background rounded-sm text-[11px] text-gray-600 font-medium",
                           { "opacity-0": !highlight },
                         )}
                       >

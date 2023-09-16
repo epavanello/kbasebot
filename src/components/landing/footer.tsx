@@ -10,12 +10,12 @@ export function Footer() {
             <a href="#" className="text-gray-500 hover:opacity-50">
               <Icon icon="mdi:twitter" className="w-7 h-7" />
             </a>
-            <a href="#" className="text-gray-500 hover:opacity-50">
+            {/* <a href="#" className="text-gray-500 hover:opacity-50">
               <Icon icon="mdi:github" className="w-7 h-7" />
             </a>
             <a href="#" className="text-gray-500 hover:opacity-50">
               <Icon icon="mdi:instagram" className="w-7 h-7" />
-            </a>
+            </a> */}
             <DarkModeSwitch />
           </div>
           <p className="text-center text-xs leading-5">
