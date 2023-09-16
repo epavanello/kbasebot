@@ -86,7 +86,7 @@
   background: linear-gradient(
     90deg,
     hsla(0, 0%, 0%, 0) 0,
-    hsla(0, 0%, 31%, 0.8) 50%,
+    hsla(0, 0%, 100%, 0.8) 50%,
     rgba(37, 53, 66, 0) 99%,
     rgba(18, 26, 32, 0)
   );
@@ -115,6 +115,15 @@
       -ms-overflow-style: none;  /* IE and Edge */
       scrollbar-width: none;  /* Firefox */
     }
+  }
+}
+
+@layer components {
+  .stroke-100{
+    stroke-dasharray: 100;
+  }
+  .stroke-15{
+    stroke-dasharray: 25;
   }
 }
 
