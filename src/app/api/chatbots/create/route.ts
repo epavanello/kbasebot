@@ -23,6 +23,13 @@ export async function POST(req: NextRequest) {
       throw new Error("unauthorized");
     }
 
+    // delete all temporary chatbots
+    await supabaseServerClient
+      .from("chatbots")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("status", "TEMPORARY");
+
     const subscription = (
       await supabaseServerClient
         .from("subscriptions")
@@ -52,7 +59,7 @@ export async function POST(req: NextRequest) {
         .from("chatbots")
         .insert({
           user_id: user.id,
-          status: "STARTED",
+          status: "TEMPORARY",
         })
         .select()
         .single()

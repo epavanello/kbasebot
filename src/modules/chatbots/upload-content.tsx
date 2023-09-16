@@ -182,22 +182,6 @@ export function UploadContent({
         text.content.length >= MIN_TEXT_INPUT &&
         text.content.length < MAX_TEXT_INPUT));
 
-  const createChatbot = async () => {
-    if (!canTrain) {
-      throw new Error("Can't create chatbot");
-    }
-
-    const res = await axios.post("/api/chatbots/create");
-    const data = res.data as { chatbot: Chatbot };
-
-    if (!data.chatbot) {
-      throw new Error("Chatbot not found");
-    }
-
-    setChatbot(data.chatbot);
-    return data.chatbot;
-  };
-
   const uploadContent = async (c: Chatbot) => {
     if (!c) throw new Error("Chatbot not found");
     const uploadPath = `/api/chatbots/train?chatbot_id=${encodeURIComponent(
@@ -302,17 +286,16 @@ export function UploadContent({
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
+      if (!chatbot) {
+        throw new Error("Chatbot not found");
+      }
       setLoading(true);
       e.preventDefault();
-      let c = chatbot;
-      if (showCreate) {
-        c = await createChatbot();
-      }
-      await uploadContent(c!);
+      await uploadContent(chatbot);
 
       resetDatasource();
       if (showCreate) {
-        push(`/app/chatbots/${c!.id}`);
+        push(`/app/chatbots/${chatbot.id}`);
       }
     } catch (e) {
       console.error(e);

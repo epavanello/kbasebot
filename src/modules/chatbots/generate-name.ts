@@ -2,6 +2,7 @@ import { getContext } from "@/modules/chatbots/context";
 import { ChatCompletionRequestMessage } from "openai-edge";
 import OpenAi from "openai";
 import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
+import { SupabaseClientTyped } from "@/lib/supabase";
 
 const openai = new OpenAi({
   apiKey: OPENAI_API_KEY,
@@ -14,7 +15,10 @@ const openai = new OpenAi({
   },
 });
 
-export const generateName = async (chatbotId, supabaseServerClient) => {
+export const generateName = async (
+  chatbotId: string,
+  supabaseServerClient: SupabaseClientTyped,
+) => {
   // Get Name of the chatbot
   const context = await getContext(
     "name of the topic",

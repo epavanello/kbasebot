@@ -9,7 +9,7 @@ import { loadText } from "@/modules/datasource/load-text";
 import { getDevErrorMessage } from "@/lib/utils";
 import { Document } from "langchain/document";
 import { Database } from "@/lib/types/database.types";
-import { KnowledgeBase } from "@/lib/supabase";
+import { Chatbot, KnowledgeBase } from "@/lib/supabase";
 import { generateName } from "@/modules/chatbots/generate-name";
 
 export const dynamic = "force-dynamic";
@@ -193,12 +193,27 @@ export async function POST(req: NextRequest) {
       console.log({ count });
     }
 
-    const chatbotName = await generateName(chatbot_id, supabaseServerClient);
+    let chatbotChanges: Partial<Chatbot> = {};
+    if (chatbot.status !== "READY") {
+      chatbotChanges = {
+        status: "READY",
+      };
+    }
+    if (!chatbot.name) {
+      const chatbotName = await generateName(chatbot_id, supabaseServerClient);
+      chatbotChanges = {
+        ...chatbotChanges,
+        name: chatbotName,
+      };
+    }
 
-    await supabaseServerClient
-      .from("chatbots")
-      .update({ status: "READY", name: chatbotName })
-      .eq("id", chatbot_id);
+    if (Object.keys(chatbotChanges).length) {
+      await supabaseServerClient
+        .from("chatbots")
+        .update(chatbotChanges)
+        .eq("id", chatbot_id)
+        .throwOnError();
+    }
 
     return NextResponse.json({ status: "done" });
   } catch (e) {

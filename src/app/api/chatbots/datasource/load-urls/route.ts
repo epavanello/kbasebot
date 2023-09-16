@@ -45,8 +45,7 @@ export async function POST(req: NextRequest) {
       data = await loadMultiUrl(sites);
     } else if (crawl) {
       data = (await loadWebsites(crawl)) || [];
-    }
-    if (url) {
+    } else if (url) {
       data = await loadSingleUrl(url, false);
     } else {
       throw new Error("no-datasource-found");

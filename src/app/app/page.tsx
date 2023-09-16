@@ -9,9 +9,10 @@ import NoItemsCard from "@/components/ui/no-items-card";
 import NewChatbotModal from "@/modules/chatbots/new-chatbot.modal";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import LoadingDots from "@/components/ui/loading-dots";
+import { Chatbot } from "@/lib/supabase";
 
 const ChatbotIndex = () => {
-  const [chatbots, setChatbots] = useState([]);
+  const [chatbots, setChatbots] = useState<Chatbot[]>([]);
   const [loading, setLoading] = useState(false);
 
   const { supabase, user } = useSupabaseAuth();
@@ -20,13 +21,17 @@ const ChatbotIndex = () => {
     async function getChatbots() {
       setLoading(true);
       try {
-        const { data: chatbots } = await supabase
-          .from("chatbots")
-          .select()
-          .eq("user_id", user?.id!)
-          .throwOnError();
-
-        if (chatbots) setChatbots(chatbots);
+        if (chatbots)
+          setChatbots(
+            (
+              await supabase
+                .from("chatbots")
+                .select()
+                .eq("user_id", user?.id!)
+                .eq("status", "READY")
+                .throwOnError()
+            ).data!,
+          );
       } catch (e) {
         console.error(e);
       } finally {

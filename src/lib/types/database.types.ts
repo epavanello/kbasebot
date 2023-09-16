@@ -34,6 +34,58 @@ export interface Database {
   }
   public: {
     Tables: {
+      blogs: {
+        Row: {
+          content: Json | null
+          created_at: string
+          description: string | null
+          id: string
+          image: string | null
+          image_blur_hash: string | null
+          published_at: string | null
+          slug: string | null
+          thumbnail: string | null
+          title: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image?: string | null
+          image_blur_hash?: string | null
+          published_at?: string | null
+          slug?: string | null
+          thumbnail?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image?: string | null
+          image_blur_hash?: string | null
+          published_at?: string | null
+          slug?: string | null
+          thumbnail?: string | null
+          title?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blogs_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       chatbot_docs: {
         Row: {
           chars: number
@@ -214,6 +266,7 @@ export interface Database {
           is_public: boolean | null
           name: string | null
           params: Json | null
+          ready: boolean
           status: string | null
           text: string | null
           user_id: string | null
@@ -225,6 +278,7 @@ export interface Database {
           is_public?: boolean | null
           name?: string | null
           params?: Json | null
+          ready?: boolean
           status?: string | null
           text?: string | null
           user_id?: string | null
@@ -236,6 +290,7 @@ export interface Database {
           is_public?: boolean | null
           name?: string | null
           params?: Json | null
+          ready?: boolean
           status?: string | null
           text?: string | null
           user_id?: string | null
