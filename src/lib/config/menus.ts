@@ -1,16 +1,16 @@
 export const menus = {
   mainNav: () => {
     return [
-      {
-        title: "Guides",
-        href: "/guides",
-        disabled: true,
-      },
-      {
-        title: "Repo",
-        href: "/repo",
-        disabled: true,
-      },
+      // {
+      //   title: "Guides",
+      //   href: "/guides",
+      //   disabled: true,
+      // },
+      // {
+      //   title: "Repo",
+      //   href: "/repo",
+      //   disabled: true,
+      // },
     ];
   },
   sidebarNav: [
