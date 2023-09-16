@@ -21,7 +21,7 @@ const features: { icon: string; title: string; desc: string }[] = [
     desc: "KBaseBot can generate leads for you, and help you grow your business.",
   },
   {
-    icon: "icomoon-free:embed2",
+    icon: "icomoon-free:embed",
     title: "Embeddable",
     desc: "KBaseBot can be embedded on your website with a single line of code.",
   },
