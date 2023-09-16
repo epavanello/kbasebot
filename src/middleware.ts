@@ -7,7 +7,7 @@ import type { Database } from "@/lib/types/database.types";
 const internalPublicRoutes = [
   "/api/chatbots/message",
   "/api/chatbots/settings",
-  "api/stripe",
+  "/api/stripe",
 ];
 
 export const config = {

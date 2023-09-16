@@ -10,7 +10,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "KBaseBot",
-  description: "Generate chatbot with AI",
+  description:
+    "KBaseBot is a no-code chatbot for knowledge base and customer support, trainable with PDF, DOCX, Notion, and more.",
+  keywords:
+    "chatbot, knowledge base, customer support, no-code, pdf, docx, notion, gpt-4, gpt-3",
 };
 
 export default function RootLayout({
