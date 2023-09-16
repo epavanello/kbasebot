@@ -3,12 +3,14 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Providers from "@/components/providers";
 import { cn } from "@/lib/utils";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "KBaseBot",
   description: "Generate chatbot with ai",
+  themeColor: "#5cb1d6",
 };
 
 export default function RootLayout({
