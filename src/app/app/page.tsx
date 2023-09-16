@@ -1,34 +1,40 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { sayGreeting } from "@/lib/utils";
 import ChatbotList from "@/modules/chatbots/chatbot-list";
 import NoItemsCard from "@/components/ui/no-items-card";
 import NewChatbotModal from "@/modules/chatbots/new-chatbot.modal";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
-import { Database } from "@/lib/types/database.types";
+import { useSupabaseAuth } from "@/lib/store/use-user";
+import LoadingDots from "@/components/ui/loading-dots";
 
-export const dynamic = "force-dynamic";
+const ChatbotIndex = () => {
+  const [chatbots, setChatbots] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-async function getData() {
-  const supabase = createServerComponentClient<Database>({ cookies });
+  const { supabase, user } = useSupabaseAuth();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    async function getChatbots() {
+      setLoading(true);
+      try {
+        const { data: chatbots } = await supabase
+          .from("chatbots")
+          .select()
+          .eq("user_id", user?.id!)
+          .throwOnError();
 
-  const { data: chatbots } = await supabase
-    .from("chatbots")
-    .select()
-    .eq("user_id", user?.id!)
-    .throwOnError();
-
-  return chatbots || [];
-}
-
-const ChatbotIndex = async () => {
-  const chatbots = await getData();
+        if (chatbots) setChatbots(chatbots);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (user?.id) getChatbots();
+  }, [user?.id]);
 
   return (
     <DashboardShell className="container gap-0 mt-4">
@@ -47,12 +53,20 @@ const ChatbotIndex = async () => {
         </>
       ) : (
         <NoItemsCard
-          title={"Create your first Chatbot"}
+          title={loading ? "Loading chatbots..." : "Create your first Chatbot"}
           text={
-            "You can train your bot with your knowledge base from different sources"
+            !loading
+              ? ""
+              : "You can train your bot with your knowledge base from different sources"
           }
         >
-          <NewChatbotModal chatbotsCreated={chatbots.length} />
+          {loading ? (
+            <div className="mt-4">
+              <LoadingDots className="!w-16 !h-16" />
+            </div>
+          ) : (
+            <NewChatbotModal chatbotsCreated={chatbots.length} />
+          )}
         </NoItemsCard>
       )}
     </DashboardShell>

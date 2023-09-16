@@ -1,7 +1,6 @@
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-
 import type { NextRequest } from "next/server";
 import { getDevErrorMessage } from "@/lib/utils";
 import { getPermissions } from "@/lib/permissions/plans";
@@ -47,6 +46,7 @@ export async function POST(req: NextRequest) {
       throw new Error("max-chatbots-limit");
     }
 
+    // @ts-ignore
     const chatbot = (
       await supabaseServerClient
         .from("chatbots")
@@ -60,6 +60,7 @@ export async function POST(req: NextRequest) {
     ).data!;
 
     // default chatbot settings
+    // @ts-ignore
     await supabaseServerClient.from("chatbot_settings").insert({
       chatbot_bubble_align: "right",
       primary_color: "#29292d",

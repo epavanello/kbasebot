@@ -37,9 +37,9 @@ const ChatbotList = ({ chatbots = [] }: { chatbots: Chatbot[] }) => {
                   className="p-2 flex justify-between"
                   title={bot.name || `Untitled ${idx + 1}`}
                 >
-                  <p className="font-medium">
-                    {truncate(bot.name || "", 10) || `Untitled ${idx + 1}`}
-                  </p>
+                  <span className="font-medium text-sm">
+                    {truncate(bot.name || "", 20) || `Untitled ${idx + 1}`}
+                  </span>
                 </CardFooter>
               </Card>
             );

@@ -10,6 +10,7 @@ import { getDevErrorMessage } from "@/lib/utils";
 import { Document } from "langchain/document";
 import { Database } from "@/lib/types/database.types";
 import { KnowledgeBase } from "@/lib/supabase";
+import { generateName } from "@/modules/chatbots/generate-name";
 
 export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
@@ -192,9 +193,11 @@ export async function POST(req: NextRequest) {
       console.log({ count });
     }
 
+    const chatbotName = await generateName(chatbot_id, supabaseServerClient);
+
     await supabaseServerClient
       .from("chatbots")
-      .update({ status: "READY" })
+      .update({ status: "READY", name: chatbotName })
       .eq("id", chatbot_id);
 
     return NextResponse.json({ status: "done" });

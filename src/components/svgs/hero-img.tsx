@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React  from "react";
 import { cn } from "@/lib/utils";
 import { motion, useAnimation } from "framer-motion";
 
@@ -24,7 +24,7 @@ function HeroImg({ className }) {
           className="animate-pulse-slow"
           filter="url(#filter0_f_5_97)"
         >
-          <path
+            <path
             fill="#35957E"
             d="M627 521c0 42.526-30.474 19-73 19-42.526 0-81 23.526-81-19 0-42.526 34.474-77 77-77s77 34.474 77 77z"
           ></path>

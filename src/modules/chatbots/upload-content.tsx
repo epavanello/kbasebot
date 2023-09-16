@@ -57,6 +57,7 @@ export function UploadContent({
     setNotion,
     setNotionTrained,
     setUrlTrained,
+    resetDatasource,
   } = useDatasourceStore((state) => ({
     docs: state.docs,
     text: state.text,
@@ -69,6 +70,7 @@ export function UploadContent({
     setDocTrained: state.setDocTrained,
     setUrlTrained: state.setUrlTrained,
     setNotionTrained: state.setNotionTrained,
+    resetDatasource: state.reset,
   }));
 
   useEffect(() => {
@@ -307,6 +309,8 @@ export function UploadContent({
         c = await createChatbot();
       }
       await uploadContent(c!);
+
+      resetDatasource();
       if (showCreate) {
         push(`/app/chatbots/${c!.id}`);
       }
