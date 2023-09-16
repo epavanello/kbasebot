@@ -25,7 +25,7 @@ export default function PricingTable() {
   return (
     <section id="pricing" className="pt-24">
       <div className="max-w-6xl mx-auto">
-        <div className="sm:flex sm:flex-col sm:align-center">
+        <div className="flex flex-col align-center">
           <h1 className="text-4xl font-extrabold sm:text-center sm:text-6xl">
             Pricing Plans
           </h1>
