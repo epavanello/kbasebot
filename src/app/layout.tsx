@@ -11,7 +11,6 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "KBaseBot",
   description: "Generate chatbot with AI",
-  themeColor: "#5cb1d6",
 };
 
 export default function RootLayout({
