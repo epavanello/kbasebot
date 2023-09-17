@@ -37,7 +37,7 @@ const Benefit = () => {
       }
       features={features}
       dir={"rtl"}
-      img="/benefit.png"
+      img="/customize.gif"
     />
   );
 };

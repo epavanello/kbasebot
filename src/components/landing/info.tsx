@@ -69,11 +69,16 @@ export default function Info({
           {showChild ? (
             children
           ) : (
-            <AspectRatio className={""} ratio={4 / 4}>
+            <AspectRatio
+              className={
+                "rounded-2xl overflow-hidden shadow-2xl p-10 bg-primary"
+              }
+              ratio={4 / 4}
+            >
               <Image
                 src={img}
                 alt="Seo"
-                className="object-contain max-w-none rounded-xl"
+                className="object-contain max-w-none"
                 fill={true}
               />
             </AspectRatio>

@@ -21,7 +21,7 @@ const Hero = () => {
       {/* TODO: Change product hunt link */}
       <div className="max-w-5xl flex flex-col items-center gap-2 text-center mt-10 lg:mt-40">
         <a
-          href="https://www.producthunt.com/posts/turbosite?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-turbosite"
+          href="https://www.producthunt.com/posts/kbasebot?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-turbosite"
           target="_blank"
           className="mx-auto h-[39px]"
         >
