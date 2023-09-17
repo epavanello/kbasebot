@@ -103,7 +103,7 @@ export default function PricingTable() {
                 }
                 if (isEnterprise) {
                   subscribeText = "Contact us!";
-                  route = "/contact";
+                  route = "mailto:hello@kbasebot.com";
                 } else if (isActive) {
                   subscribeText = "Manage";
                   route = "/app/subscription";
@@ -112,13 +112,15 @@ export default function PricingTable() {
                 return (
                   <motion.div
                     key={billingInterval + plan.id}
-                    className={cn("w-full rounded-xl pt-6 dark:shadow-slate-700", {
-                      "border-blue-50 bg-zinc-50 dark:bg-zinc-900 border-1 shadow-md":
-                        highlight,
+                    className={cn(
+                      "w-full rounded-xl pt-6 dark:shadow-slate-700",
+                      {
+                        "border-blue-50 bg-zinc-50 dark:bg-zinc-900 border-1 shadow-md":
+                          highlight,
                         "shadow-sm": !highlight,
-                      "border border-primary":
-                      isActive
-                    })}
+                        "border border-primary": isActive,
+                      },
+                    )}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{
@@ -165,9 +167,12 @@ export default function PricingTable() {
 
                         <p className={cn("mt-2")}>
                           <span
-                            className={cn("text-4xl text-zinc-700 dark:text-zinc-300 font-bold", {
-                              "text-gray-600": !priceString,
-                            })}
+                            className={cn(
+                              "text-4xl text-zinc-700 dark:text-zinc-300 font-bold",
+                              {
+                                "text-gray-600": !priceString,
+                              },
+                            )}
                           >
                             {priceString || plan.priceText}
                           </span>
