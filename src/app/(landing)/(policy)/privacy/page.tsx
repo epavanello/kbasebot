@@ -223,7 +223,7 @@ const Page = () => {
                 Social Media
               </td>
               <td classname="table-th light">
-                We've collected users social media profiles
+                We&apos;ve collected users social media profiles
               </td>
             </tr>
             <tr>
@@ -541,7 +541,7 @@ const Page = () => {
           you are our customer’s end user, please take into consideration that
           this request will be forwarded and must be answered directly by them.
         </p>
-        <h3>13. Children's privacy</h3>
+        <h3>13. Children&apos;s privacy</h3>
         <p>
           Our Services are not intended for use by children under the age of 13
           (" Children").
@@ -556,7 +556,7 @@ const Page = () => {
         <h3>14. Policy changes</h3>
         <p>
           This Privacy Policy may be modified in the future to keep it updated
-          with legal jurisprudence and evolution. You'll be informed either by a
+          with legal jurisprudence and evolution. You&apos;ll be informed either by a
           special mention on this page or by a personalized warning, by email
           for instance.
         </p>
