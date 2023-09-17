@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { plans, type BillingInterval } from "@/lib/stripe";
@@ -16,8 +15,7 @@ let tabs: { id: BillingInterval; label: string }[] = [
 ];
 
 export default function PricingTable() {
-  const router = useRouter();
-  const { subscription, isLoading } = useSupabaseAuth();
+  const { subscription } = useSupabaseAuth();
   const [billingInterval, setBillingInterval] = useState<BillingInterval>(
     tabs[0].id,
   );
@@ -182,18 +180,16 @@ export default function PricingTable() {
                             </span>
                           )}
                         </p>
-                        <Button
-                          variant="default"
-                          type="button"
-                          disabled={isLoading}
-                          loading={isLoading}
-                          onClick={() => {
-                            router.push(route);
-                          }}
-                          className="mt-4 bg-gray-700 block w-full rounded-md py-2 text-sm font-semibold text-gray-100 text-center hover:bg-zinc-900 hover:text-gray-100"
+                        <a
+                          target="_blank"
+                          className={cn(
+                            buttonVariants({ variant: "default" }),
+                            "mt-4 bg-gray-700 block w-full rounded-md py-2 text-sm font-semibold text-gray-100 text-center hover:bg-zinc-900 hover:text-gray-100",
+                          )}
+                          href={route}
                         >
                           {subscribeText}
-                        </Button>
+                        </a>
 
                         <div className="mt-2">
                           <p>This includes</p>
