@@ -25,8 +25,9 @@ const Hero = () => {
           target="_blank"
           className="mx-auto h-[39px]"
         >
+          
           <Image
-            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=406131&theme=light"
+            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=414946&theme=light"
             alt="KBaseBot - Your&#0032;landing&#0032;page&#0032;online&#0032;in&#0032;under&#0032;2&#0032;minutes&#0033; | Product Hunt"
             style={{
               width: 170,
