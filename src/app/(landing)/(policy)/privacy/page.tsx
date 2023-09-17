@@ -2,7 +2,7 @@ import React from "react";
 
 const Page = () => {
   return (
-    <article className="prose prose dark:prose-invert max-w-2xl m-auto mt-10">
+    <article className="prose dark:prose-invert max-w-2xl m-auto mt-10">
       <>
         <h2>Privacy Policy</h2>
         <p>Last update: Sep 11, 2023</p> <h3>1. Introduction</h3>
@@ -544,7 +544,7 @@ const Page = () => {
         <h3>13. Children&apos;s privacy</h3>
         <p>
           Our Services are not intended for use by children under the age of 13
-          (" Children").
+          (&quot;Children&quot;).
         </p>
         <p>
           We do not knowingly collect personally identifiable information from
