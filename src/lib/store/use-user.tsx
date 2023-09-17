@@ -91,7 +91,7 @@ const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (permission) setPermission(permission);
     if (plan) setPlan(plan);
-  }, [permission]);
+  }, [subscription]);
 
   return (
     <SupabaseAuthContext.Provider

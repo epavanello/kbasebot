@@ -36,7 +36,7 @@ const PublicChatUi = ({
 
   const [resetOnIncrement, setResetOnIncrement] = React.useState(0);
 
-  const { theme: currentTheme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
 
   useEffect(() => {
     if (forceTheme) {
