@@ -19,22 +19,17 @@ const Hero = () => {
       {/*  </div>*/}
       {/*</div>*/}
       {/* TODO: Change product hunt link */}
-      <div className="max-w-5xl flex flex-col items-center gap-2 text-center mt-10 lg:mt-40">
+      <div className="max-w-5xl flex flex-col items-center gap-2 text-center mt-16 lg:mt-24">
         <a
           href="https://www.producthunt.com/posts/kbasebot?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-turbosite"
           target="_blank"
-          className="mx-auto h-[39px]"
+          className="mx-auto h-[39px] mb-12"
         >
-          
           <Image
             src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=414946&theme=light"
             alt="KBaseBot - Your&#0032;landing&#0032;page&#0032;online&#0032;in&#0032;under&#0032;2&#0032;minutes&#0033; | Product Hunt"
-            style={{
-              width: 170,
-              height: 38,
-            }}
-            width="250"
-            height="54"
+            width="249"
+            height="53"
           />
         </a>
         <h1 className="text-6xl font-black opacity-90">
