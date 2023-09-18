@@ -7,6 +7,16 @@ import { getDevErrorMessage, isDevelopment } from "@/lib/utils";
 
 export const revalidate = isDevelopment ? 0 : 3600;
 
+export const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS(req: NextRequest) {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export async function GET(req: NextRequest) {
   try {
     const chatbotId = new URL(req.url).searchParams.get("chatbotId");
@@ -17,14 +27,7 @@ export async function GET(req: NextRequest) {
         status: "done",
         settings: await getChatbotSettings(chatbotId, cookies),
       },
-      {
-        status: 200,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        },
-      },
+      { headers: corsHeaders },
     );
   } catch (e) {
     console.error(e);
