@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "KBaseBot",
   description:
-    "KBaseBot is a no-code chatbot for knowledge base and customer support, trainable with PDF, DOCX, Notion, and more.",
+    "Turn PDFs, Docx, Notion & websites into dynamic chatbots. Embed on your platform, making static content interactive. Elevate your content into real-time dialogues. Knowledge has never been this alive or accessible.",
   keywords:
     "chatbot, knowledge base, customer support, no-code, pdf, docx, notion, gpt-4, gpt-3",
 };
