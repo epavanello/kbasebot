@@ -12,10 +12,20 @@ export async function GET(req: NextRequest) {
     const chatbotId = new URL(req.url).searchParams.get("chatbotId");
     if (!chatbotId) throw new Error("chatbotId is required");
 
-    return NextResponse.json({
-      status: "done",
-      settings: await getChatbotSettings(chatbotId, cookies),
-    });
+    return NextResponse.json(
+      {
+        status: "done",
+        settings: await getChatbotSettings(chatbotId, cookies),
+      },
+      {
+        status: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        },
+      },
+    );
   } catch (e) {
     console.error(e);
     return new Response(getDevErrorMessage(e, "Chatbot create error"), {
