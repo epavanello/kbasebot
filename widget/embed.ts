@@ -21,9 +21,6 @@ iframe.style.cssText = `
   position: fixed;
   z-index: 9999999;
   border: none;
-  width: 448px;
-  bottom: 5rem;
-  height: 70vh;
   border-radius: 0.75rem;
   background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px;
@@ -103,20 +100,42 @@ const request = fetch(
   },
 );
 
+let settings: Settings | null = null;
+const detectMobile = window.matchMedia("(max-width: 576px)");
+type Side = "left" | "right";
+function setPosition() {
+  const side: Side = (settings?.chatbot_bubble_align as Side) || "right";
+  const normalMargin = 16;
+
+  if (detectMobile.matches) {
+    iframe.style[side] = "0px";
+    button.style[side] = "4px";
+    iframe.style.height = "calc(100vh - " + (56 + 4 * 2) + "px)";
+    iframe.style.width = "100%";
+    iframe.style.bottom = 56 + 4 * 2 + "px";
+    button.style.bottom = "4px";
+  } else {
+    iframe.style[side] = normalMargin + "px";
+    button.style[side] = normalMargin + "px";
+    iframe.style.height = "70vh";
+    iframe.style.width = "448px";
+    iframe.style.bottom = 56 + normalMargin * 2 + "px";
+    button.style.bottom = normalMargin + "px";
+  }
+}
+
 request.then(async (response) => {
-  const { settings } = (await response.json()) as {
-    settings: Settings;
-  };
+  settings = (
+    (await response.json()) as {
+      settings: Settings;
+    }
+  ).settings;
   if (!settings) {
     throw new Error("Chatbot settings not found");
   }
-  if (settings.chatbot_bubble_align === "right") {
-    iframe.style.right = "16px";
-    button.style.right = "16px";
-  } else {
-    iframe.style.left = "16px";
-    button.style.left = "16px";
-  }
+
+  setPosition();
+
   button.style.backgroundColor =
     settings.primary_color || "hsl(142.1 76.2% 36.3%)";
 
@@ -141,6 +160,8 @@ request.then(async (response) => {
   document.body.appendChild(button);
 });
 
+window.addEventListener("resize", setPosition);
+
 window.addEventListener("message", (event) => {
   // Verifica l'origine del messaggio
   if (event.origin !== `${process.env.NEXT_PUBLIC_URL}`) return;
@@ -151,6 +172,6 @@ window.addEventListener("message", (event) => {
   }
 });
 
-window.addEventListener("click", (event) => {
+window.addEventListener("click", () => {
   closeChatbot();
 });
