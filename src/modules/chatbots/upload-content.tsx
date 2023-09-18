@@ -100,6 +100,7 @@ export function UploadContent({
         supabase
           .from("chatbot_urls")
           .select("*, knowledge_base(id)")
+          .eq("chatbot_id", chatbot.id)
           .then(({ data, error }) => {
             if (error) {
               console.error(error);

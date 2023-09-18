@@ -15,11 +15,11 @@ export type ChatbotNotion =
   Database["public"]["Tables"]["chatbot_notion"]["Row"];
 export type Conversation = Database["public"]["Tables"]["conversations"]["Row"];
 
-export function isPaidUser(userInfo: Subscription | null) {
-  if (!userInfo || !userInfo.current_period_end) {
+export function isPaidUser(subscription: Subscription | null) {
+  if (!subscription || !subscription.current_period_end) {
     return false;
   }
-  const periodEnd = new Date(userInfo.current_period_end);
+  const periodEnd = new Date(subscription.current_period_end);
   return !isNaN(periodEnd.getTime()) && new Date() < periodEnd;
 }
 

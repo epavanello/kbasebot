@@ -1,4 +1,4 @@
-import { Subscription } from "../supabase";
+import { Subscription, isPaidUser } from "../supabase";
 
 export enum Plan {
   FREE = "free",
@@ -36,10 +36,14 @@ export const PLAN_PERMISSIONS: Record<Plan, Permissions> = {
   },
 };
 
-
 export const getPermissions = (
   subscription: Subscription | null,
 ): { plan: Plan; permission: Permissions } => {
-  const plan = (subscription?.plan || Plan.FREE) as Plan;
+  // Setting the plan directly based on whether the user is paid or not.
+  const plan =
+    isPaidUser(subscription) && subscription?.plan
+      ? (subscription.plan as Plan)
+      : Plan.FREE;
+
   return { plan, permission: PLAN_PERMISSIONS[plan] };
 };
