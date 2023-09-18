@@ -39,9 +39,9 @@ const Conversations = async ({
   const firstChatbotId = conversationsPerSession?.[0]?.chatbot_id || "";
 
   return (
-    <DashboardShell className="container h-full">
+    <DashboardShell className="h-full">
       <DashboardHeader
-        heading={"Conversation Histories"}
+        heading={`Conversation Histories (${conversationsPerSession.length})`}
         text={""}
         className="mt-6"
       />

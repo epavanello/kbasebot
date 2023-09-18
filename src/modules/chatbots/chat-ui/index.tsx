@@ -135,7 +135,7 @@ export default function ChatUi({
   return (
     <div className={cn("flex flex-col w-full my-auto", className)}>
       <Separator className="border" />
-      <div className={cn("flex-1 overflow-y-auto py-4 px-4")} ref={chatArea}>
+      <div className={cn("flex-1 overflow-y-auto p-4")} ref={chatArea}>
         {isDataLoading && (
           <div className="max-w-2xl m-auto flex flex-col gap-6">
             {[1, 2, 3].map((i) => (
