@@ -95,13 +95,17 @@ export default function PricingTable() {
                   plan.id === subscription?.plan &&
                   billingInterval === subscription?.billing_interval;
 
+                let info = "(2 days free trial)";
+
                 if (isFree) {
                   subscribeText = "Get started";
                   route = "/app";
+                  info = "(Free forever)";
                 }
                 if (isEnterprise) {
                   subscribeText = "Contact us!";
                   route = "mailto:hello@kbasebot.com";
+                  info = "";
                 } else if (isActive) {
                   subscribeText = "Manage";
                   route = "/app/subscription";
@@ -156,6 +160,9 @@ export default function PricingTable() {
                       <div className="p-6">
                         <h2 className="text-2xl leading-6 font-semibold text-gray-500">
                           {plan.name}
+                            <span className="text-xs font-medium text-gray-500 ml-2">
+                              {info}
+                            </span>
                         </h2>
                         {plan.description && (
                           <p className="mt-4 text-zinc-600 text-md">
@@ -184,7 +191,7 @@ export default function PricingTable() {
                           target="_blank"
                           className={cn(
                             buttonVariants({ variant: "default" }),
-                            "mt-4 bg-gray-700 block w-full rounded-md py-2 text-sm font-semibold text-gray-100 text-center hover:bg-zinc-900 hover:text-gray-100",
+                            "mt-2 bg-gray-700 block w-full rounded-md py-2 text-sm font-semibold text-gray-100 text-center hover:bg-zinc-900 hover:text-gray-100",
                           )}
                           href={route}
                         >
