@@ -5,6 +5,7 @@ import Link from "next/link";
 import PublicChatUi from "@/modules/chatbots/chat-ui/public-chat-ui";
 import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
 import { cookies } from "next/headers";
+import ChatbotAnalytics from "@/modules/chatbots/chatbot-analytics";
 
 export const dynamic = "force-dynamic";
 
@@ -18,8 +19,8 @@ const Page = async ({
   return (
     <DashboardShell className="gap-0 pt-2 h-full flex flex-col">
       <DashboardHeader
-        heading={"Chat with your chatbot"}
-        className="flex-row text-center justify-center my-4 gap-6"
+        heading={"Preview of the chatbot"}
+        className="flex-row text-left justify-center my-4 gap-6"
       >
         <Link
           href={`/app/chatbots/${chatbot_id}/share`}
@@ -29,8 +30,17 @@ const Page = async ({
         </Link>
       </DashboardHeader>
 
-      <div className="w-full flex-1 overflow-auto">
-        <PublicChatUi noCloseBtn settings={settings} chatbot_id={chatbot_id} />
+      <div className="w-full flex flex-1 overflow-auto container">
+        <div className="w-1/2">
+          <ChatbotAnalytics chatbot_id={chatbot_id} />
+        </div>
+        <div className="w-1/2">
+          <PublicChatUi
+            noCloseBtn
+            settings={settings}
+            chatbot_id={chatbot_id}
+          />
+        </div>
       </div>
     </DashboardShell>
   );

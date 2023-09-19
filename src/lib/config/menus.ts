@@ -34,7 +34,7 @@ export const menus = {
       className: "border-b border-gray-300 rounded-none mb-4 opacity-80",
     },
     {
-      title: "Bot Preview",
+      title: "Home",
       href: `/app/chatbots/${chatbotId}`,
       icon: "fluent:bot-sparkle-24-regular",
     },

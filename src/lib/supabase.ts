@@ -135,6 +135,25 @@ export async function countMonthlyConversationUsage(
   );
 }
 
+export async function countMonthlyConversationUsagePerChatbot(
+  supabase: SupabaseClientTyped,
+  userId: string,
+  chatbotId: string,
+) {
+  return (
+    (
+      await supabase
+        .from("conversations")
+        .select("*", { count: "exact", head: true })
+        .eq("chatbot_owner_id", userId)
+        .eq("chatbot_id", chatbotId)
+        // Count messages created in the last 30 days
+        .gte("created_at", set(new Date(), { date: -30 }).toISOString())
+        .throwOnError()
+    ).count!
+  );
+}
+
 export async function getSubscription(
   supabase: SupabaseClientTyped,
   userId?: string,
