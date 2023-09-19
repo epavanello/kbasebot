@@ -18,7 +18,6 @@ const Hero = () => {
       {/*    */}
       {/*  </div>*/}
       {/*</div>*/}
-      {/* TODO: Change product hunt link */}
       <div className="max-w-5xl flex flex-col items-center gap-2 text-center mt-16 lg:mt-24">
         <a
           className="mx-auto h-[39px] mb-4"
