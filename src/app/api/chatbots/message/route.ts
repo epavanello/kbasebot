@@ -16,19 +16,6 @@ import { getErrorMessage } from "@/lib/utils";
 import { countMonthlyConversationUsage, getSubscription } from "@/lib/supabase";
 import { getPermissions } from "@/lib/permissions/plans";
 
-const config = new Configuration({
-  apiKey: OPENAI_API_KEY,
-  basePath: "https://oai.hconeai.com/v1",
-  baseOptions: {
-    headers: {
-      "Helicone-Auth": `Bearer ${HELICONE_API_KEY}`,
-      "Helicone-RateLimit-Policy": "1000;w=3600",
-    },
-  },
-});
-
-const openai = new OpenAIApi(config);
-
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -102,6 +89,21 @@ export async function POST(req: NextRequest) {
         content: templates.basic({ context }),
       },
     ];
+
+    const config = new Configuration({
+      apiKey: OPENAI_API_KEY,
+      basePath: "https://oai.hconeai.com/v1",
+      baseOptions: {
+        headers: {
+          "Helicone-Auth": `Bearer ${HELICONE_API_KEY}`,
+          "Helicone-RateLimit-Policy": "1000;w=3600",
+          "Helicone-User-Id": chatbotId,
+          "Helicone-Property-Conversation-Id": conversationId,
+        },
+      },
+    });
+
+    const openai = new OpenAIApi(config);
 
     // Ask OpenAI for a streaming chat completion given the prompt
     const response = await openai.createChatCompletion({
