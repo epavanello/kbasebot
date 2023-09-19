@@ -21,17 +21,30 @@ const Hero = () => {
       {/* TODO: Change product hunt link */}
       <div className="max-w-5xl flex flex-col items-center gap-2 text-center mt-16 lg:mt-24">
         <a
-          href="https://www.producthunt.com/posts/kbasebot?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-turbosite"
+          className="mx-auto h-[39px] mb-4"
+          href="https://www.producthunt.com/posts/kbasebot?utm_source=badge-top-post-badge&utm_medium=badge&utm_souce=badge-kbasebot"
           target="_blank"
-          className="mx-auto h-[39px] mb-12"
         >
           <Image
-            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=414946&theme=light"
-            alt="KBaseBot - Your&#0032;landing&#0032;page&#0032;online&#0032;in&#0032;under&#0032;2&#0032;minutes&#0033; | Product Hunt"
-            width="249"
-            height="53"
+            src="https://api.producthunt.com/widgets/embed-image/v1/top-post-badge.svg?post_id=414946&theme=light&period=daily"
+            alt="KBaseBot - From&#0032;files&#0032;&#0038;&#0032;sites&#0032;to&#0032;chatbots&#0058;&#0032;knowledge&#0032;talks | Product Hunt"
+            width="200"
+            height="40"
           />
         </a>
+
+        {/*<a*/}
+        {/*  href="https://www.producthunt.com/posts/kbasebot?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-turbosite"*/}
+        {/*  target="_blank"*/}
+        {/*  className="mx-auto h-[39px] mb-12"*/}
+        {/*>*/}
+        {/*  <Image*/}
+        {/*    src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=414946&theme=light"*/}
+        {/*    alt="KBaseBot - Your&#0032;landing&#0032;page&#0032;online&#0032;in&#0032;under&#0032;2&#0032;minutes&#0033; | Product Hunt"*/}
+        {/*    width="249"*/}
+        {/*    height="53"*/}
+        {/*  />*/}
+        {/*</a>*/}
         <h1 className="text-6xl font-black opacity-90">
           Build Powerful Chatbots from
         </h1>
