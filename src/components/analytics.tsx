@@ -19,6 +19,11 @@ const Analytics = () => {
           gtag('config', '${GA_MEASUREMENT_ID}');
         `}
       </Script>
+      <script
+        defer
+        data-domain="kbasebot.com"
+        src="https://kbase-plausible.toc.ink/js/script.js"
+      ></script>
     </>
   );
 };
