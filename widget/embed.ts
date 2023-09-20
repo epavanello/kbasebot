@@ -7,16 +7,18 @@ const button = document.createElement("button");
 const img = document.createElement("img");
 
 // get current script chatbot id param
-const scriptURL = (document.currentScript as HTMLScriptElement).src;
-const chatbot_id = new URL(scriptURL).searchParams.get("chatbot_id");
+const currentScript = document.currentScript as HTMLScriptElement;
+const scriptURL = currentScript.src;
+const chatbot_id =
+  new URL(scriptURL).searchParams.get("chatbot_id") ||
+  currentScript.getAttribute("data-chatbot-id");
+const containterSelector = currentScript.getAttribute("data-container");
 
 if (!chatbot_id) {
   throw new Error("chatbot_id is required");
 }
 
-// set the src of the iframe to the chatbot url
-iframe.src = `${process.env.NEXT_PUBLIC_URL}/c/${chatbot_id}`;
-
+iframe.id = "kbasebot-iframe";
 iframe.style.cssText = `
   position: fixed;
   z-index: 9999999;
@@ -26,7 +28,7 @@ iframe.style.cssText = `
   box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px;
 `;
 
-// add hover effect to the button
+button.id = "kbasebot-button";
 button.style.cssText = `
   overflow: hidden;
   padding: 0px;
@@ -68,6 +70,11 @@ let bubbleLogo = "";
 let closeLogo = "";
 
 function openChatbot() {
+  if (!iframe.src) {
+    // set the src of the iframe to the chatbot url
+    iframe.src = `${process.env.NEXT_PUBLIC_URL}/c/${chatbot_id}`;
+  }
+
   iframe.style.display = "block";
   img.src = closeLogo;
   isOpen = true;
@@ -156,8 +163,26 @@ request.then(async (response) => {
   closeChatbot();
 
   button.appendChild(img);
-  document.body.appendChild(iframe);
-  document.body.appendChild(button);
+
+  let container: HTMLElement | null = null;
+  if (
+    containterSelector &&
+    (container = document.querySelector(containterSelector))
+  ) {
+    container.appendChild(button);
+    container.appendChild(iframe);
+  }
+  // check if currentScript is in the body at any position
+  else if (document.body.contains(currentScript)) {
+    // append the button and the iframe after the currentScript
+    currentScript.after(button);
+    currentScript.after(iframe);
+  }
+  // append the button and the iframe at the end of the body
+  else {
+    document.body.appendChild(button);
+    document.body.appendChild(iframe);
+  }
 });
 
 window.addEventListener("resize", setPosition);

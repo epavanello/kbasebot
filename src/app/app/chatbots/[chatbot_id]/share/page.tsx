@@ -57,8 +57,8 @@ const Share = ({ params }) => {
    frameBorder="0">
 </iframe>`;
 
-  const scriptTag = `<script async 
-src="${NEXT_PUBLIC_URL}/embed.js?chatbot_id=${chatbot_id}">
+  const scriptTag = `<script async data-chatbot-id="${chatbot_id}"
+src="${NEXT_PUBLIC_URL}/embed.js">
 </script>`;
 
   return (
