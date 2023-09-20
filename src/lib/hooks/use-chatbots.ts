@@ -22,6 +22,7 @@ export function useChatbots() {
                 .select()
                 .eq("user_id", user?.id!)
                 .eq("status", "READY")
+                .order("created_at", { ascending: true })
                 .throwOnError()
             ).data!,
           );
