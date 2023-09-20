@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useBooleanTimeout } from "./use-boolean-timeout";
 
 export interface useCopyToClipboardProps {
   timeout?: number;
@@ -7,7 +8,7 @@ export interface useCopyToClipboardProps {
 export function useCopyToClipboard({
   timeout = 2000,
 }: useCopyToClipboardProps) {
-  const [isCopied, setIsCopied] = React.useState<Boolean>(false);
+  const [isCopied, setIsCopied] = useBooleanTimeout(timeout);
 
   const copyToClipboard = (value: string) => {
     if (typeof window === "undefined" || !navigator.clipboard?.writeText) {
@@ -19,11 +20,7 @@ export function useCopyToClipboard({
     }
 
     navigator.clipboard.writeText(value).then(() => {
-      setIsCopied(true);
-
-      setTimeout(() => {
-        setIsCopied(false);
-      }, timeout);
+      setIsCopied();
     });
   };
 

@@ -24,6 +24,9 @@ import { useParams } from "next/navigation";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { Chatbot, Conversation } from "@/lib/supabase";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import SaveButton from "@/components/ui/save-button";
 
 const Settings = () => {
   const [chatbot, setChatbot] = useState<
@@ -34,6 +37,7 @@ const Settings = () => {
   const { toast } = useToast();
   const { chatbot_id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [chatbotName, setChatbotName] = useState("");
 
   useEffect(() => {
     const getData = async () => {
@@ -47,6 +51,7 @@ const Settings = () => {
 
       if (data) {
         setChatbot(data);
+        setChatbotName(data.name || "");
       }
 
       setLoading(false);
@@ -57,38 +62,36 @@ const Settings = () => {
   const [updating, setUpdating] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const updateChatBot = async (data) => {
+  const updateChatBot = async () => {
+    if (!chatbot || !chatbotName) return;
     setUpdating(true);
     try {
-      const { tone, info, audience, name } = data;
       await supabase
         .from("chatbots")
         .update({
-          name,
-          params: {
-            tone,
-            info,
-            audience,
-          },
+          name: chatbotName,
         })
-        .eq("id", chatbot?.id)
+        .eq("id", chatbot.id)
         .throwOnError();
+
+      setChatbot({
+        ...chatbot,
+        name: chatbotName,
+      });
 
       toast({
         variant: "default",
         title: "Updated Successfully",
       });
-
-      await router.replace(`/chatbots/${chatbot?.id}/settings`);
-      setUpdating(false);
     } catch (e) {
-      setUpdating(false);
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description: "There was a problem with your request. please try again",
       });
       console.error(e);
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -134,17 +137,30 @@ const Settings = () => {
             <CardTitle>Chatbot Settings</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className=" flex flex-col relative w-full justify-start gap-2 items-center">
-              <div className=" flex relative w-full justify-start gap-2 items-center">
-                <p className="text-gray-700 font-medium text-sm">Chatbot ID</p>
-                <p className="p-2 bg-muted rounded-lg text-gray-700 text-xs">
-                  {chatbot?.id}
-                </p>
-                <CopyButton text={chatbot?.id || ""} />
+            <div className=" flex flex-col relative w-full justify-start gap-2 items-start">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <div className="flex flex-row items-end gap-2">
+                  <Input
+                    id="name"
+                    value={chatbotName}
+                    disabled={loading || updating}
+                    onChange={(e) => setChatbotName(e.target.value)}
+                    size={20}
+                  />
+                  <SaveButton onSave={updateChatBot} />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="id">Chatbot ID</Label>
+                <div className="flex flex-row items-end gap-2">
+                  <Input id="id" value={chatbot?.id} readOnly className="text-xs" size={33} />
+                  <CopyButton text={chatbot?.id || ""} />
+                </div>
               </div>
               <div className=" flex relative w-full justify-start gap-2 items-center">
                 <p className="text-gray-700 font-medium text-sm">Created at</p>
-                <p className="p-4 rounded-lg text-gray-700 text-xs">
+                <p className="rounded-lg text-gray-700 text-xs">
                   {formatDate(chatbot?.created_at)}
                 </p>
               </div>
