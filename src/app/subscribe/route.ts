@@ -49,6 +49,7 @@ export async function GET(request: NextRequest) {
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: `${NEXT_PUBLIC_URL}/app?payment=success&plan=${plan}`,
       cancel_url: `${NEXT_PUBLIC_URL}/pricing?payment=cancel&plan=${plan}`,
+      allow_promotion_codes: true,
       line_items: [
         {
           price: price.priceId,
