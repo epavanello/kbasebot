@@ -69,7 +69,7 @@
     "langchain": "^0.0.146",
     "lucide-react": "^0.271.0",
     "mammoth": "^1.6.0",
-    "next": "13.4.19",
+    "next": "13.5.2",
     "next-nprogress-bar": "^2.1.2",
     "next-themes": "^0.2.1",
     "notion-to-md": "^3.1.1",
