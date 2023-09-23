@@ -267,7 +267,7 @@
 
 .testimonial::before,
 .testimonial::after {
-  @apply bg-gradient-to-l from-white dark:from-black via-white dark:via-black to-transparent w-12 md:w-64 h-full absolute z-10 pointer-events-none content-[""];
+  @apply bg-gradient-to-l from-background via-background to-transparent w-12 md:w-64 h-full absolute z-10 pointer-events-none content-[""];
 }
 
 .testimonial::before {
