@@ -23,6 +23,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning className="h-full">
+      <head>
+        <meta property="og:image:alt" content="KBaseBot" />
+        <meta property="twitter:image:alt" content="KBaseBot" />
+        <meta property="og:title" content="KBaseBot" />
+        <meta property="twitter:title" content="KBaseBot" />
+      </head>
       <Analytics />
       <body className={cn("h-full", inter.className)}>
         <Providers>{children}</Providers>

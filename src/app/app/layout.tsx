@@ -9,24 +9,26 @@ interface DashboardLayoutProps {
 
 const MainLayout = ({ children, seo }: DashboardLayoutProps) => {
   return (
-    <div className="mx-auto flex flex-col h-screen">
-      <header className="sticky top-0 z-40">
-        <MainNav items={menus.mainNav()} />
-      </header>
-      <div
-        style={{ height: "calc(100vh - 65px)" }}
-        className="grid md:grid-cols-[200px_1fr]"
-      >
-        <aside className="hidden w-[200px] flex-col md:flex border-r">
-          <Sidebar />
-        </aside>
-        {/*<PageTransition>*/}
-        <main className="flex w-full flex-1 flex-col overflow-auto h-full">
-          {children}
-        </main>
-        {/*</PageTransition>*/}
+    <>
+      <div className="mx-auto flex flex-col h-screen">
+        <header className="sticky top-0 z-40">
+          <MainNav items={menus.mainNav()} />
+        </header>
+        <div
+          style={{ height: "calc(100vh - 65px)" }}
+          className="grid md:grid-cols-[200px_1fr]"
+        >
+          <aside className="hidden w-[200px] flex-col md:flex border-r">
+            <Sidebar />
+          </aside>
+          {/*<PageTransition>*/}
+          <main className="flex w-full flex-1 flex-col overflow-auto h-full">
+            {children}
+          </main>
+          {/*</PageTransition>*/}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
