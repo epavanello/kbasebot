@@ -5,10 +5,12 @@ import Providers from "@/components/providers";
 import { cn } from "@/lib/utils";
 import Head from "next/head";
 import Analytics from "@/components/analytics";
+import { NEXT_PUBLIC_URL } from "@/lib/env";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(NEXT_PUBLIC_URL),
   title: "KBaseBot",
   description:
     "Turn PDFs, Docx, Notion & websites into dynamic chatbots. Embed on your platform, making static content interactive. Elevate your content into real-time dialogues. Knowledge has never been this alive or accessible.",
