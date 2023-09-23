@@ -5,6 +5,7 @@ import Cta from "@/components/landing/cta";
 import Benefit from "@/components/landing/benefit";
 import PublicChatUiFull from "@/modules/chatbots/chat-ui/public-chat-ui-full";
 import PricingTable from "./pricing/pricing-table";
+import Testimonials from "@/components/landing/testimonials";
 
 const Page = async () => {
   return (
@@ -13,6 +14,7 @@ const Page = async () => {
       <Features />
       <Benefit />
       <PricingTable />
+      <Testimonials />
       {/*<Testimonials />*/}
       <Cta />
       <PublicChatUiFull chatbot_id="1346fc11-82a6-45cc-b40a-69cc839b084e" />

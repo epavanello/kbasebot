@@ -12,7 +12,6 @@ export const metadata: Metadata = {
   metadataBase: new URL(NEXT_PUBLIC_URL),
   title: "KBaseBot",
   twitter: {
-    card: "summary_large_image",
     site: "@kbasebot",
     creator: "@kbasebot",
     title: "KBaseBot",
