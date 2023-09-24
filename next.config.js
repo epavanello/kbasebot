@@ -1,3 +1,5 @@
+const { withContentlayer } = require("next-contentlayer");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
@@ -10,8 +12,12 @@ const nextConfig = {
   },
   images: {
     dangerouslyAllowSVG: true,
-    domains: ["gcevngqhykuaxuphcgxw.supabase.co","api.producthunt.com", "localhost"],
+    domains: [
+      "gcevngqhykuaxuphcgxw.supabase.co",
+      "api.producthunt.com",
+      "localhost",
+    ],
   },
 };
 
-module.exports = nextConfig;
+module.exports = withContentlayer(nextConfig);

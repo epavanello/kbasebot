@@ -34,6 +34,10 @@ export default function LandingNav() {
                         href: "/#pricing",
                         label: "Pricing",
                       },
+                      {
+                        href: "/blog",
+                        label: "Blogs",
+                      },
                     ]
                   : []
               }
