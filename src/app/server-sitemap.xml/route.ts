@@ -21,7 +21,7 @@ function getSiteUrls() {
 
   return urls.map((url) => {
     return {
-      loc: join(siteUrl, url),
+      loc: `${siteUrl}${url}`,
       lastmod: new Date().toISOString(),
     };
   });
@@ -30,7 +30,7 @@ function getSiteUrls() {
 function getPostsSitemap() {
   return allPosts.map((post) => {
     return {
-      loc: join(siteUrl, post.url),
+      loc: `${siteUrl}${post.url}`,
       lastmod: new Date().toISOString(),
     };
   });
