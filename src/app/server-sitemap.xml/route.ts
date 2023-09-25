@@ -1,4 +1,3 @@
-import { join } from "path";
 import { getServerSideSitemap } from "next-sitemap";
 import { allPosts } from "contentlayer/generated";
 import { configuration } from "@/lib/config/app.config";
@@ -10,21 +9,9 @@ if (!siteUrl) {
 }
 
 export async function GET() {
-  const urls = getSiteUrls();
   const posts = getPostsSitemap();
 
-  return getServerSideSitemap([...urls, ...posts]);
-}
-
-function getSiteUrls() {
-  const urls = configuration.landingUrls;
-
-  return urls.map((url) => {
-    return {
-      loc: `${siteUrl}${url}`,
-      lastmod: new Date().toISOString(),
-    };
-  });
+  return getServerSideSitemap(posts);
 }
 
 function getPostsSitemap() {
