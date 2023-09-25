@@ -8,6 +8,8 @@ const internalPublicRoutes = [
   "/api/chatbots/message",
   "/api/chatbots/settings",
   "/api/stripe",
+  "/api/integrations/slack",
+  "/api/integrations/status",
 ];
 
 export const config = {
