@@ -5,12 +5,19 @@ import useSWR from "swr";
 import { cn, fetcher } from "@/lib/utils";
 import StatCard from "@/components/ui/stats-card";
 import { gradients } from "@/style/gradients";
+import LineChart from "@/components/charts/linechart";
+import { number, string } from "zod";
 
 const ChatbotAnalytics = ({ chatbot_id }: { chatbot_id: string }) => {
-  const { data = {} } = useSWR(
-    `/api/chatbots/analytics?chatbot_id=${chatbot_id}`,
-    fetcher,
-  );
+  const { data } = useSWR<{
+    timeseries: {
+      results: {
+        date: string;
+        visitors: number;
+        visit_duration: number;
+      }[];
+    };
+  }>(`/api/chatbots/analytics?chatbot_id=${chatbot_id}`, fetcher);
 
   const {
     pageviews = {},
@@ -18,11 +25,12 @@ const ChatbotAnalytics = ({ chatbot_id }: { chatbot_id: string }) => {
     visit_duration = {},
     visitors = {},
     conversations = {},
+    timeseries,
   } = data || {};
 
   return (
-    <div>
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 px-4">
+    <div className="w-full">
+      <div className="grid gap-4 mb-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Chatot View"
           content={pageviews.value || 0}
@@ -48,6 +56,20 @@ const ChatbotAnalytics = ({ chatbot_id }: { chatbot_id: string }) => {
           className={cn(gradients.PANDORA, "text-gray-800")}
         />
       </div>
+      <LineChart
+        data={
+          timeseries?.results.map((result) => ({
+            // format date from yyyy-dd-mm to be more readable
+            date: new Date(result.date).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            }),
+            visitors: result.visitors,
+            visit_duration: result.visit_duration,
+          })) || []
+        }
+        metrics={["visitors", "visit_duration"]}
+      />
     </div>
   );
 };
