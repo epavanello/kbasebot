@@ -3,7 +3,7 @@ import { getServerSideSitemap } from "next-sitemap";
 import { allPosts } from "contentlayer/generated";
 import { configuration } from "@/lib/config/app.config";
 
-const siteUrl = configuration.site.siteUrl as string;
+const siteUrl = configuration.site.siteUrl;
 
 if (!siteUrl) {
   throw new Error(`Invalid "siteUrl", please fix in configuration.ts`);
