@@ -4,7 +4,7 @@ import Script from "next/script";
 
 import { allPosts } from "contentlayer/generated";
 import Post from "@/components/content/post";
-import Container from "@/components/ui/Container";
+import Container from "@/components/ui/container";
 
 export async function generateMetadata({
   params,

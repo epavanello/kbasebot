@@ -1,13 +1,12 @@
 import type { Post } from "contentlayer/generated";
 
-import If from "@/components/ui/If";
+import If from "@/components/ui/if";
 import SubHeading from "@/components/ui/sub-heading";
 
 import DateFormatter from "./date-formatter";
 import CoverImage from "./cover-image";
-import Heading from "@/components/ui/Heading";
+import Heading from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 
 const PostHeader: React.FC<{
