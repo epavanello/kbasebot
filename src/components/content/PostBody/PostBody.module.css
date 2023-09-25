@@ -7,7 +7,7 @@
 }
 
 :global(.dark) .PostBody h2 {
-  @apply border-b-dark-700;
+  @apply border-b-primary;
 }
 
 .PostBody h3 {
@@ -102,7 +102,7 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 
 .PostBody blockquote {
   @apply my-12 p-6 font-medium text-lg text-gray-600
-    font-sans border-l-4 border-primary-500;
+    font-sans border-l-4 border-primary;
 }
 
 :global(.dark) .PostBody blockquote {
@@ -123,11 +123,11 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
 
-  @apply bg-dark-800 relative left-3 text-[0.55rem] md:text-sm font-bold;
+  @apply relative left-3 text-[0.55rem] md:text-sm font-bold;
 }
 
 .PostBody pre[filename] {
-  @apply bg-dark-700 pt-3 rounded-md;
+  @apply pt-3 rounded-md;
 }
 
 .PostBody pre[filename] code {
@@ -146,24 +146,24 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 }
 
 .PostBody pre > code {
-  @apply p-3 md:p-6 text-xs md:text-sm font-medium font-monospace block bg-gray-100 dark:bg-dark-800;
+  @apply p-3 md:p-6 text-xs md:text-sm font-medium block bg-gray-100;
 
   white-space: pre-wrap;
 }
 
 :global(.dark) .PostBody code {
-  @apply bg-dark-800 rounded-xl;
+  @apply rounded-xl;
 }
 
 .PostBody p > code,
 .PostBody li > code {
-  @apply px-1 py-0.5 border border-dark-600  rounded mx-0.5 font-semibold text-sm;
+  @apply px-1 py-0.5 border  rounded mx-0.5 font-semibold text-sm;
 }
 
-:global(.dark) .PostBody p > code,
-:global(.dark) .PostBody li > code {
-  @apply bg-dark-700;
-}
+/*:global(.dark) .PostBody p > code,*/
+/*:global(.dark) .PostBody li > code {*/
+/*  @apply;*/
+/*}*/
 
 .PostBody hr {
   @apply mt-8 mb-6;
@@ -176,5 +176,5 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 
 :global(.dark) .PostBody p > a,
 :global(.dark) .PostBody li > a {
-  @apply text-primary-600 font-semibold underline hover:text-primary-500;
+  @apply text-primary font-semibold underline hover:text-primary/20;
 }

@@ -6,10 +6,13 @@ import NavSheet from "./nav-sheet";
 import Logo from "@/components/landing/logo";
 import { usePathname } from "next/navigation";
 
+const landingPages = ["/", "/blog", "/pricing", "/faqs", "/privacy"];
+
 export default function LandingNav() {
   // hide nav if not on landing page
   const pathname = usePathname();
-  const isLanding = pathname === "/";
+
+  const isLanding = landingPages.includes(pathname);
 
   return (
     <header
@@ -37,6 +40,10 @@ export default function LandingNav() {
                       {
                         href: "/blog",
                         label: "Blogs",
+                      },
+                      {
+                        href: "/faqs",
+                        label: "FAQs",
                       },
                     ]
                   : []

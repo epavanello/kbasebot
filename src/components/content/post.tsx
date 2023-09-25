@@ -7,10 +7,11 @@ import PostHeader from "./post-header";
 const Post: React.FCC<{
   post: Post;
   content: string;
-}> = ({ post, content }) => {
+  backUrl?: string;
+}> = ({ post, content, backUrl }) => {
   return (
     <div className={"mx-auto max-w-2xl my-8"}>
-      <PostHeader post={post} />
+      <PostHeader backUrl={backUrl} post={post} />
 
       <article className={"mx-auto flex justify-center"}>
         <PostBody content={content} />

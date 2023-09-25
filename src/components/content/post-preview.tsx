@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Post } from "contentlayer/generated";
 
-import If from "@/components/ui/If";
+import If from "@/components/ui/if";
 
 import DateFormatter from "./date-formatter";
 import CoverImage from "./cover-image";
@@ -15,7 +15,7 @@ type Props = {
 const DEFAULT_IMAGE_HEIGHT = 250;
 
 function PostPreview({
-  post,
+  post = {},
   preloadImage,
   imageHeight,
 }: React.PropsWithChildren<Props>) {
