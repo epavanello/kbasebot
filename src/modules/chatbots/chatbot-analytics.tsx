@@ -6,7 +6,7 @@ import { cn, fetcher } from "@/lib/utils";
 import StatCard from "@/components/ui/stats-card";
 import { gradients } from "@/style/gradients";
 
-const ChatbotAnalytics = ({ chatbot_id }) => {
+const ChatbotAnalytics = ({ chatbot_id }: { chatbot_id: string }) => {
   const { data = {} } = useSWR(
     `/api/chatbots/analytics?chatbot_id=${chatbot_id}`,
     fetcher,
@@ -22,7 +22,7 @@ const ChatbotAnalytics = ({ chatbot_id }) => {
 
   return (
     <div>
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-4">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 px-4">
         <StatCard
           title="Chatot View"
           content={pageviews.value || 0}
