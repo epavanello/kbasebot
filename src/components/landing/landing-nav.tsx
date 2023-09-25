@@ -5,8 +5,9 @@ import NavLinks from "./nav-links";
 import NavSheet from "./nav-sheet";
 import Logo from "@/components/landing/logo";
 import { usePathname } from "next/navigation";
+import { configuration } from "@/lib/config/app.config";
 
-const landingPages = ["/", "/blog", "/pricing", "/faqs", "/privacy"];
+const landingPages = configuration.landingUrls;
 
 export default function LandingNav() {
   // hide nav if not on landing page
