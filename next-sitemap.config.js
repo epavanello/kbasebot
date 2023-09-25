@@ -1,7 +1,7 @@
 const siteUrl = process.env.NEXT_PUBLIC_URL;
 
 // add your private routes here
-const exclude = ["/auth/notion-connect", "/.png*"];
+const exclude = ["/auth/notion-connect", "/**.png"];
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {

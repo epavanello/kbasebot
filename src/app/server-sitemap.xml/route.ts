@@ -21,7 +21,7 @@ function getSiteUrls() {
 
   return urls.map((url) => {
     return {
-      loc: join(siteUrl, url.replace("/", "")),
+      loc: join(siteUrl, url),
       lastmod: new Date().toISOString(),
     };
   });
