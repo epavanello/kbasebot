@@ -6,12 +6,11 @@ import { cn } from "@/lib/utils";
 import { Icon } from "@/components/ui/icons";
 import { MobileNav } from "@/components/layouts/mobile-nav";
 import { UserAccountNav } from "@/components/layouts/user-account-nav";
-import Image from "next/image";
 import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import Logo from "@/components/logo";
+import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { DarkModeSwitch } from "@/components/ui/dark-mode-switch";
+import Logo from "@/components/landing/logo";
 
 export type NavItem = {
   title: string;
@@ -36,12 +35,7 @@ export function MainNav({ items, children }: MainNavProps) {
     <div className="border-b">
       <div className="flex h-16 items-center px-4">
         <div className="px-2 flex flex-1 gap-6 md:gap-10">
-          <Link
-            href="/app"
-            className="hidden items-center space-x-2 md:flex mb-1"
-          >
-            <Logo />
-          </Link>
+          <Logo href="/app" />
           {items?.length ? (
             <nav className="hidden gap-6 md:flex flex-1 justify-center">
               {items?.map(

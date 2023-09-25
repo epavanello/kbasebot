@@ -8,6 +8,7 @@ export default function Logo({
   width = 135,
   height = 35,
   className,
+  href = "/",
 }: {
   withText?: boolean;
   width?: number;
@@ -15,7 +16,7 @@ export default function Logo({
   className?: string;
 }) {
   return (
-    <Link href="/">
+    <Link href={href}>
       <Image
         width={width}
         height={height}
