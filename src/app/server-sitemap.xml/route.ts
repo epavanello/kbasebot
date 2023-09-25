@@ -28,7 +28,6 @@ function getSiteUrls() {
 }
 
 function getPostsSitemap() {
-  console.log({ allPosts });
   return allPosts.map((post) => {
     return {
       loc: join(siteUrl, post.url),
