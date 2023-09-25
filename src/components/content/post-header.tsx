@@ -1,15 +1,19 @@
 import type { Post } from "contentlayer/generated";
 
 import If from "@/components/ui/If";
-import SubHeading from "@/components/ui/SubHeading";
+import SubHeading from "@/components/ui/sub-heading";
 
 import DateFormatter from "./date-formatter";
 import CoverImage from "./cover-image";
 import Heading from "@/components/ui/Heading";
+import { Button } from "@/components/ui/button";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
 const PostHeader: React.FC<{
   post: Post;
-}> = ({ post }) => {
+  backUrl?: string;
+}> = ({ post, backUrl }) => {
   const { title, date, readingTime, description, image } = post;
 
   // NB: change this to display the post's image
@@ -19,6 +23,11 @@ const PostHeader: React.FC<{
   return (
     <div className={"flex flex-col space-y-4"}>
       <div className={"flex flex-col space-y-4"}>
+        <div>
+          <Button as={Link} asChild href={backUrl} variant={"outline"}>
+            Back to all posts
+          </Button>
+        </div>
         <Heading type={1}>{title}</Heading>
 
         <SubHeading>{description}</SubHeading>

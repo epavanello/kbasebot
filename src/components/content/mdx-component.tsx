@@ -3,11 +3,10 @@ import { forwardRef } from "react";
 
 import classNames from "clsx";
 
-import LazyRender from "@/components/ui/LazyRender";
-import ClientOnly from "@/components/ui/ClientOnly";
+import LazyRender from "@/components/ui/lazy-render";
+import ClientOnly from "@/components/ui/client-only";
 import TweetEmbed from "./tweet-embed";
-
-import configuration from "~/configuration";
+import { cn } from "@/lib/utils";
 
 const NextImage: React.FCC<
   StringObject & {
@@ -18,7 +17,15 @@ const NextImage: React.FCC<
   const className = classNames(props.class, `object-cover`);
 
   return (
-    <Image className={className} src={props.src} alt={props.alt} {...props} />
+    <div className="w-full h-96 relative">
+      <Image
+        className={cn("object-contain", className)}
+        src={props.src}
+        alt={props.alt}
+        fill={true}
+        {...props}
+      />
+    </div>
   );
 };
 
@@ -26,7 +33,7 @@ const ExternalLink = forwardRef<
   React.ElementRef<"a">,
   React.AnchorHTMLAttributes<unknown>
 >(function ExternalLink(props, ref) {
-  const siteUrl = configuration.site.siteUrl ?? "";
+  const siteUrl = process.env.NEXT_PUBLIC_URL ?? "";
   const href = props.href ?? "";
   const isRoot = href[0] === "/";
   const isInternalLink = href.startsWith(siteUrl) || isRoot;

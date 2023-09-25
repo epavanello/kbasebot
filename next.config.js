@@ -15,6 +15,7 @@ const nextConfig = {
     domains: [
       "gcevngqhykuaxuphcgxw.supabase.co",
       "api.producthunt.com",
+      "images.tango.us",
       "localhost",
     ],
   },

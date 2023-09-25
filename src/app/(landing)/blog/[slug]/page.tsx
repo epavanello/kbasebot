@@ -59,7 +59,7 @@ async function Blog({ params }: { params: { slug: string } }) {
         {JSON.stringify(post.structuredData)}
       </Script>
 
-      <Post post={post} content={post.body.code} />
+      <Post backUrl={`/blog`} post={post} content={post.body.code} />
     </Container>
   );
 }
