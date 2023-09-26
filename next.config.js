@@ -1,4 +1,7 @@
 const { withContentlayer } = require("next-contentlayer");
+const dotenvExpand = require("dotenv-expand");
+
+dotenvExpand.expand({ parsed: { ...process.env } });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

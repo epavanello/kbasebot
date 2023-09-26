@@ -10,7 +10,7 @@ import { countMonthlyConversationUsagePerChatbot } from "@/lib/supabase";
 export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
 
-export const getSiteStats = async (chatbotId) => {
+export const getSiteStats = async (chatbotId: string) => {
   try {
     const res = await axios.get(
       `${
@@ -19,7 +19,7 @@ export const getSiteStats = async (chatbotId) => {
         site_id: "kbasebot.com",
         period: "6mo",
         filters: "event:page==/c/" + chatbotId,
-        metrics: "visitors,pageviews,bounce_rate,visit_duration,events",
+        metrics: "visitors,pageviews,bounce_rate,visit_duration",
       })}`,
       {
         headers: {
@@ -28,9 +28,32 @@ export const getSiteStats = async (chatbotId) => {
       },
     );
 
-    console.log({ chatbotId, ss: JSON.stringify(res.data) });
     return res.data;
   } catch (e) {
+    return null;
+  }
+};
+
+export const getSiteTimeseries = async (chatbotId: string) => {
+  try {
+    const res = await axios.get(
+      `${
+        process.env.PLAUSIBLE_API_URL
+      }/api/v1/stats/timeseries?${new URLSearchParams({
+        site_id: "kbasebot.com",
+        filters: "event:page==/c/" + chatbotId,
+        metrics: "visitors,visit_duration",
+      })}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.PLAUSIBLE_API_KEY}`,
+        },
+      },
+    );
+
+    return res.data;
+  } catch (e) {
+    console.error(e);
     return null;
   }
 };
@@ -55,7 +78,10 @@ export async function GET(req: NextRequest) {
       throw new Error("chatbot-id-not-found");
     }
 
-    const analytics = await getSiteStats(chatbot_id);
+    const [analytics, timeseries] = await Promise.all([
+      getSiteStats(chatbot_id),
+      getSiteTimeseries(chatbot_id),
+    ]);
 
     const conversations = await countMonthlyConversationUsagePerChatbot(
       supabaseServerClient,
@@ -66,6 +92,7 @@ export async function GET(req: NextRequest) {
     const stats = {
       ...(analytics?.results || {}),
       conversations: { value: conversations },
+      timeseries,
     };
 
     return NextResponse.json(stats);

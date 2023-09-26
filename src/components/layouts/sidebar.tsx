@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Icon } from "@iconify/react";
 import { Badge } from "@/components/ui/badge";
@@ -22,13 +22,11 @@ export interface SidebarItem {
   status?: ItemStatus;
 }
 
-interface SidebarProps {
-  items: SidebarItem[];
-}
+interface SidebarProps {}
 
 const Sidebar: FC<SidebarProps> = () => {
   const path = usePathname();
-  const { chatbot_id } = useParams();
+  const { chatbot_id } = useParams<{ chatbot_id: string }>();
 
   const items = chatbot_id
     ? menus.sidebarNavByChatbot(chatbot_id)
