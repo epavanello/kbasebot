@@ -34,7 +34,7 @@ export const menus = {
       className: "border-b border-gray-300 rounded-none mb-4 opacity-80",
     },
     {
-      title: "Home",
+      title: "Preview",
       href: `/app/chatbots/${chatbotId}`,
       icon: "fluent:bot-sparkle-24-regular",
     },
@@ -52,6 +52,11 @@ export const menus = {
       title: "Customize",
       href: `/app/chatbots/${chatbotId}/customize`,
       icon: "clarity:design-line",
+    },
+    {
+      title: "Analytics",
+      href: `/app/chatbots/${chatbotId}/analytics`,
+      icon: "clarity:analytics-line",
     },
     {
       title: "Share",
