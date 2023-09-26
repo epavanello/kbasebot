@@ -9,46 +9,57 @@ import {
   TabPanel,
 } from "@tremor/react";
 
-const data = [
-  {
-    Month: "Jan 22",
-    Visitors: 289,
-    "Page Views": 1012,
-    "Bounce Rate": 0.5,
-  },
-  //...
-  {
-    Month: "Jan 23",
-    Visitors: 389,
-    "Page Views": 1232,
-    "Bounce Rate": 0.51,
-  },
-];
-
 const numberFormatter = (value: number) =>
   Intl.NumberFormat("us").format(value).toString();
-const percentageFormatter = (value: number) =>
-  `${Intl.NumberFormat("us")
-    .format(value * 100)
-    .toString()}%`;
-function sumArray(array: any[], metric: string) {
+
+function sumArray<T extends ChartData>(
+  array: LineChartData<T>[],
+  metric: keyof ChartData,
+) {
   return array.reduce(
     (accumulator, currentValue) => accumulator + currentValue[metric],
     0,
   );
 }
 
-export type LineChartData<T extends Record<string, number>> = {
+export type ChartData = Record<string, number>;
+
+function averageArray<T extends ChartData>(
+  array: LineChartData<T>[],
+  metric: keyof ChartData,
+) {
+  return (
+    array.reduce(
+      (accumulator, currentValue) => accumulator + currentValue[metric],
+      0,
+    ) / array.length
+  );
+}
+
+function prettyMetric(metric: string) {
+  return metric
+    .toString()
+    .replaceAll("_", " ")
+    .split(" ")
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+export type LineChartData<T extends ChartData> = {
   date: string;
 } & T;
 
-export interface LineChartProps<T extends Record<string, number>> {
+export interface LineChartProps<T extends ChartData> {
   data: LineChartData<T>[];
   // type of string array as all strings from T
-  metrics: (keyof T)[];
+  metrics: {
+    name: keyof ChartData;
+    sum: boolean;
+    unit: string;
+  }[];
 }
 
-export default function LineChart<T extends Record<string, number>>({
+export default function LineChart<T extends ChartData>({
   data,
   metrics,
 }: LineChartProps<T>) {
@@ -59,11 +70,15 @@ export default function LineChart<T extends Record<string, number>>({
           {...metrics.map((metric, i) => (
             <Tab key={i} className="p-4 sm:p-6 text-left">
               <p className="text-sm sm:text-base">
-                {metric.toString().replaceAll("_", " ").split(" ").map((word) => word[0].toUpperCase() + word.slice(1)).join(" ")
-                }
+                {prettyMetric(metric.name)}
               </p>
               <Metric className="mt-2 text-inherit">
-                {sumArray(data, metric as string)}
+                {numberFormatter(
+                  metric.sum
+                    ? sumArray(data, metric.name)
+                    : averageArray(data, metric.name),
+                )}
+                {metric.unit}
               </Metric>
             </Tab>
           ))}
@@ -75,9 +90,9 @@ export default function LineChart<T extends Record<string, number>>({
                 className="h-80 mt-10"
                 data={data}
                 index={"date"}
-                categories={[metric as string]}
+                categories={[metric.name]}
                 colors={["blue"]}
-                valueFormatter={numberFormatter}
+                valueFormatter={(v) => numberFormatter(v) + metric.unit}
                 showLegend={false}
                 yAxisWidth={50}
               />

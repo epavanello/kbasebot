@@ -2,19 +2,18 @@
 
 import React from "react";
 import useSWR from "swr";
-import { cn, fetcher } from "@/lib/utils";
+import { bytesToMb, cn, fetcher } from "@/lib/utils";
 import StatCard from "@/components/ui/stats-card";
 import { gradients } from "@/style/gradients";
 import LineChart from "@/components/charts/linechart";
-import { number, string } from "zod";
 
 const ChatbotAnalytics = ({ chatbot_id }: { chatbot_id: string }) => {
   const { data } = useSWR<{
     timeseries: {
       results: {
         date: string;
-        visitors: number;
-        visit_duration: number;
+        visitors: number | null;
+        visit_duration: number | null;
       }[];
     };
   }>(`/api/chatbots/analytics?chatbot_id=${chatbot_id}`, fetcher);
@@ -64,11 +63,22 @@ const ChatbotAnalytics = ({ chatbot_id }: { chatbot_id: string }) => {
               month: "short",
               day: "numeric",
             }),
-            visitors: result.visitors,
-            visit_duration: result.visit_duration,
+            visitors: result.visitors || 0,
+            visit_duration: result.visit_duration || 0,
           })) || []
         }
-        metrics={["visitors", "visit_duration"]}
+        metrics={[
+          {
+            name: "visitors",
+            sum: true,
+            unit: "",
+          },
+          {
+            name: "visit_duration",
+            sum: false,
+            unit: "s",
+          },
+        ]}
       />
     </div>
   );

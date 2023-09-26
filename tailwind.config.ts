@@ -53,7 +53,7 @@ module.exports = {
             faint: "#eff6ff", // blue-50
             muted: "#bfdbfe", // blue-200
             subtle: "#60a5fa", // blue-400
-            DEFAULT: "#3b82f6", // blue-500
+            DEFAULT: "hsl(var(--primary))", // blue-500
             emphasis: "#1d4ed8", // blue-700
             inverted: "#ffffff", // white
           },
@@ -83,7 +83,7 @@ module.exports = {
             faint: "#0B1229", // custom
             muted: "#172554", // blue-950
             subtle: "#1e40af", // blue-800
-            DEFAULT: "#3b82f6", // blue-500
+            DEFAULT: "hsl(var(--primary))", // blue-500
             emphasis: "#60a5fa", // blue-400
             inverted: "#030712", // gray-950
           },
@@ -158,5 +158,34 @@ module.exports = {
       },
     },
   },
+  safelist: [
+    {
+      pattern:
+        /^(bg-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+      variants: ["hover", "ui-selected"],
+    },
+    {
+      pattern:
+        /^(text-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+      variants: ["hover", "ui-selected"],
+    },
+    {
+      pattern:
+        /^(border-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+      variants: ["hover", "ui-selected"],
+    },
+    {
+      pattern:
+        /^(ring-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+    },
+    {
+      pattern:
+        /^(stroke-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+    },
+    {
+      pattern:
+        /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+    },
+  ],
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 };
