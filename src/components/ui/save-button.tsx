@@ -14,38 +14,42 @@ interface SaveButtonProps extends React.ComponentProps<"div"> {
   showText?: false;
   onSave?: () => void;
 }
-const SaveButton: FC<SaveButtonProps> = ({
-  className,
-  variant = "ghost",
-  showText = false,
-  size = "sm",
-  onSave,
-}) => {
-  const [isSaved, setIsSaved] = useBooleanTimeout();
+const SaveButton = React.forwardRef<
+  React.ElementRef<typeof Button>,
+  React.ComponentPropsWithoutRef<typeof Button> & SaveButtonProps
+>(
+  (
+    { className, variant = "ghost", showText = false, size = "sm", onSave },
+    ref,
+  ) => {
+    const [isSaved, setIsSaved] = useBooleanTimeout();
 
-  const handleOnSave = () => {
-    setIsSaved();
-    onSave?.();
-  };
+    const handleOnSave = () => {
+      setIsSaved();
+      onSave?.();
+    };
 
-  return (
-    <Button
-      className={cn(className || "")}
-      variant={variant as any}
-      size={size as any}
-      onClick={handleOnSave}
-    >
-      {isSaved ? <CheckIcon /> : <Icon icon="ion:save-outline" />}
-      <span
-        className={cn({
-          "sr-only": !showText,
-          "ml-1": showText,
-        })}
+    return (
+      <Button
+        ref={ref}
+        className={cn(className || "")}
+        variant={variant as any}
+        size={size as any}
+        onClick={handleOnSave}
       >
-        Save
-      </span>
-    </Button>
-  );
-};
+        {isSaved ? <CheckIcon /> : <Icon icon="ion:save-outline" />}
+        <span
+          className={cn({
+            "sr-only": !showText,
+            "ml-1": showText,
+          })}
+        >
+          Save
+        </span>
+      </Button>
+    );
+  },
+);
+SaveButton.displayName = "SaveButton";
 
 export default SaveButton;

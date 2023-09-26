@@ -27,12 +27,20 @@ import { Chatbot, Conversation } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SaveButton from "@/components/ui/save-button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plan } from "@/lib/permissions/plans";
 
 const Settings = () => {
   const [chatbot, setChatbot] = useState<
     (Chatbot & { conversations: Conversation[] }) | null
   >(null);
-  const { supabase } = useSupabaseAuth();
+  const { supabase, subscription } = useSupabaseAuth();
   const router = useRouter();
   const { toast } = useToast();
   const { chatbot_id } = useParams();
@@ -62,15 +70,13 @@ const Settings = () => {
   const [updating, setUpdating] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const updateChatBot = async () => {
-    if (!chatbot || !chatbotName) return;
+  const updateChatBot = async (values: Partial<Chatbot>) => {
+    if (!chatbot || Object.keys(values).length === 0) return;
     setUpdating(true);
     try {
       await supabase
         .from("chatbots")
-        .update({
-          name: chatbotName,
-        })
+        .update(values)
         .eq("id", chatbot.id)
         .throwOnError();
 
@@ -123,7 +129,7 @@ const Settings = () => {
     }
   };
 
-  if (loading && !chatbot) return <LoadingIcon />;
+  if (loading || !chatbot) return <LoadingIcon />;
 
   return (
     <DashboardShell className="container gap-0 mt-10">
@@ -148,20 +154,54 @@ const Settings = () => {
                     onChange={(e) => setChatbotName(e.target.value)}
                     size={20}
                   />
-                  <SaveButton onSave={updateChatBot} />
+                  <SaveButton
+                    disabled={!chatbotName.trim()}
+                    onSave={() => updateChatBot({ name: chatbotName })}
+                  />
                 </div>
+              </div>
+              <div>
+                <Label htmlFor="model">Model</Label>
+                <div className="flex flex-row items-end gap-2">
+                  <Select
+                    value={chatbot.model}
+                    onValueChange={(value) => updateChatBot({ model: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="gpt-3.5-turbo">GPT 3.5</SelectItem>
+                      <SelectItem
+                        value="gpt-4"
+                        disabled={subscription?.plan !== Plan.PRO}
+                      >
+                        GPT 4
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <p className={cn("text-xs text-muted-foreground mt-2")}>
+                  GPT 4 model is only available for pro users
+                </p>
               </div>
               <div>
                 <Label htmlFor="id">Chatbot ID</Label>
                 <div className="flex flex-row items-end gap-2">
-                  <Input id="id" value={chatbot?.id} readOnly className="text-xs" size={33} />
-                  <CopyButton text={chatbot?.id || ""} />
+                  <Input
+                    id="id"
+                    value={chatbot.id}
+                    readOnly
+                    className="text-xs"
+                    size={33}
+                  />
+                  <CopyButton text={chatbot.id} />
                 </div>
               </div>
               <div className=" flex relative w-full justify-start gap-2 items-center">
                 <p className="text-gray-700 font-medium text-sm">Created at</p>
                 <p className="rounded-lg text-gray-700 text-xs">
-                  {formatDate(chatbot?.created_at)}
+                  {formatDate(chatbot.created_at)}
                 </p>
               </div>
             </div>
