@@ -63,5 +63,10 @@ export const menus = {
       href: `/app/chatbots/${chatbotId}/settings`,
       icon: "gala:settings",
     },
+    {
+      title: "Integrations",
+      href: `/app/chatbots/${chatbotId}/integrations`,
+      icon: "fluent-mdl2:plug-disconnected",
+    },
   ],
 };
