@@ -27,7 +27,7 @@ const Page = async ({
         </Link>
       </DashboardHeader>
 
-      <div className="w-full flex flex-1 overflow-auto sm:container">
+      <div className="w-full flex flex-1 sm:container">
         <PublicChatUi noCloseBtn settings={settings} chatbot_id={chatbot_id} />
       </div>
     </DashboardShell>

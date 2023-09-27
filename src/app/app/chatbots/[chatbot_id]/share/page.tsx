@@ -21,7 +21,17 @@ const CodeBlock = ({ children }) => (
   </pre>
 );
 
-const CardBlock = ({ title, code, desc, footer }) => (
+const CardBlock = ({
+  title,
+  code,
+  desc,
+  footer,
+}: {
+  title: string;
+  code: string;
+  desc?: string;
+  footer?: React.ReactNode;
+}) => (
   <Card>
     <CardHeader>
       <CardTitle>{title}</CardTitle>
@@ -62,10 +72,10 @@ src="${NEXT_PUBLIC_URL}/embed.js">
 </script>`;
 
   return (
-    <DashboardShell className="container">
+    <DashboardShell className="container max-w-2xl">
       <DashboardHeader heading={"Share"} />
 
-      <div className="flex flex-col gap-8 px-0 md:px-24 lg:px-36">
+      <div className="flex flex-col gap-8">
         <CardBlock
           title={"Add to your website"}
           desc={"Paste this code to the end of the body of your website"}

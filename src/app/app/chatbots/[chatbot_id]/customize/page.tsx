@@ -18,7 +18,7 @@ const Customize = async ({ params }: CustomizeProps) => {
   const settings = await getChatbotSettings(chatbot_id, cookies);
 
   return (
-    <DashboardShell className="container mx-auto h-full max-w-2xl">
+    <DashboardShell className="container mx-auto max-w-2xl">
       <DashboardHeader heading={"Customize"} />
 
       <CustomizeForm chatbotId={chatbot_id} settings={settings} />

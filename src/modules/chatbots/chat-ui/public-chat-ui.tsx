@@ -57,7 +57,7 @@ const PublicChatUi = ({
   return (
     <div
       className={cn(
-        "h-full flex flex-col max-w-2xl rounded-2xl border overflow-hidden m-auto bg-background w-full",
+        "h-full min-h-[400px] flex flex-col max-w-2xl rounded-2xl border overflow-hidden m-auto bg-background w-full",
         className,
       )}
     >

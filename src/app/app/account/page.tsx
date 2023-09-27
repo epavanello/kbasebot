@@ -37,10 +37,11 @@ const Page = () => {
   }, [supabase, user]);
 
   return (
-    <DashboardShell className="container gap-0 mt-4">
+    <DashboardShell className="container">
       <DashboardHeader
         heading={"Accounts"}
         text="Manage your account here"
+        className="justify-between items-start"
       ></DashboardHeader>
 
       <div className="flex flex-col gap-10 max-w-4xl">

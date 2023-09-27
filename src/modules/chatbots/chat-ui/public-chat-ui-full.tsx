@@ -68,7 +68,7 @@ const PublicChatUiFull = ({
         </div>
 
         <Bubble
-          className="pointer-events-auto p-2 sm:p-0"
+          className="p-2 sm:p-0"
           settings={settings}
           isOpen={noCloseBtn ? false : isOpen}
           onOpen={() => setIsOpen(true)}
