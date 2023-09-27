@@ -8,6 +8,7 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { Icon } from "@/components/ui/icons";
 import { getRandomGradient } from "@/style/gradients";
 import { Chatbot } from "@/lib/supabase";
+import { prettifyGPTModelName } from "./helpers";
 
 const ChatbotList = ({ chatbots = [] }: { chatbots: Chatbot[] }) => {
   return (
@@ -30,6 +31,7 @@ const ChatbotList = ({ chatbots = [] }: { chatbots: Chatbot[] }) => {
                         icon={"fluent:bot-sparkle-24-filled"}
                         className="text-7xl"
                       />
+                      <span className="absolute right-2 top-2 z-10 text-[10px] text-white">{prettifyGPTModelName(bot.model)}</span>
                     </AspectRatio>
                   </CardHeader>
                 </Link>

@@ -57,3 +57,15 @@ export const truncateText = (
 export const getChatbotPublicId = (id: string, host = NEXT_PUBLIC_URL) => {
   return `${host}/c/${id}`;
 };
+
+export type GPTModel = "gpt-3.5-turbo" | "gpt-4";
+export const GPTModels: GPTModel[] = ["gpt-3.5-turbo", "gpt-4"];
+
+export const prettifyGPTModelName = (name: GPTModel | string) => {
+  switch (GPTModels.includes(name as GPTModel) ? name : "gpt-3.5-turbo") {
+    case "gpt-3.5-turbo":
+      return "GPT 3.5 Turbo";
+    case "gpt-4":
+      return "GPT 4";
+  }
+};
