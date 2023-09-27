@@ -27,12 +27,6 @@ export const MobileNav = ({ items, children }: MobileNavProps) => {
       )}
     >
       <div className="relative z-20 grid gap-6 rounded-md bg-background p-4 shadow-md border">
-        <Link
-          href="/Users/rezwanferdousniloy/code/my-opensource/platform-kit-supabase/public"
-          className="flex justify-center items-center space-x-2 justify-center"
-        >
-          Supabase
-        </Link>
         <nav className="grid grid-flow-row auto-rows-max text-sm">
           {items.map((item, index) => (
             <Link
