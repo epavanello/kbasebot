@@ -1,3 +1,4 @@
+import { prettifyGPTModelName } from "@/modules/chatbots/helpers";
 import {
   STRIPE_PRICE_ID_BASIC,
   STRIPE_PRICE_ID_BASIC_YEARLY,
@@ -21,14 +22,14 @@ export interface PlanDetails {
   description?: string;
   priceText?: string;
   prices: Price[];
-  features: string[];
+  features: { enabled: boolean; feature: string }[];
   highlight?: boolean;
 }
 
 const commonFeatures = [
-  "Upload multiple files",
-  "View chat history",
-  "Embed on your website",
+  { enabled: true, feature: "Upload multiple files" },
+  { enabled: true, feature: "View chat history" },
+  { enabled: true, feature: "Embed on your website" },
 ];
 
 export const plans: PlanDetails[] = [
@@ -38,8 +39,12 @@ export const plans: PlanDetails[] = [
     priceText: "Start Free",
     prices: [],
     features: [
-      "1 Chatbot",
-      `${PLAN_PERMISSIONS[Plan.FREE].maxMessages} messages/month`,
+      { enabled: true, feature: "1 Chatbot" },
+      {
+        enabled: true,
+        feature: `${PLAN_PERMISSIONS[Plan.FREE].maxMessages} messages/month`,
+      },
+      { enabled: false, feature: `${prettifyGPTModelName("gpt-4")}` },
       ...commonFeatures,
     ],
   },
@@ -55,8 +60,14 @@ export const plans: PlanDetails[] = [
       },
     ],
     features: [
-      "3 Chatbots",
-      `${PLAN_PERMISSIONS[Plan.BASIC].maxMessages / 1000}k messages/month`,
+      { enabled: true, feature: "3 Chatbots" },
+      {
+        enabled: true,
+        feature: `${
+          PLAN_PERMISSIONS[Plan.BASIC].maxMessages / 1000
+        }k messages/month`,
+      },
+      { enabled: false, feature: `${prettifyGPTModelName("gpt-4")}` },
       ...commonFeatures,
     ],
   },
@@ -76,8 +87,14 @@ export const plans: PlanDetails[] = [
       },
     ],
     features: [
-      "10 Chatbots",
-      `${PLAN_PERMISSIONS[Plan.PRO].maxMessages / 1000}k messages/month`,
+      { enabled: true, feature: "10 Chatbots" },
+      {
+        enabled: true,
+        feature: `${
+          PLAN_PERMISSIONS[Plan.PRO].maxMessages / 1000
+        }k messages/month`,
+      },
+      { enabled: true, feature: `${prettifyGPTModelName("gpt-4")} ✨` },
       ...commonFeatures,
     ],
     highlight: true,
@@ -88,8 +105,9 @@ export const plans: PlanDetails[] = [
     priceText: "Let's talk",
     prices: [],
     features: [
-      "Unlimited Chatbots",
-      "Unlimited messages/month",
+      { enabled: true, feature: "Unlimited Chatbots" },
+      { enabled: true, feature: "Unlimited messages/month" },
+      { enabled: true, feature: `${prettifyGPTModelName("gpt-4")} ✨` },
       ...commonFeatures,
     ],
   },

@@ -35,6 +35,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plan } from "@/lib/permissions/plans";
+import { prettifyGPTModelName } from "@/modules/chatbots/helpers";
 
 const Settings = () => {
   const [chatbot, setChatbot] = useState<
@@ -168,12 +169,14 @@ const Settings = () => {
                       <SelectValue placeholder="Select a model" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="gpt-3.5-turbo">GPT 3.5</SelectItem>
+                      <SelectItem value="gpt-3.5-turbo">
+                        {prettifyGPTModelName("gpt-3.5-turbo")}
+                      </SelectItem>
                       <SelectItem
                         value="gpt-4"
                         disabled={subscription?.plan !== Plan.PRO}
                       >
-                        GPT 4
+                        {prettifyGPTModelName("gpt-4")}
                       </SelectItem>
                     </SelectContent>
                   </Select>

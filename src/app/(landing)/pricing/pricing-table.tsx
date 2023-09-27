@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, XCircle } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { plans, type BillingInterval } from "@/lib/stripe";
 import { useSupabaseAuth } from "@/lib/store/use-user";
@@ -160,9 +160,9 @@ export default function PricingTable() {
                       <div className="p-6">
                         <h2 className="text-2xl leading-6 font-semibold text-gray-500">
                           {plan.name}
-                            <span className="text-xs font-medium text-gray-500 ml-2">
-                              {info}
-                            </span>
+                          <span className="text-xs font-medium text-gray-500 ml-2">
+                            {info}
+                          </span>
                         </h2>
                         {plan.description && (
                           <p className="mt-4 text-zinc-600 text-md">
@@ -207,7 +207,12 @@ export default function PricingTable() {
                                   key={i}
                                   className="flex items-center gap-1 text-sm"
                                 >
-                                  <CheckCircle2 className="w-4 h-4" /> {item}
+                                  {item.enabled ? (
+                                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                  ) : (
+                                    <XCircle className="w-4 h-4 text-destructive" />
+                                  )}
+                                  {item.feature}
                                 </li>
                               ))}
                           </ul>
