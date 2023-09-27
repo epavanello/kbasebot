@@ -18,7 +18,7 @@ const ChatbotIndex = () => {
       <DashboardHeader
         heading={sayGreeting()}
         text="Manage your chatbots here"
-        className="flex-col md:flex-row"
+        className="justify-between items-start"
       >
         <NewChatbotModal chatbotsCreated={chatbots.length} />
       </DashboardHeader>

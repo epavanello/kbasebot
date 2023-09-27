@@ -73,6 +73,7 @@ export function UploadContent({
   }));
 
   useEffect(() => {
+    resetDatasource();
     if (externalChatbotId) {
       setLoading(true);
       supabase
@@ -309,10 +310,7 @@ export function UploadContent({
 
   return (
     <form onSubmit={onSubmit} className="flex-1">
-      <Tabs
-        defaultValue="text"
-        className="flex flex-col md:flex-row"
-      >
+      <Tabs defaultValue="text" className="flex flex-col md:flex-row">
         <TabsList className="flex flex-col sm:flex-row md:flex-col h-full gap-2 items-stretch overflow-auto">
           {[
             {

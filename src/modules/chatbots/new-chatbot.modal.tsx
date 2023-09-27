@@ -47,7 +47,7 @@ const NewChatbotModal = ({ chatbotsCreated }: { chatbotsCreated: number }) => {
       dissmissOnEsc={true}
     >
       <DialogTrigger
-        className={cn(buttonVariants({ variant: "default" }), "mt-4")}
+        className={cn(buttonVariants({ variant: "default" }), "w-full sm:w-auto")}
       >
         New chatbot
       </DialogTrigger>
@@ -55,7 +55,7 @@ const NewChatbotModal = ({ chatbotsCreated }: { chatbotsCreated: number }) => {
       <DialogContent
         onPointerDownOutside={(e) => e.preventDefault()}
         overlayClass="backdrop-blur-3xl bg-white\/90 bg-center bg-no-repeat bg-contain"
-        className="overflow-visible md:max-w-4xl"
+        className="overflow-auto md:max-w-4xl max-h-full"
       >
         <div className="w-full m-auto">
           <h1 className="mb-2 text-4xl font-black">Create New Chatbot</h1>
