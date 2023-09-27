@@ -28,7 +28,7 @@ export function Bubble({
       })}
     >
       <button
-        className="mt-2 w-14 h-14 rounded-full flex items-center justify-center overflow-hidden hover:scale-110 transition-all duration-200 ease-in-out"
+        className="pointer-events-auto mt-2 w-14 h-14 rounded-full flex items-center justify-center overflow-hidden hover:scale-110 transition-all duration-200 ease-in-out"
         style={{
           backgroundColor: settings.primary_color,
           boxShadow:

@@ -32,10 +32,21 @@ export function MainNav({ items, children }: MainNavProps) {
   }, [pathname]);
 
   return (
-    <div className="border-b">
+    <div className="border-b bg-background">
       <div className="flex h-16 items-center px-4">
         <div className="px-2 flex flex-1 gap-6 md:gap-10">
-          <Logo href="/app" />
+          <button
+            className="flex items-center space-x-2 md:hidden"
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+          >
+            {showMobileMenu ? (
+              <Icon icon={"majesticons:close"} />
+            ) : (
+              <Icon icon={"ep:menu"} />
+            )}
+            <span className="sr-only">Menu</span>
+          </button>
+          <Logo href="/app"  className="hidden sm:block"/>
           {items?.length ? (
             <nav className="hidden gap-6 md:flex flex-1 justify-center">
               {items?.map(
@@ -58,17 +69,6 @@ export function MainNav({ items, children }: MainNavProps) {
               )}
             </nav>
           ) : null}
-          <button
-            className="flex items-center space-x-2 md:hidden"
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
-          >
-            {showMobileMenu ? (
-              <Icon icon={"majesticons:close"} />
-            ) : (
-              <Icon icon={"ep:menu"} />
-            )}
-            <span className="font-bold">Menu</span>
-          </button>
           {showMobileMenu && items && (
             <MobileNav items={items}>{children}</MobileNav>
           )}

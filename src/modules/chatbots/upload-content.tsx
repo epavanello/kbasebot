@@ -73,6 +73,7 @@ export function UploadContent({
   }));
 
   useEffect(() => {
+    resetDatasource();
     if (externalChatbotId) {
       setLoading(true);
       supabase
@@ -308,86 +309,80 @@ export function UploadContent({
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex-1 overflow-auto">
-      <ScrollArea className="mt-4">
-        <Tabs
-          orientation={"vertical"}
-          defaultValue="text"
-          className="flex w-full"
-        >
-          <TabsList className="flex flex-col py-4 h-full gap-2 items-start">
-            {[
-              {
-                label: "Text",
-                value: "text",
-                icon: "fluent:textbox-16-regular",
-                desc: `${text.content.length} Chars`,
-              },
-              {
-                label: "Files",
-                value: "files",
-                icon: "material-symbols:file-copy-outline",
-                desc: `${totalDocChars} chars`,
-              },
-              {
-                label: "Websites",
-                value: "websites",
-                icon: "fluent-mdl2:website",
-                desc: `${totalUrlChars} chars`,
-              },
-              {
-                label: "Notion",
-                value: "notion",
-                icon: "logos:notion-icon",
-                desc: `${totalNotionChars} chars`,
-              },
-            ].map((item) => (
-              <TabsTrigger
-                className="w-full justify-start items-start text-sm"
-                key={item.value}
-                value={item.value}
-              >
-                <Icon icon={item.icon} className="mr-1 mt-1" />
-                <div className="flex flex-col items-start">
-                  <span>{item.label}</span>
-                  <small className="text-[10px]">{item.desc}</small>
-                </div>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
+    <form onSubmit={onSubmit} className="flex-1">
+      <Tabs defaultValue="text" className="flex flex-col md:flex-row">
+        <TabsList className="flex flex-col sm:flex-row md:flex-col h-full gap-2 items-stretch overflow-auto">
           {[
             {
-              Comp: TextSource,
+              label: "Text",
               value: "text",
-              props: { chatbotId: chatbot?.id || "" },
+              icon: "fluent:textbox-16-regular",
+              desc: `${text.content.length} Chars`,
             },
             {
-              Comp: DocumentUploader,
+              label: "Files",
               value: "files",
-              props: { chatbotId: chatbot?.id || "" },
+              icon: "material-symbols:file-copy-outline",
+              desc: `${totalDocChars} chars`,
             },
             {
-              Comp: WebUploader,
+              label: "Websites",
               value: "websites",
-              props: { chatbotId: chatbot?.id || "" },
+              icon: "fluent-mdl2:website",
+              desc: `${totalUrlChars} chars`,
             },
             {
-              Comp: NotionUploader,
+              label: "Notion",
               value: "notion",
-              props: { chatbotId: chatbot?.id || "" },
+              icon: "logos:notion-icon",
+              desc: `${totalNotionChars} chars`,
             },
           ].map((item) => (
-            <TabsContent
+            <TabsTrigger
+              className="flex-1 justify-center items-start text-sm shrink-0"
               key={item.value}
-              className="flex-1 p-4 border-secondary border mt-0 ml-2"
               value={item.value}
             >
-              <item.Comp {...item.props} />
-            </TabsContent>
+              <Icon icon={item.icon} className="mr-1 mt-1" />
+              <div className="flex flex-col items-start">
+                <span>{item.label}</span>
+                <small className="text-[10px]">{item.desc}</small>
+              </div>
+            </TabsTrigger>
           ))}
-        </Tabs>
-      </ScrollArea>
+        </TabsList>
+
+        {[
+          {
+            Comp: TextSource,
+            value: "text",
+            props: { chatbotId: chatbot?.id || "" },
+          },
+          {
+            Comp: DocumentUploader,
+            value: "files",
+            props: { chatbotId: chatbot?.id || "" },
+          },
+          {
+            Comp: WebUploader,
+            value: "websites",
+            props: { chatbotId: chatbot?.id || "" },
+          },
+          {
+            Comp: NotionUploader,
+            value: "notion",
+            props: { chatbotId: chatbot?.id || "" },
+          },
+        ].map((item) => (
+          <TabsContent
+            key={item.value}
+            className="flex-1 p-4 border-secondary border mt-0 ml-2"
+            value={item.value}
+          >
+            <item.Comp {...item.props} />
+          </TabsContent>
+        ))}
+      </Tabs>
 
       <div className="flex justify-center gap-1 my-2">
         {showGoBack && (

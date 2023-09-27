@@ -14,6 +14,7 @@ export default function Logo({
   width?: number;
   height?: number;
   className?: string;
+  href?: string;
 }) {
   return (
     <Link href={href}>

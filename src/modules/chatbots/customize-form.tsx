@@ -7,6 +7,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import ColorPicker from "@/components/pickers/color.picker";
 import {
@@ -122,14 +123,14 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
   const formData = form.watch();
 
   return (
-    <div className="flex gap-2 flex-1 overflow-hidden">
+    <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-1/2 h-full">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card className="h-full flex flex-col">
-            <CardHeader className="border-b">
-              {/*<CardTitle>Add logo</CardTitle>*/}
+            <CardHeader>
+              <CardTitle>Chat interface</CardTitle>
             </CardHeader>
-            <CardContent className="flex gap-4 flex-col overflow-y-scroll flex-1">
+            <CardContent className="flex gap-4 flex-col">
               <FormField
                 control={form.control}
                 name="display_name"
@@ -335,28 +336,24 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
           </Card>
         </form>
       </Form>
-      <div className="w-1/2 h-full container mx-auto relative">
-        <PublicChatUiFull
-          externalSettings={
-            settings
-              ? { ...settings, ...formData }
-              : {
-                  chatbot_background: null,
-                  chatbot_id: chatbotId,
-                  id: "",
-                  user_id: user?.id || "",
-                  theme: null,
-                  user_message_background: null,
-                  display_name: formData.display_name || null,
-                  ...formData,
-                }
-          }
-          noCloseBtn
-          absolute
-          chatbot_id={chatbotId}
-        />
-      </div>
-    </div>
+      <PublicChatUiFull
+        externalSettings={
+          settings
+            ? { ...settings, ...formData }
+            : {
+                chatbot_background: null,
+                chatbot_id: chatbotId,
+                id: "",
+                user_id: user?.id || "",
+                theme: null,
+                user_message_background: null,
+                display_name: formData.display_name || null,
+                ...formData,
+              }
+        }
+        chatbot_id={chatbotId}
+      />
+    </>
   );
 };
 

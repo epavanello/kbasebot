@@ -12,13 +12,15 @@ const PublicChatUiFull = ({
   noCloseBtn,
   absolute,
   chatbot_id,
+  defaultOpen = false,
 }: {
   externalSettings?: Settings | null;
   noCloseBtn?: boolean;
   absolute?: boolean;
   chatbot_id: string;
+  defaultOpen?: boolean;
 }) => {
-  const [isOpen, setIsOpen] = React.useState(noCloseBtn ? true : false);
+  const [isOpen, setIsOpen] = React.useState(noCloseBtn ? true : defaultOpen);
   const [settings, setSettings] = React.useState<Settings | null>(
     externalSettings,
   );
@@ -66,7 +68,7 @@ const PublicChatUiFull = ({
         </div>
 
         <Bubble
-          className="pointer-events-auto p-2 sm:p-0"
+          className="p-2 sm:p-0"
           settings={settings}
           isOpen={noCloseBtn ? false : isOpen}
           onOpen={() => setIsOpen(true)}

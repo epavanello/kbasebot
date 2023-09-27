@@ -117,9 +117,9 @@ export default function PricingTable() {
                     className={cn(
                       "w-full rounded-xl pt-6 dark:shadow-slate-700",
                       {
-                        "border-blue-50 bg-zinc-50 dark:bg-zinc-900 border-1 shadow-md":
+                        "border-blue-50 bg-gray-500/10 dark:bg-gray-200/10 border-1 shadow-md":
                           highlight,
-                        "shadow-sm": !highlight,
+                        "shadow-sm  bg-gray-500/5 dark:bg-gray-200/5": !highlight,
                         "border border-primary": isActive,
                       },
                     )}

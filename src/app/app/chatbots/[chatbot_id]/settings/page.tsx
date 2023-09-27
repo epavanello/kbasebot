@@ -130,18 +130,15 @@ const Settings = () => {
   if (loading || !chatbot) return <LoadingIcon />;
 
   return (
-    <DashboardShell className="container gap-0 mt-10">
-      <DashboardHeader
-        heading={"Chatbot Settings"}
-        className="flex-col md:flex-row justify-center my-4 gap-6"
-      />
-      <div className="flex flex-col gap-8 px-0 md:px-24 lg:px-36 mb-20">
+    <DashboardShell className="container max-w-xl">
+      <DashboardHeader heading={"Settings"} />
+      <div className="flex flex-col gap-8">
         <Card>
           <CardHeader>
-            <CardTitle>Chatbot Settings</CardTitle>
+            <CardTitle>Chatbot settings</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className=" flex flex-col relative w-full justify-start gap-2 items-start">
+            <div className="flex flex-col relative w-full justify-start gap-2 items-start">
               <div>
                 <Label htmlFor="name">Name</Label>
                 <div className="flex flex-row items-end gap-2">
@@ -182,7 +179,7 @@ const Settings = () => {
                   </Select>
                 </div>
                 <p className={cn("text-xs text-muted-foreground mt-2")}>
-                  GPT 4 model is only available for pro users
+                  GPT44 model is only available for pro users
                 </p>
               </div>
               <div>
