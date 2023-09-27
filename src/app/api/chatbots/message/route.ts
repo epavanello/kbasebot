@@ -35,14 +35,14 @@ export async function POST(req: NextRequest) {
     if (!userPrompt?.content?.length)
       throw new Error("Please write a question");
 
-    const ownerId = (
+    let { user_id: ownerId, model } = (
       await supabaseAdminClient
         .from("chatbots")
-        .select("user_id")
+        .select("user_id, model")
         .eq("id", chatbotId)
         .single()
         .throwOnError()
-    ).data!.user_id;
+    ).data!;
 
     const ownerSubscription = await getSubscription(
       supabaseAdminClient,
@@ -50,6 +50,13 @@ export async function POST(req: NextRequest) {
     );
 
     const permission = getPermissions(ownerSubscription);
+
+    if (
+      !["gpt-3.5-turbo", "gpt-4"].includes(model) ||
+      permission.plan === "free"
+    ) {
+      model = "gpt-3.5-turbo";
+    }
 
     if (
       (await countMonthlyConversationUsage(supabaseAdminClient, ownerId)) >
@@ -86,7 +93,7 @@ export async function POST(req: NextRequest) {
     const prompt: ChatCompletionRequestMessage[] = [
       {
         role: "system",
-        content: templates.basic({ context }),
+        content: templates.basic({ context, model }),
       },
     ];
 
@@ -107,7 +114,7 @@ export async function POST(req: NextRequest) {
 
     // Ask OpenAI for a streaming chat completion given the prompt
     const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
+      model,
       stream: true,
       messages: [
         ...prompt,

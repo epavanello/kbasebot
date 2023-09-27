@@ -80,15 +80,12 @@ const Settings = () => {
         .eq("id", chatbot.id)
         .throwOnError();
 
-      setChatbot({
-        ...chatbot,
-        name: chatbotName,
-      });
-
       toast({
         variant: "default",
         title: "Updated Successfully",
       });
+
+      setChatbot({ ...chatbot, ...values });
     } catch (e) {
       toast({
         variant: "destructive",
