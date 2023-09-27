@@ -46,10 +46,10 @@ const ConversationsLogs = ({
   );
 
   return (
-    <div className="grid md:grid-cols-[300px_1fr] flex-1 overflow-auto">
+    <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] flex-1 overflow-auto">
       <ChatbotTheme primary_color={settings.primary_color} />
-      <ScrollArea className="h-full border-r">
-        <aside className="hidden w-[300px] flex-col gap-3 p-4 md:flex h-full overflow-auto">
+      <ScrollArea className="h-full border">
+        <aside className="w-full md:w-[300px] flex-col gap-3 p-4 flex h-full overflow-auto">
           {!!conversationsPerSession?.length &&
             conversationsPerSession.map((item) => {
               return (

@@ -12,13 +12,15 @@ const PublicChatUiFull = ({
   noCloseBtn,
   absolute,
   chatbot_id,
+  defaultOpen = false,
 }: {
   externalSettings?: Settings | null;
   noCloseBtn?: boolean;
   absolute?: boolean;
   chatbot_id: string;
+  defaultOpen?: boolean;
 }) => {
-  const [isOpen, setIsOpen] = React.useState(noCloseBtn ? true : false);
+  const [isOpen, setIsOpen] = React.useState(noCloseBtn ? true : defaultOpen);
   const [settings, setSettings] = React.useState<Settings | null>(
     externalSettings,
   );

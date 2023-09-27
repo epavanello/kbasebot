@@ -64,7 +64,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
   return (
     <div className="flex flex-col gap-4 items-center">
       <Tabs defaultValue="fromUrl" className="w-full">
-        <TabsList>
+        <TabsList className="flex-col sm:flex-row w-full sm:w-auto">
           <TabsTrigger value="fromUrl">Scrape Website</TabsTrigger>
           <TabsTrigger value="singleUrl">Single url</TabsTrigger>
           <TabsTrigger value="fromSitemap">Load from Sitemap</TabsTrigger>

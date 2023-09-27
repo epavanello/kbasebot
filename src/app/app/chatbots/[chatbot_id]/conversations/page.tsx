@@ -34,16 +34,15 @@ const Conversations = async ({
   const { chatbot_id } = params;
 
   const conversationsPerSession = (await getData(params?.chatbot_id)) || [];
-  const settings = (await getChatbotSettings(params?.chatbot_id, cookies)) || {};
+  const settings =
+    (await getChatbotSettings(params?.chatbot_id, cookies)) || {};
 
   const firstChatbotId = conversationsPerSession?.[0]?.chatbot_id || "";
 
   return (
-    <DashboardShell className="h-full">
+    <DashboardShell className="h-full pb-0">
       <DashboardHeader
         heading={`Conversation Histories (${conversationsPerSession.length})`}
-        text={""}
-        className="mt-6"
       />
 
       <ConversationsLogs

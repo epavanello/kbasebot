@@ -14,7 +14,7 @@ export function DashboardHeader({
   children,
 }: DashboardHeaderProps) {
   return (
-    <div className={cn("flex justify-between px-2", className || "")}>
+    <div className={cn("flex flex-col sm:flex-row justify-center items-center py-8 gap-6", className || "")}>
       <div className="grid gap-1">
         <h1 className="text-2xl font-bold tracking-wide">{heading}</h1>
         {text && <p className="text-neutral-400">{text}</p>}
