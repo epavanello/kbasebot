@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
 
         const actualSubscription = await getSubscription(
           supabaseClientAdmin,
-          user.id
+          user.id,
         );
 
         // cancel old subscription
@@ -143,7 +143,11 @@ export async function POST(request: NextRequest) {
           actualSubscription &&
           actualSubscription.subscription_id !== subscription.id
         ) {
-          await stripe.subscriptions.del(actualSubscription.subscription_id);
+          try {
+            await stripe.subscriptions.del(actualSubscription.subscription_id);
+          } catch (e) {
+            console.error(e);
+          }
         }
 
         const { error: errorUpsert } = await supabaseClientAdmin
