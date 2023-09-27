@@ -130,73 +130,80 @@ const Settings = () => {
   if (loading || !chatbot) return <LoadingIcon />;
 
   return (
-    <DashboardShell className="container">
-      <DashboardHeader heading={"Chatbot Settings"} />
-      <div className="flex flex-col gap-8 px-0 md:px-24 lg:px-36 mb-20">
-        <div className=" flex flex-col relative w-full justify-start gap-2 items-start">
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <div className="flex flex-row items-end gap-2">
-              <Input
-                id="name"
-                value={chatbotName}
-                disabled={loading || updating}
-                onChange={(e) => setChatbotName(e.target.value)}
-                size={20}
-              />
-              <SaveButton
-                disabled={!chatbotName.trim()}
-                onSave={() => updateChatBot({ name: chatbotName })}
-              />
-            </div>
-          </div>
-          <div>
-            <Label htmlFor="model">Model</Label>
-            <div className="flex flex-row items-end gap-2">
-              <Select
-                value={chatbot.model}
-                onValueChange={(value) => updateChatBot({ model: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a model" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="gpt-3.5-turbo">
-                    {prettifyGPTModelName("gpt-3.5-turbo")}
-                  </SelectItem>
-                  <SelectItem
-                    value="gpt-4"
-                    disabled={subscription?.plan !== Plan.PRO}
+    <DashboardShell className="container max-w-xl">
+      <DashboardHeader heading={"Settings"} />
+      <div className="flex flex-col gap-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Chatbot settings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col relative w-full justify-start gap-2 items-start">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <div className="flex flex-row items-end gap-2">
+                  <Input
+                    id="name"
+                    value={chatbotName}
+                    disabled={loading || updating}
+                    onChange={(e) => setChatbotName(e.target.value)}
+                    size={20}
+                  />
+                  <SaveButton
+                    disabled={!chatbotName.trim()}
+                    onSave={() => updateChatBot({ name: chatbotName })}
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="model">Model</Label>
+                <div className="flex flex-row items-end gap-2">
+                  <Select
+                    value={chatbot.model}
+                    onValueChange={(value) => updateChatBot({ model: value })}
                   >
-                    {prettifyGPTModelName("gpt-4")}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="gpt-3.5-turbo">
+                        {prettifyGPTModelName("gpt-3.5-turbo")}
+                      </SelectItem>
+                      <SelectItem
+                        value="gpt-4"
+                        disabled={subscription?.plan !== Plan.PRO}
+                      >
+                        {prettifyGPTModelName("gpt-4")}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <p className={cn("text-xs text-muted-foreground mt-2")}>
+                  GPT44 model is only available for pro users
+                </p>
+              </div>
+              <div>
+                <Label htmlFor="id">Chatbot ID</Label>
+                <div className="flex flex-row items-end gap-2">
+                  <Input
+                    id="id"
+                    value={chatbot.id}
+                    readOnly
+                    className="text-xs"
+                    size={33}
+                  />
+                  <CopyButton text={chatbot.id} />
+                </div>
+              </div>
+              <div className=" flex relative w-full justify-start gap-2 items-center">
+                <p className="text-gray-700 font-medium text-sm">Created at</p>
+                <p className="rounded-lg text-gray-700 text-xs">
+                  {formatDate(chatbot.created_at)}
+                </p>
+              </div>
             </div>
-            <p className={cn("text-xs text-muted-foreground mt-2")}>
-              GPT 4 model is only available for pro users
-            </p>
-          </div>
-          <div>
-            <Label htmlFor="id">Chatbot ID</Label>
-            <div className="flex flex-row items-end gap-2">
-              <Input
-                id="id"
-                value={chatbot.id}
-                readOnly
-                className="text-xs"
-                size={33}
-              />
-              <CopyButton text={chatbot.id} />
-            </div>
-          </div>
-          <div className=" flex relative w-full justify-start gap-2 items-center">
-            <p className="text-gray-700 font-medium text-sm">Created at</p>
-            <p className="rounded-lg text-gray-700 text-xs">
-              {formatDate(chatbot.created_at)}
-            </p>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         <Card className="border-red-300">
           <CardHeader>

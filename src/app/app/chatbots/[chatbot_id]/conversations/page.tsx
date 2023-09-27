@@ -42,7 +42,7 @@ const Conversations = async ({
   return (
     <DashboardShell className="h-full pb-0">
       <DashboardHeader
-        heading={`Conversation Histories (${conversationsPerSession.length})`}
+        heading={`Conversations (${conversationsPerSession.length})`}
       />
 
       <ConversationsLogs

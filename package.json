@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "run-p dev:*",
     "dev:contentlayer": "contentlayer dev",
-    "dev:app": "next dev",
+    "dev:app": "next dev -p 80",
     "dev:widget": "parcel watch widget/embed.ts --dist-dir public --no-source-maps",
     "build": "run-s build:widget build:app build:sitemap",
     "build:widget": "parcel build widget/embed.ts --dist-dir public --no-source-maps",

@@ -21,46 +21,54 @@ const testimonialToRender = [...testimonials, ...testimonials];
 const Testimonials = () => {
   const [scrollIndex, setScrollIndex] = useState(0);
   const ref = React.useRef<HTMLDivElement>(null);
+  const [manualScroll, setManualScroll] = React.useState(false);
 
   React.useEffect(() => {
-    if (ref.current) {
+    if (ref.current && !manualScroll) {
       const rect = ref.current.children
         .item(scrollIndex)
         ?.getBoundingClientRect();
-      const left = rect?.left || 0;
+
+      if (!rect) return;
+
+      const left = rect.left;
 
       ref.current.scrollBy({
         left: left - ref.current.clientWidth / 2 + rect.width / 2,
         behavior: "smooth",
       });
-      console.log(scrollIndex);
     }
-  }, [scrollIndex]);
+  }, [scrollIndex, manualScroll]);
 
   React.useEffect(() => {
-    if (ref.current) {
+    console.log(manualScroll);
+    if (ref.current && !manualScroll) {
       // find the first item with left greater than half of the width
-      const index = Array.from(ref.current.children).findIndex((child) => {
-        const rect = child.getBoundingClientRect();
-        return rect.left > ref.current!.clientWidth / 2;
-      });
+      const index =
+        Array.from(ref.current.children).findIndex((child) => {
+          const rect = child.getBoundingClientRect();
+          return rect.left > ref.current!.clientWidth / 2;
+        }) - 1;
 
       setScrollIndex(index === -1 ? 0 : index);
+      console.log("incrementing scroll index", index === -1 ? 0 : index);
 
-      const interval = setInterval(() => {
-        // increment only if the scroller is vertically visible
+      const incrementScrollIndex = () => {
         setScrollIndex((prev) => {
+          console.log("incrementing scroll index2", prev + 1);
           if (prev === testimonialToRender.length - 1) {
             return 0;
           }
           return prev + 1;
         });
-      }, 5000);
+      };
+
+      const interval = setInterval(incrementScrollIndex, 5000);
       return () => {
         clearInterval(interval);
       };
     }
-  }, []);
+  }, [manualScroll]);
 
   return (
     <div id="testimonials" className="pt-12 sm:pt-24">
@@ -68,7 +76,12 @@ const Testimonials = () => {
         Trusted by companies of all sizes
       </h1>
       <div className="testimonial">
-        <div className="scroller" ref={ref}>
+        <div
+          className="scroller"
+          ref={ref}
+          onTouchStart={() => setManualScroll(true)}
+          onTouchEnd={() => setManualScroll(false)}
+        >
           {testimonialToRender.map((testimonial, index) => (
             <div key={index} className="testimonial-item">
               <div className="testimonial-item__content">{testimonial}</div>

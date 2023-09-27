@@ -27,7 +27,7 @@ const ConversationsLogs = ({
 
   const [selectedConversationId, setSelectedConversationId] =
     useState(firstConversationId);
-    const chatArea = useRef<HTMLDivElement | null>(null);
+  const chatArea = useRef<HTMLDivElement | null>(null);
 
   // @ts-ignore
   const { data: conversations = [], isLoading: isDataLoading } = useQuery(
@@ -48,44 +48,44 @@ const ConversationsLogs = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] flex-1 overflow-auto">
       <ChatbotTheme primary_color={settings.primary_color} />
-      <ScrollArea className="h-full border">
-        <aside className="w-full md:w-[300px] flex-col gap-3 p-4 flex h-full overflow-auto">
-          {!!conversationsPerSession?.length &&
-            conversationsPerSession.map((item) => {
-              return (
-                <Button
-                  key={item.conversation_id}
-                  onClick={() =>
-                    setSelectedConversationId(item.conversation_id)
-                  }
-                  className="text-xs text-left items-start py-2 px-4 flex-col h-auto"
-                  size={"lg"}
-                  variant={
-                    item.conversation_id === selectedConversationId
-                      ? "default"
-                      : "outline"
-                  }
-                >
-                  {truncate(item.user_last_message, 30)}
-                  <small>
-                    {formatDistance(new Date(item.sent_at), new Date(), {
-                      addSuffix: true,
-                    })}
-                  </small>
-                </Button>
-              );
-            })}
-        </aside>
-      </ScrollArea>
 
-      <section className="flex w-full flex-1 flex-col h-full overflow-auto">
+      <aside className="w-full md:w-[300px] flex-col gap-3 p-4 flex h-full overflow-auto border-b md:border-b-0">
+        {!!conversationsPerSession?.length &&
+          conversationsPerSession.map((item) => {
+            return (
+              <Button
+                key={item.conversation_id}
+                onClick={() => setSelectedConversationId(item.conversation_id)}
+                className="text-xs text-left items-start py-2 px-4 flex-col h-auto"
+                size={"lg"}
+                variant={
+                  item.conversation_id === selectedConversationId
+                    ? "default"
+                    : "outline"
+                }
+              >
+                {truncate(item.user_last_message, 30)}
+                <small>
+                  {formatDistance(new Date(item.sent_at), new Date(), {
+                    addSuffix: true,
+                  })}
+                </small>
+              </Button>
+            );
+          })}
+      </aside>
+
+      <section
+        className="flex flex-1 flex-col h-full overflow-auto p-4"
+        ref={chatArea}
+      >
         {!!conversations?.length && (
-          <ScrollArea className="w-full h-full overflow-hidden p-4" ref={chatArea}>
+          <>
             <ChatList
               messages={convesationLogToInitialMessages(conversations)}
             />
             <ChatScrollAnchor trackVisibility={isDataLoading} area={chatArea} />
-          </ScrollArea>
+          </>
         )}
       </section>
     </div>

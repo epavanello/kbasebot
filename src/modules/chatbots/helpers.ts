@@ -64,8 +64,8 @@ export const GPTModels: GPTModel[] = ["gpt-3.5-turbo", "gpt-4"];
 export const prettifyGPTModelName = (name: GPTModel | string) => {
   switch (GPTModels.includes(name as GPTModel) ? name : "gpt-3.5-turbo") {
     case "gpt-3.5-turbo":
-      return "GPT 3.5 Turbo";
+      return "GPT-3";
     case "gpt-4":
-      return "GPT 4";
+      return "GPT-4";
   }
 };

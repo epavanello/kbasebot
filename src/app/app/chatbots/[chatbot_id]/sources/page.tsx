@@ -12,7 +12,7 @@ export default function Sources({
 
   return (
     <DashboardShell className="container">
-      <DashboardHeader heading="Your sources" />
+      <DashboardHeader heading="Sources" />
       <UploadContent externalChatbotId={chatbot_id}></UploadContent>
     </DashboardShell>
   );

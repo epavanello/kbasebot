@@ -63,7 +63,7 @@ src="${NEXT_PUBLIC_URL}/embed.js">
 
   return (
     <DashboardShell className="container">
-      <DashboardHeader heading={"Share your chatbot"} />
+      <DashboardHeader heading={"Share"} />
 
       <div className="flex flex-col gap-8 px-0 md:px-24 lg:px-36">
         <CardBlock

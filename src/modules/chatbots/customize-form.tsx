@@ -7,6 +7,7 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import ColorPicker from "@/components/pickers/color.picker";
 import {
@@ -124,12 +125,12 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex-1">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card className="h-full flex flex-col">
-            <CardHeader className="border-b">
-              {/*<CardTitle>Add logo</CardTitle>*/}
+            <CardHeader>
+              <CardTitle>Chat interface</CardTitle>
             </CardHeader>
-            <CardContent className="flex gap-4 flex-col overflow-y-scroll flex-1">
+            <CardContent className="flex gap-4 flex-col">
               <FormField
                 control={form.control}
                 name="display_name"
@@ -351,7 +352,6 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
               }
         }
         chatbot_id={chatbotId}
-        defaultOpen
       />
     </>
   );

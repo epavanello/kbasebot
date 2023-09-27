@@ -18,7 +18,7 @@ const Page = async ({
 
   return (
     <DashboardShell className="pb-0 h-full">
-      <DashboardHeader heading={"Preview of the chatbot"}>
+      <DashboardHeader heading={"Preview"}>
         <Link
           href={`/app/chatbots/${chatbot_id}/share`}
           className="text-sm h-8 flex items-center rounded-md px-6 border border-primary text-primary hover:bg-primary hover:text-secondary"

@@ -246,7 +246,7 @@
 }
 
 .scroller {
-  @apply flex flex-row gap-8 overflow-hidden w-full;
+  @apply flex flex-row gap-8 overflow-x-auto overflow-y-hidden sm:overflow-hidden w-full;
 }
 
 .testimonial .testimonial-item__content {
@@ -267,7 +267,7 @@
 
 .testimonial::before,
 .testimonial::after {
-  @apply bg-gradient-to-l from-background via-background to-transparent w-12 md:w-64 h-full absolute z-10 pointer-events-none content-[""];
+  @apply hidden sm:block bg-gradient-to-l from-background via-background to-transparent w-12 md:w-64 h-full absolute z-10 pointer-events-none content-[""];
 }
 
 .testimonial::before {
