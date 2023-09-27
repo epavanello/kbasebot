@@ -41,10 +41,9 @@ const Page = () => {
       <DashboardHeader
         heading={"Accounts"}
         text="Manage your account here"
-        className="flex-col md:flex-row"
       ></DashboardHeader>
 
-      <div className="flex flex-col gap-10 max-w-4xl mt-10">
+      <div className="flex flex-col gap-10 max-w-4xl">
         <Card>
           <CardHeader>
             <CardTitle>Billing</CardTitle>
@@ -127,10 +126,10 @@ const Page = () => {
           <CardContent>
             Usage
             <div className="text-sm font-semibold text-gray-600 ">
-              Chatbot created: {permission.maxChatbots} / {chatbots.length}
+              Chatbot created: {chatbots.length} / {permission.maxChatbots}
             </div>
             <div className="text-sm font-semibold text-gray-600 ">
-              Messages/month: {permission.maxMessages} / {messagesCount}
+              Messages/month: {messagesCount} / {permission.maxMessages}
             </div>
           </CardContent>
           <CardContent>
