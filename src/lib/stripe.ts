@@ -60,7 +60,10 @@ export const plans: PlanDetails[] = [
       },
     ],
     features: [
-      { enabled: true, feature: "3 Chatbots" },
+      {
+        enabled: true,
+        feature: `${PLAN_PERMISSIONS[Plan.BASIC].maxChatbots} Chatbots`,
+      },
       {
         enabled: true,
         feature: `${
@@ -87,7 +90,10 @@ export const plans: PlanDetails[] = [
       },
     ],
     features: [
-      { enabled: true, feature: "10 Chatbots" },
+      {
+        enabled: true,
+        feature: `${PLAN_PERMISSIONS[Plan.PRO].maxChatbots} Chatbots`,
+      },
       {
         enabled: true,
         feature: `${

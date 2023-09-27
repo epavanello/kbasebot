@@ -27,9 +27,6 @@ export default function PricingTable() {
           <h1 className="text-4xl font-extrabold sm:text-center sm:text-6xl">
             Pricing Plans
           </h1>
-          <p className="mt-6 text-center">
-            Get 2 months for free by subscribing yearly!
-          </p>
           <div className="relative self-center mt-6 bg-zinc-100 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
             {tabs.map((i) => (
               <button
@@ -58,11 +55,14 @@ export default function PricingTable() {
               </button>
             ))}
           </div>
+          <p className="mt-4 text-center text-xs leading-none">
+            Get 2 months for free by subscribing yearly!
+          </p>
         </div>
         <AnimatePresence mode="wait">
           {!!plans?.length && (
             <div
-              className="mt-12 place-items-start space-y-4 sm:space-y-0 sm:grid
+              className="mt-8 place-items-start space-y-4 sm:space-y-0 sm:grid
         sm:grid-cols-2 sm:gap-6 justify-center lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4
         items-start
         "
