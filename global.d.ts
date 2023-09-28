@@ -44,6 +44,10 @@ declare global {
       resetDatabase(): void;
     }
   }
+
+  interface Window {
+    plausible(...args: any[]): void;
+  }
 }
 
 declare module "react" {
