@@ -72,6 +72,7 @@ const Settings = () => {
       if (data) {
         setChatbot(data);
         setChatbotName(data.name || "");
+        setContext(data.custom_context || basicContext);
       }
 
       setLoading(false);
