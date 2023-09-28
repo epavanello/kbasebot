@@ -35,10 +35,14 @@ export async function POST(req: NextRequest) {
     if (!userPrompt?.content?.length)
       throw new Error("Please write a question");
 
-    let { user_id: ownerId, model } = (
+    let {
+      user_id: ownerId,
+      model,
+      custom_context,
+    } = (
       await supabaseAdminClient
         .from("chatbots")
-        .select("user_id, model")
+        .select("user_id, model, custom_context")
         .eq("id", chatbotId)
         .single()
         .throwOnError()
@@ -93,7 +97,7 @@ export async function POST(req: NextRequest) {
     const prompt: ChatCompletionRequestMessage[] = [
       {
         role: "system",
-        content: templates.basic({ context, model }),
+        content: custom_context || templates.basic({ context, model }),
       },
     ];
 
