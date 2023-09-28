@@ -26,7 +26,7 @@ const Analytics = () => {
         src="https://kbase-plausible.toc.ink/js/script.js"
       ></Script>
       <Script id="plausible-function" type="text/javascript">
-        {`<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>`}
+        {`window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`}
       </Script>
       <Script id="clarity-ms" type="text/javascript">
         {`(function(c,l,a,r,i,t,y){
