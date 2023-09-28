@@ -39,7 +39,5 @@ export const generateName = async (
     messages: prompt,
   });
 
-  console.log({ response: response?.choices?.[0]?.message });
-
   return (response?.choices?.[0]?.message?.content || `Untitled`)?.slice(0, 30);
 };

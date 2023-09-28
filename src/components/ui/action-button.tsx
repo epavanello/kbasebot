@@ -1,32 +1,40 @@
 "use client";
 
-import React, { FC } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { useBooleanTimeout } from "@/lib/hooks/use-boolean-timeout";
 import { Icon } from "./icons";
 
-interface SaveButtonProps extends React.ComponentProps<"div"> {
+interface ActionButtonProps {
+  icon: string;
   variant?: "ghost" | "default" | "outline";
   size?: "sm" | "lg";
-  className?: string;
   showText?: false;
-  onSave?: () => void;
+  onClick?: () => void;
 }
-const SaveButton = React.forwardRef<
+const ActionButton = React.forwardRef<
   React.ElementRef<typeof Button>,
-  React.ComponentPropsWithoutRef<typeof Button> & SaveButtonProps
+  React.ComponentPropsWithoutRef<typeof Button> & ActionButtonProps
 >(
   (
-    { className, variant = "ghost", showText = false, size = "sm", onSave, ...props },
+    {
+      className,
+      variant = "ghost",
+      showText = false,
+      size = "sm",
+      icon,
+      onClick,
+      ...props
+    },
     ref,
   ) => {
-    const [isSaved, setIsSaved] = useBooleanTimeout();
+    const [isClicked, setIsClicked] = useBooleanTimeout();
 
-    const handleOnSave = () => {
-      setIsSaved();
-      onSave?.();
+    const handleOnClick = () => {
+      onClick?.();
+      setIsClicked();
     };
 
     return (
@@ -35,10 +43,10 @@ const SaveButton = React.forwardRef<
         className={cn(className || "")}
         variant={variant as any}
         size={size as any}
-        onClick={handleOnSave}
+        onClick={handleOnClick}
         {...props}
       >
-        {isSaved ? <CheckIcon /> : <Icon icon="ion:save-outline" />}
+        {isClicked ? <CheckIcon /> : <Icon icon={icon} />}
         <span
           className={cn({
             "sr-only": !showText,
@@ -51,6 +59,6 @@ const SaveButton = React.forwardRef<
     );
   },
 );
-SaveButton.displayName = "SaveButton";
+ActionButton.displayName = "SaveButton";
 
-export default SaveButton;
+export default ActionButton;
