@@ -41,7 +41,6 @@ const Testimonials = () => {
   }, [scrollIndex, manualScroll]);
 
   React.useEffect(() => {
-    console.log(manualScroll);
     if (ref.current && !manualScroll) {
       // find the first item with left greater than half of the width
       const index =
@@ -51,11 +50,9 @@ const Testimonials = () => {
         }) - 1;
 
       setScrollIndex(index === -1 ? 0 : index);
-      console.log("incrementing scroll index", index === -1 ? 0 : index);
 
       const incrementScrollIndex = () => {
         setScrollIndex((prev) => {
-          console.log("incrementing scroll index2", prev + 1);
           if (prev === testimonialToRender.length - 1) {
             return 0;
           }

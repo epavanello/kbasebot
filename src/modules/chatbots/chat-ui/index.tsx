@@ -62,7 +62,6 @@ export default function ChatUi({
 
   useEffect(() => {
     if (resetOnIncrement) {
-      console.log("resetting chat");
       resetChat();
     }
   }, [resetOnIncrement]);

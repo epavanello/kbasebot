@@ -26,7 +26,6 @@ import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { Chatbot, Conversation } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import SaveButton from "@/components/ui/save-button";
 import {
   Select,
   SelectContent,
@@ -39,6 +38,7 @@ import { prettifyGPTModelName } from "@/modules/chatbots/helpers";
 import { Textarea } from "@/components/ui/textarea";
 import InputNote from "@/components/ui/input-note";
 import { templates } from "@/modules/chatbots/templates";
+import ActionButton from "@/components/ui/action-button";
 
 const Settings = () => {
   const [chatbot, setChatbot] = useState<
@@ -59,6 +59,7 @@ const Settings = () => {
     [chatbot?.model],
   );
 
+  // Load chatbot
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
@@ -72,7 +73,7 @@ const Settings = () => {
       if (data) {
         setChatbot(data);
         setChatbotName(data.name || "");
-        setContext(data.custom_context || basicContext);
+        setContext(data.custom_context);
       }
 
       setLoading(false);
@@ -161,11 +162,12 @@ const Settings = () => {
                     onChange={(e) => setChatbotName(e.target.value)}
                     size={20}
                   />
-                  <SaveButton
+                  <ActionButton
+                    icon="ion:save-outline"
                     disabled={
                       !chatbotName.trim() || chatbotName === chatbot.name
                     }
-                    onSave={() => updateChatBot({ name: chatbotName })}
+                    onClick={() => updateChatBot({ name: chatbotName })}
                   />
                 </div>
               </div>
@@ -204,21 +206,48 @@ const Settings = () => {
                       id="context"
                       maxLength={1000}
                       className="text-xs"
+                      onClick={(e) => {
+                        e.currentTarget.select();
+                      }}
+                      onFocus={() => {
+                        if (context === "") {
+                          setContext(basicContext);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (context === basicContext) {
+                          setContext("");
+                        }
+                      }}
                       rows={10}
                       cols={60}
-                      placeholder={`Default context is ""`}
                       onChange={(e) => setContext(e.target.value)}
-                      value={context || basicContext}
+                      placeholder={basicContext}
+                      value={context}
                     />
                     <InputNote>
                       {context.length}/{1000}
                       {" chars"}
                     </InputNote>
                   </div>
-                  <SaveButton
-                    disabled={context === chatbot.custom_context || context === basicContext || context.trim() === ""}
-                    onSave={() => updateChatBot({ custom_context: context })}
-                  />
+                  <div className="flex flex-col">
+                    <ActionButton
+                      icon="ion:save-outline"
+                      disabled={
+                        context === chatbot.custom_context ||
+                        (!chatbot.custom_context && context === basicContext)
+                      }
+                      onClick={() => updateChatBot({ custom_context: context })}
+                    />
+                    <ActionButton
+                      icon="carbon:reset"
+                      disabled={!context}
+                      onClick={() => {
+                        setContext("");
+                        updateChatBot({ custom_context: "" });
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               <div>

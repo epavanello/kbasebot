@@ -189,8 +189,6 @@ export async function POST(req: NextRequest) {
         .update(knowledgeBaseRef)
         .in("id", chunk)
         .throwOnError();
-
-      console.log({ count });
     }
 
     let chatbotChanges: Partial<Chatbot> = {};
