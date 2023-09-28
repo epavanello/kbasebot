@@ -19,7 +19,7 @@ const SaveButton = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof Button> & SaveButtonProps
 >(
   (
-    { className, variant = "ghost", showText = false, size = "sm", onSave },
+    { className, variant = "ghost", showText = false, size = "sm", onSave, ...props },
     ref,
   ) => {
     const [isSaved, setIsSaved] = useBooleanTimeout();
@@ -36,6 +36,7 @@ const SaveButton = React.forwardRef<
         variant={variant as any}
         size={size as any}
         onClick={handleOnSave}
+        {...props}
       >
         {isSaved ? <CheckIcon /> : <Icon icon="ion:save-outline" />}
         <span

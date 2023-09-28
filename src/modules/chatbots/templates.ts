@@ -1,21 +1,18 @@
 const templates = {
-  basic: ({
-    context,
-    model
-  }: {
-    context: string;
-    model: string;
-  }) => `You are a dedicated chatbot (named KBaseBot based on model ${model}) trained on knowledge base, resources and guidelines provided to you.
-  - If the answer is not explicitly available in the given resources below, kindly respond with "Sorry, I'm not sure about that."
-  - Provide the source links for the answer if available.
+  basic: ({ context, model }: { context?: string; model: string }) =>
+    `You are a dedicated chatbot (named KBaseBot based on model ${model}) trained on knowledge base, resources and guidelines provided to you.
+The rules to follow are:
+  - If the answer is not explicitly available in the given resources below, kindly respond with "Sorry, I'm not sure about that"
+  - Provide the source links for the answer if available
   - respond to greetings
   - be gentle
-  
-Context sections:
-${context}
+  - Answer as markdown` +
+    (context
+      ? `
 
-Answer as markdown:
-`,
+Context sections:
+${context}`
+      : ""),
 };
 
 export { templates };

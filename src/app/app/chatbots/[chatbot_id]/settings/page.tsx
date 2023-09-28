@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -36,6 +36,9 @@ import {
 } from "@/components/ui/select";
 import { Plan } from "@/lib/permissions/plans";
 import { prettifyGPTModelName } from "@/modules/chatbots/helpers";
+import { Textarea } from "@/components/ui/textarea";
+import InputNote from "@/components/ui/input-note";
+import { templates } from "@/modules/chatbots/templates";
 
 const Settings = () => {
   const [chatbot, setChatbot] = useState<
@@ -47,6 +50,14 @@ const Settings = () => {
   const { chatbot_id } = useParams();
   const [loading, setLoading] = useState(false);
   const [chatbotName, setChatbotName] = useState("");
+  const [context, setContext] = useState("");
+  const basicContext = useMemo(
+    () =>
+      templates.basic({
+        model: prettifyGPTModelName(chatbot?.model || ""),
+      }),
+    [chatbot?.model],
+  );
 
   useEffect(() => {
     const getData = async () => {
@@ -141,7 +152,7 @@ const Settings = () => {
             <div className="flex flex-col relative w-full justify-start gap-2 items-start">
               <div>
                 <Label htmlFor="name">Name</Label>
-                <div className="flex flex-row items-end gap-2">
+                <div className="flex flex-row items-start gap-2">
                   <Input
                     id="name"
                     value={chatbotName}
@@ -150,14 +161,16 @@ const Settings = () => {
                     size={20}
                   />
                   <SaveButton
-                    disabled={!chatbotName.trim()}
+                    disabled={
+                      !chatbotName.trim() || chatbotName === chatbot.name
+                    }
                     onSave={() => updateChatBot({ name: chatbotName })}
                   />
                 </div>
               </div>
               <div>
                 <Label htmlFor="model">Model</Label>
-                <div className="flex flex-row items-end gap-2">
+                <div className="flex flex-row items-start gap-2">
                   <Select
                     value={chatbot.model}
                     onValueChange={(value) => updateChatBot({ model: value })}
@@ -179,12 +192,37 @@ const Settings = () => {
                   </Select>
                 </div>
                 <p className={cn("text-xs text-muted-foreground mt-2")}>
-                  GPT44 model is only available for pro users
+                  GPT-4 model is only available for pro users
                 </p>
               </div>
               <div>
+                <Label htmlFor="context">Context</Label>
+                <div className="flex flex-row items-start gap-2">
+                  <div className="relative">
+                    <Textarea
+                      id="context"
+                      maxLength={1000}
+                      className="text-xs"
+                      rows={10}
+                      cols={60}
+                      placeholder={`Default context is ""`}
+                      onChange={(e) => setContext(e.target.value)}
+                      value={context || basicContext}
+                    />
+                    <InputNote>
+                      {context.length}/{1000}
+                      {" chars"}
+                    </InputNote>
+                  </div>
+                  <SaveButton
+                    disabled={context === chatbot.custom_context || context === basicContext || context.trim() === ""}
+                    onSave={() => updateChatBot({ custom_context: context })}
+                  />
+                </div>
+              </div>
+              <div>
                 <Label htmlFor="id">Chatbot ID</Label>
-                <div className="flex flex-row items-end gap-2">
+                <div className="flex flex-row items-start gap-2">
                   <Input
                     id="id"
                     value={chatbot.id}

@@ -83,6 +83,12 @@ export interface Database {
             columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blogs_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["user_id"]
           }
         ]
       }
@@ -117,6 +123,12 @@ export interface Database {
             columns: ["chatbot_id"]
             referencedRelation: "chatbots"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbot_docs_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["chatbot_id"]
           },
           {
             foreignKeyName: "chatbot_docs_file_name_fkey"
@@ -160,6 +172,12 @@ export interface Database {
             columns: ["chatbot_id"]
             referencedRelation: "chatbots"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbot_notion_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["chatbot_id"]
           }
         ]
       }
@@ -217,10 +235,22 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "chatbot_settings_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["chatbot_id"]
+          },
+          {
             foreignKeyName: "chatbot_settings_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbot_settings_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["user_id"]
           }
         ]
       }
@@ -255,12 +285,19 @@ export interface Database {
             columns: ["chatbot_id"]
             referencedRelation: "chatbots"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbot_urls_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["chatbot_id"]
           }
         ]
       }
       chatbots: {
         Row: {
           created_at: string
+          custom_context: string
           files: string[] | null
           id: string
           is_public: boolean | null
@@ -273,6 +310,7 @@ export interface Database {
         }
         Insert: {
           created_at?: string
+          custom_context?: string
           files?: string[] | null
           id?: string
           is_public?: boolean | null
@@ -285,6 +323,7 @@ export interface Database {
         }
         Update: {
           created_at?: string
+          custom_context?: string
           files?: string[] | null
           id?: string
           is_public?: boolean | null
@@ -301,6 +340,12 @@ export interface Database {
             columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbots_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["user_id"]
           }
         ]
       }
@@ -346,10 +391,22 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "conversations_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["chatbot_id"]
+          },
+          {
             foreignKeyName: "conversations_chatbot_owner_id_fkey"
             columns: ["chatbot_owner_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_chatbot_owner_id_fkey"
+            columns: ["chatbot_owner_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["user_id"]
           }
         ]
       }
@@ -399,6 +456,12 @@ export interface Database {
             columns: ["chatbot_id"]
             referencedRelation: "chatbots"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_base_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["chatbot_id"]
           },
           {
             foreignKeyName: "knowledge_base_doc_id_fkey"
@@ -466,12 +529,32 @@ export interface Database {
             columns: ["id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_id_fkey"
+            columns: ["id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["user_id"]
           }
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      users_chatbots: {
+        Row: {
+          chatbot_id: string | null
+          chatbot_model: string | null
+          chatbot_name: string | null
+          chatbot_status: string | null
+          email: string | null
+          num_chunks: number | null
+          num_conversations: number | null
+          num_links: number | null
+          subscription_plan: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_messages_by_chatbot_id: {
