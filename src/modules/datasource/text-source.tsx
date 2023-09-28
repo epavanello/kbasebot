@@ -31,7 +31,7 @@ const TextSource = () => {
         })}
       >
         {text.content.length}/{MAX_TEXT_INPUT}{" "}
-        {isOverLimit ? "(Max chars limit reached)" : "Chars"}
+        {isOverLimit ? "(Max chars limit reached)" : "chars"}
       </InputNote>
     </div>
   );

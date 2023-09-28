@@ -91,8 +91,8 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
     })),
 
   // 'Delete' Methods
-  deleteDoc: (name) => {
-    set((state) => ({ docs: state.docs.filter((i) => i.id !== name) }));
+  deleteDoc: (id) => {
+    set((state) => ({ docs: state.docs.filter((i) => i.id !== id) }));
   },
   deleteAllDocs: () =>
     set(() => ({

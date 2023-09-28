@@ -11,7 +11,7 @@ export default function Sources({
   const { chatbot_id } = params;
 
   return (
-    <DashboardShell className="container">
+    <DashboardShell className="container mx-auto  max-w-4xl">
       <DashboardHeader heading="Sources" />
       <UploadContent externalChatbotId={chatbot_id}></UploadContent>
     </DashboardShell>

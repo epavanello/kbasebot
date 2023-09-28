@@ -56,7 +56,18 @@ export async function POST(req: NextRequest) {
       .map((i) => ({
         content: i.pageContent,
         url: i.metadata.source,
-      }));
+      }))
+      // se ci sono url duplicati con page content diverso, concateno il contenuto e unisco gli array items
+      .reduce((acc, curr) => {
+        const index = acc.findIndex((i) => i.url === curr.url);
+        if (index === -1) {
+          acc.push(curr);
+        } else {
+          acc[index].content += "\n\n" + curr.content;
+        }
+        return acc;
+      }, [] as { content: string; url: string }[]);  
+      ;
 
     await supabaseServerClient
       .from("chatbot_urls")

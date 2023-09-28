@@ -71,7 +71,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
 
   const handleDeleteDoc = async (doc: IFile) => {
     await supabase.storage.from("files").remove([`${chatbotId}/${doc.name}`]);
-    deleteDoc(doc.name);
+    deleteDoc(doc.id);
   };
 
   const handleDeleteAllDocs = async () => {
@@ -127,7 +127,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
   });
 
   return (
-    <div className="w-full flex flex-col items-center max-w-3xl">
+    <div className="w-full flex flex-col items-center">
       {!!label && <label className="text-xs font-bold">{label}</label>}
       <div className="w-full my-1" {...getRootProps()}>
         <label className="flex flex-col gap-4 text-xs items-center justify-center w-full pt-14 pb-8 px-4 transition border border-dashed border-gray-300 rounded-md appearance-none cursor-pointer hover:border-gray-600 focus:outline-none">

@@ -6,7 +6,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import DocumentUploader from "@/modules/datasource/doc-uploader";
 import TextSource from "@/modules/datasource/text-source";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   IFile,
   INotion,
@@ -317,7 +316,7 @@ export function UploadContent({
               label: "Text",
               value: "text",
               icon: "fluent:textbox-16-regular",
-              desc: `${text.content.length} Chars`,
+              desc: `${text.content.length} chars`,
             },
             {
               label: "Files",
