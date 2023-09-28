@@ -25,6 +25,9 @@ const Analytics = () => {
         data-domain="kbasebot.com"
         src="https://kbase-plausible.toc.ink/js/script.js"
       ></Script>
+      <Script id="plausible-function" type="text/javascript">
+        {`<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>`}
+      </Script>
       <Script id="clarity-ms" type="text/javascript">
         {`(function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};

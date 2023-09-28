@@ -119,7 +119,8 @@ export default function PricingTable() {
                       {
                         "border-blue-50 bg-gray-500/10 dark:bg-gray-200/10 border-1 shadow-md":
                           highlight,
-                        "shadow-sm  bg-gray-500/5 dark:bg-gray-200/5": !highlight,
+                        "shadow-sm  bg-gray-500/5 dark:bg-gray-200/5":
+                          !highlight,
                         "border border-primary": isActive,
                       },
                     )}
@@ -194,6 +195,14 @@ export default function PricingTable() {
                             "mt-2 bg-gray-700 block w-full rounded-md py-2 text-sm font-semibold text-gray-100 text-center hover:bg-zinc-900 hover:text-gray-100",
                           )}
                           href={route}
+                          onClick={() => {
+                            window.plausible("GoToStripe", {
+                              props: {
+                                plan: plan.id,
+                                interval: billingInterval,
+                              },
+                            });
+                          }}
                         >
                           {subscribeText}
                         </a>
