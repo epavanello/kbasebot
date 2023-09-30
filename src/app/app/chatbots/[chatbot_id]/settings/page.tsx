@@ -34,11 +34,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plan } from "@/lib/permissions/plans";
-import { prettifyGPTModelName } from "@/modules/chatbots/helpers";
+import { GPTModel, GPTModels, prettifyGPTModelName } from "@/modules/chatbots/helpers";
 import { Textarea } from "@/components/ui/textarea";
 import InputNote from "@/components/ui/input-note";
 import { templates } from "@/modules/chatbots/templates";
 import ActionButton from "@/components/ui/action-button";
+import { tokenLimits } from "@/modules/chatbots/context";
 
 const Settings = () => {
   const [chatbot, setChatbot] = useState<
@@ -53,7 +54,7 @@ const Settings = () => {
   const [context, setContext] = useState("");
   const basicContext = useMemo(
     () =>
-      templates.basic({
+      templates.defaultContext({
         model: prettifyGPTModelName(chatbot?.model || ""),
       }),
     [chatbot?.model],
@@ -175,21 +176,21 @@ const Settings = () => {
                 <Label htmlFor="model">Model</Label>
                 <div className="flex flex-row items-start gap-2">
                   <Select
-                    value={chatbot.model}
+                    value={GPTModels.includes(chatbot.model as GPTModel) ? chatbot.model : GPTModel.GPT_3}
                     onValueChange={(value) => updateChatBot({ model: value })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a model" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="gpt-3.5-turbo">
-                        {prettifyGPTModelName("gpt-3.5-turbo")}
+                      <SelectItem value={GPTModel.GPT_3}>
+                        {prettifyGPTModelName(GPTModel.GPT_3)}
                       </SelectItem>
                       <SelectItem
-                        value="gpt-4"
+                        value={GPTModel.GPT_4}
                         disabled={subscription?.plan !== Plan.PRO}
                       >
-                        {prettifyGPTModelName("gpt-4")}
+                        {prettifyGPTModelName(GPTModel.GPT_4)}
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -204,12 +205,9 @@ const Settings = () => {
                   <div className="relative">
                     <Textarea
                       id="context"
-                      maxLength={1000}
+                      maxLength={tokenLimits.context * 4}
                       className="text-xs"
-                      onClick={(e) => {
-                        e.currentTarget.select();
-                      }}
-                      onFocus={() => {
+                      onFocus={(e) => {
                         if (context === "") {
                           setContext(basicContext);
                         }
@@ -226,7 +224,7 @@ const Settings = () => {
                       value={context}
                     />
                     <InputNote>
-                      {context.length}/{1000}
+                      {context.length}/{tokenLimits.context * 4}
                       {" chars"}
                     </InputNote>
                   </div>
