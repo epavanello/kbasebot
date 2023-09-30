@@ -9,7 +9,7 @@ import Testimonials from "@/components/landing/testimonials";
 
 const Page = async () => {
   return (
-    <div className="px-2 sm:px-0">
+    <div className="px-6 sm:px-0">
       <Hero />
       <Features />
       <Benefit />
