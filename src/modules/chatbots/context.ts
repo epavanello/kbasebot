@@ -33,7 +33,7 @@ export const searchKnowledgeBase = async (
       p_query_embedding: embedding,
       p_match_count: 10, // Choose the number of matches
       p_chatbot_id: chatbotId,
-      p_threshold: 0.8,
+      p_threshold: 0.6,
     })
     .throwOnError();
 
