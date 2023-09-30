@@ -12,7 +12,9 @@ The rules to follow are:
 
 Context sections:
 ${context}`
-      : ""),
+      : "") + `
+
+As first step, please ask and store name, email and phone number of the user`,
 };
 
 export { templates };

@@ -96,6 +96,9 @@ export default function ChatUi({
       conversationId: conversation_id,
       chatbotId: chatbot_id,
     },
+    experimental_onFunctionCall: async function call(messages, functionCall) {
+      console.log("onFunctionCall", functionCall);
+    },
     async onResponse(response) {
       if (response.status !== 200) {
         const data = (await response.json()) as { error?: string };

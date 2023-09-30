@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
 
     const config = new Configuration({
       apiKey: OPENAI_API_KEY,
-      basePath: "https://oai.hconeai.com/v1",
+      /*basePath: "https://oai.hconeai.com/v1",
       baseOptions: {
         headers: {
           "Helicone-Auth": `Bearer ${HELICONE_API_KEY}`,
@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
           "Helicone-User-Id": chatbotId,
           "Helicone-Property-Conversation-Id": conversationId,
         },
-      },
+      },*/
     });
 
     const openai = new OpenAIApi(config);
@@ -126,6 +126,27 @@ export async function POST(req: NextRequest) {
           (message: ChatCompletionRequestMessage) =>
             message.content && message.role === "user",
         ),
+      ],
+      functions: [
+        {
+          name: "store_lead",
+          description: "Call the lead store function whenever a lead is found",
+          parameters: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+              },
+              email: {
+                type: "string",
+              },
+              phone: {
+                type: "string",
+              },
+            },
+            required: ["email"],
+          },
+        },
       ],
     });
 
