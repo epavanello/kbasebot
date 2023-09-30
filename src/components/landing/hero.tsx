@@ -12,7 +12,7 @@ const Hero = () => {
       id="hero"
       className="relative w-full flex flex-col justify-center items-center gap-2"
     >
-      <div className="max-w-5xl flex flex-col items-center gap-2 text-center mt-8 sm:mt-12 md:mt-24">
+      <div className="max-w-5xl flex flex-col items-center gap-2 text-center mt-8 sm:mt-12 md:mt-16">
         
 
       <div className="flex flex-row items-center">
@@ -30,7 +30,7 @@ const Hero = () => {
         </a>
       </div>
 
-        <h1 aria-label="Upload. Train. Serve." className="mb-6 md:mb-10 flex flex-col md:flex-row text-7xl lg:text-8xl mt-8 sm:mt-12 md:mt-24">
+        <h1 aria-label="Upload. Train. Serve." className="mb-6 md:mb-10 flex flex-col md:flex-row text-7xl lg:text-8xl mt-8 sm:mt-12 md:mt-16">
           <span className="animated-gradient-text_background from-green-200 via-green-300 to-blue-600">
             Upload.
           </span>
