@@ -34,64 +34,6 @@ export interface Database {
   }
   public: {
     Tables: {
-      blogs: {
-        Row: {
-          content: Json | null
-          created_at: string
-          description: string | null
-          id: string
-          image: string | null
-          image_blur_hash: string | null
-          published_at: string | null
-          slug: string | null
-          thumbnail: string | null
-          title: string | null
-          updated_at: string
-          user_id: string | null
-        }
-        Insert: {
-          content?: Json | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          image?: string | null
-          image_blur_hash?: string | null
-          published_at?: string | null
-          slug?: string | null
-          thumbnail?: string | null
-          title?: string | null
-          updated_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          content?: Json | null
-          created_at?: string
-          description?: string | null
-          id?: string
-          image?: string | null
-          image_blur_hash?: string | null
-          published_at?: string | null
-          slug?: string | null
-          thumbnail?: string | null
-          title?: string | null
-          updated_at?: string
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "blogs_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "blogs_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users_chatbots"
-            referencedColumns: ["user_id"]
-          }
-        ]
-      }
       chatbot_docs: {
         Row: {
           chars: number
@@ -128,7 +70,7 @@ export interface Database {
             foreignKeyName: "chatbot_docs_chatbot_id_fkey"
             columns: ["chatbot_id"]
             referencedRelation: "users_chatbots"
-            referencedColumns: ["chatbot_id"]
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "chatbot_docs_file_name_fkey"
@@ -177,7 +119,7 @@ export interface Database {
             foreignKeyName: "chatbot_notion_chatbot_id_fkey"
             columns: ["chatbot_id"]
             referencedRelation: "users_chatbots"
-            referencedColumns: ["chatbot_id"]
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -238,7 +180,7 @@ export interface Database {
             foreignKeyName: "chatbot_settings_chatbot_id_fkey"
             columns: ["chatbot_id"]
             referencedRelation: "users_chatbots"
-            referencedColumns: ["chatbot_id"]
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "chatbot_settings_user_id_fkey"
@@ -290,7 +232,7 @@ export interface Database {
             foreignKeyName: "chatbot_urls_chatbot_id_fkey"
             columns: ["chatbot_id"]
             referencedRelation: "users_chatbots"
-            referencedColumns: ["chatbot_id"]
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -394,7 +336,7 @@ export interface Database {
             foreignKeyName: "conversations_chatbot_id_fkey"
             columns: ["chatbot_id"]
             referencedRelation: "users_chatbots"
-            referencedColumns: ["chatbot_id"]
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "conversations_chatbot_owner_id_fkey"
@@ -461,7 +403,7 @@ export interface Database {
             foreignKeyName: "knowledge_base_chatbot_id_fkey"
             columns: ["chatbot_id"]
             referencedRelation: "users_chatbots"
-            referencedColumns: ["chatbot_id"]
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "knowledge_base_doc_id_fkey"
@@ -542,15 +484,17 @@ export interface Database {
     Views: {
       users_chatbots: {
         Row: {
-          chatbot_id: string | null
-          chatbot_model: string | null
-          chatbot_name: string | null
-          chatbot_status: string | null
+          context: string | null
           email: string | null
+          id: string | null
+          model: string | null
+          name: string | null
+          notion_pages: number | null
           num_chunks: number | null
           num_conversations: number | null
           num_links: number | null
-          subscription_plan: string | null
+          plan: string | null
+          status: string | null
           user_id: string | null
         }
         Relationships: []
@@ -594,6 +538,20 @@ export interface Database {
         Returns: unknown
       }
       match_documents: {
+        Args: {
+          p_query_embedding: string
+          p_match_count: number
+          p_chatbot_id: string
+          p_threshold?: number
+        }
+        Returns: {
+          id: number
+          content: string
+          metadata: Json
+          similarity: number
+        }[]
+      }
+      match_documents_old: {
         Args: {
           p_query_embedding: string
           p_match_count: number
