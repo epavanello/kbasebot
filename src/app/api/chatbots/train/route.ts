@@ -65,6 +65,10 @@ export async function POST(req: NextRequest) {
       user_id: user.id,
     };
 
+    let metadata: Partial<{
+      source: string;
+    }> = {};
+
     const documentCollection: Document[][] = [];
 
     if (text.length) {
@@ -121,6 +125,10 @@ export async function POST(req: NextRequest) {
         ...knowledgeBaseRef,
         url_id: chatbotUrl.id,
       };
+      metadata = {
+        ...metadata,
+        source: chatbotUrl.url,
+      };
     } else if (notion) {
       const chatbotNotion = (
         await supabaseServerClient
@@ -158,6 +166,7 @@ export async function POST(req: NextRequest) {
               metadata: {
                 ...(document.metadata || {}),
                 ...knowledgeBaseRef,
+                ...metadata,
               },
             })),
           );
