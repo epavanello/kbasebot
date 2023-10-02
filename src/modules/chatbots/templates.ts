@@ -32,8 +32,29 @@ const templates = {
     - Provide the source links for the answer if available
     - respond to greetings
     - be gentle
-    - Answer as markdown`;
+    - Answer as markdown
+    `;
   },
+  leads: (leads: ILeads)=> {
+    const isLeadsEnabled = !!(leads.name || leads.email || leads.phone)
+
+    if(!isLeadsEnabled) return ''
+
+    const leadsKeys = {
+      name: leads.name,
+      email: leads.email,
+      phone: leads.phone
+    }
+
+    const askableLeadKeys = Object.keys(leadsKeys).filter(i => leadsKeys[i]).join(', ')
+
+    return `- As first step before starting any conversation, please ask the user ${askableLeadKeys} by one 
+    and when user provide all the data call 'store_lead' function.
+    - and after getting the leads please give the confirmation message '${leads.confirmation_message}' 
+    as it is unless there's a spelling or grammar mistake.
+    `
+
+  }
 };
 
 export { templates };

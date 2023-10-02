@@ -119,8 +119,12 @@ export async function POST(req: NextRequest) {
       },
       {
         role: "system",
-        content: templates.searchResults({ results: knowledgeBase }),
+        content: templates.leads(chatbot_settings?.leads),
       },
+      // {
+      //   role: "system",
+      //   content: templates.searchResults({ results: knowledgeBase }),
+      // },
     ];
 
     console.log({prompt})
