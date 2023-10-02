@@ -1,8 +1,10 @@
-interface ILeads {
-  name?: string;
-  email?: string;
-  phone?: string;
-  confirmation_message?: string;
+import { map } from "zod";
+
+export interface ILeads {
+  name: boolean;
+  email: boolean;
+  phone: boolean;
+  confirmation_message: string;
 }
 
 const templates = {
@@ -14,8 +16,7 @@ const templates = {
     context: string;
   }) {
     return (
-      context +
-      "\n\n" + this.searchResults({ results: knowledgeBase || "" })
+      context + "\n\n" + this.searchResults({ results: knowledgeBase || "" })
     );
   },
 
@@ -26,35 +27,36 @@ const templates = {
   },
 
   defaultContext({ model }: { model: string }) {
-    return `You are a dedicated chatbot (named KBaseBot based on model ${model}) trained on knowledge base, resources and guidelines provided to you.
+    return `You are a chatbot named KBaseBot (based on model ${model}) and you can search the knowledge base for the user's request.
   The rules to follow are:
     - If the answer is not explicitly available in the given resources below, kindly respond with "Sorry, I'm not sure about that"
     - Provide the source links for the answer if available
-    - respond to greetings
-    - be gentle
     - Answer as markdown
     `;
   },
-  leads: (leads: ILeads)=> {
-    const isLeadsEnabled = !!(leads.name || leads.email || leads.phone)
+  leads: (leads?: ILeads) => {
+    const isLeadsEnabled = leads && (leads.name || leads.email || leads.phone);
 
-    if(!isLeadsEnabled) return ''
+    if (!isLeadsEnabled) return "";
 
     const leadsKeys = {
       name: leads.name,
       email: leads.email,
-      phone: leads.phone
-    }
+      phone: leads.phone,
+    };
 
-    const askableLeadKeys = Object.keys(leadsKeys).filter(i => leadsKeys[i]).join(', ')
+    const askableLeadKeys = Object.entries(leadsKeys)
+      .filter(([_, enabled]) => enabled)
+      .map(([key]) => `"${key}"`)
+      .join(", ");
 
-    return `- As first step before starting any conversation, please ask the user ${askableLeadKeys} by one 
-    and when user provide all the data call 'store_lead' function.
-    - and after getting the leads please give the confirmation message '${leads.confirmation_message}' 
-    as it is unless there's a spelling or grammar mistake.
-    `
-
-  }
+    return `ask the user to provide  ${askableLeadKeys} and when user provide all the data call 'store_lead' function.
+${
+  leads.confirmation_message
+    ? `After getting the leads please give the confirmation message '${leads.confirmation_message}' as it is unless there's a spelling or grammar mistake.`
+    : ""
+}`;
+  },
 };
 
 export { templates };

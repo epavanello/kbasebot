@@ -132,6 +132,7 @@ export interface Database {
           chatbot_logo: string | null
           display_name: string | null
           id: string
+          leads: Json | null
           primary_color: string
           suggested_message: string[] | null
           theme: string | null
@@ -147,6 +148,7 @@ export interface Database {
           chatbot_logo?: string | null
           display_name?: string | null
           id?: string
+          leads?: Json | null
           primary_color: string
           suggested_message?: string[] | null
           theme?: string | null
@@ -162,6 +164,7 @@ export interface Database {
           chatbot_logo?: string | null
           display_name?: string | null
           id?: string
+          leads?: Json | null
           primary_color?: string
           suggested_message?: string[] | null
           theme?: string | null
