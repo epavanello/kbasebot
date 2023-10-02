@@ -48,10 +48,11 @@ export async function POST(req: NextRequest) {
       user_id: ownerId,
       model,
       custom_context,
+      chatbot_settings
     } = (
       await supabaseAdminClient
         .from("chatbots")
-        .select("user_id, model, custom_context")
+        .select("user_id, model, custom_context, chatbot_settings(leads)")
         .eq("id", chatbotId)
         .single()
         .throwOnError()
@@ -121,6 +122,8 @@ export async function POST(req: NextRequest) {
         content: templates.searchResults({ results: knowledgeBase }),
       },
     ];
+
+    console.log({prompt})
 
     const config = new Configuration({
       apiKey: OPENAI_API_KEY,

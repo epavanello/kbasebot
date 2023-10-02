@@ -18,8 +18,8 @@ const LEADS_FIELDS= [
 
 const LeadsSettings = () => {
     const {chatbot_id} = useParams()
-    const {supabase} = useSupabaseAuth()
-
+    const {supabase, user} = useSupabaseAuth()
+    console.log({user})
     const [leadValues, setLeadValues] = useState({
         name: true,
         email: true,

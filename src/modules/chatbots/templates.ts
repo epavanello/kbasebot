@@ -1,3 +1,10 @@
+interface ILeads {
+  name?: string;
+  email?: string;
+  phone?: string;
+  confirmation_message?: string;
+}
+
 const templates = {
   basic({
     knowledgeBase,
