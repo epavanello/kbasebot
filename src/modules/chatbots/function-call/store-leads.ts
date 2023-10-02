@@ -27,12 +27,13 @@ export const storeLeadSchema = ({ name, email, phone }: SchemaFields) =>
 
 // type IStoreLead = z.infer<typeof createStoreLeadZodSchema>;
 
-export const callStoreLeads = async (leads, conversation_id, chatbot_owner_id, supabase) => {
+export const callStoreLeads = async (leads, conversation_id, chatbot_owner_id, chatbot_id,  supabase) => {
     try {
 
        const {data, error} = await supabase.from('leads').insert({
             ...leads,
            conversation_id,
+           chatbot_id,
            chatbot_owner_id
         });
 

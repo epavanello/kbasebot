@@ -49,6 +49,14 @@ export const menus = {
       icon: "jam:messages-alt",
     },
     {
+      title: "Leads",
+      href: `/app/chatbots/${chatbotId}/leads`,
+      icon: "pepicons-pencil:people",
+      status: {
+        text: "New",
+      },
+    },
+    {
       title: "Customize",
       href: `/app/chatbots/${chatbotId}/customize`,
       icon: "clarity:design-line",
@@ -57,6 +65,9 @@ export const menus = {
       title: "Analytics",
       href: `/app/chatbots/${chatbotId}/analytics`,
       icon: "clarity:analytics-line",
+      status: {
+        text: "New",
+      },
     },
     {
       title: "Share",
@@ -66,11 +77,6 @@ export const menus = {
     {
       title: "Settings",
       href: `/app/chatbots/${chatbotId}/settings`,
-      icon: "gala:settings",
-    },
-    {
-      title: "Leads",
-      href: `/app/chatbots/${chatbotId}/leads`,
       icon: "gala:settings",
     },
   ],

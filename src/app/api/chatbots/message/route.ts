@@ -193,7 +193,7 @@ export async function POST(req: NextRequest) {
         console.log('called')
         if (name === FUNC_STORE_LEAD) {
 
-         await callStoreLeads(args, conversationId,ownerId,  supabaseAdminClient)
+         await callStoreLeads(args, conversationId,ownerId, chatbotId, supabaseAdminClient)
 
           // `createFunctionCallMessages` constructs the relevant "assistant" and "function" messages for you
           const newMessages = createFunctionCallMessages(args);

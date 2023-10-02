@@ -70,9 +70,9 @@ const LeadsSettings = () => {
 
 
     return (
-        <Card>
+        <Card id={'leads-settings'}>
             <CardHeader>
-                <CardTitle>Leads</CardTitle>
+                <CardTitle>Leads Settings</CardTitle>
                 <p>Collects leads from your chatbot</p>
                 {!isLeadsEnabled && <p className={'text-primary text-xs p-1'}>Please select a field from below to enable lead's collection</p>}
             </CardHeader>
@@ -106,7 +106,7 @@ const LeadsSettings = () => {
                             ...leadValues,
                             confirmation_message: e.target.value
                         })
-                    }} value={leadValues.confirmation_message} placeholder="Type your confirmation message here." />
+                    }} value={leadValues.confirmation_message} placeholder="eg. Thanks for reaching out! Our team will get back to you soon" />
                     <p className="text-sm text-muted-foreground">
                         This message will be shown once user input the data
                     </p>
