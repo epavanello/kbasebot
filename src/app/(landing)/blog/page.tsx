@@ -14,7 +14,6 @@ export const metadata: Metadata = {
 };
 
 async function BlogPage() {
-  console.log({ allPosts });
   return (
     <Container>
       <div className={"flex flex-col space-y-16 my-8"}>

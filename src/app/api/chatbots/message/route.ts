@@ -6,7 +6,11 @@ import {
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 import { ConversationLog } from "@/modules/chatbots/conversation-log";
-import { getContext } from "@/modules/chatbots/context";
+import {
+  TokenCounter,
+  searchKnowledgeBase,
+  tokenLimits,
+} from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { templates } from "@/modules/chatbots/templates";
 import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
@@ -15,6 +19,11 @@ import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import { getErrorMessage } from "@/lib/utils";
 import { countMonthlyConversationUsage, getSubscription } from "@/lib/supabase";
 import { getPermissions } from "@/lib/permissions/plans";
+import {
+  GPTModel,
+  GPTModels,
+  prettifyGPTModelName,
+} from "@/modules/chatbots/helpers";
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge";
@@ -55,11 +64,8 @@ export async function POST(req: NextRequest) {
 
     const permission = getPermissions(ownerSubscription);
 
-    if (
-      !["gpt-3.5-turbo", "gpt-4"].includes(model) ||
-      permission.plan === "free"
-    ) {
-      model = "gpt-3.5-turbo";
+    if (!GPTModels.includes(model as GPTModel) || permission.plan === "free") {
+      model = GPTModel.GPT_3;
     }
 
     if (
@@ -82,13 +88,20 @@ export async function POST(req: NextRequest) {
       speaker: IConversationSpeaker.User,
     });
 
-    const conversationHistory: ChatCompletionRequestMessage[] =
+    // filter out the most old messages if the conversation history is too long
+
+    const counter = new TokenCounter(tokenLimits.history);
+    let conversationHistory: ChatCompletionRequestMessage[] = (
       await conversationLog.getConversation({
         limit: 10,
-      });
+      })
+    )
+      .reverse()
+      .filter((entry) => counter.canAdd(entry.content || ""))
+      .reverse();
 
     // Get the context from the last message
-    const context = await getContext(
+    const knowledgeBase = await searchKnowledgeBase(
       userPrompt.content,
       chatbotId,
       supabaseAdminClient,
@@ -97,7 +110,15 @@ export async function POST(req: NextRequest) {
     const prompt: ChatCompletionRequestMessage[] = [
       {
         role: "system",
-        content: custom_context || templates.basic({ context, model }),
+        content:
+          custom_context ||
+          templates.defaultContext({
+            model: prettifyGPTModelName(model),
+          }),
+      },
+      {
+        role: "system",
+        content: templates.searchResults({ results: knowledgeBase }),
       },
     ];
 
@@ -120,13 +141,8 @@ export async function POST(req: NextRequest) {
     const response = await openai.createChatCompletion({
       model,
       stream: true,
-      messages: [
-        ...prompt,
-        ...conversationHistory.filter(
-          (message: ChatCompletionRequestMessage) =>
-            message.content && message.role === "user",
-        ),
-      ],
+      messages: [...prompt, ...conversationHistory],
+      max_tokens: tokenLimits.response,
       functions: [
         {
           name: "store_lead",

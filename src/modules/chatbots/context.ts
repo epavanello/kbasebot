@@ -9,15 +9,15 @@ const config = new Configuration({
 });
 const openai = new OpenAIApi(config);
 
-export const getContext = async (
-  input: string,
+export const searchKnowledgeBase = async (
+  search: string,
   chatbotId: string,
   supabaseAdminClient: SupabaseClientTyped,
 ) => {
   // Generate a one-time embedding for the query itself
   const embeddingResponse = await openai.createEmbedding({
     model: "text-embedding-ada-002",
-    input,
+    input: search,
   });
 
   const {
@@ -33,6 +33,7 @@ export const getContext = async (
       p_query_embedding: embedding,
       p_match_count: 10, // Choose the number of matches
       p_chatbot_id: chatbotId,
+      p_threshold: 0.8,
     })
     .throwOnError();
 
@@ -53,8 +54,7 @@ export const getContext = async (
   //   LIMIT match_count;
   //   END;
 
-  const tokenizer = new GPT3Tokenizer({ type: "gpt3" });
-  let tokenCount = 0;
+  const counter = new TokenCounter(tokenLimits.knowledgeBase);
   let contextText = "";
 
   // Concat matched documents
@@ -64,19 +64,42 @@ export const getContext = async (
       const content = document?.content;
       const source = (document?.metadata as Record<string, string>)["source"];
       const similarity = document.similarity;
-      const encoded = tokenizer.encode(content);
-      tokenCount += encoded.text.length;
 
-      // Limit context to max 1500 tokens (configurable)
-      if (tokenCount > 1500) {
+      const chunk = `source: ${
+        source || ""
+      }\nsimilarity:${similarity}\ncontent: ${content.trim()}\n\n---\n`;
+
+      if (!counter.canAdd(chunk)) {
         break;
       }
 
-      contextText += `source: ${
-        source || ""
-      }\nsimilarity:${similarity}\ncontent: ${content.trim()}\n\n---\n`;
+      contextText += chunk;
     }
   }
 
   return contextText;
+};
+
+export class TokenCounter {
+  private tokenCount = 0;
+  private tokenizer = new GPT3Tokenizer({ type: "gpt3" });
+
+  constructor(private readonly limit: number) {}
+
+  canAdd(text: string): boolean {
+    const encoded = this.tokenizer.encode(text);
+    this.tokenCount += encoded.text.length;
+    return this.tokenCount <= this.limit;
+  }
+
+  reset() {
+    this.tokenCount = 0;
+  }
+}
+
+export const tokenLimits = {
+  context: 2_000,
+  knowledgeBase: 2_000,
+  history: 1_000,
+  response: 1_000,
 };
