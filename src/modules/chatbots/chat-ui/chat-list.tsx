@@ -11,9 +11,13 @@ export function ChatList({ messages, chatbotLogo }: ChatList) {
     return null;
   }
 
-  return messages.map((message, index) => (
-    <div key={index}>
-      <ChatMessage chatbotLogo={chatbotLogo} message={message} />
-    </div>
-  ));
+  return messages
+    .filter(
+      (message) => message.role !== "function" && message.role !== "system",
+    )
+    .map((message, index) => (
+      <div key={index}>
+        <ChatMessage chatbotLogo={chatbotLogo} message={message} />
+      </div>
+    ));
 }

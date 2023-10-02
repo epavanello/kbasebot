@@ -67,11 +67,12 @@ export async function POST(req: NextRequest) {
         .eq("id", chatbotId)
         .single()
         .throwOnError()
-    ).data! as any as Pick<Chatbot, "user_id" | "model" | "custom_context"> & ({
-      chatbot_settings?: {
-        leads: ILeads;
-      };
-    } | null);
+    ).data! as any as Pick<Chatbot, "user_id" | "model" | "custom_context"> &
+      ({
+        chatbot_settings?: {
+          leads: ILeads;
+        };
+      } | null);
 
     const ownerSubscription = await getSubscription(
       supabaseAdminClient,
@@ -152,7 +153,7 @@ export async function POST(req: NextRequest) {
 
     const config = new Configuration({
       apiKey: OPENAI_API_KEY,
-      /*basePath: "https://oai.hconeai.com/v1",
+      basePath: "https://oai.hconeai.com/v1",
       baseOptions: {
         headers: {
           "Helicone-Auth": `Bearer ${HELICONE_API_KEY}`,
@@ -160,7 +161,7 @@ export async function POST(req: NextRequest) {
           "Helicone-User-Id": chatbotId,
           "Helicone-Property-Conversation-Id": conversationId,
         },
-      },*/
+      },
     });
 
     const openai = new OpenAIApi(config);
@@ -202,6 +203,9 @@ export async function POST(req: NextRequest) {
           entry: result,
           speaker: IConversationSpeaker.Assistant,
         });
+      },
+      experimental_onFunctionCall: async function call(messages, functionCall) {
+        console.log("onFunctionCall backend", functionCall);
       },
     });
     // Respond with the stream
