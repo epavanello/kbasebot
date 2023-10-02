@@ -16,7 +16,7 @@ const Page = async ({ params }: PageProps) => {
   const settings = await getChatbotSettings(chatbot_id, cookies);
 
   return (
-    <PublicChatUi settings={settings} chatbot_id={chatbot_id} forceTheme />
+    <PublicChatUi user_id={settings?.user_id} settings={settings} chatbot_id={chatbot_id} forceTheme />
   );
 };
 

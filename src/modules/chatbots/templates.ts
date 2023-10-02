@@ -50,7 +50,7 @@ const templates = {
       .map(([key]) => `"${key}"`)
       .join(", ");
 
-    return `ask the user to provide  ${askableLeadKeys} and when user provide all the data call 'store_lead' function.
+    return `ask the user to provide  ${askableLeadKeys} one by one gently and when user provide all the data call 'store_lead' function.
 ${
   leads.confirmation_message
     ? `After getting the leads please give the confirmation message '${leads.confirmation_message}' as it is unless there's a spelling or grammar mistake.`

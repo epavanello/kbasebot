@@ -19,7 +19,6 @@ const LEADS_FIELDS= [
 const LeadsSettings = () => {
     const {chatbot_id} = useParams()
     const {supabase, user} = useSupabaseAuth()
-    console.log({user})
     const [leadValues, setLeadValues] = useState({
         name: true,
         email: true,
@@ -38,7 +37,6 @@ const LeadsSettings = () => {
                 .eq("chatbot_id", chatbot_id)
                 .maybeSingle();
 
-            console.log({chatbotSettings})
 
             if(chatbotSettings?.leads)
             setLeadValues(chatbotSettings?.leads)
@@ -84,7 +82,6 @@ const LeadsSettings = () => {
                     {LEADS_FIELDS.map(item => {
                         const isActive = !!leadValues[item.field]
 
-                        console.log({isActive})
 
                         return <Toggle pressed={leadValues[item.field]} key={item.field} onPressedChange={(val) => {
                             setLeadValues({

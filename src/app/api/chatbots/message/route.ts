@@ -29,6 +29,7 @@ import {
   GPTModels,
   prettifyGPTModelName,
 } from "@/modules/chatbots/helpers";
+import {callStoreLeads, FUNC_STORE_LEAD, storeLeadSchema} from "@/modules/chatbots/function-call/store-leads";
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge";
@@ -149,8 +150,6 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    console.log(messages);
-
     const config = new Configuration({
       apiKey: OPENAI_API_KEY,
       basePath: "https://oai.hconeai.com/v1",
@@ -173,26 +172,7 @@ export async function POST(req: NextRequest) {
       messages,
       max_tokens: tokenLimits.response,
       functions: [
-        // TODO: it need to be dynamic, based on the chatbot settings
-        {
-          name: "store_lead",
-          description: "Call the lead store function whenever a lead is found",
-          parameters: {
-            type: "object",
-            properties: {
-              name: {
-                type: "string",
-              },
-              email: {
-                type: "string",
-              },
-              phone: {
-                type: "string",
-              },
-            },
-            required: ["email"],
-          },
-        },
+        storeLeadSchema(chatbot_settings.leads)
       ],
     });
 
@@ -204,8 +184,30 @@ export async function POST(req: NextRequest) {
           speaker: IConversationSpeaker.Assistant,
         });
       },
-      experimental_onFunctionCall: async function call(messages, functionCall) {
-        console.log("onFunctionCall backend", functionCall);
+      experimental_onFunctionCall: async (
+          { name, arguments: args },
+          createFunctionCallMessages,
+      ) => {
+        // if you skip the function call and return nothing, the `function_call`
+        // message will be sent to the client for it to handle
+        console.log('called')
+        if (name === FUNC_STORE_LEAD) {
+
+         await callStoreLeads(args, conversationId,ownerId,  supabaseAdminClient)
+
+          // `createFunctionCallMessages` constructs the relevant "assistant" and "function" messages for you
+          const newMessages = createFunctionCallMessages(args);
+
+          return openai.createChatCompletion({
+            model,
+            stream: true,
+            messages:  [...messages, ...(newMessages as ChatCompletionRequestMessage[])],
+            max_tokens: tokenLimits.response,
+            functions: [
+              storeLeadSchema(chatbot_settings.leads)
+            ],
+          });
+        }
       },
     });
     // Respond with the stream

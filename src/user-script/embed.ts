@@ -59,7 +59,6 @@ export class ChatbotEmbed {
 
     openChatbot() {
         this.setChatbotIcon(true, true);
-        console.log({here:2})
         if (!this.shadowRoot) {
             this.shadowRoot = this.chatbotContainer.attachShadow({ mode: 'open' });
             this.render();
@@ -93,8 +92,6 @@ export class ChatbotEmbed {
         if (!this.shadowRoot) return;
 
         const chatbotURL = getChatbotPublicId(this.chatbot_id);
-
-        console.log({ss:this.chatbot_id})
 
         const iframe = document.createElement('iframe');
         iframe.src = chatbotURL;
