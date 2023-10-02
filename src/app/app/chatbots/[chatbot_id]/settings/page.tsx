@@ -40,6 +40,7 @@ import InputNote from "@/components/ui/input-note";
 import { templates } from "@/modules/chatbots/templates";
 import ActionButton from "@/components/ui/action-button";
 import { tokenLimits } from "@/modules/chatbots/context";
+import LeadsSettings from "@/app/app/chatbots/[chatbot_id]/settings/leads-settings";
 
 const Settings = () => {
   const [chatbot, setChatbot] = useState<
@@ -270,6 +271,8 @@ const Settings = () => {
             </div>
           </CardContent>
         </Card>
+
+        <LeadsSettings/>
 
         <Card className="border-red-300">
           <CardHeader>

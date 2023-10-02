@@ -68,5 +68,10 @@ export const menus = {
       href: `/app/chatbots/${chatbotId}/settings`,
       icon: "gala:settings",
     },
+    {
+      title: "Leads",
+      href: `/app/chatbots/${chatbotId}/leads`,
+      icon: "gala:settings",
+    },
   ],
 };
