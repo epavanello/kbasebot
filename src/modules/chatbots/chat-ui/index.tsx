@@ -51,8 +51,9 @@ export default function ChatUi({
     string | undefined
   >("conversation_id", undefined);
 
+  // FIXME: need to validate this section
   function resetChat(uid?:string) {
-    setConversationId(uid|| uuid());
+    setConversationId(uid || uuid());
   }
 
   useEffect(() => {

@@ -75,6 +75,10 @@ export async function POST(req: NextRequest) {
         };
       } | null);
 
+    const leadSettings = chatbot_settings.leads || {}
+
+    const isLeadsEnabled = !!(leadSettings.name || leadSettings.email || leadSettings.phone)
+
     const ownerSubscription = await getSubscription(
       supabaseAdminClient,
       ownerId,
@@ -165,15 +169,19 @@ export async function POST(req: NextRequest) {
 
     const openai = new OpenAIApi(config);
 
+    const functions = []
+
+    if(isLeadsEnabled){
+      functions.push(storeLeadSchema(chatbot_settings.leads))
+    }
+
     // Ask OpenAI for a streaming chat completion given the prompt
     const response = await openai.createChatCompletion({
       model,
       stream: true,
       messages,
       max_tokens: tokenLimits.response,
-      functions: [
-        storeLeadSchema(chatbot_settings.leads)
-      ],
+    ...(functions?.length ? {functions} : {})
     });
 
     // Convert the response into a friendly text-stream
@@ -190,7 +198,6 @@ export async function POST(req: NextRequest) {
       ) => {
         // if you skip the function call and return nothing, the `function_call`
         // message will be sent to the client for it to handle
-        console.log('called')
         if (name === FUNC_STORE_LEAD) {
 
          await callStoreLeads(args, conversationId,ownerId, chatbotId, supabaseAdminClient)

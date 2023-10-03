@@ -9,7 +9,7 @@ type SchemaFields = {
     phone: boolean;
 };
 
-const createStoreLeadZodSchema = ({ name, email, phone }: SchemaFields): ZodObject<any> => {
+const createStoreLeadZodSchema = ({ name, email, phone }: SchemaFields  = {}): ZodObject<any> => {
     const optionalString = z.string().optional();
     return z.object({
         ...(name ? { name: optionalString } : {}),
@@ -18,7 +18,7 @@ const createStoreLeadZodSchema = ({ name, email, phone }: SchemaFields): ZodObje
     });
 };
 
-export const storeLeadSchema = ({ name, email, phone }: SchemaFields) =>
+export const storeLeadSchema = ({ name, email, phone }: SchemaFields  = {}) =>
     ({
         name: FUNC_STORE_LEAD,
         description: "Call the lead store function whenever a lead is found",

@@ -5,7 +5,6 @@ import Link from "next/link";
 import PublicChatUi from "@/modules/chatbots/chat-ui/public-chat-ui";
 import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
 import { cookies } from "next/headers";
-import ChatbotAnalytics from "@/modules/chatbots/chatbot-analytics";
 
 export const dynamic = "force-dynamic";
 
