@@ -33,7 +33,6 @@ function uuidToFixedNumber(uuid: string): number {
 export function getChatbotGradient(chatbotId: string) {
   const keys = Object.keys(gradients);
   // get a repeatable random number based on the chatbot id
-  console.log(chatbotId, uuidToFixedNumber(chatbotId));
   const randomKey = keys[
     Math.floor(uuidToFixedNumber(chatbotId) * keys.length)
   ] as keyof typeof gradients;

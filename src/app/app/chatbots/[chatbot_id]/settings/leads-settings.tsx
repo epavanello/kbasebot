@@ -74,7 +74,7 @@ const LeadsSettings = () => {
             <CardHeader>
                 <CardTitle>Leads Settings</CardTitle>
                 <p>Collects leads from your chatbot</p>
-                {!isLeadsEnabled && <p className={'text-primary text-xs p-1'}>Please select a field from below to enable lead's collection</p>}
+                {!isLeadsEnabled && <p className={'text-primary text-xs p-1'}>Please select a field from below to enable lead&apos;s collection</p>}
             </CardHeader>
             <CardContent className="flex flex-col gap-6">
 

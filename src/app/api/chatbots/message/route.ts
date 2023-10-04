@@ -183,8 +183,6 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    console.log(messages);
-
     const config = new Configuration({
       apiKey: OPENAI_API_KEY,
       basePath: "https://oai.hconeai.com/v1",

@@ -60,6 +60,73 @@ export type FormSubmission = {
 
 const ITEMS_PER_PAGE = 8;
 
+const Actions: React.FC<{ row: any }> = ({ row }) => {
+  const { supabase } = useSupabaseAuth();
+  const data = row.original;
+
+  const [removePopupOpen, setRemovePopupOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const { trigger: handleDelete, isMutating: removing } = useDeleteMutation(
+    supabase.from("leads"),
+    ["id"],
+    "created_at",
+    {
+      onSuccess: () => {
+        setRemovePopupOpen(false);
+        setDropdownOpen(false);
+      },
+    },
+  );
+
+  return (
+    <DropdownMenu onOpenChange={setDropdownOpen} open={dropdownOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <DotsHorizontalIcon className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <Popover open={removePopupOpen} onOpenChange={setRemovePopupOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="destructive" size={"sm"} className="w-full">
+              <TrashIcon size={18} />
+              <span className="ml-1">Remove</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="flex flex-col justify-center items-center">
+            <p className="text-md font-medium my-2">Are you sure to remove?</p>
+            <p className="text-xs text-muted-foreground text-center">
+              This action will remove data of {data.email}
+            </p>
+            <div className="mt-2 flex">
+              <Button
+                className="mr-2"
+                variant="ghost"
+                onClick={() => setRemovePopupOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => handleDelete({ id: data.id })}
+                disabled={removing}
+                loading={removing}
+                variant="destructive"
+              >
+                {removing ? <LoadingDots /> : "Confirm"}
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/*<DropdownMenuSeparator />
+                    <DropdownMenuItem>View Details</DropdownMenuItem>*/}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
 export const columns: ColumnDef<FormSubmission>[] = [
   {
     id: "select",
@@ -148,74 +215,7 @@ export const columns: ColumnDef<FormSubmission>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const { supabase } = useSupabaseAuth();
-      const data = row.original;
-
-      const [removePopupOpen, setRemovePopupOpen] = useState(false);
-      const [dropdownOpen, setDropdownOpen] = useState(false);
-
-      const { trigger: handleDelete, isMutating: removing } = useDeleteMutation(
-        supabase.from("leads"),
-        ["id"],
-        "created_at",
-        {
-          onSuccess: () => {
-            setRemovePopupOpen(false);
-            setDropdownOpen(false);
-          },
-        },
-      );
-
-      return (
-        <DropdownMenu onOpenChange={setDropdownOpen} open={dropdownOpen}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <Popover open={removePopupOpen} onOpenChange={setRemovePopupOpen}>
-              <PopoverTrigger asChild>
-                <Button variant="destructive" size={"sm"} className="w-full">
-                  <TrashIcon size={18} />
-                  <span className="ml-1">Remove</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="flex flex-col justify-center items-center">
-                <p className="text-md font-medium my-2">
-                  Are you sure to remove?
-                </p>
-                <p className="text-xs text-muted-foreground text-center">
-                  This action will remove data of {data.email}
-                </p>
-                <div className="mt-2 flex">
-                  <Button
-                    className="mr-2"
-                    variant="ghost"
-                    onClick={() => setRemovePopupOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={() => handleDelete({ id: data.id })}
-                    disabled={removing}
-                    loading={removing}
-                    variant="destructive"
-                  >
-                    {removing ? <LoadingDots /> : "Confirm"}
-                  </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
-
-            {/*<DropdownMenuSeparator />
-                        <DropdownMenuItem>View Details</DropdownMenuItem>*/}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: Actions,
   },
 ];
 
@@ -275,6 +275,7 @@ function Leads() {
       rowSelection,
       pagination: {
         pageIndex,
+        pageSize: ITEMS_PER_PAGE,
       },
     },
     onPaginationChange: setPage,
