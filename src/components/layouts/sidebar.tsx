@@ -25,17 +25,18 @@ export interface SidebarItem {
 interface SidebarProps {}
 
 const Sidebar: FC<SidebarProps> = () => {
-  const path = usePathname();
   const { chatbot_id } = useParams<{ chatbot_id: string }>();
+  const path = usePathname();
 
-  const items = chatbot_id
+  const insideChatbot = !!chatbot_id;
+  const items = insideChatbot
     ? menus.sidebarNavByChatbot(chatbot_id)
     : menus.sidebarNav;
 
   return (
     <nav className="grid items-start gap-2 p-2">
-      {items.map((item: SidebarItem, index) => {
-        return (
+      {items.map(
+        (item, index) =>
           item.href && (
             <Link
               className={cn({
@@ -65,9 +66,8 @@ const Sidebar: FC<SidebarProps> = () => {
                 )}
               </span>
             </Link>
-          )
-        );
-      })}
+          ),
+      )}
     </nav>
   );
 };

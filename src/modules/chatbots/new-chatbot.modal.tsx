@@ -9,8 +9,19 @@ import { useSupabaseAuth } from "@/lib/store/use-user";
 import { UploadContent } from "./upload-content";
 import axios from "axios";
 import { Chatbot } from "@/lib/supabase";
+import { VariantProps } from "class-variance-authority";
 
-const NewChatbotModal = ({ chatbotsCreated }: { chatbotsCreated: number }) => {
+const NewChatbotModal = ({
+  chatbotsCreated,
+  className,
+  children,
+  variant = "default",
+}: {
+  chatbotsCreated: number;
+  className?: string;
+  children?: React.ReactNode;
+  variant?: VariantProps<typeof buttonVariants>["variant"] | null;
+}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false); // Step 1
   const [chatbot, setChatbot] = useState<Chatbot | null>(null);
 
@@ -40,16 +51,11 @@ const NewChatbotModal = ({ chatbotsCreated }: { chatbotsCreated: number }) => {
   };
 
   return (
-    <Dialog
-      open={isDialogOpen}
-      onOpenChange={setIsDialogOpen}
-      onDismiss={closeDialog}
-      dissmissOnEsc={true}
-    >
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger
-        className={cn(buttonVariants({ variant: "default" }), "w-full sm:w-auto")}
+        className={cn({ [buttonVariants({ variant })]: !!variant }, className)}
       >
-        New chatbot
+        {children || <>New chatbot</>}
       </DialogTrigger>
 
       <DialogContent

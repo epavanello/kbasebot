@@ -1,4 +1,5 @@
 import {
+  ChatCompletionFunctions,
   ChatCompletionRequestMessage,
   Configuration,
   OpenAIApi,
@@ -12,18 +13,28 @@ import {
   tokenLimits,
 } from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
-import { templates } from "@/modules/chatbots/templates";
+import { ILeads, templates } from "@/modules/chatbots/templates";
 import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import { getErrorMessage } from "@/lib/utils";
-import { countMonthlyConversationUsage, getSubscription } from "@/lib/supabase";
+import {
+  Chatbot,
+  Settings,
+  countMonthlyConversationUsage,
+  getSubscription,
+} from "@/lib/supabase";
 import { getPermissions } from "@/lib/permissions/plans";
 import {
   GPTModel,
   GPTModels,
   prettifyGPTModelName,
 } from "@/modules/chatbots/helpers";
+import {
+  callStoreLeads,
+  FUNC_STORE_LEAD,
+  storeLeadSchema,
+} from "@/modules/chatbots/function-call/store-leads";
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge";
@@ -31,7 +42,11 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages, conversationId, chatbotId } = await req.json();
+    const {
+      messages: clientMessages,
+      conversationId,
+      chatbotId,
+    } = await req.json();
 
     if (!conversationId) {
       throw new Error("conversationId is required");
@@ -39,7 +54,9 @@ export async function POST(req: NextRequest) {
 
     const supabaseAdminClient = getSupabaseClientAdmin();
 
-    const userPrompt = messages?.length ? messages[messages.length - 1] : [];
+    const userPrompt = clientMessages?.length
+      ? clientMessages[clientMessages.length - 1]
+      : [];
 
     if (!userPrompt?.content?.length)
       throw new Error("Please write a question");
@@ -48,14 +65,38 @@ export async function POST(req: NextRequest) {
       user_id: ownerId,
       model,
       custom_context,
+      chatbot_settings,
     } = (
       await supabaseAdminClient
         .from("chatbots")
-        .select("user_id, model, custom_context")
+        .select("user_id, model, custom_context, chatbot_settings(leads)")
         .eq("id", chatbotId)
         .single()
         .throwOnError()
-    ).data!;
+    ).data! as any as Pick<Chatbot, "user_id" | "model" | "custom_context"> &
+      ({
+        chatbot_settings?: {
+          leads?: ILeads;
+        };
+      } | null);
+
+    const isLeadsEnabled =
+      chatbot_settings &&
+      (chatbot_settings.leads?.name ||
+        chatbot_settings.leads?.email ||
+        chatbot_settings.leads?.phone);
+
+    const hasLeads =
+      (isLeadsEnabled &&
+        (
+          await supabaseAdminClient
+            .from("leads")
+            .select("*", { count: "exact" })
+            .eq("conversation_id", conversationId)
+            .maybeSingle()
+            .throwOnError()
+        )?.count) ||
+      0 > 0;
 
     const ownerSubscription = await getSubscription(
       supabaseAdminClient,
@@ -88,18 +129,6 @@ export async function POST(req: NextRequest) {
       speaker: IConversationSpeaker.User,
     });
 
-    // filter out the most old messages if the conversation history is too long
-
-    const counter = new TokenCounter(tokenLimits.history);
-    let conversationHistory: ChatCompletionRequestMessage[] = (
-      await conversationLog.getConversation({
-        limit: 10,
-      })
-    )
-      .reverse()
-      .filter((entry) => counter.canAdd(entry.content || ""))
-      .reverse();
-
     // Get the context from the last message
     const knowledgeBase = await searchKnowledgeBase(
       userPrompt.content,
@@ -107,7 +136,9 @@ export async function POST(req: NextRequest) {
       supabaseAdminClient,
     );
 
-    const prompt: ChatCompletionRequestMessage[] = [
+    const functions: ChatCompletionFunctions[] = [];
+
+    const messages: ChatCompletionRequestMessage[] = [
       {
         role: "system",
         content:
@@ -116,11 +147,41 @@ export async function POST(req: NextRequest) {
             model: prettifyGPTModelName(model),
           }),
       },
-      {
-        role: "system",
-        content: templates.searchResults({ results: knowledgeBase }),
-      },
     ];
+
+    messages.push({
+      role: "system",
+      content: templates.searchResults({ results: knowledgeBase }),
+    });
+
+    // filter out the most old messages if the conversation history is too long
+    const historyCounter = new TokenCounter(
+      tokenLimits.history(
+        messages.reduce(
+          (acc, message) => acc + (message.content?.length || 0),
+          0,
+        ),
+      ),
+    );
+    let conversationHistory: ChatCompletionRequestMessage[] = (
+      await conversationLog.getConversation({
+        limit: 10,
+      })
+    )
+      .reverse()
+      .filter((entry) => historyCounter.canAdd(entry.content || ""))
+      .reverse();
+
+    messages.push(...conversationHistory);
+
+    // System messages on first position are more likely to be used as context on GPT-3
+    if (isLeadsEnabled && !hasLeads) {
+      functions.push(storeLeadSchema(chatbot_settings!.leads));
+      messages.push({
+        role: "system",
+        content: templates.leads(chatbot_settings!.leads),
+      });
+    }
 
     const config = new Configuration({
       apiKey: OPENAI_API_KEY,
@@ -141,17 +202,53 @@ export async function POST(req: NextRequest) {
     const response = await openai.createChatCompletion({
       model,
       stream: true,
-      messages: [...prompt, ...conversationHistory],
+      messages,
       max_tokens: tokenLimits.response,
+      ...(functions.length && { functions }),
     });
 
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response, {
       async onCompletion(result) {
+        // check if result is a stringfied JSON, if yes skip the addEntry
+        try {
+          JSON.parse(result);
+          return;
+        } catch {}
+
         await conversationLog.addEntry({
           entry: result,
           speaker: IConversationSpeaker.Assistant,
         });
+      },
+      experimental_onFunctionCall: async (
+        { name, arguments: args },
+        createFunctionCallMessages,
+      ) => {
+        // if you skip the function call and return nothing, the `function_call`
+        // message will be sent to the client for it to handle
+        if (name === FUNC_STORE_LEAD) {
+          await callStoreLeads(
+            args,
+            conversationId,
+            ownerId,
+            chatbotId,
+            supabaseAdminClient,
+          );
+
+          // `createFunctionCallMessages` constructs the relevant "assistant" and "function" messages for you
+          const newMessages = createFunctionCallMessages(args);
+
+          return openai.createChatCompletion({
+            model,
+            stream: true,
+            messages: [
+              ...messages,
+              ...(newMessages as ChatCompletionRequestMessage[]),
+            ],
+            max_tokens: tokenLimits.response,
+          });
+        }
       },
     });
     // Respond with the stream

@@ -14,6 +14,28 @@ export const gradients = {
 
 export function getRandomGradient() {
   const keys = Object.keys(gradients);
-  const randomKey = keys[Math.floor(Math.random() * keys.length)];
+  const randomKey = keys[
+    Math.floor(Math.random() * keys.length)
+  ] as keyof typeof gradients;
+  return gradients[randomKey];
+}
+
+function uuidToFixedNumber(uuid: string): number {
+  let hash = 0;
+  for (let i = 0; i < uuid.length; i++) {
+    let character = uuid.charCodeAt(i);
+    hash = (hash << 5) - hash + character;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return Math.abs(hash) / 0xffffffff;
+}
+
+export function getChatbotGradient(chatbotId: string) {
+  const keys = Object.keys(gradients);
+  // get a repeatable random number based on the chatbot id
+  const randomKey = keys[
+    Math.floor(uuidToFixedNumber(chatbotId) * keys.length)
+  ] as keyof typeof gradients;
+
   return gradients[randomKey];
 }
