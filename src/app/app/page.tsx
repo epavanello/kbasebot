@@ -20,7 +20,7 @@ const ChatbotIndex = () => {
         text="Manage your chatbots here"
         className="justify-between items-start"
       >
-        <NewChatbotModal chatbotsCreated={chatbots.length} />
+        <NewChatbotModal chatbotsCreated={chatbots.length} className="w-full sm:w-auto" />
       </DashboardHeader>
 
       {chatbots?.length ? (
@@ -41,7 +41,7 @@ const ChatbotIndex = () => {
               <LoadingDots className="!w-16 !h-16" />
             </div>
           ) : (
-            <NewChatbotModal chatbotsCreated={chatbots.length} />
+            <NewChatbotModal chatbotsCreated={chatbots.length} className="w-full sm:w-auto" />
           )}
         </NoItemsCard>
       )}

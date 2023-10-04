@@ -1,13 +1,14 @@
 import * as React from "react";
 import { Chatbot, SupabaseClientTyped } from "../supabase";
 import { useSupabaseAuth } from "../store/use-user";
+import { usePathname } from "next/navigation";
 
 export interface useChatbotsProps {}
 
 export function useChatbots() {
   const [loading, setLoading] = React.useState(false);
   const [chatbots, setChatbots] = React.useState<Chatbot[]>([]);
-
+  const pathname = usePathname();
   const { supabase, user } = useSupabaseAuth();
 
   React.useEffect(() => {
@@ -37,5 +38,11 @@ export function useChatbots() {
     }
   }, [user?.id]);
 
-  return { loading, chatbots };
+  // extract id from url /app/chatbots/[chatbot_id]
+  const currentChatbot = React.useMemo(
+    () => chatbots.find((chatbot) => chatbot.id === pathname.split("/")[3]),
+    [chatbots, pathname],
+  );
+
+  return { loading, chatbots, currentChatbot };
 }

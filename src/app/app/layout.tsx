@@ -17,7 +17,7 @@ const MainLayout = ({ children, seo }: DashboardLayoutProps) => {
         <div
           className="flex flex-row flex-1 min-h-0"
         >
-          <aside className="hidden w-[200px] flex-col md:flex border-r overflow-auto">
+          <aside className="hidden w-56 flex-col md:flex border-r overflow-auto">
             <Sidebar />
           </aside>
           {/*<PageTransition>*/}

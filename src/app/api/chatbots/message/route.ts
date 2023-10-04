@@ -1,4 +1,5 @@
 import {
+  ChatCompletionFunctions,
   ChatCompletionRequestMessage,
   Configuration,
   OpenAIApi,
@@ -29,7 +30,11 @@ import {
   GPTModels,
   prettifyGPTModelName,
 } from "@/modules/chatbots/helpers";
-import {callStoreLeads, FUNC_STORE_LEAD, storeLeadSchema} from "@/modules/chatbots/function-call/store-leads";
+import {
+  callStoreLeads,
+  FUNC_STORE_LEAD,
+  storeLeadSchema,
+} from "@/modules/chatbots/function-call/store-leads";
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge";
@@ -71,13 +76,27 @@ export async function POST(req: NextRequest) {
     ).data! as any as Pick<Chatbot, "user_id" | "model" | "custom_context"> &
       ({
         chatbot_settings?: {
-          leads: ILeads;
+          leads?: ILeads;
         };
       } | null);
 
-    const leadSettings = chatbot_settings.leads || {}
+    const isLeadsEnabled =
+      chatbot_settings &&
+      (chatbot_settings.leads?.name ||
+        chatbot_settings.leads?.email ||
+        chatbot_settings.leads?.phone);
 
-    const isLeadsEnabled = !!(leadSettings.name || leadSettings.email || leadSettings.phone)
+    const hasLeads =
+      (isLeadsEnabled &&
+        (
+          await supabaseAdminClient
+            .from("leads")
+            .select("*", { count: "exact" })
+            .eq("conversation_id", conversationId)
+            .maybeSingle()
+            .throwOnError()
+        )?.count) ||
+      0 > 0;
 
     const ownerSubscription = await getSubscription(
       supabaseAdminClient,
@@ -110,24 +129,14 @@ export async function POST(req: NextRequest) {
       speaker: IConversationSpeaker.User,
     });
 
-    // filter out the most old messages if the conversation history is too long
-
-    const counter = new TokenCounter(tokenLimits.history);
-    let conversationHistory: ChatCompletionRequestMessage[] = (
-      await conversationLog.getConversation({
-        limit: 10,
-      })
-    )
-      .reverse()
-      .filter((entry) => counter.canAdd(entry.content || ""))
-      .reverse();
-
     // Get the context from the last message
     const knowledgeBase = await searchKnowledgeBase(
       userPrompt.content,
       chatbotId,
       supabaseAdminClient,
     );
+
+    const functions: ChatCompletionFunctions[] = [];
 
     const messages: ChatCompletionRequestMessage[] = [
       {
@@ -145,14 +154,36 @@ export async function POST(req: NextRequest) {
       content: templates.searchResults({ results: knowledgeBase }),
     });
 
+    // filter out the most old messages if the conversation history is too long
+    const historyCounter = new TokenCounter(
+      tokenLimits.history(
+        messages.reduce(
+          (acc, message) => acc + (message.content?.length || 0),
+          0,
+        ),
+      ),
+    );
+    let conversationHistory: ChatCompletionRequestMessage[] = (
+      await conversationLog.getConversation({
+        limit: 10,
+      })
+    )
+      .reverse()
+      .filter((entry) => historyCounter.canAdd(entry.content || ""))
+      .reverse();
+
     messages.push(...conversationHistory);
 
-    if (chatbot_settings?.leads) {
+    // System messages on first position are more likely to be used as context on GPT-3
+    if (isLeadsEnabled && !hasLeads) {
+      functions.push(storeLeadSchema(chatbot_settings!.leads));
       messages.push({
         role: "system",
-        content: templates.leads(chatbot_settings.leads),
+        content: templates.leads(chatbot_settings!.leads),
       });
     }
+
+    console.log(messages);
 
     const config = new Configuration({
       apiKey: OPENAI_API_KEY,
@@ -169,38 +200,43 @@ export async function POST(req: NextRequest) {
 
     const openai = new OpenAIApi(config);
 
-    const functions = []
-
-    if(isLeadsEnabled){
-      functions.push(storeLeadSchema(chatbot_settings.leads))
-    }
-
     // Ask OpenAI for a streaming chat completion given the prompt
     const response = await openai.createChatCompletion({
       model,
       stream: true,
       messages,
       max_tokens: tokenLimits.response,
-    ...(functions?.length ? {functions} : {})
+      ...(functions.length && { functions }),
     });
 
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response, {
       async onCompletion(result) {
+        // check if result is a stringfied JSON, if yes skip the addEntry
+        try {
+          JSON.parse(result);
+          return;
+        } catch {}
+
         await conversationLog.addEntry({
           entry: result,
           speaker: IConversationSpeaker.Assistant,
         });
       },
       experimental_onFunctionCall: async (
-          { name, arguments: args },
-          createFunctionCallMessages,
+        { name, arguments: args },
+        createFunctionCallMessages,
       ) => {
         // if you skip the function call and return nothing, the `function_call`
         // message will be sent to the client for it to handle
         if (name === FUNC_STORE_LEAD) {
-
-         await callStoreLeads(args, conversationId,ownerId, chatbotId, supabaseAdminClient)
+          await callStoreLeads(
+            args,
+            conversationId,
+            ownerId,
+            chatbotId,
+            supabaseAdminClient,
+          );
 
           // `createFunctionCallMessages` constructs the relevant "assistant" and "function" messages for you
           const newMessages = createFunctionCallMessages(args);
@@ -208,11 +244,11 @@ export async function POST(req: NextRequest) {
           return openai.createChatCompletion({
             model,
             stream: true,
-            messages:  [...messages, ...(newMessages as ChatCompletionRequestMessage[])],
-            max_tokens: tokenLimits.response,
-            functions: [
-              storeLeadSchema(chatbot_settings.leads)
+            messages: [
+              ...messages,
+              ...(newMessages as ChatCompletionRequestMessage[]),
             ],
+            max_tokens: tokenLimits.response,
           });
         }
       },

@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
 import { cn } from "@/lib/utils";
-import { ArrowDownIcon } from "@radix-ui/react-icons";
-import { Icon, DOT_LOADING_ICON } from "@/components/ui/icons";
+import { Icon } from "@/components/ui/icons";
 
 export interface PromptProps
   extends Pick<UseChatHelpers, "input" | "setInput"> {

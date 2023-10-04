@@ -17,7 +17,7 @@ import { UserAvatar } from "@/components/layouts/user-avatar";
 import { Icon } from "@/components/ui/icons";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-export function UserAccountNav({ className }) {
+export function UserAccountNav({ className }: { className?: string }) {
   const { user } = useSupabaseAuth();
 
   const userDetails = user?.user_metadata;
@@ -46,7 +46,7 @@ export function UserAccountNav({ className }) {
           className={cn("flex justify-between", className)}
         >
           <UserAvatar avatar_url={avatar_url} full_name={full_name || "@"} />
-          <span className="mr-1">{full_name}</span>
+          <span className="mr-1 hidden sm:inline">{full_name}</span>
           <Icon
             icon="ep:arrow-down"
             className="ml-auto text-lg shrink-0 opacity-50"

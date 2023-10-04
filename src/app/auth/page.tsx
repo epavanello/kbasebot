@@ -53,7 +53,7 @@ const Page = ({ searchParams }) => {
   }, [user, code]);
 
   return (
-    <div className="flex justify-center items-center h-screen w-full relative">
+    <div className="flex justify-center items-center h-screen w-full relative p-4">
       <Card className="bg-transparent border-4 border-b-primary p-10 border_run">
         <CardHeader className="flex justify-center items-center">
           <Logo />

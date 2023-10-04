@@ -22,53 +22,54 @@ export interface SidebarItem {
   status?: ItemStatus;
 }
 
+function SidebarItem(item: SidebarItem) {
+  const path = usePathname();
+  return (
+    item.href && (
+      <Link
+        className={cn({
+          "pointer-events-none opacity-30": !!item.disabled,
+        })}
+        key={item.href}
+        href={item.href}
+      >
+        <span
+          className={cn(
+            "group relative flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary",
+            path === item.href ? "bg-secondary" : "transparent",
+            item.className || "",
+          )}
+        >
+          <Icon className="mr-2 text-xl" icon={item.icon} />
+          <span className="text-sm">{item.title}</span>
+          {!!item.status && (
+            <Badge
+              className={cn(
+                "absolute right-1 bottom-1 text-[10px] px-[6px] py-[0px]",
+                item.status.className || "",
+              )}
+            >
+              {item.status?.text}
+            </Badge>
+          )}
+        </span>
+      </Link>
+    )
+  );
+}
+
 interface SidebarProps {}
 
 const Sidebar: FC<SidebarProps> = () => {
-  const path = usePathname();
   const { chatbot_id } = useParams<{ chatbot_id: string }>();
 
-  const items = chatbot_id
+  const insideChatbot = !!chatbot_id;
+  const items = insideChatbot
     ? menus.sidebarNavByChatbot(chatbot_id)
     : menus.sidebarNav;
 
   return (
-    <nav className="grid items-start gap-2 p-2">
-      {items.map((item: SidebarItem, index) => {
-        return (
-          item.href && (
-            <Link
-              className={cn({
-                "pointer-events-none opacity-30": !!item.disabled,
-              })}
-              key={index}
-              href={item.href}
-            >
-              <span
-                className={cn(
-                  "group relative flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary",
-                  path === item.href ? "bg-secondary" : "transparent",
-                  item.className || "",
-                )}
-              >
-                <Icon className="mr-2 text-xl" icon={item.icon} />
-                <span className="text-sm">{item.title}</span>
-                {!!item.status && (
-                  <Badge
-                    className={cn(
-                      "absolute right-1 bottom-1 text-[10px] px-[6px] py-[0px]",
-                      item.status.className || "",
-                    )}
-                  >
-                    {item.status?.text}
-                  </Badge>
-                )}
-              </span>
-            </Link>
-          )
-        );
-      })}
-    </nav>
+    <nav className="grid items-start gap-2 p-2">{items.map(SidebarItem)}</nav>
   );
 };
 

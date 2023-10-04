@@ -434,6 +434,64 @@ export interface Database {
           }
         ]
       }
+      leads: {
+        Row: {
+          chatbot_id: string | null
+          chatbot_owner_id: string | null
+          conversation_id: string
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+          phone: string | null
+        }
+        Insert: {
+          chatbot_id?: string | null
+          chatbot_owner_id?: string | null
+          conversation_id: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+        }
+        Update: {
+          chatbot_id?: string | null
+          chatbot_owner_id?: string | null
+          conversation_id?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_chatbot_owner_id_fkey"
+            columns: ["chatbot_owner_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_chatbot_owner_id_fkey"
+            columns: ["chatbot_owner_id"]
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
       subscriptions: {
         Row: {
           billing_interval: string
