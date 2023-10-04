@@ -1,3 +1,5 @@
+import { SidebarItem } from "@/components/layouts/sidebar";
+
 export const menus = {
   mainNav: () => {
     return [
@@ -24,9 +26,9 @@ export const menus = {
       href: "/app/account",
       icon: "billing",
     },
-  ],
+  ] as SidebarItem[],
   // eslint-disable-next-line
-  sidebarNavByChatbot: (chatbotId: string) => [
+  sidebarNavByChatbot: (chatbotId: string): SidebarItem[] => [
     {
       title: "Go Back",
       href: `/app`,

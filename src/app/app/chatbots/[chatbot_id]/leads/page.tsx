@@ -237,7 +237,7 @@ function Leads() {
   if (columnFilters?.length) {
     columnFilters.forEach((filter) => {
       if (filter.id === "email") {
-        query.like("response->>email", `%${filter.value}%`);
+        query.like("email", `%${filter.value}%`);
       }
     });
   }
@@ -328,15 +328,15 @@ function Leads() {
         wrapperClass={"text-center"}
       />
 
-      <div className="w-full overflow-x-auto">
-        <div className="flex flex-col lg:flex-row py-4 gap-1">
+      <div className="w-full">
+        <div className="flex flex-col items-stretch sm:flex-row sm:justify-end flex-wrap py-4 gap-1">
           <Input
             placeholder="Filter emails..."
             value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("email")?.setFilterValue(event.target.value)
             }
-            className="max-w-sm mr-auto"
+            className="w-full md:max-w-sm mr-auto"
           />
           <Button disabled={true}>
             Integration <DatabaseBackup className="ml-2 h-4 w-4" /> (Coming
@@ -373,7 +373,7 @@ function Leads() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="rounded-md border">
+        <div className="rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
