@@ -124,6 +124,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
     multiple: !single,
     accept: SUPPORTED_EXTENSION_FOR_DROPZONE,
     maxSize: MAX_FILE_SIZE,
+    noClick: true,
   });
 
   return (

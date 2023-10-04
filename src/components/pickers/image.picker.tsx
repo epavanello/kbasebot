@@ -122,6 +122,7 @@ const ImagePicker = React.forwardRef<
     const { getRootProps, getInputProps } = useDropzone({
       onDrop: (files) => uploadImage(files),
       multiple: false,
+      noClick: true,
     });
 
     const deleteImage = async () => {
