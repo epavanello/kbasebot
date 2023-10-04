@@ -1,7 +1,7 @@
 const siteUrl = process.env.NEXT_PUBLIC_URL;
 
 // add your private routes here
-const exclude = ["/auth/*", "/**.png", "/app", "/app*"];
+const exclude = ["/auth/*", "/**.png", "/app", "/app*", "/*.xml"];
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
