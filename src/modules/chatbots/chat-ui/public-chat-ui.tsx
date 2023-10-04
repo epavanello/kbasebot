@@ -17,6 +17,7 @@ const PublicChatUi = ({
   onClose,
   className,
   forceTheme,
+  user_id
 }: {
   settings: Settings | null;
   chatbot_id: string;
@@ -94,6 +95,7 @@ const PublicChatUi = ({
         </div>
       </div>
       <ChatUi
+          user_id={user_id}
         welcome_message={welcome_message || ""}
         suggested_message={suggested_message || undefined}
         className="flex-1 min-h-0"

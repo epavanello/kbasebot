@@ -11,6 +11,7 @@ import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { DarkModeSwitch } from "@/components/ui/dark-mode-switch";
 import Logo from "@/components/landing/logo";
+import ChatbotSwitcher from "./chatbot-switcher";
 
 export type NavItem = {
   title: string;
@@ -34,7 +35,7 @@ export function MainNav({ items, children }: MainNavProps) {
   return (
     <div className="border-b bg-background">
       <div className="flex h-16 items-center px-4">
-        <div className="px-2 flex flex-1 gap-6 md:gap-10">
+        <div className="px-2 flex items-center flex-1 gap-2 md:gap-4">
           <button
             className="flex items-center space-x-2 md:hidden"
             onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -46,7 +47,15 @@ export function MainNav({ items, children }: MainNavProps) {
             )}
             <span className="sr-only">Menu</span>
           </button>
-          <Logo href="/app"  className="hidden sm:block"/>
+          <Logo href="/app" className="hidden sm:block" />
+          <Logo
+            href="/app"
+            withText={false}
+            width={35}
+            height={35}
+            className="block sm:hidden"
+          />
+          {pathname !== "/app" && <ChatbotSwitcher className="w-52" />}
           {items?.length ? (
             <nav className="hidden gap-6 md:flex flex-1 justify-center">
               {items?.map(
@@ -74,7 +83,7 @@ export function MainNav({ items, children }: MainNavProps) {
           )}
         </div>
         <div className="ml-auto flex items-center space-x-4">
-          <DarkModeSwitch />
+          <DarkModeSwitch className="hidden sm:flex" />
           <UserAccountNav />
         </div>
       </div>

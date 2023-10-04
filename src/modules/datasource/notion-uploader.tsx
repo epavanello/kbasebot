@@ -21,10 +21,6 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
     }));
   const { supabase } = useSupabaseAuth();
 
-  useEffect(() => {
-    console.log({ notionCode });
-  }, [notionCode]);
-
   const handleNotionConnect = async () => {
     popupCenter({
       url: NOTION_AUTH_URL,

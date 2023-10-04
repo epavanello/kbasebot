@@ -56,7 +56,7 @@ export function ChatMessage({
             className={cn(
               "w-auto min-w-0 max-w-full text-xs prose prose-sm break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 px-4 py-2 inline-block rounded-xl rounded-tl-none bg-secondary",
               {
-                "rounded-tr-none c_bg_primary c_text_primary_auto": isUser,
+                "rounded-tr-none c_bg_primary c_text_primary_auto prose-invert": isUser,
                 "rounded-tl-none bg-secondary": !isUser,
               },
             )}
@@ -68,7 +68,7 @@ export function ChatMessage({
             className={cn(
               "w-auto min-w-0 max-w-full text-xs prose prose-sm break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 px-4 py-2 inline-block rounded-xl",
               {
-                "rounded-tr-none c_bg_primary c_text_primary_auto": isUser,
+                "rounded-tr-none c_bg_primary c_text_primary_auto prose-invert": isUser,
                 "rounded-tl-none bg-secondary": !isUser,
               },
             )}

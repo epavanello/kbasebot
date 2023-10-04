@@ -32,6 +32,7 @@ export interface ChatProps extends React.ComponentProps<"div"> {
 
 export default function ChatUi({
   id,
+    user_id,
   className,
   chatContainerClass,
   welcome_message,
@@ -44,19 +45,20 @@ export default function ChatUi({
 
   const chatArea = useRef<HTMLDivElement | null>(null);
 
+  const { supabase } = useSupabaseAuth();
+
   const [conversation_id, setConversationId] = useLocalStorage<
     string | undefined
   >("conversation_id", undefined);
 
-  function resetChat() {
-    setConversationId(uuid());
+  // FIXME: need to validate this section
+  function resetChat(uid?:string) {
+    setConversationId(uid || uuid());
   }
-
-  const { supabase } = useSupabaseAuth();
 
   useEffect(() => {
     if (!conversation_id) {
-      resetChat();
+      resetChat(user_id);
     }
   }, []);
 
@@ -110,7 +112,7 @@ export default function ChatUi({
         setResponseIsStarted(true);
       }
     },
-    onFinish() {},
+    // onFinish() {},
     initialMessages: convesationLogToInitialMessages(
       conversations,
       welcome_message,

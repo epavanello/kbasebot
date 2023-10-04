@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
 import { cn } from "@/lib/utils";
-import { ArrowDownIcon } from "@radix-ui/react-icons";
-import { Icon, DOT_LOADING_ICON } from "@/components/ui/icons";
+import { Icon } from "@/components/ui/icons";
 
 export interface PromptProps
   extends Pick<UseChatHelpers, "input" | "setInput"> {
@@ -38,12 +37,19 @@ export function PromptForm({
   return (
     <form
       onSubmit={async (e) => {
+        const tempInput = input;
         e.preventDefault();
         if (!input?.trim()) {
           return;
         }
-        await onSubmit(input);
         setInput("");
+        try {
+          await onSubmit(input);
+        }
+        catch (e) {
+          setInput(tempInput);
+          throw e
+        }
       }}
       ref={formRef}
     >

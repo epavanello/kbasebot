@@ -98,9 +98,12 @@ export class TokenCounter {
 }
 
 export const tokenLimits = {
+  max: 8_000,
   context: 2_000,
   knowledgeBase: 2_000,
   chunk: 2_000 / 5,
-  history: 1_000,
+  history(used: number) {
+    return this.max - this.response - used;
+  },
   response: 1_000,
 };

@@ -14,8 +14,6 @@ export async function POST(req: NextRequest) {
 
     // if (!files?.length) throw new Error("no-files-found");
 
-    console.log({ files, text, url });
-
     return NextResponse.json({});
   } catch (e) {
     console.error(e);

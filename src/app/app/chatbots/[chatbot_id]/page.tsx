@@ -5,7 +5,6 @@ import Link from "next/link";
 import PublicChatUi from "@/modules/chatbots/chat-ui/public-chat-ui";
 import { getChatbotSettings } from "@/modules/chatbots/services.chatbot";
 import { cookies } from "next/headers";
-import ChatbotAnalytics from "@/modules/chatbots/chatbot-analytics";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +27,7 @@ const Page = async ({
       </DashboardHeader>
 
       <div className="w-full flex flex-1 sm:container">
-        <PublicChatUi noCloseBtn settings={settings} chatbot_id={chatbot_id} />
+        <PublicChatUi user_id={settings?.user_id} noCloseBtn settings={settings} chatbot_id={chatbot_id} />
       </div>
     </DashboardShell>
   );
