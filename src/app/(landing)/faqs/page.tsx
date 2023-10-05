@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/accordion";
 
 export const metadata = {
-  title: "FAQs",
+  title: "FAQs - KBaseBot",
   description: "Frequently Asked Questions of KBaseBot",
 };
 

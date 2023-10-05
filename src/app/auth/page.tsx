@@ -18,6 +18,12 @@ import LoadingDots from "@/components/ui/loading-dots";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Logo from "@/components/landing/logo";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login - KBaseBot",
+  description: "Login to your account",
+};
 
 const Page = ({ searchParams }) => {
   const supabase = createClientComponentClient();
