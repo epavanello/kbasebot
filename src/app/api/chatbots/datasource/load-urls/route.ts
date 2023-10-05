@@ -14,7 +14,10 @@ import { cookies } from "next/headers";
 import { Chatbot, ChatbotUrl } from "@/lib/supabase";
 import { getDevErrorMessage } from "@/lib/utils";
 import { IUrl } from "@/lib/store/use-datasource-store";
+
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
+
 // export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
