@@ -99,7 +99,7 @@ export function UploadContent({
       Promise.all([
         supabase
           .from("chatbot_urls")
-          .select("*, knowledge_base(id)")
+          .select("url, chars, knowledge_base(id)")
           .eq("chatbot_id", chatbot.id)
           .then(({ data, error }) => {
             if (error) {
