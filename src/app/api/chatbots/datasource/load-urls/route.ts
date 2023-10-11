@@ -11,7 +11,7 @@ import { Document } from "langchain/document";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/lib/types/database.types";
 import { cookies } from "next/headers";
-import { Chatbot, ChatbotUrl } from "@/lib/supabase";
+import { ChatbotUrl } from "@/lib/supabase";
 import { getDevErrorMessage } from "@/lib/utils";
 import { IUrl } from "@/lib/store/use-datasource-store";
 
@@ -19,6 +19,36 @@ export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 
 // export const runtime = "nodejs";
+
+interface AdjustedContent {
+  content: string;
+  url: string;
+}
+
+function adjustDocuments(
+  documents: Document<Record<string, any>>[],
+  content: AdjustedContent[] = [],
+) {
+  return (
+    [
+      ...documents.filter(Boolean).map((i) => ({
+        content: i.pageContent,
+        url: i.metadata.source,
+      })),
+      ...content,
+    ]
+      // se ci sono url duplicati con page content diverso, concateno il contenuto e unisco gli array items
+      .reduce((acc, curr) => {
+        const index = acc.findIndex((i) => i.url === curr.url);
+        // i documenti restituiti devono essere univoci a parità di url, se ci sono duplicati, li ignoro
+        if (index === -1) {
+          acc.push(curr);
+        }
+        return acc;
+      }, [] as AdjustedContent[])
+      .filter((url) => url.content.length > 0)
+  );
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,44 +68,43 @@ export async function POST(req: NextRequest) {
       url?: string;
     };
 
-    const { sitemap, crawl, url } = body;
+    let { sitemap, crawl, url } = body;
 
-    let data: Document<Record<string, any>>[] = [];
+    let adjustedContent: AdjustedContent[] = [];
 
-    if (sitemap) {
-      const { sites } = await loadSiteMap(sitemap);
-      data = await loadMultiUrl(sites);
-    } else if (crawl) {
-      data = (await loadWebsites(crawl)) || [];
-    } else if (url) {
-      data = await loadSingleUrl(url, false);
-    } else {
-      throw new Error("no-datasource-found");
+    if (crawl) {
+      adjustedContent = adjustDocuments((await loadWebsites(crawl)) || []);
     }
 
-    const loadedUrls = data
-      .filter(Boolean)
-      .filter((url) => url.pageContent.length > 0)
-      .map((i) => ({
-        content: i.pageContent,
-        url: i.metadata.source,
-      }))
-      // se ci sono url duplicati con page content diverso, concateno il contenuto e unisco gli array items
-      .reduce((acc, curr) => {
-        const index = acc.findIndex((i) => i.url === curr.url);
-        if (index === -1) {
-          acc.push(curr);
-        } else {
-          acc[index].content += "\n\n" + curr.content;
-        }
-        return acc;
-      }, [] as { content: string; url: string }[]);  
-      ;
+    if (sitemap || crawl) {
+      if (crawl) {
+        sitemap = `${crawl}/sitemap.xml`;
+      }
+      let { sites } = await loadSiteMap(sitemap!);
+      if (sites.length == 0 && sitemap?.indexOf(".xml") == -1) {
+        // try to set sitemap.xml to the url and retry
+        sitemap = new URL(sitemap!).origin + "/sitemap.xml";
+        ({ sites } = await loadSiteMap(sitemap));
+      }
+      // filter out previous extracted urls
+      sites.filter((site) => !adjustedContent.find((i) => i.url === site));
+      adjustedContent = adjustDocuments(
+        await loadMultiUrl(sites),
+        adjustedContent,
+      );
+    }
+    if (url) {
+      adjustedContent = adjustDocuments(await loadSingleUrl(url));
+    }
+
+    if (!url && !sitemap && !crawl) {
+      throw new Error("no-datasource-found");
+    }
 
     await supabaseServerClient
       .from("chatbot_urls")
       .insert(
-        loadedUrls.map(
+        adjustedContent.map(
           (document) =>
             ({
               chars: document.content.length,
@@ -88,7 +117,7 @@ export async function POST(req: NextRequest) {
       .throwOnError();
 
     return NextResponse.json(
-      loadedUrls.map(
+      adjustedContent.map(
         (url) => ({ chars: url.content.length, url: url.url }) as IUrl,
       ),
     );
