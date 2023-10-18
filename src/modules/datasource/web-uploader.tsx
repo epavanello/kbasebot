@@ -7,6 +7,7 @@ import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tabs } from "@radix-ui/react-tabs";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import ContentList from "./content-list";
+import { useToast } from "@/components/ui/use-toast";
 
 const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
   const { urls, appendUrls, deleteUrl, deleteAllUrls } = useDatasourceStore(
@@ -17,6 +18,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
       deleteAllUrls: state.deleteAllUrls,
     }),
   );
+  const { toast } = useToast();
 
   const { supabase } = useSupabaseAuth();
 
@@ -53,6 +55,12 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
 
       if (res.data?.length) {
         appendUrls(res.data);
+      } else {
+        toast({
+          title: "Uh oh! Something went wrong.",
+          description: "No content found",
+          variant: "destructive",
+        });
       }
     } catch (e) {
       console.error(e);

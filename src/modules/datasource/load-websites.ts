@@ -18,27 +18,21 @@ export const loadWebsites = async (url: string) => {
 };
 
 // TODO: use ToMarkdownLoader to get better content
-export const loadSingleUrl = async (url: string, split = false) => {
+export const loadSingleUrl = async (url: string) => {
   const loader = new CheerioWebBaseLoader(url, {
     timeout: 60000,
   });
-  if (split) {
-    return loader.loadAndSplit();
-  } else {
-    return loader.load();
-  }
+  return loader.load();
 };
 
-export const loadMultiUrl = async (url: string[], split = false) => {
-  return (
-    await Promise.all(url.map((url) => loadSingleUrl(url, split)))
-  ).flat();
+export const loadMultiUrl = async (url: string[]) => {
+  return (await Promise.all(url.map((url) => loadSingleUrl(url)))).flat();
 };
 
 export const loadSiteMap = async (sitemapUrl: string) => {
   const Site = new Sitemapper({
     url: sitemapUrl,
-    timeout: 10000, // 5 seconds
+    timeout: 10000, // 5 seconds,
   });
 
   return await Site.fetch();
