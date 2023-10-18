@@ -11,5 +11,6 @@
         "node_modules": true,
         ".yarn": true,
     },
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "npm.packageManager": "yarn"
 }
