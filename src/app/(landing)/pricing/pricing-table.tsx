@@ -76,7 +76,7 @@ export default function PricingTable() {
                       style: "currency",
                       // TODO: add currency based on user location
                       currency: "usd",
-                      minimumFractionDigits: 0,
+                      minimumFractionDigits: 2,
                     }).format((price.unitAmount || 0) / 100)
                   : "";
 
@@ -95,7 +95,7 @@ export default function PricingTable() {
                   plan.id === subscription?.plan &&
                   billingInterval === subscription?.billing_interval;
 
-                let info = "(2 days free trial)";
+                let info = "";
 
                 if (isFree) {
                   subscribeText = "Get started";

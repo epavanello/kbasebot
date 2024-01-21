@@ -1,8 +1,17 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Icon } from "@iconify/react";
+import { IconifyIcon } from '@iconify/react';
 
-const StatCard = ({ className, title, content, subtitle, icon }) => {
+interface StatCardProps {
+  className?: string;
+  title: string;
+  content: React.ReactNode;
+  subtitle?: string;
+  icon: IconifyIcon | string;
+}
+
+const StatCard: React.FC<StatCardProps> = ({ className, title, content, subtitle, icon }) => {
   return (
     <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

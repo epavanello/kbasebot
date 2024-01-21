@@ -16,12 +16,12 @@ export type Permissions = {
 export const PLAN_PERMISSIONS: Record<Plan, Permissions> = {
   [Plan.FREE]: {
     maxChatbots: 1,
-    maxMessages: 30,
+    maxMessages: 500,
     maxCharactersToTrain: 500_000,
   },
   [Plan.BASIC]: {
     maxChatbots: 5,
-    maxMessages: 3_000,
+    maxMessages: 10_000,
     maxCharactersToTrain: 800_000,
   },
   [Plan.PRO]: {
