@@ -5,10 +5,10 @@ import type { NextRequest } from "next/server";
 import {
   STRIPE_API_KEY,
   STRIPE_ENDPOINT_SECRET,
-  STRIPE_PRICE_ID_BASIC,
-  STRIPE_PRICE_ID_BASIC_YEARLY,
-  STRIPE_PRICE_ID_PRO,
-  STRIPE_PRICE_ID_PRO_YEARLY,
+  STRIPE_PRICE_IDS_BASIC,
+  STRIPE_PRICE_IDS_BASIC_YEARLY,
+  STRIPE_PRICE_IDS_PRO,
+  STRIPE_PRICE_IDS_PRO_YEARLY,
 } from "@/lib/env";
 import Stripe from "stripe";
 import { getErrorMessage, isProduction } from "@/lib/utils";
@@ -117,16 +117,16 @@ export async function POST(request: NextRequest) {
 
         let plan: Plan;
         let billingInterval: BillingInterval;
-        if (STRIPE_PRICE_ID_BASIC.split("|").includes(priceID)) {
+        if (STRIPE_PRICE_IDS_BASIC.split("|").includes(priceID)) {
           plan = Plan.BASIC;
           billingInterval = "month";
-        } else if (STRIPE_PRICE_ID_PRO.split("|").includes(priceID)) {
+        } else if (STRIPE_PRICE_IDS_PRO.split("|").includes(priceID)) {
           plan = Plan.PRO;
           billingInterval = "month";
-        } else if (STRIPE_PRICE_ID_BASIC_YEARLY.split("|").includes(priceID)) {
+        } else if (STRIPE_PRICE_IDS_BASIC_YEARLY.split("|").includes(priceID)) {
           plan = Plan.BASIC;
           billingInterval = "year";
-        } else if (STRIPE_PRICE_ID_PRO_YEARLY.split("|").includes(priceID)) {
+        } else if (STRIPE_PRICE_IDS_PRO_YEARLY.split("|").includes(priceID)) {
           plan = Plan.PRO;
           billingInterval = "year";
         } else {

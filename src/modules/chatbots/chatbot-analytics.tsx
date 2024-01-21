@@ -7,16 +7,33 @@ import StatCard from "@/components/ui/stats-card";
 import { gradients } from "@/style/gradients";
 import LineChart from "@/components/charts/linechart";
 
+type AnalyticsData = {
+  timeseries: {
+    results: {
+      date: string;
+      visitors: number | null;
+      visit_duration: number | null;
+    }[];
+  };
+  pageviews?: {
+    value?: number;
+  };
+  visit_duration?: {
+    value?: number;
+  };
+  visitors?: {
+    value?: number;
+  };
+  conversations?: {
+    value?: number;
+  };
+};
+
 const ChatbotAnalytics = ({ chatbot_id }: { chatbot_id: string }) => {
-  const { data } = useSWR<{
-    timeseries: {
-      results: {
-        date: string;
-        visitors: number | null;
-        visit_duration: number | null;
-      }[];
-    };
-  }>(`/api/chatbots/analytics?chatbot_id=${chatbot_id}`, fetcher);
+  const { data } = useSWR<AnalyticsData>(
+    `/api/chatbots/analytics?chatbot_id=${chatbot_id}`,
+    fetcher,
+  );
 
   const {
     pageviews = {},

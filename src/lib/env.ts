@@ -1,10 +1,15 @@
 export const NEXT_PUBLIC_URL = process.env.NEXT_PUBLIC_URL!;
-export const STRIPE_PRICE_ID_BASIC = process.env.STRIPE_PRICE_ID_BASIC!;
-export const STRIPE_PRICE_ID_PRO = process.env.STRIPE_PRICE_ID_PRO!;
-export const STRIPE_PRICE_ID_BASIC_YEARLY =
-  process.env.STRIPE_PRICE_ID_BASIC_YEARLY!;
-export const STRIPE_PRICE_ID_PRO_YEARLY =
-  process.env.STRIPE_PRICE_ID_PRO_YEARLY!;
+
+export const STRIPE_PRICE_IDS_BASIC = process.env.STRIPE_PRICE_IDS_BASIC || "";
+export const STRIPE_PRICE_IDS_PRO = process.env.STRIPE_PRICE_IDS_PRO || "";
+export const STRIPE_PRICE_IDS_BASIC_YEARLY = process.env.STRIPE_PRICE_IDS_BASIC_YEARLY || "";
+export const STRIPE_PRICE_IDS_PRO_YEARLY = process.env.STRIPE_PRICE_IDS_PRO_YEARLY || "";
+
+export const STRIPE_PRICE_ID_BASIC = STRIPE_PRICE_IDS_BASIC.split("|")[0];
+export const STRIPE_PRICE_ID_PRO = STRIPE_PRICE_IDS_PRO.split("|")[0];
+export const STRIPE_PRICE_ID_BASIC_YEARLY = STRIPE_PRICE_IDS_BASIC_YEARLY.split("|")[0];
+export const STRIPE_PRICE_ID_PRO_YEARLY = STRIPE_PRICE_IDS_PRO_YEARLY.split("|")[0];
+
 export const STRIPE_API_KEY = process.env.STRIPE_API_KEY!;
 export const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_ENDPOINT_SECRET!;
 export const NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;

@@ -52,11 +52,11 @@ export const plans: PlanDetails[] = [
     id: Plan.BASIC,
     name: "Basic",
     prices: [
-      { priceId: STRIPE_PRICE_ID_BASIC, interval: "month", unitAmount: 1499 },
+      { priceId: STRIPE_PRICE_ID_BASIC, interval: "month", unitAmount: 9_79 },
       {
         priceId: STRIPE_PRICE_ID_BASIC_YEARLY,
         interval: "year",
-        unitAmount: 14999,
+        unitAmount: 97_90,
       },
     ],
     features: [
@@ -81,12 +81,12 @@ export const plans: PlanDetails[] = [
       {
         priceId: STRIPE_PRICE_ID_PRO,
         interval: "month",
-        unitAmount: 3999,
+        unitAmount: 34_79,
       },
       {
         priceId: STRIPE_PRICE_ID_PRO_YEARLY,
         interval: "year",
-        unitAmount: 39999,
+        unitAmount: 347_90,
       },
     ],
     features: [
