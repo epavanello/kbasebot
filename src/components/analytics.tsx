@@ -23,7 +23,7 @@ const Analytics = () => {
         id="plausible"
         defer
         data-domain="kbasebot.com"
-        src="https://kbase-plausible.toc.ink/js/script.js"
+        src="https://plausible.emadev.co/js/script.js"
       ></Script>
       <Script id="plausible-function" type="text/javascript">
         {`window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`}
