@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
     const permission = getPermissions(ownerSubscription);
 
     if (!GPTModels.includes(model as GPTModel) || permission.plan === "free") {
-      model = GPTModel.GPT_3;
+      model = GPTModel.GPT_3_5_Turbo;
     }
 
     if ((await countMonthlyConversationUsage(supabaseAdminClient, ownerId)) > permission.permission.maxMessages) {
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
 
     messages.push(...conversationHistory);
 
-    // System messages on first position are more likely to be used as context on GPT-3
+    // System messages on first position are more likely to be used as context on GPT-3.5 Turbo
     if (isLeadsEnabled && !hasLeads) {
       functions.push(storeLeadSchema(chatbot_settings!.leads));
       messages.push({

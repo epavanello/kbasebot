@@ -22,7 +22,7 @@ export const generateName = async (chatbotId: string, supabaseServerClient: Supa
 
   // Ask OpenAI for a streaming chat completion given the prompt
   const response = await openai.chat.completions.create({
-    model: GPTModel.GPT_3,
+    model: GPTModel.GPT_3_5_Turbo,
     messages: prompt,
   });
 

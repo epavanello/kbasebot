@@ -1,11 +1,11 @@
-import { prettifyGPTModelName } from "@/modules/chatbots/helpers";
+import { GPTModel, prettifyGPTModelName } from "@/modules/chatbots/helpers";
 import {
   STRIPE_PRICE_ID_BASIC,
   STRIPE_PRICE_ID_BASIC_YEARLY,
   STRIPE_PRICE_ID_PRO,
   STRIPE_PRICE_ID_PRO_YEARLY,
 } from "./env";
-import { PLAN_PERMISSIONS, Plan, getPermissions } from "./permissions/plans";
+import { PLAN_PERMISSIONS, Plan } from "./permissions/plans";
 
 export type BillingInterval = "year" | "month";
 
@@ -44,7 +44,7 @@ export const plans: PlanDetails[] = [
         enabled: true,
         feature: `${PLAN_PERMISSIONS[Plan.FREE].maxMessages} messages/month`,
       },
-      { enabled: false, feature: `${prettifyGPTModelName("gpt-4")}` },
+      { enabled: false, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)}` },
       ...commonFeatures,
     ],
   },
@@ -68,7 +68,7 @@ export const plans: PlanDetails[] = [
         enabled: true,
         feature: `${PLAN_PERMISSIONS[Plan.BASIC].maxMessages / 1000}k messages/month`,
       },
-      { enabled: false, feature: `${prettifyGPTModelName("gpt-4")}` },
+      { enabled: false, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)}` },
       ...commonFeatures,
     ],
   },
@@ -96,7 +96,7 @@ export const plans: PlanDetails[] = [
         enabled: true,
         feature: `${PLAN_PERMISSIONS[Plan.PRO].maxMessages / 1000}k messages/month`,
       },
-      { enabled: true, feature: `${prettifyGPTModelName("gpt-4")} ✨` },
+      { enabled: true, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)} ✨` },
       ...commonFeatures,
     ],
     highlight: true,
@@ -109,7 +109,7 @@ export const plans: PlanDetails[] = [
     features: [
       { enabled: true, feature: "Unlimited Chatbots" },
       { enabled: true, feature: "Unlimited messages/month" },
-      { enabled: true, feature: `${prettifyGPTModelName("gpt-4")} ✨` },
+      { enabled: true, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)} ✨` },
       ...commonFeatures,
     ],
   },

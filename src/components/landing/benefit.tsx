@@ -11,7 +11,7 @@ const features = [
   },
   {
     name: "Powerful",
-    description: "KBaseBot is powered by GPT-4, making it the most powerful chatbot in the market.",
+    description: "KBaseBot is powered by GPT-4o, making it the most powerful chatbot in the market.",
   },
   {
     name: "Secure",

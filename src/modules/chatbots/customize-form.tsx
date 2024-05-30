@@ -148,7 +148,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                     <FormControl>
                       <Creatable
                         placeholder="eg. how to upgrade my plan?"
-                        className="text-sm"
+                        className="text-sm text-black"
                         isMulti
                         onChange={(val) => {
                           field.onChange(val.map((i) => i.value));

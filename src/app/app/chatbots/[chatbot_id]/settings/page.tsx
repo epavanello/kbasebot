@@ -159,21 +159,23 @@ const Settings = () => {
                 <Label htmlFor="model">Model</Label>
                 <div className="flex flex-row items-start gap-2">
                   <Select
-                    value={GPTModels.includes(chatbot.model as GPTModel) ? chatbot.model : GPTModel.GPT_3}
+                    value={GPTModels.includes(chatbot.model as GPTModel) ? chatbot.model : GPTModel.GPT_3_5_Turbo}
                     onValueChange={(value) => updateChatBot({ model: value })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a model" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={GPTModel.GPT_3}>{prettifyGPTModelName(GPTModel.GPT_3)}</SelectItem>
-                      <SelectItem value={GPTModel.GPT_4} disabled={subscription?.plan !== Plan.PRO}>
-                        {prettifyGPTModelName(GPTModel.GPT_4)}
+                      <SelectItem value={GPTModel.GPT_3_5_Turbo}>
+                        {prettifyGPTModelName(GPTModel.GPT_3_5_Turbo)}
+                      </SelectItem>
+                      <SelectItem value={GPTModel.GPT_4o} disabled={subscription?.plan !== Plan.PRO}>
+                        {prettifyGPTModelName(GPTModel.GPT_4o)}
                       </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <p className={cn("mt-2 text-xs text-muted-foreground")}>GPT-4 model is only available for pro users</p>
+                <p className={cn("mt-2 text-xs text-muted-foreground")}>GPT-4o model is only available for pro users</p>
               </div>
               <div>
                 <Label htmlFor="context">Context</Label>

@@ -43,7 +43,7 @@ const Hero = () => {
         <div className="flex w-full flex-col-reverse items-stretch justify-center gap-4 sm:flex-row sm:items-center">
           <p>
             <span className="text-sm font-light italic text-muted-foreground">Powered by</span>
-            <span className="font-semibold">&nbsp;&nbsp;GPT-4 ✨</span>
+            <span className="font-semibold">&nbsp;&nbsp;GPT-4o ✨</span>
           </p>
           <Link
             className={cn(
