@@ -6,20 +6,12 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import DocumentUploader from "@/modules/datasource/doc-uploader";
 import TextSource from "@/modules/datasource/text-source";
-import {
-  IFile,
-  INotion,
-  IUrl,
-  useDatasourceStore,
-} from "@/lib/store/use-datasource-store";
-import {
-  MAX_TEXT_INPUT,
-  MIN_TEXT_INPUT,
-} from "@/modules/datasource/docs-constant";
+import { IFile, INotion, IUrl, useDatasourceStore } from "@/lib/store/use-datasource-store";
+import { MAX_TEXT_INPUT, MIN_TEXT_INPUT } from "@/modules/datasource/docs-constant";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tabs } from "@radix-ui/react-tabs";
-import { Icon } from "@/components/ui/icons";
+import { Icon, LoadingIcon } from "@/components/ui/icons";
 import WebUploader from "@/modules/datasource/web-uploader";
 import { toast } from "@/components/ui/use-toast";
 import { Chatbot } from "@/lib/supabase";
@@ -37,6 +29,7 @@ export function UploadContent({
   externalChatbotId?: string;
 }) {
   const [loading, setLoading] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
   const { push } = useRouter();
   const { supabase } = useSupabaseAuth();
 
@@ -56,6 +49,7 @@ export function UploadContent({
     setNotionTrained,
     setUrlTrained,
     resetDatasource,
+    startLoading,
   } = useDatasourceStore((state) => ({
     docs: state.docs,
     text: state.text,
@@ -69,126 +63,131 @@ export function UploadContent({
     setUrlTrained: state.setUrlTrained,
     setNotionTrained: state.setNotionTrained,
     resetDatasource: state.reset,
+    startLoading: state.startLoading,
   }));
 
   useEffect(() => {
-    resetDatasource();
     if (externalChatbotId) {
-      setLoading(true);
-      supabase
-        .from("chatbots")
-        .select("*")
-        .eq("id", externalChatbotId)
-        .then(({ data, error }) => {
-          if (error) {
-            console.error(error);
-          } else {
-            setChatbot(data[0]);
-          }
-          setLoading(false);
-        });
-    }
-  }, [externalChatbotId]);
+      if (showCreate) {
+        resetDatasource();
+      } else {
+        startLoading();
+      }
 
-  // loading text, urls, notions and files
-  useEffect(() => {
-    if (chatbot && !showCreate) {
       setLoading(true);
 
-      setText({ content: chatbot.text || "", changed: false });
       Promise.all([
         supabase
-          .from("chatbot_urls")
-          .select("url, chars, knowledge_base(id)")
-          .eq("chatbot_id", chatbot.id)
+          .from("chatbots")
+          .select("*")
+          .eq("id", externalChatbotId)
           .then(({ data, error }) => {
             if (error) {
               console.error(error);
-              return;
+            } else {
+              setChatbot(data[0]);
+              setText({ content: data[0].text || "", changed: false });
             }
-            setUrls(
-              data.map(
-                (item) =>
-                  ({
-                    url: item.url,
-                    chars: item.chars,
-                    trained: item.knowledge_base.length > 0,
-                  }) as IUrl,
-              ),
-            );
           }),
-        supabase
-          .from("chatbot_docs")
-          .select("*, knowledge_base(id)")
-          .eq("chatbot_id", chatbot.id)
-          .then(({ data, error }) => {
-            if (error) {
-              console.error(error);
-              return;
-            }
-            setDocs(
-              data.map(
-                (item) =>
-                  ({
-                    id: item.id,
-                    name: item.file_name.split("/").pop() || "",
-                    chars: item.chars,
-                    trained: item.knowledge_base.length > 0,
-                  }) as IFile,
-              ),
-            );
-          }),
-        // Get notion from chatbot_notion
-        supabase
-          .from("chatbot_notion")
-          .select("*, knowledge_base(id)")
-          .eq("chatbot_id", chatbot.id)
-          .then(({ data, error }) => {
-            if (error) {
-              console.error(error);
-              return;
-            }
-            setNotion(
-              data.map(
-                (item) =>
-                  ({
-                    id: item.id,
-                    name: item.name,
-                    chars: item.chars,
-                    trained: item.knowledge_base.length > 0,
-                  }) as INotion,
-              ),
-            );
-          }),
-      ]).finally(() => setLoading(false));
+        ...(!showCreate
+          ? [
+              supabase
+                .from("chatbot_training_status")
+                .select("*")
+                .eq("chatbot_id", externalChatbotId)
+                .then(({ data, error }) => {
+                  if (error) {
+                    console.error(error);
+                    return;
+                  }
+                  setUrls(
+                    data.map(
+                      (item) =>
+                        ({
+                          url: item.url,
+                          chars: item.chars,
+                          trained: item.trained,
+                        }) as IUrl,
+                    ),
+                  );
+                }),
+              supabase
+                .from("chatbot_docs")
+                .select("*, knowledge_base(id)")
+                .eq("chatbot_id", externalChatbotId)
+                .then(({ data, error }) => {
+                  if (error) {
+                    console.error(error);
+                    return;
+                  }
+                  setDocs(
+                    data.map(
+                      (item) =>
+                        ({
+                          id: item.id,
+                          name: item.file_name.split("/").pop() || "",
+                          chars: item.chars,
+                          trained: item.knowledge_base.length > 0,
+                        }) as IFile,
+                    ),
+                  );
+                }),
+              supabase
+                .from("chatbot_notion")
+                .select("*, knowledge_base(id)")
+                .eq("chatbot_id", externalChatbotId)
+                .then(({ data, error }) => {
+                  if (error) {
+                    console.error(error);
+                    return;
+                  }
+                  setNotion(
+                    data.map(
+                      (item) =>
+                        ({
+                          id: item.id,
+                          name: item.name,
+                          chars: item.chars,
+                          trained: item.knowledge_base.length > 0,
+                        }) as INotion,
+                    ),
+                  );
+                }),
+            ]
+          : []),
+      ])
+        .catch((e) => {
+          console.error(e);
+          toast({
+            variant: "destructive",
+            title: "Something went wrong!",
+            description: "There was a problem with your request. please try again",
+          });
+        })
+        .finally(() => setLoading(false));
     }
-  }, [chatbot, showCreate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [externalChatbotId, supabase]);
 
-  const totalDocChars = docs.reduce((acc, next) => acc + (next.chars || 0), 0);
+  const totalDocChars = docs?.reduce((acc, next) => acc + (next.chars || 0), 0) || 0;
 
-  const totalUrlChars = urls.reduce((acc, next) => acc + (next.chars || 0), 0);
+  const totalUrlChars = urls?.reduce((acc, next) => acc + (next.chars || 0), 0) || 0;
 
-  const totalNotionChars = notion.reduce(
-    (acc, next) => acc + (next.chars || 0),
-    0,
-  );
+  const totalNotionChars = notion?.reduce((acc, next) => acc + (next.chars || 0), 0) || 0;
 
   const canTrain =
     !loading &&
-    (docs.filter((doc) => !doc.trained).length > 0 ||
-      urls.filter((url) => !url.trained).length > 0 ||
-      notion.filter((n) => !n.trained).length > 0 ||
-      (text.changed &&
-        text.content.length >= MIN_TEXT_INPUT &&
-        text.content.length < MAX_TEXT_INPUT));
+    !formLoading &&
+    ((docs && docs.filter((doc) => !doc.trained).length > 0) ||
+      (urls && urls.filter((url) => !url.trained).length > 0) ||
+      (notion && notion.filter((n) => !n.trained).length > 0) ||
+      (text && text.changed && text.content.length >= MIN_TEXT_INPUT && text.content.length < MAX_TEXT_INPUT));
 
   const uploadContent = async (c: Chatbot) => {
     if (!c) throw new Error("Chatbot not found");
-    const uploadPath = `/api/chatbots/train?chatbot_id=${encodeURIComponent(
-      c.id,
-    )}`;
+    const uploadPath = `/api/chatbots/train?chatbot_id=${encodeURIComponent(c.id)}`;
     const promises: Promise<void>[] = [];
-    for (let doc of docs) {
+    for (let doc of docs || []) {
       if (!doc.trained) {
         promises.push(
           new Promise(async (resolve, reject) => {
@@ -210,7 +209,7 @@ export function UploadContent({
       }
     }
 
-    for (let url of urls) {
+    for (let url of urls || []) {
       if (!url.trained) {
         promises.push(
           new Promise(async (resolve, reject) => {
@@ -232,7 +231,7 @@ export function UploadContent({
       }
     }
 
-    for (let n of notion) {
+    for (let n of notion || []) {
       if (!n.trained) {
         promises.push(
           new Promise(async (resolve, reject) => {
@@ -267,9 +266,7 @@ export function UploadContent({
               text: text.content,
             });
             if (res.status === 200) {
-              useDatasourceStore
-                .getState()
-                .setText({ content: text.content, changed: false });
+              useDatasourceStore.getState().setText({ content: text.content, changed: false });
             } else {
               reject(new Error("Upload failed"));
             }
@@ -289,7 +286,7 @@ export function UploadContent({
       if (!chatbot) {
         throw new Error("Chatbot not found");
       }
-      setLoading(true);
+      setFormLoading(true);
       e.preventDefault();
       await uploadContent(chatbot);
 
@@ -304,7 +301,7 @@ export function UploadContent({
         description: "There was a problem with your request. please try again",
       });
     }
-    setLoading(false);
+    setFormLoading(false);
   };
 
   return (
@@ -316,22 +313,25 @@ export function UploadContent({
               label: "Text",
               value: "text",
               icon: "fluent:textbox-16-regular",
-              desc: `${text.content.length} chars`,
+              desc: `${text?.content.length || 0} chars`,
             },
             {
               label: "Files",
+              count: docs?.length,
               value: "files",
               icon: "material-symbols:file-copy-outline",
               desc: `${totalDocChars} chars`,
             },
             {
               label: "Websites",
+              count: urls?.length,
               value: "websites",
               icon: "fluent-mdl2:website",
               desc: `${totalUrlChars} chars`,
             },
             {
               label: "Notion",
+              count: notion?.length,
               value: "notion",
               icon: "logos:notion-icon",
               desc: `${totalNotionChars} chars`,
@@ -342,9 +342,18 @@ export function UploadContent({
               key={item.value}
               value={item.value}
             >
-              <Icon icon={item.icon} className="mr-1 mt-1" />
+              <Icon icon={item.icon} className="mr-1.5 mt-0.5" />
               <div className="flex flex-col items-start">
-                <span>{item.label}</span>
+                <span className="flex flex-row items-center gap-2">
+                  {"count" in item ? (
+                    <>
+                      {item.label}
+                      {typeof item.count === "number" ? ` (${item.count})` : <LoadingIcon className="text-sm" />}
+                    </>
+                  ) : (
+                    item.label
+                  )}
+                </span>
                 <small className="text-[10px]">{item.desc}</small>
               </div>
             </TabsTrigger>
@@ -373,11 +382,7 @@ export function UploadContent({
             props: { chatbotId: chatbot?.id || "" },
           },
         ].map((item) => (
-          <TabsContent
-            key={item.value}
-            className="flex-1 p-4 border-secondary border mt-0 ml-2"
-            value={item.value}
-          >
+          <TabsContent key={item.value} className="flex-1 p-4 border-secondary border mt-0 ml-2" value={item.value}>
             <item.Comp {...item.props} />
           </TabsContent>
         ))}
@@ -397,23 +402,11 @@ export function UploadContent({
           </Button>
         )}
         {showCreate ? (
-          <Button
-            className="text-white"
-            type="submit"
-            size={"lg"}
-            loading={loading}
-            disabled={!canTrain}
-          >
+          <Button className="text-white" type="submit" size={"lg"} loading={formLoading} disabled={!canTrain}>
             Create
           </Button>
         ) : (
-          <Button
-            className="text-white"
-            type="submit"
-            size={"lg"}
-            loading={loading}
-            disabled={!canTrain}
-          >
+          <Button className="text-white" type="submit" size={"lg"} loading={formLoading} disabled={!canTrain}>
             Train
           </Button>
         )}

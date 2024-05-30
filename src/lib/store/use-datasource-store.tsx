@@ -26,10 +26,10 @@ export type IFile = {
 };
 
 export interface UseDocStore {
-  text: IText;
-  docs: IFile[];
-  urls: IUrl[];
-  notion: INotion[];
+  text?: IText;
+  docs?: IFile[];
+  urls?: IUrl[];
+  notion?: INotion[];
   setText: (text: IText) => void;
   setDocs: (docs: IFile[]) => void;
   appendDocs: (docs: IFile[]) => void;
@@ -47,13 +47,14 @@ export interface UseDocStore {
   setNotionTrained: (notion: INotion) => void;
   deleteAllNotion: () => void;
   reset: () => void;
+  startLoading: () => void;
 }
 
 export const useDatasourceStore = create<UseDocStore>()((set) => ({
   text: { content: "", changed: false },
-  docs: [],
-  urls: [],
-  notion: [],
+  docs: undefined,
+  urls: undefined,
+  notion: undefined,
 
   // 'Set' Methods
   setText: (text) => set(() => ({ text })),
@@ -64,42 +65,30 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
   // 'Append' Methods
   appendDocs: (docs) =>
     set((state) => ({
-      docs: [
-        ...state.docs,
-        ...docs.filter(
-          (newDoc) => !state.docs.find((doc) => doc.id === newDoc.id),
-        ),
-      ],
+      docs: [...(state.docs || []), ...docs.filter((newDoc) => !state.docs?.find((doc) => doc.id === newDoc.id))],
     })),
   appendUrls: (urls) =>
     set((state) => ({
-      urls: [
-        ...state.urls,
-        ...urls.filter(
-          (newUrl) => !state.urls.find((url) => url.url === newUrl.url),
-        ),
-      ],
+      urls: [...(state.urls || []), ...urls.filter((newUrl) => !state.urls?.find((url) => url.url === newUrl.url))],
     })),
   appendNotion: (notion) =>
     set((state) => ({
       notion: [
-        ...state.notion,
-        ...notion.filter(
-          (newNotion) => !state.notion.find((n) => n.id === newNotion.id),
-        ),
+        ...(state.notion || []),
+        ...notion.filter((newNotion) => !state.notion?.find((n) => n.id === newNotion.id)),
       ],
     })),
 
   // 'Delete' Methods
   deleteDoc: (id) => {
-    set((state) => ({ docs: state.docs.filter((i) => i.id !== id) }));
+    set((state) => ({ docs: state.docs?.filter((i) => i.id !== id) }));
   },
   deleteAllDocs: () =>
     set(() => ({
       docs: [],
     })),
   deleteUrl: (url) => {
-    set((state) => ({ urls: state.urls.filter((i) => i.url !== url) }));
+    set((state) => ({ urls: state.urls?.filter((i) => i.url !== url) }));
   },
   deleteAllUrls: () =>
     set(() => ({
@@ -107,7 +96,7 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
     })),
   deleteNotion: (notion: INotion) => {
     set((state) => ({
-      notion: state.notion.filter((i) => i.id !== notion.id),
+      notion: state.notion?.filter((i) => i.id !== notion.id),
     }));
   },
   deleteAllNotion: () =>
@@ -118,16 +107,16 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
   // 'Upload' Methods
   setDocTrained: (file) => {
     set((state) => {
-      const index = state.docs.findIndex((i) => i.id === file.id);
-      const newDocs = [...state.docs];
+      const index = (state.docs || []).findIndex((i) => i.id === file.id);
+      const newDocs = [...(state.docs || [])];
       newDocs[index].trained = true;
       return { docs: newDocs };
     });
   },
   setUrlTrained: (url) => {
     set((state) => {
-      const newUrls = [...state.urls];
-      const index = state.urls.findIndex((i) => i === url);
+      const newUrls = [...(state.urls || [])];
+      const index = (state.urls || []).findIndex((i) => i === url);
       if (index !== -1) {
         newUrls[index].trained = true;
       }
@@ -136,8 +125,8 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
   },
   setNotionTrained: (notion) => {
     set((state) => {
-      const newNotions = [...state.notion];
-      const index = state.notion.findIndex((i) => i.id === notion.id);
+      const newNotions = [...(state.notion || [])];
+      const index = (state.notion || []).findIndex((i) => i.id === notion.id);
       if (index !== -1) {
         newNotions[index].trained = true;
       }
@@ -155,5 +144,12 @@ export const useDatasourceStore = create<UseDocStore>()((set) => ({
       docs: [],
       urls: [],
       notion: [],
+    })),
+  startLoading: () =>
+    set(() => ({
+      text: undefined,
+      docs: undefined,
+      urls: undefined,
+      notion: undefined,
     })),
 }));

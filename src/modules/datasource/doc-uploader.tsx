@@ -5,11 +5,7 @@ import { useDropzone } from "react-dropzone";
 
 import { LoadingIcon } from "@/components/ui/icons";
 
-import {
-  MAX_FILE_SIZE,
-  SUPPORTED_EXTENSION_FOR_DROPZONE,
-  SUPPORTED_EXTENSIONS,
-} from "./docs-constant";
+import { MAX_FILE_SIZE, SUPPORTED_EXTENSION_FOR_DROPZONE, SUPPORTED_EXTENSIONS } from "./docs-constant";
 import { IFile, useDatasourceStore } from "@/lib/store/use-datasource-store";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import ContentList from "./content-list";
@@ -28,14 +24,12 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
 }: IDocumentUploaderProps) => {
   const inputRef = useRef<any>();
 
-  const { docs, appendDocs, deleteDoc, deleteAllDocs } = useDatasourceStore(
-    (state) => ({
-      docs: state.docs,
-      appendDocs: state.appendDocs,
-      deleteDoc: state.deleteDoc,
-      deleteAllDocs: state.deleteAllDocs,
-    }),
-  );
+  const { docs, appendDocs, deleteDoc, deleteAllDocs } = useDatasourceStore((state) => ({
+    docs: state.docs,
+    appendDocs: state.appendDocs,
+    deleteDoc: state.deleteDoc,
+    deleteAllDocs: state.deleteAllDocs,
+  }));
 
   const { supabase } = useSupabaseAuth();
 
@@ -43,15 +37,11 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
     files.forEach(async (file) => {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post<IFile>(
-        `/api/chatbots/datasource/load-files?chatbot_id=${chatbotId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+      const res = await axios.post<IFile>(`/api/chatbots/datasource/load-files?chatbot_id=${chatbotId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-      );
+      });
 
       if (res.status !== 200) {
         throw new Error(res.statusText);
@@ -90,25 +80,20 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
         throw new Error("You must select at least a file to upload.");
       }
 
-      if (single && uploadedFiles?.length > 1)
-        throw new Error("You can upload only one file");
+      if (single && uploadedFiles?.length > 1) throw new Error("You can upload only one file");
 
       if (single) {
-        if (docs.length > 0) {
+        if (docs?.length || 0 > 0) {
           handleDeleteAllDocs();
         }
         handleUploadFiles(
           // Filter the files to check if there's any file with duplicate name
-          uploadedFiles.filter(
-            (uploadedFile) => !docs.find((f) => f.name === uploadedFile.name),
-          ),
+          uploadedFiles.filter((uploadedFile) => !docs?.find((f) => f.name === uploadedFile.name)),
         );
       } else {
         handleUploadFiles(
           // Filter the files to check if there's any file with duplicate name
-          uploadedFiles.filter(
-            (uploadedFile) => !docs.find((f) => f.name === uploadedFile.name),
-          ),
+          uploadedFiles.filter((uploadedFile) => !docs?.find((f) => f.name === uploadedFile.name)),
         );
       }
     } catch (error) {
@@ -139,14 +124,11 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
               <span className="flex items-center space-x-2">
                 <Icon className="text-4xl text-gray-700" icon="tabler:upload" />{" "}
                 <span className="font-medium text-gray-700">
-                  Drop files here or{" "}
-                  <span className="text-blue-600 underline">Browse Files</span>
+                  Drop files here or <span className="text-blue-600 underline">Browse Files</span>
                 </span>
               </span>
               <div className="text-gray-400">
-                <p className="text-[13px] mb-1 mt-2 font-bold">
-                  You can upload {bytesToMb(MAX_FILE_SIZE)}MB Max
-                </p>
+                <p className="text-[13px] mb-1 mt-2 font-bold">You can upload {bytesToMb(MAX_FILE_SIZE)}MB Max</p>
                 <div className="flex gap-2 flex-wrap text-[12px]">
                   {SUPPORTED_EXTENSIONS.map((item) => (
                     <small key={item.ext}>.{item.ext}</small>
@@ -156,17 +138,12 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
             </>
           )}
 
-          <input
-            {...getInputProps()}
-            ref={inputRef}
-            type="file"
-            name="file_upload"
-          />
+          <input {...getInputProps()} ref={inputRef} type="file" name="file_upload" />
         </label>
       </div>
       <ContentList
         title="Loaded files"
-        items={docs.map((doc) => ({
+        items={(docs || []).map((doc) => ({
           value: doc.name,
           chars: doc.chars,
           id: doc.id,

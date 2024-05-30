@@ -52,9 +52,7 @@ const NewChatbotModal = ({
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger
-        className={cn({ [buttonVariants({ variant })]: !!variant }, className)}
-      >
+      <DialogTrigger className={cn({ [buttonVariants({ variant })]: !!variant }, className)}>
         {children || <>New chatbot</>}
       </DialogTrigger>
 
@@ -65,16 +63,8 @@ const NewChatbotModal = ({
       >
         <div className="w-full m-auto">
           <h1 className="mb-2 text-4xl font-black">Create New Chatbot</h1>
-          <PaymentBlock
-            isBlocked={isBlocked}
-            text={`You have reached max ${permission.maxChatbots} Chatbot limit`}
-          >
-            <UploadContent
-              showGoBack
-              onGoBack={closeDialog}
-              showCreate
-              externalChatbotId={chatbot?.id}
-            ></UploadContent>
+          <PaymentBlock isBlocked={isBlocked} text={`You have reached max ${permission.maxChatbots} Chatbot limit`}>
+            <UploadContent showGoBack onGoBack={closeDialog} showCreate externalChatbotId={chatbot?.id}></UploadContent>
           </PaymentBlock>
         </div>
       </DialogContent>

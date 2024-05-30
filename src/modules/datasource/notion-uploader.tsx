@@ -12,13 +12,12 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const { notion, appendNotion, deleteNotion, deleteAllNotion } =
-    useDatasourceStore((state) => ({
-      notion: state.notion,
-      appendNotion: state.appendNotion,
-      deleteNotion: state.deleteNotion,
-      deleteAllNotion: state.deleteAllNotion,
-    }));
+  const { notion, appendNotion, deleteNotion, deleteAllNotion } = useDatasourceStore((state) => ({
+    notion: state.notion,
+    appendNotion: state.appendNotion,
+    deleteNotion: state.deleteNotion,
+    deleteAllNotion: state.deleteAllNotion,
+  }));
   const { supabase } = useSupabaseAuth();
 
   const handleNotionConnect = async () => {
@@ -31,21 +30,12 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
   };
 
   const handleDeleteNotion = async (n: INotion) => {
-    await supabase
-      .from("chatbot_notion")
-      .delete()
-      .eq("id", n.id)
-      .eq("chatbot_id", chatbotId)
-      .throwOnError();
+    await supabase.from("chatbot_notion").delete().eq("id", n.id).eq("chatbot_id", chatbotId).throwOnError();
     deleteNotion(n);
   };
 
   const handleDeleteAllNotion = async () => {
-    await supabase
-      .from("chatbot_notion")
-      .delete()
-      .eq("chatbot_id", chatbotId)
-      .throwOnError();
+    await supabase.from("chatbot_notion").delete().eq("chatbot_id", chatbotId).throwOnError();
     deleteAllNotion();
   };
 
@@ -100,7 +90,7 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
 
       <ContentList
         title="Loaded pages"
-        items={notion.map(
+        items={(notion || []).map(
           (n) =>
             ({
               value: n.name,

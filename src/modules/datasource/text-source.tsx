@@ -11,7 +11,7 @@ const TextSource = () => {
     setText: state.setText,
   }));
 
-  const isOverLimit = text.content.length >= MAX_TEXT_INPUT;
+  const isOverLimit = (text?.content.length || 0) >= MAX_TEXT_INPUT;
 
   return (
     <div className="relative">
@@ -20,7 +20,7 @@ const TextSource = () => {
         rows={10}
         placeholder="Type or Paste your text here."
         onChange={(e) => setText({ content: e.target.value, changed: true })}
-        value={text.content}
+        value={text?.content}
         className={cn({
           "ring-red-500 focus-visible:ring-red-500": isOverLimit,
         })}
@@ -30,8 +30,7 @@ const TextSource = () => {
           "text-red-600": isOverLimit,
         })}
       >
-        {text.content.length}/{MAX_TEXT_INPUT}{" "}
-        {isOverLimit ? "(Max chars limit reached)" : "chars"}
+        {text?.content.length || 0}/{MAX_TEXT_INPUT} {isOverLimit ? "(Max chars limit reached)" : "chars"}
       </InputNote>
     </div>
   );
