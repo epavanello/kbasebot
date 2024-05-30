@@ -90,6 +90,17 @@ export async function POST(req: NextRequest) {
       throw new Error("no-datasource-found");
     }
 
+    // estract distinct urls from db to avoid duplicates
+    const { data: existingUrls } = await supabaseServerClient
+      .from("chatbot_urls")
+      .select("url")
+      .eq("chatbot_id", chatbot_id)
+      .throwOnError();
+
+    adjustedContent = adjustedContent.filter(
+      (i) => !existingUrls!.find((url) => url.url.toLocaleLowerCase() === i.url.toLocaleLowerCase()),
+    );
+
     await supabaseServerClient
       .from("chatbot_urls")
       .insert(

@@ -85,23 +85,31 @@ export class TokenCounter {
   constructor(private readonly limit: number) {}
 
   canAdd(text: string): boolean {
+    this.count(text);
+    return this.tokenCount <= this.limit;
+  }
+
+  count(text: string) {
     const encoded = this.tokenizer.encode(text);
     this.tokenCount += encoded.text.length;
-    return this.tokenCount <= this.limit;
   }
 
   reset() {
     this.tokenCount = 0;
   }
+
+  get countedTokens() {
+    return this.tokenCount;
+  }
 }
 
 export const tokenLimits = {
-  max: 8_000,
-  context: 2_000,
-  knowledgeBase: 2_000,
-  chunk: 2_000 / 5,
-  history(used: number) {
-    return this.max - this.response - used;
-  },
+  context: 500,
+  knowledgeBase: 6_000,
   response: 1_000,
+  historyAvailable(used: number) {
+    return 12_000 - this.response - used;
+  },
+  // Size of the chunk for the text splitter
+  chunk: 400,
 };

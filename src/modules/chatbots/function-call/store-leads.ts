@@ -4,9 +4,9 @@ import { zodToJsonSchema } from "zod-to-json-schema";
 export const FUNC_STORE_LEAD = "store-leads";
 
 type SchemaFields = {
-  name: boolean;
-  email: boolean;
-  phone: boolean;
+  name?: boolean;
+  email?: boolean;
+  phone?: boolean;
 };
 
 const createStoreLeadZodSchema = ({ name, email, phone }: SchemaFields = {}): ZodObject<any> => {

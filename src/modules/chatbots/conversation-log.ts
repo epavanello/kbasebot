@@ -9,12 +9,7 @@ class ConversationLog {
     public chatbotId: string,
     public chatbotOwnerId: string,
     private supabaseAdminClient: SupabaseClientTyped,
-  ) {
-    this.conversationId = conversationId;
-    this.chatbotId = chatbotId;
-    this.chatbotOwnerId = chatbotOwnerId;
-    this.supabaseAdminClient = supabaseAdminClient;
-  }
+  ) {}
 
   public async addEntry({
     entry,

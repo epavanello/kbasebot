@@ -41,7 +41,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
         [type]: url,
       });
 
-      if (res.data?.length) {
+      if (res.status === 200) {
         appendUrls(res.data);
       } else {
         toast({

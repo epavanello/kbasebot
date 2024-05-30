@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
         content:
           custom_context ||
           templates.defaultContext({
-            model: prettifyGPTModelName(model),
+            model: prettifyGPTModelName(model as GPTModel),
           }),
       },
     ];
@@ -108,10 +108,13 @@ export async function POST(req: NextRequest) {
       content: templates.searchResults({ results: knowledgeBase }),
     });
 
+    // Count actual tokens to limit the conversation history
+    const messagesCounter = new TokenCounter(0);
+    messagesCounter.count(messages.reduce((acc, message) => acc + message.content, ""));
+
     // filter out the most old messages if the conversation history is too long
-    const historyCounter = new TokenCounter(
-      tokenLimits.history(messages.reduce((acc, message) => acc + (message.content?.length || 0), 0)),
-    );
+    const historyCounter = new TokenCounter(tokenLimits.historyAvailable(messagesCounter.countedTokens));
+
     let conversationHistory: ChatCompletionRequestMessage[] = (
       await conversationLog.getConversation({
         limit: 10,
