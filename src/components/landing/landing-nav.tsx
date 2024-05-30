@@ -16,9 +16,9 @@ export default function LandingNav() {
   const isLanding = landingPages.includes(pathname);
 
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-200 bg-background/80 backdrop-blur-md border-b`}>
+    <header className={`sticky top-0 z-50 border-b bg-background/80 backdrop-blur-md transition-all duration-200`}>
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-2 lg:px-8" aria-label="Global">
-        <div className="flex w-full items-center gap-x-12 z-50">
+        <div className="z-50 flex w-full items-center gap-x-12">
           <Logo />
           <div className="hidden flex-1 lg:flex lg:gap-x-12">
             <NavLinks
@@ -47,10 +47,10 @@ export default function LandingNav() {
             />
           </div>
         </div>
-        <div className="flex lg:hidden z-50">
+        <div className="z-50 flex lg:hidden">
           <NavSheet />
         </div>
-        <div className="hidden lg:flex space-x-1 z-50"></div>
+        <div className="z-50 hidden space-x-1 lg:flex"></div>
       </nav>
     </header>
   );

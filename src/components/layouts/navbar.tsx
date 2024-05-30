@@ -35,7 +35,7 @@ export function MainNav({ items, children }: MainNavProps) {
   return (
     <div className="border-b bg-background">
       <div className="flex h-16 items-center px-4">
-        <div className="px-2 flex items-center flex-1 gap-2 md:gap-4">
+        <div className="flex flex-1 items-center gap-2 px-2 md:gap-4">
           <button className="flex items-center space-x-2 md:hidden" onClick={() => setShowMobileMenu(!showMobileMenu)}>
             {showMobileMenu ? <Icon icon={"majesticons:close"} /> : <Icon icon={"ep:menu"} />}
             <span className="sr-only">Menu</span>
@@ -44,7 +44,7 @@ export function MainNav({ items, children }: MainNavProps) {
           <Logo href="/app" withText={false} width={35} height={35} className="block sm:hidden" />
           {pathname !== "/app" && <ChatbotSwitcher className="w-52" />}
           {items?.length ? (
-            <nav className="hidden gap-6 md:flex flex-1 justify-center">
+            <nav className="hidden flex-1 justify-center gap-6 md:flex">
               {items?.map(({ href, disabled, icon, title, ...itemProps }, index) => {
                 return (
                   <Link
@@ -53,7 +53,7 @@ export function MainNav({ items, children }: MainNavProps) {
                     className={cn(buttonVariants({ variant: "ghost" }), !!disabled && "cursor-not-allowed opacity-60")}
                     {...itemProps}
                   >
-                    {icon && <Icon className="text-xl mr-1" icon={icon} />}
+                    {icon && <Icon className="mr-1 text-xl" icon={icon} />}
                     {title}
                   </Link>
                 );

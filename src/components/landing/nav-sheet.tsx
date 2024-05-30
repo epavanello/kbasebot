@@ -26,18 +26,18 @@ export default function NavSheet() {
       </SheetTrigger>
       <SheetContent
         closeBtnClass="w-8 h-8"
-        className="w-full bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-40"
+        className="w-full bg-opacity-40 bg-clip-padding backdrop-blur-md backdrop-filter"
       >
         <SheetHeader>
           <SheetTitle>
             <Logo />
           </SheetTitle>
           <SheetDescription>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <div className="flex items-center"></div>
             </div>
             <div>
-              <div className="mt-3 justify-center items-center flex h-[70vh]">
+              <div className="mt-3 flex h-[70vh] items-center justify-center">
                 <NavLinks isCol />
               </div>
             </div>

@@ -38,7 +38,7 @@ const PublicChatUiFull = ({
     settings && (
       <div
         className={cn(
-          "z-[9999999] h-full bottom-0 sm:bottom-4 flex flex-col justify-end w-full sm:max-w-md sm:max-h-[70vh] pointer-events-none",
+          "pointer-events-none bottom-0 z-[9999999] flex h-full w-full flex-col justify-end sm:bottom-4 sm:max-h-[70vh] sm:max-w-md",
           {
             "right-0 sm:right-4": settings.chatbot_bubble_align === "right",
             "left-0 sm:left-4": settings.chatbot_bubble_align === "left",

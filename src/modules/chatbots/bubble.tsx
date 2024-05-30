@@ -22,7 +22,7 @@ export function Bubble({ settings, isOpen, onClose, onOpen, className }: BubbleP
       })}
     >
       <button
-        className="pointer-events-auto mt-2 w-14 h-14 rounded-full flex items-center justify-center overflow-hidden hover:scale-110 transition-all duration-200 ease-in-out"
+        className="pointer-events-auto mt-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full transition-all duration-200 ease-in-out hover:scale-110"
         style={{
           backgroundColor: settings.primary_color,
           boxShadow: "rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",

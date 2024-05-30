@@ -4,7 +4,7 @@ import { Footer } from "@/components/landing/footer";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex h-full flex-col">
       <LandingNav />
       <div className="flex-1">{children}</div>
       <Footer />

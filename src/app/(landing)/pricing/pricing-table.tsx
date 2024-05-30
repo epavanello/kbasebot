@@ -20,17 +20,17 @@ export default function PricingTable() {
 
   return (
     <section id="pricing" className="pt-12 sm:pt-24">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col align-center">
+      <div className="mx-auto max-w-6xl">
+        <div className="align-center flex flex-col">
           <h1 className="text-4xl font-extrabold sm:text-center sm:text-6xl">Pricing Plans</h1>
-          <div className="relative self-center mt-6 bg-zinc-100 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
+          <div className="relative mt-6 flex self-center rounded-lg border border-zinc-800 bg-zinc-100 p-0.5 sm:mt-8">
             {tabs.map((i) => (
               <button
                 key={i.id}
                 onClick={() => setBillingInterval(i.id)}
                 type="button"
                 className={cn(
-                  "relative mix-blend-multiply rounded-full px-3 py-1.5 text-sm font-medium outline-sky-400 transition focus-visible:outline-2",
+                  "relative rounded-full px-3 py-1.5 text-sm font-medium mix-blend-multiply outline-sky-400 transition focus-visible:outline-2",
                   {
                     "text-white": billingInterval === i.id,
                     "text-gray-500": billingInterval !== i.id,
@@ -43,7 +43,7 @@ export default function PricingTable() {
                 {billingInterval === i.id && (
                   <motion.span
                     layoutId="bubble"
-                    className="absolute inset-0 -z-10 bg-slate-700 rounded-md"
+                    className="absolute inset-0 -z-10 rounded-md bg-slate-700"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   ></motion.span>
                 )}
@@ -55,12 +55,7 @@ export default function PricingTable() {
         </div>
         <AnimatePresence mode="wait">
           {!!plans?.length && (
-            <div
-              className="mt-8 place-items-start space-y-4 sm:space-y-0 sm:grid
-        sm:grid-cols-2 sm:gap-6 justify-center lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4
-        items-start
-        "
-            >
+            <div className="mt-8 place-items-start items-start justify-center space-y-4 sm:grid sm:grid-cols-2 sm:gap-6 sm:space-y-0 lg:mx-auto lg:max-w-4xl xl:mx-0 xl:max-w-none xl:grid-cols-4">
               {plans.map((plan, idx) => {
                 const price = plan.prices.find((price) => price.interval === billingInterval);
                 const priceString = price
@@ -103,8 +98,8 @@ export default function PricingTable() {
                   <motion.div
                     key={billingInterval + plan.id}
                     className={cn("w-full rounded-xl pt-6 dark:shadow-slate-700", {
-                      "border-blue-50 bg-gray-500/10 dark:bg-gray-200/10 border-1 shadow-md": highlight,
-                      "shadow-sm  bg-gray-500/5 dark:bg-gray-200/5": !highlight,
+                      "border-1 border-blue-50 bg-gray-500/10 shadow-md dark:bg-gray-200/10": highlight,
+                      "bg-gray-500/5 shadow-sm dark:bg-gray-200/5": !highlight,
                       "border border-primary": isActive,
                     })}
                     initial={{ y: 20, opacity: 0 }}
@@ -115,10 +110,10 @@ export default function PricingTable() {
                       ease: "easeOut",
                     }}
                   >
-                    <div className="flex justify-between items-center px-4">
+                    <div className="flex items-center justify-between px-4">
                       <p
                         className={cn(
-                          "self-start shine-effect-flat h-4 px-2 bg-background rounded-sm text-[11px] text-gray-600 font-medium",
+                          "shine-effect-flat h-4 self-start rounded-sm bg-background px-2 text-[11px] font-medium text-gray-600",
                           { "opacity-0": !highlight },
                         )}
                       >
@@ -126,24 +121,24 @@ export default function PricingTable() {
                       </p>
 
                       <p
-                        className={cn("mt-4 text-primary font-bold text-xs text-right mr-2 flex flex-col", {
+                        className={cn("mr-2 mt-4 flex flex-col text-right text-xs font-bold text-primary", {
                           hidden: !discount,
                         })}
                       >
                         <strong className="text-xl">🪄 {discount || "0"}%</strong> <span>Discount</span>
                       </p>
                     </div>
-                    <div key={plan.id} className="rounded-lg divide-y divide-zinc-200">
+                    <div key={plan.id} className="divide-y divide-zinc-200 rounded-lg">
                       <div className="p-6">
-                        <h2 className="text-2xl leading-6 font-semibold text-gray-500">
+                        <h2 className="text-2xl font-semibold leading-6 text-gray-500">
                           {plan.name}
-                          <span className="text-xs font-medium text-gray-500 ml-2">{info}</span>
+                          <span className="ml-2 text-xs font-medium text-gray-500">{info}</span>
                         </h2>
-                        {plan.description && <p className="mt-4 text-zinc-600 text-md">{plan.description}</p>}
+                        {plan.description && <p className="text-md mt-4 text-zinc-600">{plan.description}</p>}
 
                         <p className={cn("mt-2")}>
                           <span
-                            className={cn("text-4xl text-zinc-700 dark:text-zinc-300 font-bold", {
+                            className={cn("text-4xl font-bold text-zinc-700 dark:text-zinc-300", {
                               "text-gray-600": !priceString,
                             })}
                           >
@@ -159,7 +154,7 @@ export default function PricingTable() {
                           target="_blank"
                           className={cn(
                             buttonVariants({ variant: "default" }),
-                            "mt-2 bg-gray-700 block w-full rounded-md py-2 text-sm font-semibold text-gray-100 text-center hover:bg-zinc-900 hover:text-gray-100",
+                            "mt-2 block w-full rounded-md bg-gray-700 py-2 text-center text-sm font-semibold text-gray-100 hover:bg-zinc-900 hover:text-gray-100",
                           )}
                           href={route}
                           onClick={() => {
@@ -176,14 +171,14 @@ export default function PricingTable() {
 
                         <div className="mt-2">
                           <p>This includes</p>
-                          <ul className="flex flex-col gap-2 mt-2">
+                          <ul className="mt-2 flex flex-col gap-2">
                             {!!features.length &&
                               features.map((item, i) => (
                                 <li key={i} className="flex items-center gap-1 text-sm">
                                   {item.enabled ? (
-                                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                    <CheckCircle2 className="h-4 w-4 text-green-500" />
                                   ) : (
-                                    <XCircle className="w-4 h-4 text-destructive" />
+                                    <XCircle className="h-4 w-4 text-destructive" />
                                   )}
                                   {item.feature}
                                 </li>

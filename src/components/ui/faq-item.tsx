@@ -11,13 +11,13 @@ function FaqItem({
   };
 }>) {
   return (
-    <details className={"group border-b border-gray-100 px-2 py-4 dark:border-dark-800"}>
+    <details className={"dark:border-dark-800 group border-b border-gray-100 px-2 py-4"}>
       <summary className={"flex items-center justify-between hover:cursor-pointer"}>
         <h2
           className={
             "font-sans text-lg font-medium text-gray-700" +
-            " hover:underline-none cursor-pointer dark:text-gray-300" +
-            " dark:hover:text-white"
+            "hover:underline-none cursor-pointer dark:text-gray-300" +
+            "dark:hover:text-white"
           }
         >
           {item.question}

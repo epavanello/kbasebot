@@ -74,8 +74,8 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 items-center">
-      <div className="flex justify-center items-center h-16">
+    <div className="flex flex-col items-center gap-4">
+      <div className="flex h-16 items-center justify-center">
         <Button
           type={"button"}
           onClick={handleNotionConnect}

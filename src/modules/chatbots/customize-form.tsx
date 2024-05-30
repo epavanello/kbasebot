@@ -105,11 +105,11 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Card className="h-full flex flex-col">
+          <Card className="flex h-full flex-col">
             <CardHeader>
               <CardTitle>Chat interface</CardTitle>
             </CardHeader>
-            <CardContent className="flex gap-4 flex-col">
+            <CardContent className="flex flex-col gap-4">
               <FormField
                 control={form.control}
                 name="display_name"
@@ -278,7 +278,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
               />
             </CardContent>
 
-            <CardFooter className="p-2 border-t">
+            <CardFooter className="border-t p-2">
               <Button
                 loading={formState.isSubmitting || formState.isLoading}
                 disabled={formState.isSubmitting || formState.isLoading}

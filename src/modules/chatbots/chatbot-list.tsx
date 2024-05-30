@@ -13,7 +13,7 @@ import { prettifyGPTModelName } from "./helpers";
 const ChatbotList = ({ chatbots = [] }: { chatbots: Chatbot[] }) => {
   return (
     <div>
-      <div className="grid justify-center gap-8 pt-6 mx-auto grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-6">
+      <div className="mx-auto grid grid-cols-2 justify-center gap-8 pt-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-6">
         {!!chatbots.length &&
           chatbots.map((bot, idx) => {
             return (
@@ -22,7 +22,7 @@ const ChatbotList = ({ chatbots = [] }: { chatbots: Chatbot[] }) => {
                   <CardHeader className={cn(getChatbotGradient(bot.id), "p-0")}>
                     <AspectRatio
                       ratio={4 / 3.5}
-                      className="p-0 flex justify-center items-center w-full h-full bg-primary/50"
+                      className="flex h-full w-full items-center justify-center bg-primary/50 p-0"
                     >
                       <Icon icon={"fluent:bot-sparkle-24-filled"} className="text-7xl" />
                       <span className="absolute right-2 top-2 z-10 text-[10px] text-white">
@@ -31,8 +31,8 @@ const ChatbotList = ({ chatbots = [] }: { chatbots: Chatbot[] }) => {
                     </AspectRatio>
                   </CardHeader>
                 </Link>
-                <CardFooter className="p-2 flex justify-between" title={bot.name || `Untitled ${idx + 1}`}>
-                  <span className="font-medium text-sm">{truncate(bot.name || "", 20) || `Untitled ${idx + 1}`}</span>
+                <CardFooter className="flex justify-between p-2" title={bot.name || `Untitled ${idx + 1}`}>
+                  <span className="text-sm font-medium">{truncate(bot.name || "", 20) || `Untitled ${idx + 1}`}</span>
                 </CardFooter>
               </Card>
             );

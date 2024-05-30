@@ -23,7 +23,7 @@ const ColorPicker = ({
   return (
     <>
       {!!(resetProp || label) && (
-        <div className="flex justify-between w-full text-xs">
+        <div className="flex w-full justify-between text-xs">
           {label && (
             <label>
               <span>{label}</span>{" "}
@@ -38,15 +38,15 @@ const ColorPicker = ({
       )}
       <Popover>
         <PopoverTrigger className="flex flex-col">
-          <div className="flex flex-wrap items-center mt-1">
+          <div className="mt-1 flex flex-wrap items-center">
             {value !== "none" ? (
-              <div className="w-8 h-8 mr-2 border-2 rounded-md shadow-2xl" style={{ backgroundColor: value }}></div>
+              <div className="mr-2 h-8 w-8 rounded-md border-2 shadow-2xl" style={{ backgroundColor: value }}></div>
             ) : (
-              <div className="w-8 h-8 mr-2 border-2 rounded-md shadow-2xl flex justify-center items-center">
+              <div className="mr-2 flex h-8 w-8 items-center justify-center rounded-md border-2 shadow-2xl">
                 <Icon icon={"radix-icons:eye-none"} className="text-md" />
               </div>
             )}
-            <input className="text-[12px] border p-1 font-medium text-muted-foreground bg-muted mt-1" value={value} />
+            <input className="mt-1 border bg-muted p-1 text-[12px] font-medium text-muted-foreground" value={value} />
           </div>
         </PopoverTrigger>
         <PopoverContent>

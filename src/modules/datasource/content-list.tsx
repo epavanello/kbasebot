@@ -18,16 +18,16 @@ interface Props<T> {
 }
 export default function ContentList<T>({ items, title, onDelete, onDeleteAll }: Props<T>) {
   return (
-    <div className="w-full bg-secondary p-4 border border-dashed max-h-[50vh] overflow-auto">
+    <div className="max-h-[50vh] w-full overflow-auto border border-dashed bg-secondary p-4">
       {onDeleteAll && (
         <div className="flex justify-between gap-4">
-          <h1 className="text-center font-bold my-1">{title}</h1>
+          <h1 className="my-1 text-center font-bold">{title}</h1>
           <Button
             type="button"
             onClick={() => onDeleteAll()}
             variant="destructive"
             size={"sm"}
-            className="text-xs h-auto bg-none"
+            className="h-auto bg-none text-xs"
             disabled={!items.length}
           >
             <Icon className={"text-md mr-1"} icon={"ph:trash"} /> Delete All
@@ -39,7 +39,7 @@ export default function ContentList<T>({ items, title, onDelete, onDeleteAll }: 
         {items.map((item) => (
           <li key={item.id} className="flex flex-row items-center gap-2">
             <div className="relative flex-1">
-              <Input className="text-sm h-8" value={item.value} readOnly />
+              <Input className="h-8 text-sm" value={item.value} readOnly />
               <InputNote>{item.chars} chars</InputNote>
             </div>
             {!!item.trained ? (

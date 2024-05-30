@@ -49,18 +49,18 @@ const Page = ({ searchParams }) => {
   }, [user, code]);
 
   return (
-    <div className="flex justify-center items-center h-screen w-full relative p-4">
-      <Card className="bg-transparent border-4 border-b-primary p-10 border_run">
-        <CardHeader className="flex justify-center items-center">
+    <div className="relative flex h-screen w-full items-center justify-center p-4">
+      <Card className="border_run border-4 border-b-primary bg-transparent p-10">
+        <CardHeader className="flex items-center justify-center">
           <Logo />
         </CardHeader>
         <CardContent className="text-center">
-          <p className="text-3xl font-bold my-2">Welcome</p>
+          <p className="my-2 text-3xl font-bold">Welcome</p>
           <small>Login/Register to create your awesome chatbot</small>
         </CardContent>
         <CardFooter className="justify-center">
           {isLoading ? (
-            <LoadingDots className="!w-16 !h-16" />
+            <LoadingDots className="!h-16 !w-16" />
           ) : (
             <Button onClick={() => handleOAuth("google")} className="w-full" variant="outline" size="lg">
               <Icon className="mr-2 text-xl" icon={"flat-color-icons:google"} />

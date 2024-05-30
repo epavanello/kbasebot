@@ -1,9 +1,9 @@
 .root {
-  @apply inline-flex text-center text-gray-800 items-center leading-7;
+  @apply inline-flex items-center text-center leading-7 text-gray-800;
 }
 
 .root span {
-  @apply bg-primary/30 rounded-full h-2 w-2;
+  @apply h-2 w-2 rounded-full bg-primary/30;
   animation-name: blink;
   animation-duration: 1.4s;
   animation-iteration-count: infinite;

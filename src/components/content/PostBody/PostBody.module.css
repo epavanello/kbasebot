@@ -1,9 +1,9 @@
 .PostBody h1 {
-  @apply font-bold text-4xl mt-14;
+  @apply mt-14 text-4xl font-bold;
 }
 
 .PostBody h2 {
-  @apply font-semibold text-2xl lg:text-3xl mt-12 mb-4 border-b border-b-gray-100 pb-2;
+  @apply mb-4 mt-12 border-b border-b-gray-100 pb-2 text-2xl font-semibold lg:text-3xl;
 }
 
 :global(.dark) .PostBody h2 {
@@ -11,19 +11,19 @@
 }
 
 .PostBody h3 {
-  @apply font-bold text-2xl mt-10;
+  @apply mt-10 text-2xl font-bold;
 }
 
 .PostBody h4 {
-  @apply font-bold text-xl mt-8;
+  @apply mt-8 text-xl font-bold;
 }
 
 .PostBody h5 {
-  @apply font-semibold text-lg mt-6;
+  @apply mt-6 text-lg font-semibold;
 }
 
 .PostBody h6 {
-  @apply font-medium text-base mt-2;
+  @apply mt-2 text-base font-medium;
 }
 
 /**
@@ -59,11 +59,11 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 }
 
 .PostBody > p {
-  @apply BodyText text-base dark:text-gray-300 mt-2 mb-4 leading-7;
+  @apply BodyText mb-4 mt-2 text-base leading-7 dark:text-gray-300;
 }
 
 .PostBody li {
-  @apply BodyText text-base my-1.5 leading-7 dark:text-gray-300;
+  @apply BodyText my-1.5 text-base leading-7 dark:text-gray-300;
 }
 
 .PostBody b,
@@ -95,15 +95,14 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 }
 
 .PostBody ol > li:before {
-  @apply font-bold mr-3 inline-flex;
+  @apply mr-3 inline-flex font-bold;
 
   content: counters(counts, ".") ". ";
   font-feature-settings: "tnum";
 }
 
 .PostBody blockquote {
-  @apply my-12 p-6 font-medium text-lg text-gray-600
-    font-sans border-l-4 border-primary;
+  @apply my-12 border-l-4 border-primary p-6 font-sans text-lg font-medium text-gray-600;
 }
 
 :global(.dark) .PostBody blockquote {
@@ -124,11 +123,11 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
   border-top-left-radius: 0.35rem;
   border-top-right-radius: 0.35rem;
 
-  @apply relative left-3 text-[0.55rem] md:text-sm font-bold;
+  @apply relative left-3 text-[0.55rem] font-bold md:text-sm;
 }
 
 .PostBody pre[filename] {
-  @apply pt-3 rounded-md;
+  @apply rounded-md pt-3;
 }
 
 .PostBody pre[filename] code {
@@ -137,7 +136,7 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 }
 
 :global(.dark) .PostBody pre {
-  @apply shadow-none my-8;
+  @apply my-8 shadow-none;
 }
 
 .PostBody code {
@@ -147,7 +146,7 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 }
 
 .PostBody pre > code {
-  @apply p-3 md:p-6 text-xs md:text-sm font-medium block bg-gray-100;
+  @apply block bg-gray-100 p-3 text-xs font-medium md:p-6 md:text-sm;
 
   white-space: pre-wrap;
 }
@@ -158,7 +157,7 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 
 .PostBody p > code,
 .PostBody li > code {
-  @apply px-1 py-0.5 border  rounded mx-0.5 font-semibold text-sm;
+  @apply mx-0.5 rounded border px-1 py-0.5 text-sm font-semibold;
 }
 
 /*:global(.dark) .PostBody p > code,*/
@@ -167,7 +166,7 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 /*}*/
 
 .PostBody hr {
-  @apply mt-8 mb-6;
+  @apply mb-6 mt-8;
 }
 
 .PostBody p > a,
@@ -177,5 +176,5 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 
 :global(.dark) .PostBody p > a,
 :global(.dark) .PostBody li > a {
-  @apply text-primary font-semibold underline hover:text-primary/20;
+  @apply font-semibold text-primary underline hover:text-primary/20;
 }

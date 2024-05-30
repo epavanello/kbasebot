@@ -137,7 +137,7 @@ const Settings = () => {
             <CardTitle>Chatbot settings</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col relative w-full justify-start gap-2 items-start">
+            <div className="relative flex w-full flex-col items-start justify-start gap-2">
               <div>
                 <Label htmlFor="name">Name</Label>
                 <div className="flex flex-row items-start gap-2">
@@ -173,7 +173,7 @@ const Settings = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <p className={cn("text-xs text-muted-foreground mt-2")}>GPT-4 model is only available for pro users</p>
+                <p className={cn("mt-2 text-xs text-muted-foreground")}>GPT-4 model is only available for pro users</p>
               </div>
               <div>
                 <Label htmlFor="context">Context</Label>
@@ -230,9 +230,9 @@ const Settings = () => {
                   <CopyButton text={chatbot.id} />
                 </div>
               </div>
-              <div className=" flex relative w-full justify-start gap-2 items-center">
-                <p className="text-gray-700 font-medium text-sm">Created at</p>
-                <p className="rounded-lg text-gray-700 text-xs">{formatDate(chatbot.created_at)}</p>
+              <div className="relative flex w-full items-center justify-start gap-2">
+                <p className="text-sm font-medium text-gray-700">Created at</p>
+                <p className="rounded-lg text-xs text-gray-700">{formatDate(chatbot.created_at)}</p>
               </div>
             </div>
           </CardContent>
@@ -256,7 +256,7 @@ const Settings = () => {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle className="flex gap-1 items-center">
+                    <AlertDialogTitle className="flex items-center gap-1">
                       <Icon icon={"pajamas:remove"} className="mr-1" /> Please confirm your action
                     </AlertDialogTitle>
                     <AlertDialogDescription>

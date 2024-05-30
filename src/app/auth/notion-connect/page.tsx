@@ -14,7 +14,7 @@ const Page = () => {
   }, [code]);
 
   return (
-    <div className="h-screen w-full flex justify-center items-center">
+    <div className="flex h-screen w-full items-center justify-center">
       <p className="text-3xl font-bold text-primary">Connecting to Notion...</p>
     </div>
   );

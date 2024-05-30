@@ -18,7 +18,7 @@ export interface ChatMessageProps {
 export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMessageProps) {
   const isUser = message.role === "user";
   return (
-    <div className={cn("relative flex flex-col gap-1 w-full items-stretch")} {...props}>
+    <div className={cn("relative flex w-full flex-col items-stretch gap-1")} {...props}>
       <div
         className={cn({
           "self-end": isUser,
@@ -29,7 +29,7 @@ export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMe
         ) : !!chatbotLogo ? (
           <Image src={chatbotLogo} width={15} height={15} alt={"chatbot logo"} className="rounded-full" />
         ) : (
-          <Icon icon="fluent:bot-sparkle-24-filled" className="w-5 h-5 c_text_primary" />
+          <Icon icon="fluent:bot-sparkle-24-filled" className="c_text_primary h-5 w-5" />
         )}
       </div>
       <div
@@ -40,9 +40,9 @@ export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMe
         {children ? (
           <div
             className={cn(
-              "w-auto min-w-0 max-w-full text-xs prose prose-sm break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 px-4 py-2 inline-block rounded-xl rounded-tl-none bg-secondary",
+              "prose prose-sm inline-block w-auto min-w-0 max-w-full break-words rounded-xl rounded-tl-none bg-secondary px-4 py-2 text-xs dark:prose-invert prose-p:leading-relaxed prose-pre:p-0",
               {
-                "rounded-tr-none c_bg_primary c_text_primary_auto prose-invert": isUser,
+                "c_bg_primary c_text_primary_auto prose-invert rounded-tr-none": isUser,
                 "rounded-tl-none bg-secondary": !isUser,
               },
             )}
@@ -52,9 +52,9 @@ export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMe
         ) : (
           <MemoizedReactMarkdown
             className={cn(
-              "w-auto min-w-0 max-w-full text-xs prose prose-sm break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 px-4 py-2 inline-block rounded-xl",
+              "prose prose-sm inline-block w-auto min-w-0 max-w-full break-words rounded-xl px-4 py-2 text-xs dark:prose-invert prose-p:leading-relaxed prose-pre:p-0",
               {
-                "rounded-tr-none c_bg_primary c_text_primary_auto prose-invert": isUser,
+                "c_bg_primary c_text_primary_auto prose-invert rounded-tr-none": isUser,
                 "rounded-tl-none bg-secondary": !isUser,
               },
             )}
@@ -66,7 +66,7 @@ export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMe
               code({ node, inline, className, children, ...props }) {
                 if (children.length) {
                   if (children[0] == "▍") {
-                    return <span className="mt-1 cursor-default animate-pulse">▍</span>;
+                    return <span className="mt-1 animate-pulse cursor-default">▍</span>;
                   }
 
                   children[0] = (children[0] as string).replace("`▍`", "▍");
@@ -99,7 +99,7 @@ export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMe
       </div>
       {!!message.createdAt && (
         <small
-          className={cn("opacity-70 text-[10px]", {
+          className={cn("text-[10px] opacity-70", {
             "self-end": isUser,
           })}
         >

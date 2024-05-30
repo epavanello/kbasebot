@@ -81,9 +81,9 @@ const Actions: React.FC<{ row: any }> = ({ row }) => {
               <span className="ml-1">Remove</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="flex flex-col justify-center items-center">
-            <p className="text-md font-medium my-2">Are you sure to remove?</p>
-            <p className="text-xs text-muted-foreground text-center">This action will remove data of {data.email}</p>
+          <PopoverContent className="flex flex-col items-center justify-center">
+            <p className="text-md my-2 font-medium">Are you sure to remove?</p>
+            <p className="text-center text-xs text-muted-foreground">This action will remove data of {data.email}</p>
             <div className="mt-2 flex">
               <Button className="mr-2" variant="ghost" onClick={() => setRemovePopupOpen(false)}>
                 Cancel
@@ -165,7 +165,7 @@ export const columns: ColumnDef<FormSubmission>[] = [
     header: ({ column }) => (
       <Button
         variant="ghost"
-        className="justify-end w-full"
+        className="w-full justify-end"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         Received At
@@ -285,12 +285,12 @@ function Leads() {
       <DashboardHeader heading={"Leads"} text="Manage your collected leads details here" wrapperClass={"text-center"} />
 
       <div className="w-full">
-        <div className="flex flex-col items-stretch sm:flex-row sm:justify-end flex-wrap py-4 gap-1">
+        <div className="flex flex-col flex-wrap items-stretch gap-1 py-4 sm:flex-row sm:justify-end">
           <Input
             placeholder="Filter emails..."
             value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
             onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
-            className="w-full md:max-w-sm mr-auto"
+            className="mr-auto w-full md:max-w-sm"
           />
           <Button disabled={true}>
             Integration <DatabaseBackup className="ml-2 h-4 w-4" /> (Coming soon)
@@ -317,7 +317,7 @@ function Leads() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="rounded-md border overflow-x-auto">
+        <div className="overflow-x-auto rounded-md border">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

@@ -10,7 +10,7 @@ const Post: React.FCC<{
   backUrl?: string;
 }> = ({ post, content, backUrl }) => {
   return (
-    <div className={"mx-auto max-w-2xl my-8"}>
+    <div className={"mx-auto my-8 max-w-2xl"}>
       <PostHeader backUrl={backUrl} post={post} />
 
       <article className={"mx-auto flex justify-center"}>

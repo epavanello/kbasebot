@@ -104,7 +104,7 @@ interface CarouselNavigationProps {
 
 export const CarouselNavigation: React.FC<CarouselNavigationProps> = ({ onPrev, onNext }) => {
   return (
-    <div className="absolute top-1/2 transform -translate-y-1/2 left-0 right-0">
+    <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 transform">
       <button className={cn("absolute left-4 p-4")} onClick={onPrev}>
         &#10094;
       </button>

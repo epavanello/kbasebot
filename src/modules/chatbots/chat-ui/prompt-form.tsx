@@ -53,10 +53,9 @@ export function PromptForm({ onSubmit, input, setInput, isLoading }: PromptProps
             onChange={(e) => setInput(e.target.value)}
             placeholder={"Ask here"}
             spellCheck={false}
-            className="w-full px-4 py-3 resize-none rounded-lg
-            border border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full resize-none rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           />
-          <div className="absolute top-0 bottom-0 right-[3px] flex flex-col justify-center">
+          <div className="absolute bottom-0 right-[3px] top-0 flex flex-col justify-center">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" type="submit" size="icon" disabled={isLoading || input === ""}>

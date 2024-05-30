@@ -45,17 +45,17 @@ const ConversationsLogs = ({
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] flex-1 overflow-auto">
+    <div className="grid flex-1 grid-cols-1 overflow-auto md:grid-cols-[300px_1fr]">
       <ChatbotTheme primary_color={settings.primary_color} />
 
-      <aside className="w-full md:w-[300px] flex-col gap-3 p-4 flex h-full overflow-auto border-b md:border-b-0">
+      <aside className="flex h-full w-full flex-col gap-3 overflow-auto border-b p-4 md:w-[300px] md:border-b-0">
         {!!conversationsPerSession?.length &&
           conversationsPerSession.map((item) => {
             return (
               <Button
                 key={item.conversation_id}
                 onClick={() => setSelectedConversationId(item.conversation_id)}
-                className="text-xs text-left items-start py-2 px-4 flex-col h-auto"
+                className="h-auto flex-col items-start px-4 py-2 text-left text-xs"
                 size={"lg"}
                 variant={item.conversation_id === selectedConversationId ? "default" : "outline"}
               >
@@ -70,7 +70,7 @@ const ConversationsLogs = ({
           })}
       </aside>
 
-      <section className="flex flex-1 flex-col h-full overflow-auto p-4" ref={chatArea}>
+      <section className="flex h-full flex-1 flex-col overflow-auto p-4" ref={chatArea}>
         {!!conversations?.length && (
           <>
             <ChatList messages={convesationLogToInitialMessages(conversations)} />

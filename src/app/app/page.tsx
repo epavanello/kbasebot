@@ -14,8 +14,8 @@ const ChatbotIndex = () => {
   const { chatbots, loading } = useChatbots();
 
   return (
-    <DashboardShell className="container gap-0 mt-4">
-      <DashboardHeader heading={sayGreeting()} text="Manage your chatbots here" className="justify-between items-start">
+    <DashboardShell className="container mt-4 gap-0">
+      <DashboardHeader heading={sayGreeting()} text="Manage your chatbots here" className="items-start justify-between">
         <NewChatbotModal chatbotsCreated={chatbots.length} className="w-full sm:w-auto" />
       </DashboardHeader>
 
@@ -30,7 +30,7 @@ const ChatbotIndex = () => {
         >
           {loading ? (
             <div className="mt-4">
-              <LoadingDots className="!w-16 !h-16" />
+              <LoadingDots className="!h-16 !w-16" />
             </div>
           ) : (
             <NewChatbotModal chatbotsCreated={chatbots.length} className="w-full sm:w-auto" />

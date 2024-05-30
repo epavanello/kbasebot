@@ -112,7 +112,7 @@ const ImagePicker = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
       <>
         {!!label && <label className="text-xs font-bold">{label}</label>}
         <div ref={ref} className="relative max-w-xl" {...getRootProps()}>
-          <label className="flex flex-col text-xs items-center justify-center w-full p-3 px-4 transition border border-gray-500  rounded-md appearance-none cursor-pointer hover:border-gray-600 focus:outline-none">
+          <label className="flex w-full cursor-pointer appearance-none flex-col items-center justify-center rounded-md border border-gray-500 p-3 px-4 text-xs transition hover:border-gray-600 focus:outline-none">
             {uploading ? (
               <LoadingDots />
             ) : (
@@ -125,7 +125,7 @@ const ImagePicker = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
                   </span>
                 </span>
                 {imageUrl && (
-                  <div className={cn("relative mt-4 overflow-hidden w-full h-16", imgWrapperClass || "")}>
+                  <div className={cn("relative mt-4 h-16 w-full overflow-hidden", imgWrapperClass || "")}>
                     <NextImage
                       alt="image selected"
                       fill={true}
@@ -136,7 +136,7 @@ const ImagePicker = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
                   </div>
                 )}
                 {!imageUrl && (
-                  <div className="flex justify-center items-center p-6">
+                  <div className="flex items-center justify-center p-6">
                     <ImageOff size={32} />
                   </div>
                 )}
@@ -158,9 +158,9 @@ const ImagePicker = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
           size="sm"
           variant={"outline"}
           onClick={deleteImage}
-          className="py-1 px-2 h-auto w-full text-xs"
+          className="h-auto w-full px-2 py-1 text-xs"
         >
-          <Icon icon={"ph:trash"} className="text-red-500 text-lg mr-1" />
+          <Icon icon={"ph:trash"} className="mr-1 text-lg text-red-500" />
           Remove Image
         </Button>
       </>

@@ -113,10 +113,10 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
   });
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="flex w-full flex-col items-center">
       {!!label && <label className="text-xs font-bold">{label}</label>}
-      <div className="w-full my-1" {...getRootProps()}>
-        <label className="flex flex-col gap-4 text-xs items-center justify-center w-full pt-14 pb-8 px-4 transition border border-dashed border-gray-300 rounded-md appearance-none cursor-pointer hover:border-gray-600 focus:outline-none">
+      <div className="my-1 w-full" {...getRootProps()}>
+        <label className="flex w-full cursor-pointer appearance-none flex-col items-center justify-center gap-4 rounded-md border border-dashed border-gray-300 px-4 pb-8 pt-14 text-xs transition hover:border-gray-600 focus:outline-none">
           {uploading ? (
             <LoadingIcon />
           ) : (
@@ -128,8 +128,8 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
                 </span>
               </span>
               <div className="text-gray-400">
-                <p className="text-[13px] mb-1 mt-2 font-bold">You can upload {bytesToMb(MAX_FILE_SIZE)}MB Max</p>
-                <div className="flex gap-2 flex-wrap text-[12px]">
+                <p className="mb-1 mt-2 text-[13px] font-bold">You can upload {bytesToMb(MAX_FILE_SIZE)}MB Max</p>
+                <div className="flex flex-wrap gap-2 text-[12px]">
                   {SUPPORTED_EXTENSIONS.map((item) => (
                     <small key={item.ext}>.{item.ext}</small>
                   ))}

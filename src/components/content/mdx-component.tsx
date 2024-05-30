@@ -17,7 +17,7 @@ const NextImage: React.FCC<
   const className = classNames(props.class, `object-cover`);
 
   return (
-    <div className="w-full h-96 relative">
+    <div className="relative h-96 w-full">
       <Image className={cn("object-contain", className)} src={props.src} alt={props.alt} fill={true} {...props} />
     </div>
   );

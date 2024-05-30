@@ -47,7 +47,7 @@ export function UserAccountNav({ className }: { className?: string }) {
         >
           <UserAvatar avatar_url={avatar_url} full_name={full_name || "@"} />
           <span className="mr-1 hidden sm:inline">{full_name}</span>
-          <Icon icon="ep:arrow-down" className="ml-auto text-lg shrink-0 opacity-50" />
+          <Icon icon="ep:arrow-down" className="ml-auto shrink-0 text-lg opacity-50" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>

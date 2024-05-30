@@ -49,14 +49,14 @@ const Features = () => {
         </div>
 
         <section className="text-gray-900 dark:text-gray-100">
-          <div className="max-w-screen-xl px-4 py-8 sm:py-12 sm:px-6 lg:py-16 lg:px-8">
+          <div className="max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
             <div className="max-w-xl"></div>
 
             <div className="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
               {features.map((feature) => (
                 <div key={feature.icon} className="flex items-start gap-4">
                   <span className="shrink-0 rounded-lg p-1">
-                    <Icon className={"text-4xl rounded-lg text-black p-2 " + gradients.SEAFOAM} icon={feature.icon} />
+                    <Icon className={"rounded-lg p-2 text-4xl text-black" + gradients.SEAFOAM} icon={feature.icon} />
                   </span>
 
                   <div>

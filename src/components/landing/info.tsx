@@ -34,18 +34,18 @@ export default function Info({
           dir={dir}
           className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2"
         >
-          <div className="lg:pr-8 lg:pt-4 " dir="ltr">
+          <div className="lg:pr-8 lg:pt-4" dir="ltr">
             <div className="lg:max-w-lg">
               <div>
                 {!!helpText && <h2 className="text-base font-semibold leading-7 text-muted-foreground">{helpText}</h2>}
                 {!!title && <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{title}</p>}
-                {!!desc && <p className="mt-6 text-lg leading-8 ">{desc}</p>}
+                {!!desc && <p className="mt-6 text-lg leading-8">{desc}</p>}
 
                 <dl className="mt-10 max-w-xl space-y-2 text-base lg:max-w-none">
                   {features.map((feature) => (
                     <div key={feature.name} className="flex flex-col">
-                      <dt className="font-semibold whitespace-nowrap flex flex-row items-center">
-                        <Icon className={cn("text-md rounded-lg mr-1 text-primary")} icon={"mdi:check-bold"} />
+                      <dt className="flex flex-row items-center whitespace-nowrap font-semibold">
+                        <Icon className={cn("text-md mr-1 rounded-lg text-primary")} icon={"mdi:check-bold"} />
                         {feature.name}
                       </dt>{" "}
                       <dd className="inline">{feature.description}</dd>
@@ -58,8 +58,8 @@ export default function Info({
           {showChild ? (
             children
           ) : (
-            <AspectRatio className={"rounded-2xl overflow-hidden shadow-2xl p-10 bg-primary"} ratio={4 / 4}>
-              <Image src={img} alt="Seo" className="object-contain max-w-none" fill={true} />
+            <AspectRatio className={"overflow-hidden rounded-2xl bg-primary p-10 shadow-2xl"} ratio={4 / 4}>
+              <Image src={img} alt="Seo" className="max-w-none object-contain" fill={true} />
             </AspectRatio>
           )}
         </div>

@@ -55,7 +55,7 @@ const Sidebar: FC<SidebarProps> = () => {
                 {!!item.status && (
                   <Badge
                     className={cn(
-                      "absolute right-1 bottom-1 text-[10px] px-[6px] py-[0px]",
+                      "absolute bottom-1 right-1 px-[6px] py-[0px] text-[10px]",
                       item.status.className || "",
                     )}
                   >

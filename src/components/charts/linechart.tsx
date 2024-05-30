@@ -41,7 +41,7 @@ export default function LineChart<T extends ChartData>({ data, metrics }: LineCh
       <TabGroup>
         <TabList>
           {...metrics.map((metric, i) => (
-            <Tab key={i} className="p-4 sm:p-6 text-left">
+            <Tab key={i} className="p-4 text-left sm:p-6">
               <p className="text-sm sm:text-base">{prettyMetric(metric.name)}</p>
               <Metric className="mt-2 text-inherit">
                 {numberFormatter(metric.sum ? sumArray(data, metric.name) : averageArray(data, metric.name))}
@@ -54,7 +54,7 @@ export default function LineChart<T extends ChartData>({ data, metrics }: LineCh
           {...metrics.map((metric, i) => (
             <TabPanel key={i} className="p-6">
               <AreaChart
-                className="h-80 mt-10"
+                className="mt-10 h-80"
                 data={data}
                 index={"date"}
                 categories={[metric.name]}

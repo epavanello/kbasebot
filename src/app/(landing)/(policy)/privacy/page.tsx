@@ -2,7 +2,7 @@ import React from "react";
 
 const Page = () => {
   return (
-    <article className="prose dark:prose-invert max-w-2xl m-auto mt-10">
+    <article className="prose m-auto mt-10 max-w-2xl dark:prose-invert">
       <>
         <h2>Privacy Policy</h2>
         <p>Last update: Sep 11, 2023</p> <h3>1. Introduction</h3>

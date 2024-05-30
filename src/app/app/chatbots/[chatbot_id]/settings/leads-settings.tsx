@@ -71,7 +71,7 @@ const LeadsSettings = () => {
         <CardTitle>Leads Settings</CardTitle>
         <p>Collects leads from your chatbot</p>
         {!isLeadsEnabled && (
-          <p className={"text-primary text-xs p-1"}>
+          <p className={"p-1 text-xs text-primary"}>
             Please select a field from below to enable lead&apos;s collection
           </p>
         )}
@@ -95,7 +95,7 @@ const LeadsSettings = () => {
                 aria-label="Toggle italic"
               >
                 <div
-                  className={cn("w-6 h-6 bg-secondary rounded-full border flex justify-center items-center mr-2", {
+                  className={cn("mr-2 flex h-6 w-6 items-center justify-center rounded-full border bg-secondary", {
                     "bg-primary text-secondary": isActive,
                   })}
                 >

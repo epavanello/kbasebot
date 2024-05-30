@@ -12,17 +12,17 @@ const Page = async ({ params: { chatbot_id } }: { params: { chatbot_id: string }
   const settings = await getChatbotSettings(chatbot_id, cookies);
 
   return (
-    <DashboardShell className="pb-0 h-full">
+    <DashboardShell className="h-full pb-0">
       <DashboardHeader heading={"Preview"}>
         <Link
           href={`/app/chatbots/${chatbot_id}/share`}
-          className="text-sm h-8 flex items-center rounded-md px-6 border border-primary text-primary hover:bg-primary hover:text-secondary"
+          className="flex h-8 items-center rounded-md border border-primary px-6 text-sm text-primary hover:bg-primary hover:text-secondary"
         >
           Share
         </Link>
       </DashboardHeader>
 
-      <div className="w-full flex flex-1 sm:container">
+      <div className="flex w-full flex-1 sm:container">
         <PublicChatUi user_id={settings?.user_id} noCloseBtn settings={settings} chatbot_id={chatbot_id} />
       </div>
     </DashboardShell>

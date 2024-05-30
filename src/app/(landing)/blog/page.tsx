@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 async function BlogPage() {
   return (
     <Container>
-      <div className={"flex flex-col space-y-16 my-8"}>
+      <div className={"my-8 flex flex-col space-y-16"}>
         <div className={"flex flex-col items-center space-y-4"}>
           <Heading type={1}>Blog</Heading>
 

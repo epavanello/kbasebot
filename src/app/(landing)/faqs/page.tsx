@@ -63,7 +63,7 @@ const FAQPage = () => {
   return (
     <div>
       <Container>
-        <div className={"flex flex-col space-y-8 my-8"}>
+        <div className={"my-8 flex flex-col space-y-8"}>
           <div className={"flex flex-col items-center space-y-4"}>
             <Heading type={1}>FAQ</Heading>
 

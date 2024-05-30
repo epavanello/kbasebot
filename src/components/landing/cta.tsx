@@ -10,7 +10,7 @@ const Cta = () => {
       <div className="relative isolate px-6 py-32 sm:py-40 lg:px-8">
         <GridBackground></GridBackground>
         <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-bold -tracking-wide text-4xl leading-10">
+          <h2 className="text-4xl font-bold leading-10 -tracking-wide">
             {/*Migliora l'esperienza dei tuoi clienti, inizia a usare la nostra app oggi */}
             Improve your customer experience
             <br />
@@ -21,7 +21,7 @@ const Cta = () => {
             Don&apos;t waste time, start using our chatbots for your website for free.
           </p>
           <div className="mt-4">
-            <Link className={cn(buttonVariants({ variant: "default", size: "lg" }), "mt-4 py-6 px-10")} href="/app">
+            <Link className={cn(buttonVariants({ variant: "default", size: "lg" }), "mt-4 px-10 py-6")} href="/app">
               Get started for free
             </Link>
           </div>

@@ -2,7 +2,7 @@ export function GridBackground() {
   return (
     <>
       <svg
-        className="absolute inset-0 h-full w-full stroke-current -z-10 text-gray-200 dark:text-gray-700"
+        className="absolute inset-0 -z-10 h-full w-full stroke-current text-gray-200 dark:text-gray-700"
         style={{
           WebkitMaskImage: "radial-gradient(100% 100% at top right,white,transparent)",
           maskImage: "radial-gradient(100% 100% at top right,white,transparent)",

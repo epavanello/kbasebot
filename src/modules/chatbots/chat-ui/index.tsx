@@ -127,15 +127,15 @@ export default function ChatUi({
   }, [messages.length, messages.at(-1)?.content.split("\n").length]);
 
   return (
-    <div className={cn("flex flex-col w-full my-auto", className)}>
+    <div className={cn("my-auto flex w-full flex-col", className)}>
       <Separator className="border" />
       <div className={cn("flex-1 overflow-y-auto p-4")} ref={chatArea}>
         {isDataLoading && (
-          <div className="max-w-2xl m-auto flex flex-col gap-6">
+          <div className="m-auto flex max-w-2xl flex-col gap-6">
             {[1, 2, 3].map((i) => (
               <div className="flex flex-col gap-3" key={i.toString()}>
-                <Skeleton className="w-[70%] h-[70px] rounded-2xl self-end" />
-                <Skeleton className="w-[70%] h-[70px] rounded-2xl" />
+                <Skeleton className="h-[70px] w-[70%] self-end rounded-2xl" />
+                <Skeleton className="h-[70px] w-[70%] rounded-2xl" />
               </div>
             ))}
           </div>
@@ -148,18 +148,18 @@ export default function ChatUi({
         )}
         {isLoading && !responseIsStarted && (
           <ChatMessage message={{ role: "assistant", content: "", id: "loading" }}>
-            <LoadingDots className="!w-2 !h-2" />
+            <LoadingDots className="!h-2 !w-2" />
           </ChatMessage>
         )}
       </div>
       {!!suggested_message?.length && (
-        <div className="w-full overflow-x-auto pt-2 no-scrollbar border-t">
-          <div className="flex px-2 justify-start gap-3 flex-nowrap">
+        <div className="no-scrollbar w-full overflow-x-auto border-t pt-2">
+          <div className="flex flex-nowrap justify-start gap-3 px-2">
             {suggested_message.map((item, idx) => (
               <Button
                 variant="outline"
                 title="Click to ask this"
-                className="text-[10px] px-2 py-1 h-auto rounded-2xl flex-shrink-0"
+                className="h-auto flex-shrink-0 rounded-2xl px-2 py-1 text-[10px]"
                 key={"suggested_message-" + idx.toString()}
                 onClick={async () => {
                   await append({

@@ -243,15 +243,15 @@
 }
 
 .testimonial {
-  @apply mx-auto w-[95vw] relative h-64 overflow-hidden flex flex-row;
+  @apply relative mx-auto flex h-64 w-[95vw] flex-row overflow-hidden;
 }
 
 .scroller {
-  @apply flex flex-row gap-8 overflow-x-auto overflow-y-hidden sm:overflow-hidden w-full;
+  @apply flex w-full flex-row gap-8 overflow-x-auto overflow-y-hidden sm:overflow-hidden;
 }
 
 .testimonial .testimonial-item__content {
-  @apply w-72 text-left shrink-0 bg-gray-600/10 dark:bg-white/10 rounded-2xl;
+  @apply w-72 shrink-0 rounded-2xl bg-gray-600/10 text-left dark:bg-white/10;
   box-shadow: rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
   padding: 32px;
 }
@@ -268,7 +268,7 @@
 
 .testimonial::before,
 .testimonial::after {
-  @apply hidden sm:block bg-gradient-to-l from-background via-background to-transparent w-12 md:w-64 h-full absolute z-10 pointer-events-none content-[""];
+  @apply pointer-events-none absolute z-10 hidden h-full w-12 bg-gradient-to-l from-background via-background to-transparent content-[""] sm:block md:w-64;
 }
 
 .testimonial::before {
@@ -299,7 +299,7 @@
         </span>
 */
 .animated-gradient-text_background {
-  @apply bg-gradient-to-r bg-clip-text font-bold text-foreground relative;
+  @apply relative bg-gradient-to-r bg-clip-text font-bold text-foreground;
   animation: text-fade 9s infinite;
 }
 

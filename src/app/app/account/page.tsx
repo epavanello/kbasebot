@@ -34,10 +34,10 @@ const Page = () => {
       <DashboardHeader
         heading={"Accounts"}
         text="Manage your account here"
-        className="justify-between items-start"
+        className="items-start justify-between"
       ></DashboardHeader>
 
-      <div className="flex flex-col gap-10 max-w-4xl">
+      <div className="flex max-w-4xl flex-col gap-10">
         <Card>
           <CardHeader>
             <CardTitle>Billing</CardTitle>
@@ -94,7 +94,7 @@ const Page = () => {
 
           <CardFooter className="flex flex-col items-start space-y-2 md:flex-row md:justify-between md:space-x-0">
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-              <p className="pb-4 mr-4 sm:pb-0">Manage your subscription on Stripe.</p>
+              <p className="mr-4 pb-4 sm:pb-0">Manage your subscription on Stripe.</p>
               {subscription ? (
                 <Link className={buttonVariants({})} href="/app/subscription">
                   Open customer portal
@@ -115,17 +115,17 @@ const Page = () => {
 
           <CardContent>
             Usage
-            <div className="text-sm font-semibold text-gray-600 ">
+            <div className="text-sm font-semibold text-gray-600">
               Chatbot created: {chatbots.length} / {permission.maxChatbots}
             </div>
-            <div className="text-sm font-semibold text-gray-600 ">
+            <div className="text-sm font-semibold text-gray-600">
               Messages/month: {messagesCount} / {permission.maxMessages}
             </div>
           </CardContent>
           <CardContent>
             <div className="flex items-center">
               <UserAvatar avatar_url={avatar_url} full_name={full_name || "@"} />
-              <div className="flex flex-col mr-1">
+              <div className="mr-1 flex flex-col">
                 <span className="font-bold">{full_name}</span>
                 <span className="text-sm">{email}</span>
               </div>
@@ -147,7 +147,7 @@ const Page = () => {
 
           <CardContent>
             <Alert variant="destructive">
-              <InfoCircledIcon className="w-4 h-4" />
+              <InfoCircledIcon className="h-4 w-4" />
               <AlertTitle>Attention</AlertTitle>
               <AlertDescription>This action will delete your account all it&apos;s data.</AlertDescription>
             </Alert>

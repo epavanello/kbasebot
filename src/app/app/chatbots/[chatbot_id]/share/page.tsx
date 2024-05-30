@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
 
 const CodeBlock = ({ children }) => (
-  <pre className="mt-2 min-w-0 overflow-auto w-full rounded-md bg-slate-950 p-4 break-words">
-    <code className="text-white text-xs">{children}</code>
+  <pre className="mt-2 w-full min-w-0 overflow-auto break-words rounded-md bg-slate-950 p-4">
+    <code className="text-xs text-white">{children}</code>
   </pre>
 );
 
@@ -32,10 +32,10 @@ const CardBlock = ({
     <CardContent>
       {!!desc && <CardDescription className={"mb-4"}>{desc}</CardDescription>}
 
-      <div className="relative flex flex-wrap relative w-full justify-start gap-2 items-start">
+      <div className="relative flex w-full flex-wrap items-start justify-start gap-2">
         <CodeBlock>{code}</CodeBlock>
 
-        <div className="absolute top-4 right-2 z-10">
+        <div className="absolute right-2 top-4 z-10">
           <CopyButton className="text-white" size="icon" variant="ghost" text={code} />
         </div>
       </div>

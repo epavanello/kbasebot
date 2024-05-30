@@ -21,14 +21,14 @@ export default function NavLinks({
 
   return (
     <div
-      className={cn("flex items-center text-md flex-1 justify-end", {
+      className={cn("text-md flex flex-1 items-center justify-end", {
         "flex-col space-y-6": isCol,
-        "space-x-6 ": !isCol,
+        "space-x-6": !isCol,
       })}
     >
       <div
-        className={cn("flex justify-center flex-1", {
-          "flex-col space-y-6 text-2xl items-center": isCol,
+        className={cn("flex flex-1 justify-center", {
+          "flex-col items-center space-y-6 text-2xl": isCol,
           "space-x-6": !isCol,
         })}
       >
@@ -37,7 +37,7 @@ export default function NavLinks({
             key={link.label}
             href={link.href}
             className={cn(
-              "transition-colors hover:text-foreground/80 text-sm",
+              "text-sm transition-colors hover:text-foreground/80",
               pathname === link.href ? "text-foreground" : "text-foreground/60",
             )}
           >

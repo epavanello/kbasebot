@@ -59,10 +59,10 @@ const NewChatbotModal = ({
       <DialogContent
         onPointerDownOutside={(e) => e.preventDefault()}
         overlayClass="backdrop-blur-3xl bg-white\/90 bg-center bg-no-repeat bg-contain"
-        className="overflow-auto md:max-w-4xl max-h-full"
+        className="max-h-full overflow-auto md:max-w-4xl"
       >
-        <div className="w-full m-auto">
-          <h1 className="mb-2 text-4xl font-black">Create New Chatbot</h1>
+        <div className="m-auto w-full">
+          <h1 className="mb-8 text-center text-4xl font-black">Create a New Chatbot</h1>
           <PaymentBlock isBlocked={isBlocked} text={`You have reached max ${permission.maxChatbots} Chatbot limit`}>
             <UploadContent showGoBack onGoBack={closeDialog} showCreate externalChatbotId={chatbot?.id}></UploadContent>
           </PaymentBlock>

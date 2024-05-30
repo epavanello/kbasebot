@@ -307,7 +307,7 @@ export function UploadContent({
   return (
     <form onSubmit={onSubmit} className="flex-1">
       <Tabs defaultValue="text" className="flex flex-col md:flex-row">
-        <TabsList className="flex flex-col sm:flex-row md:flex-col h-full gap-2 items-stretch overflow-auto">
+        <TabsList className="flex h-full flex-col items-stretch gap-2 overflow-auto sm:flex-row md:flex-col">
           {[
             {
               label: "Text",
@@ -338,7 +338,7 @@ export function UploadContent({
             },
           ].map((item) => (
             <TabsTrigger
-              className="flex-1 justify-center items-start text-sm shrink-0"
+              className="flex-1 shrink-0 items-start justify-center text-sm"
               key={item.value}
               value={item.value}
             >
@@ -382,13 +382,13 @@ export function UploadContent({
             props: { chatbotId: chatbot?.id || "" },
           },
         ].map((item) => (
-          <TabsContent key={item.value} className="flex-1 p-4 border-secondary border mt-0 ml-2" value={item.value}>
+          <TabsContent key={item.value} className="ml-2 mt-0 flex-1 border border-secondary p-4" value={item.value}>
             <item.Comp {...item.props} />
           </TabsContent>
         ))}
       </Tabs>
 
-      <div className="flex justify-center gap-1 my-2">
+      <div className="my-2 flex justify-center gap-1">
         {showGoBack && (
           <Button
             className="text-gray-800"

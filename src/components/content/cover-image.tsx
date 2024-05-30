@@ -11,7 +11,7 @@ type Props = {
 const CoverImage: React.FC<Props> = ({ title, src, preloadImage, className }) => {
   return (
     <Image
-      className={cn("duration-250 block rounded-xl object-cover" + " transition-all hover:opacity-90", {
+      className={cn("duration-250 block rounded-xl object-cover" + "transition-all hover:opacity-90", {
         className,
       })}
       src={src}
