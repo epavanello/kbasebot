@@ -25,9 +25,7 @@ const Testimonials = () => {
 
   React.useEffect(() => {
     if (ref.current && !manualScroll) {
-      const rect = ref.current.children
-        .item(scrollIndex)
-        ?.getBoundingClientRect();
+      const rect = ref.current.children.item(scrollIndex)?.getBoundingClientRect();
 
       if (!rect) return;
 
@@ -69,9 +67,7 @@ const Testimonials = () => {
 
   return (
     <div id="testimonials" className="pt-12 sm:pt-24">
-      <h1 className="text-4xl font-extrabold sm:text-center sm:text-6xl mb-12">
-        Trusted by companies of all sizes
-      </h1>
+      <h1 className="text-4xl font-extrabold sm:text-center sm:text-6xl mb-12">Trusted by companies of all sizes</h1>
       <div className="testimonial">
         <div
           className="scroller"

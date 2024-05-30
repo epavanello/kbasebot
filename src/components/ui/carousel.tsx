@@ -27,8 +27,7 @@ export const Carousel: React.FC<CarouselProps> = ({
 
   const goToSlide = (index: number) => {
     if (infinite) {
-      if (index < 0)
-        index = totalSlides - visibleItems - React.Children.count(children);
+      if (index < 0) index = totalSlides - visibleItems - React.Children.count(children);
       // Consider duplicate set
       else if (index >= totalSlides - visibleItems) {
         index = 0;
@@ -85,10 +84,7 @@ export const Carousel: React.FC<CarouselProps> = ({
           <div style={{ flex: `0 0 ${slideWidth}%` }}>{child}</div>
         ))}
       </div>
-      <CarouselNavigation
-        onPrev={() => goToSlide(currentSlide - 1)}
-        onNext={() => goToSlide(currentSlide + 1)}
-      />
+      <CarouselNavigation onPrev={() => goToSlide(currentSlide - 1)} onNext={() => goToSlide(currentSlide + 1)} />
     </div>
   );
 };
@@ -106,10 +102,7 @@ interface CarouselNavigationProps {
   onNext: () => void;
 }
 
-export const CarouselNavigation: React.FC<CarouselNavigationProps> = ({
-  onPrev,
-  onNext,
-}) => {
+export const CarouselNavigation: React.FC<CarouselNavigationProps> = ({ onPrev, onNext }) => {
   return (
     <div className="absolute top-1/2 transform -translate-y-1/2 left-0 right-0">
       <button className={cn("absolute left-4 p-4")} onClick={onPrev}>

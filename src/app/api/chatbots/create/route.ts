@@ -25,11 +25,7 @@ export async function POST(req: NextRequest) {
     }
 
     // delete all temporary chatbots
-    await supabaseServerClient
-      .from("chatbots")
-      .delete()
-      .eq("user_id", user.id)
-      .eq("status", "TEMPORARY");
+    await supabaseServerClient.from("chatbots").delete().eq("user_id", user.id).eq("status", "TEMPORARY");
 
     const subscription = await getSubscription(supabaseServerClient, user.id);
 
@@ -74,9 +70,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ status: "done", chatbot });
   } catch (e) {
     console.error(e);
-    return NextResponse.json(
-      { error: getDevErrorMessage(e, "Chatbot create error") },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: getDevErrorMessage(e, "Chatbot create error") }, { status: 500 });
   }
 }

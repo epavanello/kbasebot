@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import {
-  authenticateNotion,
-  loadNotions,
-} from "@/modules/datasource/load-notions";
+import { authenticateNotion, loadNotions } from "@/modules/datasource/load-notions";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/lib/types/database.types";
 import { cookies } from "next/headers";

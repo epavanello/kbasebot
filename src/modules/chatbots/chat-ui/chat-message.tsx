@@ -15,18 +15,10 @@ export interface ChatMessageProps {
   children?: React.ReactNode;
 }
 
-export function ChatMessage({
-  message,
-  chatbotLogo,
-  children,
-  ...props
-}: ChatMessageProps) {
+export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMessageProps) {
   const isUser = message.role === "user";
   return (
-    <div
-      className={cn("relative flex flex-col gap-1 w-full items-stretch")}
-      {...props}
-    >
+    <div className={cn("relative flex flex-col gap-1 w-full items-stretch")} {...props}>
       <div
         className={cn({
           "self-end": isUser,
@@ -35,13 +27,7 @@ export function ChatMessage({
         {isUser ? (
           <span className="text-xs">You</span>
         ) : !!chatbotLogo ? (
-          <Image
-            src={chatbotLogo}
-            width={15}
-            height={15}
-            alt={"chatbot logo"}
-            className="rounded-full"
-          />
+          <Image src={chatbotLogo} width={15} height={15} alt={"chatbot logo"} className="rounded-full" />
         ) : (
           <Icon icon="fluent:bot-sparkle-24-filled" className="w-5 h-5 c_text_primary" />
         )}
@@ -80,9 +66,7 @@ export function ChatMessage({
               code({ node, inline, className, children, ...props }) {
                 if (children.length) {
                   if (children[0] == "▍") {
-                    return (
-                      <span className="mt-1 cursor-default animate-pulse">▍</span>
-                    );
+                    return <span className="mt-1 cursor-default animate-pulse">▍</span>;
                   }
 
                   children[0] = (children[0] as string).replace("`▍`", "▍");

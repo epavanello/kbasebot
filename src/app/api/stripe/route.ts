@@ -21,10 +21,7 @@ export const dynamic = "force-dynamic";
 
 function checkForProduction(email: string) {
   if (!isProduction) {
-    if (
-      email !== "pavanello.emanuele@gmail.com" &&
-      email !== "dev.nilooy@gmail.com"
-    ) {
+    if (email !== "pavanello.emanuele@gmail.com" && email !== "dev.nilooy@gmail.com") {
       throw new Error("Email not allowed in test mode");
     }
   }
@@ -42,19 +39,14 @@ export async function POST(request: NextRequest) {
       apiVersion: "2022-11-15",
     });
 
-    const event = await stripe.webhooks.constructEventAsync(
-      await request.text(),
-      signature,
-      STRIPE_ENDPOINT_SECRET,
-    );
+    const event = await stripe.webhooks.constructEventAsync(await request.text(), signature, STRIPE_ENDPOINT_SECRET);
 
     const supabaseClientAdmin = getSupabaseClientAdmin();
 
     switch (event.type) {
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice;
-        const customer =
-          typeof invoice.customer == "string" ? invoice.customer : null;
+        const customer = typeof invoice.customer == "string" ? invoice.customer : null;
         const priceID = invoice.lines.data?.[0].price?.id;
 
         const email = invoice.customer_email?.toLowerCase();
@@ -80,9 +72,7 @@ export async function POST(request: NextRequest) {
         if (typeof invoice.subscription == "object") {
           subscription = invoice.subscription;
         } else if (typeof invoice.subscription == "string") {
-          subscription = await stripe.subscriptions.retrieve(
-            invoice.subscription,
-          );
+          subscription = await stripe.subscriptions.retrieve(invoice.subscription);
         }
 
         if (!subscription) {
@@ -100,8 +90,7 @@ export async function POST(request: NextRequest) {
         let user: User | null = null;
 
         if (clientReferenceID) {
-          const { data } =
-            await supabaseClientAdmin.auth.admin.getUserById(clientReferenceID);
+          const { data } = await supabaseClientAdmin.auth.admin.getUserById(clientReferenceID);
           user = data.user;
         }
 
@@ -110,9 +99,7 @@ export async function POST(request: NextRequest) {
         }
 
         if (!user) {
-          throw new Error(
-            `User not found: ref_id ${clientReferenceID}, email:${email}`,
-          );
+          throw new Error(`User not found: ref_id ${clientReferenceID}, email:${email}`);
         }
 
         let plan: Plan;
@@ -133,16 +120,10 @@ export async function POST(request: NextRequest) {
           throw new Error(`Invalid price id: ${priceID}`);
         }
 
-        const actualSubscription = await getSubscription(
-          supabaseClientAdmin,
-          user.id,
-        );
+        const actualSubscription = await getSubscription(supabaseClientAdmin, user.id);
 
         // cancel old subscription
-        if (
-          actualSubscription &&
-          actualSubscription.subscription_id !== subscription.id
-        ) {
+        if (actualSubscription && actualSubscription.subscription_id !== subscription.id) {
           try {
             await stripe.subscriptions.del(actualSubscription.subscription_id);
           } catch (e) {
@@ -150,17 +131,15 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        const { error: errorUpsert } = await supabaseClientAdmin
-          .from("subscriptions")
-          .upsert({
-            id: user.id,
-            current_period_start: currentPeriodStart?.toISOString(),
-            current_period_end: currentPeriodEnd?.toISOString(),
-            customer_id: customer,
-            plan: plan,
-            subscription_id: subscription.id,
-            billing_interval: billingInterval,
-          });
+        const { error: errorUpsert } = await supabaseClientAdmin.from("subscriptions").upsert({
+          id: user.id,
+          current_period_start: currentPeriodStart?.toISOString(),
+          current_period_end: currentPeriodEnd?.toISOString(),
+          customer_id: customer,
+          plan: plan,
+          subscription_id: subscription.id,
+          billing_interval: billingInterval,
+        });
 
         if (errorUpsert) {
           throw errorUpsert;

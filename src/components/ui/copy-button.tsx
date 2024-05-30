@@ -29,12 +29,7 @@ const CopyButton: FC<CopyButtonProps> = ({
   };
 
   return (
-    <Button
-      className={cn(className || "")}
-      variant={variant as any}
-      size={size as any}
-      onClick={onCopy}
-    >
+    <Button className={cn(className || "")} variant={variant as any} size={size as any} onClick={onCopy}>
       {isCopied ? <CheckIcon /> : <CopyIcon />}
       <span
         className={cn({

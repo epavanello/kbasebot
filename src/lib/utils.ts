@@ -22,10 +22,7 @@ export const truncate = (str: string, num: number) => {
 export const isDevelopment = process.env.NODE_ENV === "development";
 export const isProduction = process.env.NODE_ENV === "production";
 
-export async function fetcher<JSON = any>(
-  input: RequestInfo,
-  init?: RequestInit,
-): Promise<JSON> {
+export async function fetcher<JSON = any>(input: RequestInfo, init?: RequestInit): Promise<JSON> {
   const response = await fetch(input, init || {});
 
   return response.json();
@@ -63,8 +60,7 @@ export function sayGreeting() {
   return greeting;
 }
 
-export const getRandomArrayIndex = (arr) =>
-  Math.floor(Math.random() * arr?.length);
+export const getRandomArrayIndex = (arr) => Math.floor(Math.random() * arr?.length);
 
 export const getRandomArrayValue = (arr = []) => {
   return arr[Math.floor(Math.random() * arr?.length)];
@@ -78,21 +74,13 @@ export function getDevErrorMessage(e: unknown, defaultMessage: string): string {
   }
 }
 
-export function getErrorMessage(
-  e: unknown,
-  defaultMessage: string = "Unknown error",
-): string {
+export function getErrorMessage(e: unknown, defaultMessage: string = "Unknown error"): string {
   try {
     if (typeof e === "string") {
       return e;
     } else if (e instanceof Error) {
       return e.message;
-    } else if (
-      typeof e == "object" &&
-      e &&
-      "message" in e &&
-      typeof e.message == "string"
-    ) {
+    } else if (typeof e == "object" && e && "message" in e && typeof e.message == "string") {
       return e.message;
     }
   } catch (error) {
@@ -126,13 +114,7 @@ export function isContrastColorWhite(hexColor: string): boolean {
   }
   // convert 3-digit hex to 6-digits.
   if (hexColor.length === 3) {
-    hexColor =
-      hexColor[0] +
-      hexColor[0] +
-      hexColor[1] +
-      hexColor[1] +
-      hexColor[2] +
-      hexColor[2];
+    hexColor = hexColor[0] + hexColor[0] + hexColor[1] + hexColor[1] + hexColor[2] + hexColor[2];
   }
   if (hexColor.length !== 6) {
     throw new Error("Invalid HEX color.");
@@ -152,10 +134,8 @@ export function textColorBasedOnBg(bgColor: string) {
 
 export const popupCenter = ({ url, title, w, h }) => {
   // Fixes dual-screen position                             Most browsers      Firefox
-  const dualScreenLeft =
-    window.screenLeft !== undefined ? window.screenLeft : window.screenX;
-  const dualScreenTop =
-    window.screenTop !== undefined ? window.screenTop : window.screenY;
+  const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+  const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
 
   const width = window.innerWidth
     ? window.innerWidth

@@ -1,39 +1,15 @@
-import {
-  AreaChart,
-  Card,
-  Metric,
-  TabList,
-  Tab,
-  TabGroup,
-  TabPanels,
-  TabPanel,
-} from "@tremor/react";
+import { AreaChart, Card, Metric, TabList, Tab, TabGroup, TabPanels, TabPanel } from "@tremor/react";
 
-const numberFormatter = (value: number) =>
-  Intl.NumberFormat("us").format(value).toString();
+const numberFormatter = (value: number) => Intl.NumberFormat("us").format(value).toString();
 
-function sumArray<T extends ChartData>(
-  array: LineChartData<T>[],
-  metric: keyof ChartData,
-) {
-  return array.reduce(
-    (accumulator, currentValue) => accumulator + currentValue[metric],
-    0,
-  );
+function sumArray<T extends ChartData>(array: LineChartData<T>[], metric: keyof ChartData) {
+  return array.reduce((accumulator, currentValue) => accumulator + currentValue[metric], 0);
 }
 
 export type ChartData = Record<string, number>;
 
-function averageArray<T extends ChartData>(
-  array: LineChartData<T>[],
-  metric: keyof ChartData,
-) {
-  return (
-    array.reduce(
-      (accumulator, currentValue) => accumulator + currentValue[metric],
-      0,
-    ) / array.length
-  );
+function averageArray<T extends ChartData>(array: LineChartData<T>[], metric: keyof ChartData) {
+  return array.reduce((accumulator, currentValue) => accumulator + currentValue[metric], 0) / array.length;
 }
 
 function prettyMetric(metric: string) {
@@ -59,25 +35,16 @@ export interface LineChartProps<T extends ChartData> {
   }[];
 }
 
-export default function LineChart<T extends ChartData>({
-  data,
-  metrics,
-}: LineChartProps<T>) {
+export default function LineChart<T extends ChartData>({ data, metrics }: LineChartProps<T>) {
   return (
     <Card className="p-0">
       <TabGroup>
         <TabList>
           {...metrics.map((metric, i) => (
             <Tab key={i} className="p-4 sm:p-6 text-left">
-              <p className="text-sm sm:text-base">
-                {prettyMetric(metric.name)}
-              </p>
+              <p className="text-sm sm:text-base">{prettyMetric(metric.name)}</p>
               <Metric className="mt-2 text-inherit">
-                {numberFormatter(
-                  metric.sum
-                    ? sumArray(data, metric.name)
-                    : averageArray(data, metric.name),
-                )}
+                {numberFormatter(metric.sum ? sumArray(data, metric.name) : averageArray(data, metric.name))}
                 {metric.unit}
               </Metric>
             </Tab>

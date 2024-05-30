@@ -33,10 +33,7 @@ interface INotionResultItem {
   properties: any;
 }
 
-async function extractNotionResRecursively(
-  notion: NotionClient,
-  next_cursor: string | undefined,
-) {
+async function extractNotionResRecursively(notion: NotionClient, next_cursor: string | undefined) {
   const nextNotionRes = await notion.search({
     sort: {
       direction: "ascending",
@@ -46,10 +43,7 @@ async function extractNotionResRecursively(
   });
 
   if (nextNotionRes.has_more && nextNotionRes.next_cursor) {
-    const nextNotionItems = await extractNotionResRecursively(
-      notion,
-      nextNotionRes.next_cursor,
-    );
+    const nextNotionItems = await extractNotionResRecursively(notion, nextNotionRes.next_cursor);
     nextNotionRes.results.push(...nextNotionItems.results);
   }
   return nextNotionRes;
@@ -84,12 +78,7 @@ export const loadNotions = async (notionAuth: INotionAuth) => {
     .flat()
     .filter(Boolean)
     .filter(
-      (document) =>
-        document &&
-        document.pageContent?.length > 0 &&
-        document.id &&
-        document.type &&
-        document.title,
+      (document) => document && document.pageContent?.length > 0 && document.id && document.type && document.title,
     ) as {
     pageContent: string;
     type: string;
@@ -102,11 +91,7 @@ export const loadDBOrPage = async ({
   item,
   accessToken,
 }: {
-  item:
-    | PageObjectResponse
-    | DatabaseObjectResponse
-    | PartialPageObjectResponse
-    | PartialDatabaseObjectResponse;
+  item: PageObjectResponse | DatabaseObjectResponse | PartialPageObjectResponse | PartialDatabaseObjectResponse;
   accessToken: string;
 }) => {
   const { object: type, id } = item;
@@ -135,10 +120,7 @@ export const loadDBOrPage = async ({
       id: p.metadata.notionId as string,
       title:
         type === NotionItemType.Page
-          ? printTitle(
-              item.properties.title.title[0].plain_text,
-              p.metadata?.properties?.title,
-            )
+          ? printTitle(item.properties.title.title[0].plain_text, p.metadata?.properties?.title)
           : printTitle(item.title[0].plain_text, p.metadata?.properties?.title),
     }));
   } catch (e) {
@@ -146,12 +128,8 @@ export const loadDBOrPage = async ({
   }
 };
 
-export const authenticateNotion = async (
-  code: string,
-): Promise<INotionAuth> => {
-  const encoded = Buffer.from(
-    `${process.env.NOTION_CLIENT_ID}:${process.env.NOTION_CLIENT_SECRET}`,
-  ).toString("base64");
+export const authenticateNotion = async (code: string): Promise<INotionAuth> => {
+  const encoded = Buffer.from(`${process.env.NOTION_CLIENT_ID}:${process.env.NOTION_CLIENT_SECRET}`).toString("base64");
 
   const response = await fetch("https://api.notion.com/v1/oauth/token", {
     method: "POST",

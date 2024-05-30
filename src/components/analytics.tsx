@@ -7,9 +7,7 @@ const GA_MEASUREMENT_ID = "G-RC26S8911V";
 const Analytics = () => {
   return (
     <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-      />
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />
       <Script id="google-analytics">
         {`
           window.dataLayer = window.dataLayer || [];
@@ -19,12 +17,7 @@ const Analytics = () => {
           gtag('config', '${GA_MEASUREMENT_ID}');
         `}
       </Script>
-      <Script
-        id="plausible"
-        defer
-        data-domain="kbasebot.com"
-        src="https://plausible.emadev.co/js/script.js"
-      ></Script>
+      <Script id="plausible" defer data-domain="kbasebot.com" src="https://plausible.emadev.co/js/script.js"></Script>
       <Script id="plausible-function" type="text/javascript">
         {`window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`}
       </Script>

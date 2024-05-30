@@ -32,10 +32,7 @@ declare global {
     interface Chainable {
       cyGet(name: string): Chainable<JQuery>;
 
-      signIn(
-        redirectPath?: string,
-        credentials?: { email: string; password: string },
-      ): void;
+      signIn(redirectPath?: string, credentials?: { email: string; password: string }): void;
 
       clearStorage(): void;
 
@@ -51,9 +48,7 @@ declare global {
 }
 
 declare module "react" {
-  type FCC<Props = Record<string, unknown>> = React.FC<
-    React.PropsWithChildren<Props>
-  >;
+  type FCC<Props = Record<string, unknown>> = React.FC<React.PropsWithChildren<Props>>;
 }
 
 export {};

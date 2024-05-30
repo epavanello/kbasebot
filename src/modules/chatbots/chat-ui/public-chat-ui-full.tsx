@@ -21,22 +21,16 @@ const PublicChatUiFull = ({
   defaultOpen?: boolean;
 }) => {
   const [isOpen, setIsOpen] = React.useState(noCloseBtn ? true : defaultOpen);
-  const [settings, setSettings] = React.useState<Settings | null>(
-    externalSettings,
-  );
+  const [settings, setSettings] = React.useState<Settings | null>(externalSettings);
   useEffect(() => {
     if (externalSettings) {
       setSettings(externalSettings);
     } else {
-      axios
-        .get<{ settings: Settings }>(
-          `/api/chatbots/settings?chatbotId=${chatbot_id}`,
-        )
-        .then(async (res) => {
-          if (res.status === 200) {
-            setSettings(res.data.settings);
-          }
-        });
+      axios.get<{ settings: Settings }>(`/api/chatbots/settings?chatbotId=${chatbot_id}`).then(async (res) => {
+        if (res.status === 200) {
+          setSettings(res.data.settings);
+        }
+      });
     }
   }, [externalSettings]);
 

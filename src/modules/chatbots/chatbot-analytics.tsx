@@ -30,10 +30,7 @@ type AnalyticsData = {
 };
 
 const ChatbotAnalytics = ({ chatbot_id }: { chatbot_id: string }) => {
-  const { data } = useSWR<AnalyticsData>(
-    `/api/chatbots/analytics?chatbot_id=${chatbot_id}`,
-    fetcher,
-  );
+  const { data } = useSWR<AnalyticsData>(`/api/chatbots/analytics?chatbot_id=${chatbot_id}`, fetcher);
 
   const {
     pageviews = {},

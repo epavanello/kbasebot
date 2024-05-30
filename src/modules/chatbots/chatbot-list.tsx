@@ -18,32 +18,21 @@ const ChatbotList = ({ chatbots = [] }: { chatbots: Chatbot[] }) => {
           chatbots.map((bot, idx) => {
             return (
               <Card key={bot.id} className="overflow-hidden">
-                <Link
-                  href={`/app/chatbots/${bot.id}`}
-                  className="overflow-hidden"
-                >
+                <Link href={`/app/chatbots/${bot.id}`} className="overflow-hidden">
                   <CardHeader className={cn(getChatbotGradient(bot.id), "p-0")}>
                     <AspectRatio
                       ratio={4 / 3.5}
                       className="p-0 flex justify-center items-center w-full h-full bg-primary/50"
                     >
-                      <Icon
-                        icon={"fluent:bot-sparkle-24-filled"}
-                        className="text-7xl"
-                      />
+                      <Icon icon={"fluent:bot-sparkle-24-filled"} className="text-7xl" />
                       <span className="absolute right-2 top-2 z-10 text-[10px] text-white">
                         {prettifyGPTModelName(bot.model)}
                       </span>
                     </AspectRatio>
                   </CardHeader>
                 </Link>
-                <CardFooter
-                  className="p-2 flex justify-between"
-                  title={bot.name || `Untitled ${idx + 1}`}
-                >
-                  <span className="font-medium text-sm">
-                    {truncate(bot.name || "", 20) || `Untitled ${idx + 1}`}
-                  </span>
+                <CardFooter className="p-2 flex justify-between" title={bot.name || `Untitled ${idx + 1}`}>
+                  <span className="font-medium text-sm">{truncate(bot.name || "", 20) || `Untitled ${idx + 1}`}</span>
                 </CardFooter>
               </Card>
             );

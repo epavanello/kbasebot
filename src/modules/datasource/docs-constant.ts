@@ -64,20 +64,12 @@ export const SUPPORTED_EXTENSIONS = [
   // { ext: "ogv", type: "video", mime: "video/ogg", icon: "mingcute:video-line" }
 ];
 
-export const SUPPORTED_EXTENSION_BY_TYPE = groupBy(
-  SUPPORTED_EXTENSIONS,
-  "type",
-);
+export const SUPPORTED_EXTENSION_BY_TYPE = groupBy(SUPPORTED_EXTENSIONS, "type");
 
-export const SUPPORTED_EXTENSION_FOR_DROPZONE = SUPPORTED_EXTENSIONS.reduce(
-  (acc, item) => {
-    acc[item.mime] = acc[item.mime]
-      ? [...acc[item.mime], `.${item.ext}`]
-      : [`.${item.ext}`];
-    return acc;
-  },
-  {},
-);
+export const SUPPORTED_EXTENSION_FOR_DROPZONE = SUPPORTED_EXTENSIONS.reduce((acc, item) => {
+  acc[item.mime] = acc[item.mime] ? [...acc[item.mime], `.${item.ext}`] : [`.${item.ext}`];
+  return acc;
+}, {});
 
 export const MAX_FILE_SIZE = 20 * 1024 * 1024; // 25 MB
 

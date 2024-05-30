@@ -7,12 +7,10 @@ export type SupabaseClientTyped = SupabaseClient<Database>;
 
 export type Subscription = Database["public"]["Tables"]["subscriptions"]["Row"];
 export type Settings = Database["public"]["Tables"]["chatbot_settings"]["Row"];
-export type KnowledgeBase =
-  Database["public"]["Tables"]["knowledge_base"]["Row"];
+export type KnowledgeBase = Database["public"]["Tables"]["knowledge_base"]["Row"];
 export type Chatbot = Database["public"]["Tables"]["chatbots"]["Row"];
 export type ChatbotUrl = Database["public"]["Tables"]["chatbot_urls"]["Row"];
-export type ChatbotNotion =
-  Database["public"]["Tables"]["chatbot_notion"]["Row"];
+export type ChatbotNotion = Database["public"]["Tables"]["chatbot_notion"]["Row"];
 export type Conversation = Database["public"]["Tables"]["conversations"]["Row"];
 
 export function isPaidUser(subscription: Subscription | null) {
@@ -39,10 +37,7 @@ export function handleSupabaseError<TError extends { message: string }>({
   }
 }
 
-export function handleSupabaseErrorAndGetData<
-  TData,
-  TError extends { message: string },
->({
+export function handleSupabaseErrorAndGetData<TData, TError extends { message: string }>({
   data,
   error,
 }:
@@ -63,10 +58,7 @@ export function handleSupabaseErrorAndGetData<
   }
 }
 
-export async function getUserByEmail(
-  email: string,
-  supabaseClientAdmin: SupabaseClient<Database>,
-) {
+export async function getUserByEmail(email: string, supabaseClientAdmin: SupabaseClient<Database>) {
   const userID = handleSupabaseErrorAndGetData(
     await supabaseClientAdmin.rpc("get_user_id_by_email", {
       user_email: email,
@@ -77,25 +69,20 @@ export async function getUserByEmail(
     return null;
   }
 
-  const { data, error } =
-    await supabaseClientAdmin.auth.admin.getUserById(userID);
+  const { data, error } = await supabaseClientAdmin.auth.admin.getUserById(userID);
   if (error) {
     throw error;
   }
   return data.user;
 }
 
-export async function getUserByEmailAndSignin(
-  email: string,
-  supabaseClientAdmin: SupabaseClient<Database>,
-) {
+export async function getUserByEmailAndSignin(email: string, supabaseClientAdmin: SupabaseClient<Database>) {
   let user = await getUserByEmail(email, supabaseClientAdmin);
 
   if (!user) {
-    const { data, error } =
-      await supabaseClientAdmin.auth.admin.inviteUserByEmail(email, {
-        redirectTo: `${NEXT_PUBLIC_URL}/auth`,
-      });
+    const { data, error } = await supabaseClientAdmin.auth.admin.inviteUserByEmail(email, {
+      redirectTo: `${NEXT_PUBLIC_URL}/auth`,
+    });
     if (error) {
       throw error;
     }
@@ -118,10 +105,7 @@ export async function getUserByEmailAndSignin(
   return user;
 }
 
-export async function countMonthlyConversationUsage(
-  supabase: SupabaseClientTyped,
-  userId: string,
-) {
+export async function countMonthlyConversationUsage(supabase: SupabaseClientTyped, userId: string) {
   return (
     (
       await supabase
@@ -154,19 +138,9 @@ export async function countMonthlyConversationUsagePerChatbot(
   );
 }
 
-export async function getSubscription(
-  supabase: SupabaseClientTyped,
-  userId?: string,
-) {
+export async function getSubscription(supabase: SupabaseClientTyped, userId?: string) {
   if (!userId) {
     return null;
   }
-  return (
-    await supabase
-      .from("subscriptions")
-      .select("*")
-      .eq("id", userId)
-      .maybeSingle()
-      .throwOnError()
-  ).data;
+  return (await supabase.from("subscriptions").select("*").eq("id", userId).maybeSingle().throwOnError()).data;
 }

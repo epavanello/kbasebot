@@ -16,17 +16,13 @@ let tabs: { id: BillingInterval; label: string }[] = [
 
 export default function PricingTable() {
   const { subscription } = useSupabaseAuth();
-  const [billingInterval, setBillingInterval] = useState<BillingInterval>(
-    tabs[0].id,
-  );
+  const [billingInterval, setBillingInterval] = useState<BillingInterval>(tabs[0].id);
 
   return (
     <section id="pricing" className="pt-12 sm:pt-24">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col align-center">
-          <h1 className="text-4xl font-extrabold sm:text-center sm:text-6xl">
-            Pricing Plans
-          </h1>
+          <h1 className="text-4xl font-extrabold sm:text-center sm:text-6xl">Pricing Plans</h1>
           <div className="relative self-center mt-6 bg-zinc-100 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800">
             {tabs.map((i) => (
               <button
@@ -55,9 +51,7 @@ export default function PricingTable() {
               </button>
             ))}
           </div>
-          <p className="mt-4 text-center text-xs leading-none">
-            Get 2 months for free by subscribing yearly!
-          </p>
+          <p className="mt-4 text-center text-xs leading-none">Get 2 months for free by subscribing yearly!</p>
         </div>
         <AnimatePresence mode="wait">
           {!!plans?.length && (
@@ -68,9 +62,7 @@ export default function PricingTable() {
         "
             >
               {plans.map((plan, idx) => {
-                const price = plan.prices.find(
-                  (price) => price.interval === billingInterval,
-                );
+                const price = plan.prices.find((price) => price.interval === billingInterval);
                 const priceString = price
                   ? new Intl.NumberFormat("en-US", {
                       style: "currency",
@@ -87,13 +79,9 @@ export default function PricingTable() {
                 const isFree = plan.id === "free";
                 const isEnterprise = plan.id === "enterprise";
 
-                let subscribeText = isPaidUser(subscription)
-                  ? "Change plan"
-                  : "Subscribe";
+                let subscribeText = isPaidUser(subscription) ? "Change plan" : "Subscribe";
                 let route = `/subscribe?plan=${plan.id}&interval=${billingInterval}`;
-                const isActive =
-                  plan.id === subscription?.plan &&
-                  billingInterval === subscription?.billing_interval;
+                const isActive = plan.id === subscription?.plan && billingInterval === subscription?.billing_interval;
 
                 let info = "";
 
@@ -114,16 +102,11 @@ export default function PricingTable() {
                 return (
                   <motion.div
                     key={billingInterval + plan.id}
-                    className={cn(
-                      "w-full rounded-xl pt-6 dark:shadow-slate-700",
-                      {
-                        "border-blue-50 bg-gray-500/10 dark:bg-gray-200/10 border-1 shadow-md":
-                          highlight,
-                        "shadow-sm  bg-gray-500/5 dark:bg-gray-200/5":
-                          !highlight,
-                        "border border-primary": isActive,
-                      },
-                    )}
+                    className={cn("w-full rounded-xl pt-6 dark:shadow-slate-700", {
+                      "border-blue-50 bg-gray-500/10 dark:bg-gray-200/10 border-1 shadow-md": highlight,
+                      "shadow-sm  bg-gray-500/5 dark:bg-gray-200/5": !highlight,
+                      "border border-primary": isActive,
+                    })}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{
@@ -143,42 +126,26 @@ export default function PricingTable() {
                       </p>
 
                       <p
-                        className={cn(
-                          "mt-4 text-primary font-bold text-xs text-right mr-2 flex flex-col",
-                          { hidden: !discount },
-                        )}
+                        className={cn("mt-4 text-primary font-bold text-xs text-right mr-2 flex flex-col", {
+                          hidden: !discount,
+                        })}
                       >
-                        <strong className="text-xl">
-                          🪄 {discount || "0"}%
-                        </strong>{" "}
-                        <span>Discount</span>
+                        <strong className="text-xl">🪄 {discount || "0"}%</strong> <span>Discount</span>
                       </p>
                     </div>
-                    <div
-                      key={plan.id}
-                      className="rounded-lg divide-y divide-zinc-200"
-                    >
+                    <div key={plan.id} className="rounded-lg divide-y divide-zinc-200">
                       <div className="p-6">
                         <h2 className="text-2xl leading-6 font-semibold text-gray-500">
                           {plan.name}
-                          <span className="text-xs font-medium text-gray-500 ml-2">
-                            {info}
-                          </span>
+                          <span className="text-xs font-medium text-gray-500 ml-2">{info}</span>
                         </h2>
-                        {plan.description && (
-                          <p className="mt-4 text-zinc-600 text-md">
-                            {plan.description}
-                          </p>
-                        )}
+                        {plan.description && <p className="mt-4 text-zinc-600 text-md">{plan.description}</p>}
 
                         <p className={cn("mt-2")}>
                           <span
-                            className={cn(
-                              "text-4xl text-zinc-700 dark:text-zinc-300 font-bold",
-                              {
-                                "text-gray-600": !priceString,
-                              },
-                            )}
+                            className={cn("text-4xl text-zinc-700 dark:text-zinc-300 font-bold", {
+                              "text-gray-600": !priceString,
+                            })}
                           >
                             {priceString || plan.priceText}
                           </span>
@@ -212,10 +179,7 @@ export default function PricingTable() {
                           <ul className="flex flex-col gap-2 mt-2">
                             {!!features.length &&
                               features.map((item, i) => (
-                                <li
-                                  key={i}
-                                  className="flex items-center gap-1 text-sm"
-                                >
+                                <li key={i} className="flex items-center gap-1 text-sm">
                                   {item.enabled ? (
                                     <CheckCircle2 className="w-4 h-4 text-green-500" />
                                   ) : (

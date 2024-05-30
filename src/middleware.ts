@@ -4,11 +4,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import type { Database } from "@/lib/types/database.types";
 
-const internalPublicRoutes = [
-  "/api/chatbots/message",
-  "/api/chatbots/settings",
-  "/api/stripe",
-];
+const internalPublicRoutes = ["/api/chatbots/message", "/api/chatbots/settings", "/api/stripe"];
 
 export const config = {
   matcher: [`/app/:path*`, `/api/:path*`],
@@ -28,11 +24,7 @@ export async function middleware(req: NextRequest) {
     // handle internal public routes
     if (internalPublicRoutes.includes(url.pathname)) {
       return res;
-    } else if (
-      config.matcher
-        .map((i) => i.split("/").filter(Boolean).shift())
-        .includes(mainPath)
-    ) {
+    } else if (config.matcher.map((i) => i.split("/").filter(Boolean).shift()).includes(mainPath)) {
       return NextResponse.redirect(new URL("/auth", req.url));
     }
   }

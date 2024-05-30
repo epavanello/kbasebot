@@ -8,12 +8,7 @@ interface ChatMessageActionsProps extends React.ComponentProps<"div"> {
   message: Message;
 }
 
-export function ChatMessageActions({
-  message,
-  isUser,
-  className,
-  ...props
-}: ChatMessageActionsProps) {
+export function ChatMessageActions({ message, isUser, className, ...props }: ChatMessageActionsProps) {
   const { isCopied, copyToClipboard } = useCopyToClipboard({ timeout: 2000 });
 
   const onCopy = () => {
@@ -30,13 +25,8 @@ export function ChatMessageActions({
       {...props}
     >
       {!isUser && (
-        <Button
-          className="bg-gray-100/90 h-4 w-4"
-          variant="ghost"
-          size="icon"
-          onClick={onCopy}
-        >
-          {isCopied ? <CheckIcon /> : <CopyIcon/>}
+        <Button className="bg-gray-100/90 h-4 w-4" variant="ghost" size="icon" onClick={onCopy}>
+          {isCopied ? <CheckIcon /> : <CopyIcon />}
           <span className="sr-only">Copy</span>
         </Button>
       )}

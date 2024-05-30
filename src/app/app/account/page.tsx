@@ -4,14 +4,7 @@ import React, { useEffect, useState } from "react";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserAvatar } from "@/components/layouts/user-avatar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
@@ -48,9 +41,7 @@ const Page = () => {
         <Card>
           <CardHeader>
             <CardTitle>Billing</CardTitle>
-            <CardDescription>
-              You are currently on the {plan} plan
-            </CardDescription>
+            <CardDescription>You are currently on the {plan} plan</CardDescription>
           </CardHeader>
 
           <CardContent>
@@ -103,9 +94,7 @@ const Page = () => {
 
           <CardFooter className="flex flex-col items-start space-y-2 md:flex-row md:justify-between md:space-x-0">
             <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-              <p className="pb-4 mr-4 sm:pb-0">
-                Manage your subscription on Stripe.
-              </p>
+              <p className="pb-4 mr-4 sm:pb-0">Manage your subscription on Stripe.</p>
               {subscription ? (
                 <Link className={buttonVariants({})} href="/app/subscription">
                   Open customer portal
@@ -135,10 +124,7 @@ const Page = () => {
           </CardContent>
           <CardContent>
             <div className="flex items-center">
-              <UserAvatar
-                avatar_url={avatar_url}
-                full_name={full_name || "@"}
-              />
+              <UserAvatar avatar_url={avatar_url} full_name={full_name || "@"} />
               <div className="flex flex-col mr-1">
                 <span className="font-bold">{full_name}</span>
                 <span className="text-sm">{email}</span>
@@ -163,9 +149,7 @@ const Page = () => {
             <Alert variant="destructive">
               <InfoCircledIcon className="w-4 h-4" />
               <AlertTitle>Attention</AlertTitle>
-              <AlertDescription>
-                This action will delete your account all it&apos;s data.
-              </AlertDescription>
+              <AlertDescription>This action will delete your account all it&apos;s data.</AlertDescription>
             </Alert>
           </CardContent>
 

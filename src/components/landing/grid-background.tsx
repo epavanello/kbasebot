@@ -4,10 +4,8 @@ export function GridBackground() {
       <svg
         className="absolute inset-0 h-full w-full stroke-current -z-10 text-gray-200 dark:text-gray-700"
         style={{
-          WebkitMaskImage:
-            "radial-gradient(100% 100% at top right,white,transparent)",
-          maskImage:
-            "radial-gradient(100% 100% at top right,white,transparent)",
+          WebkitMaskImage: "radial-gradient(100% 100% at top right,white,transparent)",
+          maskImage: "radial-gradient(100% 100% at top right,white,transparent)",
         }}
         aria-hidden="true"
       >
@@ -29,12 +27,7 @@ export function GridBackground() {
             strokeWidth="0"
           ></path>
         </svg>
-        <rect
-          width="100%"
-          height="100%"
-          strokeWidth="0"
-          fill="url(#1d4240dd-898f-445f-932d-e2872fd12de3)"
-        ></rect>
+        <rect width="100%" height="100%" strokeWidth="0" fill="url(#1d4240dd-898f-445f-932d-e2872fd12de3)"></rect>
       </svg>
       <div
         className="absolute inset-x-0 top-10 -z-10 flex justify-center overflow-hidden"

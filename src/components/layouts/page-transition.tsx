@@ -9,11 +9,7 @@ function FrozenRouter(props: PropsWithChildren<{}>) {
   const context = useContext(LayoutRouterContext);
   const frozen = useRef(context).current;
 
-  return (
-    <LayoutRouterContext.Provider value={frozen}>
-      {props.children}
-    </LayoutRouterContext.Provider>
-  );
+  return <LayoutRouterContext.Provider value={frozen}>{props.children}</LayoutRouterContext.Provider>;
 }
 
 export default function Layout(props: PropsWithChildren<{}>) {

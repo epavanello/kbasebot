@@ -7,23 +7,19 @@ const features = [
   },
   {
     name: "Customizable",
-    description:
-      "KBaseBot is highly customizable and can be tailored to your needs.",
+    description: "KBaseBot is highly customizable and can be tailored to your needs.",
   },
   {
     name: "Powerful",
-    description:
-      "KBaseBot is powered by GPT-4, making it the most powerful chatbot in the market.",
+    description: "KBaseBot is powered by GPT-4, making it the most powerful chatbot in the market.",
   },
   {
     name: "Secure",
-    description:
-      "KBaseBot is secure and reliable, with 99.99% uptime guaranteed.",
+    description: "KBaseBot is secure and reliable, with 99.99% uptime guaranteed.",
   },
   {
     name: "Insightful",
-    description:
-      "KBaseBot provides you with powerful analytics to help you make data-driven decisions.",
+    description: "KBaseBot provides you with powerful analytics to help you make data-driven decisions.",
   },
 ];
 const Benefit = () => {

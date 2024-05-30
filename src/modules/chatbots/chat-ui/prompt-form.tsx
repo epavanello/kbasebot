@@ -4,27 +4,17 @@ import Textarea from "react-textarea-autosize";
 
 import { Button } from "@/components/ui/button";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
 import { cn } from "@/lib/utils";
 import { Icon } from "@/components/ui/icons";
 
-export interface PromptProps
-  extends Pick<UseChatHelpers, "input" | "setInput"> {
+export interface PromptProps extends Pick<UseChatHelpers, "input" | "setInput"> {
   onSubmit: (value: string) => Promise<void>;
   isLoading: boolean;
 }
 
-export function PromptForm({
-  onSubmit,
-  input,
-  setInput,
-  isLoading,
-}: PromptProps) {
+export function PromptForm({ onSubmit, input, setInput, isLoading }: PromptProps) {
   const { formRef, onKeyDown } = useEnterSubmit();
   const inputRef = React.useRef<HTMLTextAreaElement>(null as any);
 
@@ -45,10 +35,9 @@ export function PromptForm({
         setInput("");
         try {
           await onSubmit(input);
-        }
-        catch (e) {
+        } catch (e) {
           setInput(tempInput);
-          throw e
+          throw e;
         }
       }}
       ref={formRef}
@@ -70,13 +59,7 @@ export function PromptForm({
           <div className="absolute top-0 bottom-0 right-[3px] flex flex-col justify-center">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  type="submit"
-                  size="icon"
-                  disabled={isLoading || input === ""}
-
-                >
+                <Button variant="ghost" type="submit" size="icon" disabled={isLoading || input === ""}>
                   <Icon
                     icon={"ant-design:send-outlined"}
                     className={cn("text-lg text-primary", {

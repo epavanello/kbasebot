@@ -14,16 +14,12 @@ const MainLayout = ({ children, seo }: DashboardLayoutProps) => {
         <header className="sticky top-0 z-40">
           <MainNav items={menus.mainNav()} />
         </header>
-        <div
-          className="flex flex-row flex-1 min-h-0"
-        >
+        <div className="flex flex-row flex-1 min-h-0">
           <aside className="hidden w-56 flex-col md:flex border-r overflow-auto">
             <Sidebar />
           </aside>
           {/*<PageTransition>*/}
-          <main className="flex flex-col w-full flex-1 overflow-auto">
-            {children}
-          </main>
+          <main className="flex flex-col w-full flex-1 overflow-auto">{children}</main>
           {/*</PageTransition>*/}
         </div>
       </div>

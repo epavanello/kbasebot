@@ -3,16 +3,7 @@ import { type UseChatHelpers } from "ai/react";
 import { PromptForm } from "./prompt-form";
 
 export interface ChatPanelProps
-  extends Pick<
-    UseChatHelpers,
-    | "append"
-    | "isLoading"
-    | "reload"
-    | "messages"
-    | "stop"
-    | "input"
-    | "setInput"
-  > {
+  extends Pick<UseChatHelpers, "append" | "isLoading" | "reload" | "messages" | "stop" | "input" | "setInput"> {
   id?: string;
   chatArea: React.MutableRefObject<HTMLDivElement | null>;
 }

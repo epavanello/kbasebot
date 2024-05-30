@@ -2,20 +2,10 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  createPagesBrowserClient,
-  Session,
-  SupabaseClient,
-  User,
-} from "@supabase/auth-helpers-nextjs";
+import { createPagesBrowserClient, Session, SupabaseClient, User } from "@supabase/auth-helpers-nextjs";
 import { Subscription, getSubscription } from "../supabase";
 import { Database } from "../types/database.types";
-import {
-  getPermissions,
-  Permissions,
-  Plan,
-  PLAN_PERMISSIONS,
-} from "@/lib/permissions/plans";
+import { getPermissions, Permissions, Plan, PLAN_PERMISSIONS } from "@/lib/permissions/plans";
 
 type SuapabaseAuthContextType = {
   supabase: SupabaseClient<Database>;
@@ -45,9 +35,7 @@ const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<undefined | User>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [subscription, setSubscription] = useState<null | Subscription>(null);
-  const [permission, setPermission] = useState<Permissions>(
-    PLAN_PERMISSIONS[Plan.FREE],
-  );
+  const [permission, setPermission] = useState<Permissions>(PLAN_PERMISSIONS[Plan.FREE]);
   const [plan, setPlan] = useState<Plan>(Plan.FREE);
 
   const router = useRouter();

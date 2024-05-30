@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getChatbotPublicId } from "@/modules/chatbots/helpers";
 import CopyButton from "@/components/ui/copy-button";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
@@ -43,12 +36,7 @@ const CardBlock = ({
         <CodeBlock>{code}</CodeBlock>
 
         <div className="absolute top-4 right-2 z-10">
-          <CopyButton
-            className="text-white"
-            size="icon"
-            variant="ghost"
-            text={code}
-          />
+          <CopyButton className="text-white" size="icon" variant="ghost" text={code} />
         </div>
       </div>
     </CardContent>
@@ -85,13 +73,7 @@ src="${NEXT_PUBLIC_URL}/embed.js">
           title={"Share your chatbot"}
           code={chatbotPublicUrl}
           footer={
-            <Button
-              target={"_blank"}
-              as={"a"}
-              href={chatbotPublicUrl}
-              asChild
-              variant={"outline"}
-            >
+            <Button target={"_blank"} as={"a"} href={chatbotPublicUrl} asChild variant={"outline"}>
               Visit Public Url
             </Button>
           }

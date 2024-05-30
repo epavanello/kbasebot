@@ -29,9 +29,7 @@ const Sidebar: FC<SidebarProps> = () => {
   const path = usePathname();
 
   const insideChatbot = !!chatbot_id;
-  const items = insideChatbot
-    ? menus.sidebarNavByChatbot(chatbot_id)
-    : menus.sidebarNav;
+  const items = insideChatbot ? menus.sidebarNavByChatbot(chatbot_id) : menus.sidebarNav;
 
   return (
     <nav className="grid items-start gap-2 p-2">

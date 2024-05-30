@@ -9,10 +9,7 @@ import { Icon } from "@iconify/react";
 export { Icon };
 
 export const CloseIcon = ({ className }: { className?: string }) => (
-  <Icon
-    icon="icon-park-outline:close"
-    className={cn("text-2xl", className || "")}
-  />
+  <Icon icon="icon-park-outline:close" className={cn("text-2xl", className || "")} />
 );
 
 export const LOADING_ICON = "line-md:loading-loop";

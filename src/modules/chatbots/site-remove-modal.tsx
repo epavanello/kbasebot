@@ -57,16 +57,12 @@ const SiteRemoveModal = React.forwardRef<HTMLButtonElement>(
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your {table} and can&apos;t be recovered.
+                  This action cannot be undone. This will permanently delete your {table} and can&apos;t be recovered.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  className={buttonVariants({ variant: "destructive" })}
-                  onClick={removeSite}
-                >
+                <AlertDialogAction className={buttonVariants({ variant: "destructive" })} onClick={removeSite}>
                   Delete anyway
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -75,7 +71,7 @@ const SiteRemoveModal = React.forwardRef<HTMLButtonElement>(
         </AlertDialogContent>
       </AlertDialog>
     );
-  }
+  },
 );
 
 SiteRemoveModal.displayName = "SiteRemoveModal";

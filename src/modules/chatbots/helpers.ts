@@ -44,10 +44,7 @@ export const convesationLogToInitialMessages = (
   ];
 };
 
-export const truncateText = (
-  inputText: string,
-  maxLength: number = 20,
-): string => {
+export const truncateText = (inputText: string, maxLength: number = 20): string => {
   if (inputText?.length <= maxLength) {
     return inputText;
   }

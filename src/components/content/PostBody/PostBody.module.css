@@ -41,20 +41,21 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 }
 
 .BodyText {
-  font-family: ui-sans-serif,
-  system-ui,
-  -apple-system,
-  BlinkMacSystemFont,
-  Segoe UI,
-  Roboto,
-  Helvetica Neue,
-  Arial,
-  Noto Sans,
-  sans-serif,
-  Apple Color Emoji,
-  Segoe UI Emoji,
-  Segoe UI Symbol,
-  Noto Color Emoji;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Helvetica Neue,
+    Arial,
+    Noto Sans,
+    sans-serif,
+    Apple Color Emoji,
+    Segoe UI Emoji,
+    Segoe UI Symbol,
+    Noto Color Emoji;
 }
 
 .PostBody > p {
@@ -96,7 +97,7 @@ For more info: https://github.com/tailwindlabs/tailwindcss/issues/3258#issuecomm
 .PostBody ol > li:before {
   @apply font-bold mr-3 inline-flex;
 
-  content: counters(counts,".") ". ";
+  content: counters(counts, ".") ". ";
   font-feature-settings: "tnum";
 }
 

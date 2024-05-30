@@ -6,11 +6,7 @@ import { allPosts } from "contentlayer/generated";
 import Post from "@/components/content/post";
 import Container from "@/components/ui/container";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata | undefined> {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata | undefined> {
   const post = allPosts.find((post) => post.slug === params.slug);
 
   if (!post) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Icon } from "@iconify/react";
-import { IconifyIcon } from '@iconify/react';
+import { IconifyIcon } from "@iconify/react";
 
 interface StatCardProps {
   className?: string;
@@ -20,9 +20,7 @@ const StatCard: React.FC<StatCardProps> = ({ className, title, content, subtitle
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{content}</div>
-        {subtitle && (
-          <p className="text-xs text-muted-foreground">{subtitle}</p>
-        )}
+        {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
       </CardContent>
     </Card>
   );

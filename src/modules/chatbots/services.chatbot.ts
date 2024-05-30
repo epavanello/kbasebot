@@ -4,10 +4,7 @@ import { cookies as cookiesType } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-export const getChatbotSettings = async (
-  chatbotId: string,
-  cookies: () => ReturnType<typeof cookiesType>,
-) => {
+export const getChatbotSettings = async (chatbotId: string, cookies: () => ReturnType<typeof cookiesType>) => {
   const supabase = createServerComponentClient<Database>({ cookies });
 
   const { data: chatbotSettings, error } = await supabase

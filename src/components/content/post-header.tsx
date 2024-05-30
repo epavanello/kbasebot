@@ -46,12 +46,7 @@ const PostHeader: React.FC<{
       <If condition={displayImage && image}>
         {(imageUrl) => (
           <div className="relative mx-auto h-[378px] w-full justify-center">
-            <CoverImage
-              preloadImage={preloadImage}
-              className="rounded-md"
-              title={title}
-              src={imageUrl}
-            />
+            <CoverImage preloadImage={preloadImage} className="rounded-md" title={title} src={imageUrl} />
           </div>
         )}
       </If>

@@ -26,13 +26,7 @@ import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { Chatbot, Conversation } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plan } from "@/lib/permissions/plans";
 import { GPTModel, GPTModels, prettifyGPTModelName } from "@/modules/chatbots/helpers";
 import { Textarea } from "@/components/ui/textarea";
@@ -43,9 +37,7 @@ import { tokenLimits } from "@/modules/chatbots/context";
 import LeadsSettings from "@/app/app/chatbots/[chatbot_id]/settings/leads-settings";
 
 const Settings = () => {
-  const [chatbot, setChatbot] = useState<
-    (Chatbot & { conversations: Conversation[] }) | null
-  >(null);
+  const [chatbot, setChatbot] = useState<(Chatbot & { conversations: Conversation[] }) | null>(null);
   const { supabase, subscription } = useSupabaseAuth();
   const router = useRouter();
   const { toast } = useToast();
@@ -90,11 +82,7 @@ const Settings = () => {
     if (!chatbot || Object.keys(values).length === 0) return;
     setUpdating(true);
     try {
-      await supabase
-        .from("chatbots")
-        .update(values)
-        .eq("id", chatbot.id)
-        .throwOnError();
+      await supabase.from("chatbots").update(values).eq("id", chatbot.id).throwOnError();
 
       toast({
         variant: "default",
@@ -118,11 +106,7 @@ const Settings = () => {
     setDeleting(true);
     if (!chatbot) return;
     try {
-      await supabase
-        .from("chatbots")
-        .delete()
-        .eq("id", chatbot.id)
-        .throwOnError();
+      await supabase.from("chatbots").delete().eq("id", chatbot.id).throwOnError();
 
       toast({
         variant: "default",
@@ -166,9 +150,7 @@ const Settings = () => {
                   />
                   <ActionButton
                     icon="ion:save-outline"
-                    disabled={
-                      !chatbotName.trim() || chatbotName === chatbot.name
-                    }
+                    disabled={!chatbotName.trim() || chatbotName === chatbot.name}
                     onClick={() => updateChatBot({ name: chatbotName })}
                   />
                 </div>
@@ -184,21 +166,14 @@ const Settings = () => {
                       <SelectValue placeholder="Select a model" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={GPTModel.GPT_3}>
-                        {prettifyGPTModelName(GPTModel.GPT_3)}
-                      </SelectItem>
-                      <SelectItem
-                        value={GPTModel.GPT_4}
-                        disabled={subscription?.plan !== Plan.PRO}
-                      >
+                      <SelectItem value={GPTModel.GPT_3}>{prettifyGPTModelName(GPTModel.GPT_3)}</SelectItem>
+                      <SelectItem value={GPTModel.GPT_4} disabled={subscription?.plan !== Plan.PRO}>
                         {prettifyGPTModelName(GPTModel.GPT_4)}
                       </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
-                <p className={cn("text-xs text-muted-foreground mt-2")}>
-                  GPT-4 model is only available for pro users
-                </p>
+                <p className={cn("text-xs text-muted-foreground mt-2")}>GPT-4 model is only available for pro users</p>
               </div>
               <div>
                 <Label htmlFor="context">Context</Label>
@@ -233,8 +208,7 @@ const Settings = () => {
                     <ActionButton
                       icon="ion:save-outline"
                       disabled={
-                        context === chatbot.custom_context ||
-                        (!chatbot.custom_context && context === basicContext)
+                        context === chatbot.custom_context || (!chatbot.custom_context && context === basicContext)
                       }
                       onClick={() => updateChatBot({ custom_context: context })}
                     />
@@ -252,27 +226,19 @@ const Settings = () => {
               <div>
                 <Label htmlFor="id">Chatbot ID</Label>
                 <div className="flex flex-row items-start gap-2">
-                  <Input
-                    id="id"
-                    value={chatbot.id}
-                    readOnly
-                    className="text-xs"
-                    size={33}
-                  />
+                  <Input id="id" value={chatbot.id} readOnly className="text-xs" size={33} />
                   <CopyButton text={chatbot.id} />
                 </div>
               </div>
               <div className=" flex relative w-full justify-start gap-2 items-center">
                 <p className="text-gray-700 font-medium text-sm">Created at</p>
-                <p className="rounded-lg text-gray-700 text-xs">
-                  {formatDate(chatbot.created_at)}
-                </p>
+                <p className="rounded-lg text-gray-700 text-xs">{formatDate(chatbot.created_at)}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <LeadsSettings/>
+        <LeadsSettings />
 
         <Card className="border-red-300">
           <CardHeader>
@@ -284,24 +250,17 @@ const Settings = () => {
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant="destructive">
-                    <Icon
-                      icon={deleting ? LOADING_ICON : "pajamas:remove"}
-                      className="mr-1"
-                    />
+                    <Icon icon={deleting ? LOADING_ICON : "pajamas:remove"} className="mr-1" />
                     Delete
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle className="flex gap-1 items-center">
-                      <Icon icon={"pajamas:remove"} className="mr-1" /> Please
-                      confirm your action
+                      <Icon icon={"pajamas:remove"} className="mr-1" /> Please confirm your action
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                      <p className="mt-2">
-                        you are permanently deleting your chatbot and it can not
-                        be undone
-                      </p>
+                      <p className="mt-2">you are permanently deleting your chatbot and it can not be undone</p>
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
@@ -310,10 +269,7 @@ const Settings = () => {
                       onClick={deleteChatbot}
                       className={cn(buttonVariants({ variant: "destructive" }))}
                     >
-                      <Icon
-                        icon={deleting ? LOADING_ICON : "pajamas:remove"}
-                        className="mr-1"
-                      />
+                      <Icon icon={deleting ? LOADING_ICON : "pajamas:remove"} className="mr-1" />
                       Delete Anyway
                     </AlertDialogAction>
                   </AlertDialogFooter>

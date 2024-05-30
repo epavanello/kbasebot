@@ -13,9 +13,7 @@ export const dynamic = "force-dynamic";
 export const getSiteStats = async (chatbotId: string) => {
   try {
     const res = await axios.get(
-      `${
-        process.env.PLAUSIBLE_API_URL
-      }/api/v1/stats/aggregate?${new URLSearchParams({
+      `${process.env.PLAUSIBLE_API_URL}/api/v1/stats/aggregate?${new URLSearchParams({
         site_id: "kbasebot.com",
         period: "6mo",
         filters: "event:page==/c/" + chatbotId,
@@ -37,9 +35,7 @@ export const getSiteStats = async (chatbotId: string) => {
 export const getSiteTimeseries = async (chatbotId: string) => {
   try {
     const res = await axios.get(
-      `${
-        process.env.PLAUSIBLE_API_URL
-      }/api/v1/stats/timeseries?${new URLSearchParams({
+      `${process.env.PLAUSIBLE_API_URL}/api/v1/stats/timeseries?${new URLSearchParams({
         site_id: "kbasebot.com",
         filters: "event:page==/c/" + chatbotId,
         metrics: "visitors,visit_duration",
@@ -78,16 +74,9 @@ export async function GET(req: NextRequest) {
       throw new Error("chatbot-id-not-found");
     }
 
-    const [analytics, timeseries] = await Promise.all([
-      getSiteStats(chatbot_id),
-      getSiteTimeseries(chatbot_id),
-    ]);
+    const [analytics, timeseries] = await Promise.all([getSiteStats(chatbot_id), getSiteTimeseries(chatbot_id)]);
 
-    const conversations = await countMonthlyConversationUsagePerChatbot(
-      supabaseServerClient,
-      user?.id,
-      chatbot_id,
-    );
+    const conversations = await countMonthlyConversationUsagePerChatbot(supabaseServerClient, user?.id, chatbot_id);
 
     const stats = {
       ...(analytics?.results || {}),

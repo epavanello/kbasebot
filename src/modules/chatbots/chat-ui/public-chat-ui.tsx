@@ -17,7 +17,7 @@ const PublicChatUi = ({
   onClose,
   className,
   forceTheme,
-  user_id
+  user_id,
 }: {
   settings: Settings | null;
   chatbot_id: string;
@@ -66,17 +66,9 @@ const PublicChatUi = ({
       <div className="flex justify-between p-4 c_bg_primary">
         <div className="flex gap-2 items-center">
           {!!chatbot_logo && (
-            <Image
-              src={chatbot_logo}
-              width={32}
-              height={32}
-              alt={"chatbot logo"}
-              className="rounded-full"
-            />
+            <Image src={chatbot_logo} width={32} height={32} alt={"chatbot logo"} className="rounded-full" />
           )}
-          <h1 className="text-md font-bold c_text_primary_auto">
-            {display_name || "KBaseBot"}
-          </h1>
+          <h1 className="text-md font-bold c_text_primary_auto">{display_name || "KBaseBot"}</h1>
         </div>
         <div className="flex flex-row-reverse gap-4 c_text_primary_auto">
           {!noCloseBtn && (
@@ -95,7 +87,7 @@ const PublicChatUi = ({
         </div>
       </div>
       <ChatUi
-          user_id={user_id}
+        user_id={user_id}
         welcome_message={welcome_message || ""}
         suggested_message={suggested_message || undefined}
         className="flex-1 min-h-0"
@@ -110,21 +102,16 @@ const PublicChatUi = ({
             <Icon
               icon="fluent:bot-sparkle-24-filled"
               className={cn({
-                ["drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]"]:
-                  !isContrastColorWhite(primary_color),
+                ["drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]"]: !isContrastColorWhite(primary_color),
               })}
             />
             <a
               target="_blank"
               rel="noopener noreferrer"
               href={`${NEXT_PUBLIC_URL}?via=widget`}
-              className={cn(
-                "text-sm font-semibold tracking-tight hover:underline",
-                {
-                  "drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]":
-                    !isContrastColorWhite(primary_color),
-                },
-              )}
+              className={cn("text-sm font-semibold tracking-tight hover:underline", {
+                "drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]": !isContrastColorWhite(primary_color),
+              })}
             >
               KBaseBot
             </a>

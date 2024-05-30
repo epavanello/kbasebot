@@ -9,9 +9,7 @@ const img = document.createElement("img");
 // get current script chatbot id param
 const currentScript = document.currentScript as HTMLScriptElement;
 const scriptURL = currentScript.src;
-const chatbot_id =
-  new URL(scriptURL).searchParams.get("chatbot_id") ||
-  currentScript.getAttribute("data-chatbot-id");
+const chatbot_id = new URL(scriptURL).searchParams.get("chatbot_id") || currentScript.getAttribute("data-chatbot-id");
 const containterSelector = currentScript.getAttribute("data-container");
 
 if (!chatbot_id) {
@@ -97,15 +95,12 @@ button.addEventListener("click", (e) => {
 
 // load settings
 
-const request = fetch(
-  `${process.env.NEXT_PUBLIC_URL}/api/chatbots/settings?chatbotId=${chatbot_id}`,
-  {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+const request = fetch(`${process.env.NEXT_PUBLIC_URL}/api/chatbots/settings?chatbotId=${chatbot_id}`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
   },
-);
+});
 
 let settings: Settings | null = null;
 const detectMobile = window.matchMedia("(max-width: 576px)");
@@ -143,8 +138,7 @@ request.then(async (response) => {
 
   setPosition();
 
-  button.style.backgroundColor =
-    settings.primary_color || "hsl(142.1 76.2% 36.3%)";
+  button.style.backgroundColor = settings.primary_color || "hsl(142.1 76.2% 36.3%)";
 
   let contrastWhite = isContrastColorWhite(settings.primary_color);
 
@@ -165,10 +159,7 @@ request.then(async (response) => {
   button.appendChild(img);
 
   let container: HTMLElement | null = null;
-  if (
-    containterSelector &&
-    (container = document.querySelector(containterSelector))
-  ) {
+  if (containterSelector && (container = document.querySelector(containterSelector))) {
     container.appendChild(button);
     container.appendChild(iframe);
   }

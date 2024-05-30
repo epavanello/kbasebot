@@ -1,12 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default function InputNote({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+export default function InputNote({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <small
       className={cn(

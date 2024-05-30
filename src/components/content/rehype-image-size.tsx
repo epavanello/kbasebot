@@ -32,9 +32,7 @@ export const rehypeImageSize = (options) => {
       const imagePath = `${options?.root ?? ""}${srcAttr.value}`;
       const imageSize = getImageSize(imagePath);
       const widthAttr = node.attributes?.find((attr) => attr.name === "width");
-      const heightAttr = node.attributes?.find(
-        (attr) => attr.name === "height",
-      );
+      const heightAttr = node.attributes?.find((attr) => attr.name === "height");
       if (widthAttr || heightAttr) {
         // If `width` or `height` have already been set explicitly we
         // don't want to override them.

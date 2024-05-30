@@ -42,11 +42,7 @@ class ConversationLog {
     }
   }
 
-  public async getConversation({
-    limit,
-  }: {
-    limit: number;
-  }): Promise<ChatCompletionRequestMessage[]> {
+  public async getConversation({ limit }: { limit: number }): Promise<ChatCompletionRequestMessage[]> {
     const { data: history } = await this.supabaseAdminClient
       .from("conversations")
       .select("entry, speaker, created_at")

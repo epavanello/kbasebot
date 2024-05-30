@@ -17,48 +17,35 @@ interface ActionButtonProps {
 const ActionButton = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentPropsWithoutRef<typeof Button> & ActionButtonProps
->(
-  (
-    {
-      className,
-      variant = "ghost",
-      showText = false,
-      size = "sm",
-      icon,
-      onClick,
-      ...props
-    },
-    ref,
-  ) => {
-    const [isClicked, setIsClicked] = useBooleanTimeout();
+>(({ className, variant = "ghost", showText = false, size = "sm", icon, onClick, ...props }, ref) => {
+  const [isClicked, setIsClicked] = useBooleanTimeout();
 
-    const handleOnClick = () => {
-      onClick?.();
-      setIsClicked();
-    };
+  const handleOnClick = () => {
+    onClick?.();
+    setIsClicked();
+  };
 
-    return (
-      <Button
-        ref={ref}
-        className={cn(className || "")}
-        variant={variant as any}
-        size={size as any}
-        onClick={handleOnClick}
-        {...props}
+  return (
+    <Button
+      ref={ref}
+      className={cn(className || "")}
+      variant={variant as any}
+      size={size as any}
+      onClick={handleOnClick}
+      {...props}
+    >
+      {isClicked ? <CheckIcon /> : <Icon icon={icon} />}
+      <span
+        className={cn({
+          "sr-only": !showText,
+          "ml-1": showText,
+        })}
       >
-        {isClicked ? <CheckIcon /> : <Icon icon={icon} />}
-        <span
-          className={cn({
-            "sr-only": !showText,
-            "ml-1": showText,
-          })}
-        >
-          Save
-        </span>
-      </Button>
-    );
-  },
-);
+        Save
+      </span>
+    </Button>
+  );
+});
 ActionButton.displayName = "SaveButton";
 
 export default ActionButton;

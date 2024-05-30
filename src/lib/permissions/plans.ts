@@ -36,14 +36,9 @@ export const PLAN_PERMISSIONS: Record<Plan, Permissions> = {
   },
 };
 
-export const getPermissions = (
-  subscription: Subscription | null,
-): { plan: Plan; permission: Permissions } => {
+export const getPermissions = (subscription: Subscription | null): { plan: Plan; permission: Permissions } => {
   // Setting the plan directly based on whether the user is paid or not.
-  const plan =
-    isPaidUser(subscription) && subscription?.plan
-      ? (subscription.plan as Plan)
-      : Plan.FREE;
+  const plan = isPaidUser(subscription) && subscription?.plan ? (subscription.plan as Plan) : Plan.FREE;
 
   return { plan, permission: PLAN_PERMISSIONS[plan] };
 };

@@ -1,7 +1,6 @@
 export const gradients = {
   OCEANIC: "bg-gradient-to-r from-green-300 via-blue-500 to-purple-600",
-  BLUEN:
-    "bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-white via-blue-600 to-teal-400",
+  BLUEN: "bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-white via-blue-600 to-teal-400",
   HYPER: "bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500",
   COTTON_CANDY: "bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400",
   BEACHSIDE: "bg-gradient-to-r from-yellow-200 via-green-200 to-green-500",
@@ -14,9 +13,7 @@ export const gradients = {
 
 export function getRandomGradient() {
   const keys = Object.keys(gradients);
-  const randomKey = keys[
-    Math.floor(Math.random() * keys.length)
-  ] as keyof typeof gradients;
+  const randomKey = keys[Math.floor(Math.random() * keys.length)] as keyof typeof gradients;
   return gradients[randomKey];
 }
 
@@ -33,9 +30,7 @@ function uuidToFixedNumber(uuid: string): number {
 export function getChatbotGradient(chatbotId: string) {
   const keys = Object.keys(gradients);
   // get a repeatable random number based on the chatbot id
-  const randomKey = keys[
-    Math.floor(uuidToFixedNumber(chatbotId) * keys.length)
-  ] as keyof typeof gradients;
+  const randomKey = keys[Math.floor(uuidToFixedNumber(chatbotId) * keys.length)] as keyof typeof gradients;
 
   return gradients[randomKey];
 }

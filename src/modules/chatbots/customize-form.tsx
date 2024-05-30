@@ -2,23 +2,9 @@
 import { useSupabaseAuth } from "@/lib/store/use-user";
 
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import ColorPicker from "@/components/pickers/color.picker";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,12 +20,7 @@ import PublicChatUiFull from "./chat-ui/public-chat-ui-full";
 import { Settings } from "@/lib/supabase";
 import { useTheme } from "next-themes";
 import { Select } from "@radix-ui/react-select";
-import {
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const FormSchema = z.object({
   display_name: z
@@ -66,9 +47,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
   const { supabase, user } = useSupabaseAuth();
   const { theme } = useTheme();
 
-  function parseWithDefaults(
-    input: Settings | null,
-  ): z.infer<typeof FormSchema> {
+  function parseWithDefaults(input: Settings | null): z.infer<typeof FormSchema> {
     return {
       chatbot_bubble_align: input?.chatbot_bubble_align || "right",
       chatbot_bubble_logo: input?.chatbot_bubble_logo || "",
@@ -140,9 +119,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                     <FormControl>
                       <Input placeholder="eg. Dr. Knowledge" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      This is your public display name.
-                    </FormDescription>
+                    <FormDescription>This is your public display name.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -154,15 +131,9 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                   <FormItem>
                     <FormLabel>Welcome Message</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="eg: Hi there! How can i help?"
-                        className="resize-none"
-                        {...field}
-                      />
+                      <Textarea placeholder="eg: Hi there! How can i help?" className="resize-none" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      This message will greet user to start chatting
-                    </FormDescription>
+                    <FormDescription>This message will greet user to start chatting</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -188,9 +159,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                         }))}
                       />
                     </FormControl>
-                    <FormDescription>
-                      These message will be shown to your users as suggestions
-                    </FormDescription>
+                    <FormDescription>These message will be shown to your users as suggestions</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -205,14 +174,9 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                   <FormItem>
                     <FormLabel>Primary Color</FormLabel>
                     <FormControl>
-                      <ColorPicker
-                        onChange={field.onChange}
-                        value={field.value}
-                      />
+                      <ColorPicker onChange={field.onChange} value={field.value} />
                     </FormControl>
-                    <FormDescription>
-                      Primary color of the chatbot
-                    </FormDescription>
+                    <FormDescription>Primary color of the chatbot</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -224,10 +188,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Theme</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a theme" />
@@ -238,9 +199,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                         <SelectItem value="dark">Dark</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormDescription>
-                      Change Theme of your chatbot
-                    </FormDescription>
+                    <FormDescription>Change Theme of your chatbot</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -258,9 +217,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                         <FormControl>
                           <ImagePicker {...field} />
                         </FormControl>
-                        <FormDescription>
-                          Logo to show on your chatbot (Only square image)
-                        </FormDescription>
+                        <FormDescription>Logo to show on your chatbot (Only square image)</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -278,8 +235,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                           <ImagePicker {...field} />
                         </FormControl>
                         <FormDescription>
-                          This will on show in the floating chat bubble (Only
-                          square image)
+                          This will on show in the floating chat bubble (Only square image)
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -315,9 +271,7 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
-                      Direction of floating chat bubble
-                    </FormDescription>
+                    <FormDescription>Direction of floating chat bubble</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

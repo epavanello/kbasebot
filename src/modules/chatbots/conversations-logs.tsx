@@ -25,8 +25,7 @@ const ConversationsLogs = ({
 }) => {
   const { supabase } = useSupabaseAuth();
 
-  const [selectedConversationId, setSelectedConversationId] =
-    useState(firstConversationId);
+  const [selectedConversationId, setSelectedConversationId] = useState(firstConversationId);
   const chatArea = useRef<HTMLDivElement | null>(null);
 
   // @ts-ignore
@@ -58,11 +57,7 @@ const ConversationsLogs = ({
                 onClick={() => setSelectedConversationId(item.conversation_id)}
                 className="text-xs text-left items-start py-2 px-4 flex-col h-auto"
                 size={"lg"}
-                variant={
-                  item.conversation_id === selectedConversationId
-                    ? "default"
-                    : "outline"
-                }
+                variant={item.conversation_id === selectedConversationId ? "default" : "outline"}
               >
                 {truncate(item.user_last_message, 30)}
                 <small>
@@ -75,15 +70,10 @@ const ConversationsLogs = ({
           })}
       </aside>
 
-      <section
-        className="flex flex-1 flex-col h-full overflow-auto p-4"
-        ref={chatArea}
-      >
+      <section className="flex flex-1 flex-col h-full overflow-auto p-4" ref={chatArea}>
         {!!conversations?.length && (
           <>
-            <ChatList
-              messages={convesationLogToInitialMessages(conversations)}
-            />
+            <ChatList messages={convesationLogToInitialMessages(conversations)} />
             <ChatScrollAnchor trackVisibility={isDataLoading} area={chatArea} />
           </>
         )}

@@ -65,9 +65,7 @@ export const searchKnowledgeBase = async (
       const source = (document?.metadata as Record<string, string>)["source"];
       const similarity = document.similarity;
 
-      const chunk = `source: ${
-        source || ""
-      }\nsimilarity:${similarity}\ncontent: ${content.trim()}\n\n---\n`;
+      const chunk = `source: ${source || ""}\nsimilarity:${similarity}\ncontent: ${content.trim()}\n\n---\n`;
 
       if (!counter.canAdd(chunk)) {
         break;

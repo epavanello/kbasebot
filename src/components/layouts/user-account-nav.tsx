@@ -47,19 +47,14 @@ export function UserAccountNav({ className }: { className?: string }) {
         >
           <UserAvatar avatar_url={avatar_url} full_name={full_name || "@"} />
           <span className="mr-1 hidden sm:inline">{full_name}</span>
-          <Icon
-            icon="ep:arrow-down"
-            className="ml-auto text-lg shrink-0 opacity-50"
-          />
+          <Icon icon="ep:arrow-down" className="ml-auto text-lg shrink-0 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{full_name}</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {email}
-            </p>
+            <p className="text-xs leading-none text-muted-foreground">{email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

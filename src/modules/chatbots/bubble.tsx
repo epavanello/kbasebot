@@ -14,13 +14,7 @@ interface BubbleProps {
   className?: string;
 }
 
-export function Bubble({
-  settings,
-  isOpen,
-  onClose,
-  onOpen,
-  className,
-}: BubbleProps) {
+export function Bubble({ settings, isOpen, onClose, onOpen, className }: BubbleProps) {
   return (
     <div
       className={cn("flex", className, {
@@ -31,8 +25,7 @@ export function Bubble({
         className="pointer-events-auto mt-2 w-14 h-14 rounded-full flex items-center justify-center overflow-hidden hover:scale-110 transition-all duration-200 ease-in-out"
         style={{
           backgroundColor: settings.primary_color,
-          boxShadow:
-            "rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
+          boxShadow: "rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.1) 0px 8px 10px -6px",
         }}
         onClick={() => {
           if (isOpen) {
@@ -43,12 +36,7 @@ export function Bubble({
         }}
       >
         {!isOpen && settings.chatbot_bubble_logo ? (
-          <Image
-            width={32}
-            height={32}
-            src={settings.chatbot_bubble_logo}
-            alt={"Chatbot bubble logo"}
-          />
+          <Image width={32} height={32} src={settings.chatbot_bubble_logo} alt={"Chatbot bubble logo"} />
         ) : (
           <Image
             width={32}

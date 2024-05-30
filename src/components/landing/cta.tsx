@@ -18,17 +18,10 @@ const Cta = () => {
           </h2>
           <p className="my-2">
             {/* Non perdere tempo, inizia a usare gratuitamente i nostri chatbot per il tuo sito web. */}
-            Don&apos;t waste time, start using our chatbots for your website for
-            free.
+            Don&apos;t waste time, start using our chatbots for your website for free.
           </p>
           <div className="mt-4">
-            <Link
-              className={cn(
-                buttonVariants({ variant: "default", size: "lg" }),
-                "mt-4 py-6 px-10",
-              )}
-              href="/app"
-            >
+            <Link className={cn(buttonVariants({ variant: "default", size: "lg" }), "mt-4 py-6 px-10")} href="/app">
               Get started for free
             </Link>
           </div>

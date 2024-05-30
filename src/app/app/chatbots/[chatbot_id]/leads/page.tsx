@@ -1,11 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
+import { CaretSortIcon, ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -28,19 +24,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import {
-  useDeleteMutation,
-  usePaginationQuery,
-} from "@supabase-cache-helpers/postgrest-swr";
+import { useDeleteMutation, usePaginationQuery } from "@supabase-cache-helpers/postgrest-swr";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
 import { Popover, PopoverTrigger } from "@radix-ui/react-popover";
@@ -97,15 +83,9 @@ const Actions: React.FC<{ row: any }> = ({ row }) => {
           </PopoverTrigger>
           <PopoverContent className="flex flex-col justify-center items-center">
             <p className="text-md font-medium my-2">Are you sure to remove?</p>
-            <p className="text-xs text-muted-foreground text-center">
-              This action will remove data of {data.email}
-            </p>
+            <p className="text-xs text-muted-foreground text-center">This action will remove data of {data.email}</p>
             <div className="mt-2 flex">
-              <Button
-                className="mr-2"
-                variant="ghost"
-                onClick={() => setRemovePopupOpen(false)}
-              >
+              <Button className="mr-2" variant="ghost" onClick={() => setRemovePopupOpen(false)}>
                 Cancel
               </Button>
               <Button
@@ -151,10 +131,7 @@ export const columns: ColumnDef<FormSubmission>[] = [
     accessorKey: "email",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Email
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
@@ -166,10 +143,7 @@ export const columns: ColumnDef<FormSubmission>[] = [
     enableSorting: false,
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Name
         </Button>
       );
@@ -180,10 +154,7 @@ export const columns: ColumnDef<FormSubmission>[] = [
     enableSorting: false,
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Phone
         </Button>
       );
@@ -205,11 +176,7 @@ export const columns: ColumnDef<FormSubmission>[] = [
     cell: ({ row }) => {
       const createdAT: string = row.getValue("created_at");
 
-      return (
-        <div className="text-right font-medium">
-          {new Date(createdAT).toLocaleString()}
-        </div>
-      );
+      return <div className="text-right font-medium">{new Date(createdAT).toLocaleString()}</div>;
     },
   },
   {
@@ -225,9 +192,7 @@ function Leads() {
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   const [rowSelection, setRowSelection] = React.useState({});
 
@@ -251,11 +216,10 @@ function Leads() {
   });
 
   // @ts-ignore
-  const { currentPage, nextPage, previousPage, setPage, pageIndex, isLoading } =
-    usePaginationQuery(query, {
-      pageSize: ITEMS_PER_PAGE,
-      revalidateOnReconnect: true,
-    });
+  const { currentPage, nextPage, previousPage, setPage, pageIndex, isLoading } = usePaginationQuery(query, {
+    pageSize: ITEMS_PER_PAGE,
+    revalidateOnReconnect: true,
+  });
 
   // @ts-ignore
   const table = useReactTable({
@@ -301,11 +265,7 @@ function Leads() {
   const handleExport = async () => {
     try {
       setExporting(true);
-      const { data } = await supabase
-        .from("leads")
-        .select("*")
-        .eq("chatbot_id", chatbot_id)
-        .csv();
+      const { data } = await supabase.from("leads").select("*").eq("chatbot_id", chatbot_id).csv();
 
       if (!data) throw new Error("Something went wrong! Please try again");
 
@@ -322,25 +282,18 @@ function Leads() {
 
   return (
     <DashboardShell className="container mt-4 gap-0">
-      <DashboardHeader
-        heading={"Leads"}
-        text="Manage your collected leads details here"
-        wrapperClass={"text-center"}
-      />
+      <DashboardHeader heading={"Leads"} text="Manage your collected leads details here" wrapperClass={"text-center"} />
 
       <div className="w-full">
         <div className="flex flex-col items-stretch sm:flex-row sm:justify-end flex-wrap py-4 gap-1">
           <Input
             placeholder="Filter emails..."
             value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
-            }
+            onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
             className="w-full md:max-w-sm mr-auto"
           />
           <Button disabled={true}>
-            Integration <DatabaseBackup className="ml-2 h-4 w-4" /> (Coming
-            soon)
+            Integration <DatabaseBackup className="ml-2 h-4 w-4" /> (Coming soon)
           </Button>
           <Button
             asChild
@@ -352,23 +305,14 @@ function Leads() {
             Leads Settings
           </Button>
 
-          <DropdownMenu
-            onOpenChange={setExportDropDownOpen}
-            open={exportDropDownOpen}
-          >
+          <DropdownMenu onOpenChange={setExportDropDownOpen} open={exportDropDownOpen}>
             <DropdownMenuTrigger asChild>
-              <Button
-                loading={exporting}
-                disabled={exporting}
-                variant="outline"
-              >
+              <Button loading={exporting} disabled={exporting} variant="outline">
                 Export CSV <ChevronDownIcon className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleExport}>
-                Export All
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExport}>Export All</DropdownMenuItem>
               {/*<DropdownMenuItem>Export Selected</DropdownMenuItem>*/}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -381,12 +325,7 @@ function Leads() {
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </TableHead>
                     );
                   })}
@@ -396,10 +335,7 @@ function Leads() {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-[65px] text-center"
-                  >
+                  <TableCell colSpan={columns.length} className="h-[65px] text-center">
                     <LoadingDots />
                   </TableCell>
                 </TableRow>
@@ -407,26 +343,17 @@ function Leads() {
                 <>
                   {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && "selected"}
-                      >
+                      <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                         {row.getVisibleCells().map((cell) => (
                           <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </TableCell>
                         ))}
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell
-                        colSpan={columns.length}
-                        className="h-24 text-center"
-                      >
+                      <TableCell colSpan={columns.length} className="h-24 text-center">
                         No results.
                       </TableCell>
                     </TableRow>
@@ -438,24 +365,14 @@ function Leads() {
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
           <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
+            {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
+            selected.
           </div>
           <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={previousPage}
-              disabled={!previousPage}
-            >
+            <Button variant="outline" size="sm" onClick={previousPage} disabled={!previousPage}>
               Previous
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={nextPage}
-              disabled={!nextPage}
-            >
+            <Button variant="outline" size="sm" onClick={nextPage} disabled={!nextPage}>
               Next
             </Button>
           </div>

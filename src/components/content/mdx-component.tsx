@@ -18,46 +18,33 @@ const NextImage: React.FCC<
 
   return (
     <div className="w-full h-96 relative">
-      <Image
-        className={cn("object-contain", className)}
-        src={props.src}
-        alt={props.alt}
-        fill={true}
-        {...props}
-      />
+      <Image className={cn("object-contain", className)} src={props.src} alt={props.alt} fill={true} {...props} />
     </div>
   );
 };
 
-const ExternalLink = forwardRef<
-  React.ElementRef<"a">,
-  React.AnchorHTMLAttributes<unknown>
->(function ExternalLink(props, ref) {
-  const siteUrl = process.env.NEXT_PUBLIC_URL ?? "";
-  const href = props.href ?? "";
-  const isRoot = href[0] === "/";
-  const isInternalLink = href.startsWith(siteUrl) || isRoot;
+const ExternalLink = forwardRef<React.ElementRef<"a">, React.AnchorHTMLAttributes<unknown>>(
+  function ExternalLink(props, ref) {
+    const siteUrl = process.env.NEXT_PUBLIC_URL ?? "";
+    const href = props.href ?? "";
+    const isRoot = href[0] === "/";
+    const isInternalLink = href.startsWith(siteUrl) || isRoot;
 
-  if (isInternalLink) {
+    if (isInternalLink) {
+      return (
+        <a {...props} ref={ref} href={href}>
+          {props.children}
+        </a>
+      );
+    }
+
     return (
-      <a {...props} ref={ref} href={href}>
+      <a href={href} ref={ref} {...props} target="_blank" rel="noopener noreferrer">
         {props.children}
       </a>
     );
-  }
-
-  return (
-    <a
-      href={href}
-      ref={ref}
-      {...props}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {props.children}
-    </a>
-  );
-});
+  },
+);
 
 const Video: React.FCC<{
   src: string;
@@ -69,15 +56,7 @@ const Video: React.FCC<{
   return (
     <ClientOnly>
       <LazyRender rootMargin={"-200px 0px"}>
-        <video
-          className="my-4"
-          width={width ?? `100%`}
-          height="auto"
-          playsInline
-          autoPlay
-          muted
-          loop
-        >
+        <video className="my-4" width={width ?? `100%`} height="auto" playsInline autoPlay muted loop>
           <source src={src} type={useType} />
         </video>
       </LazyRender>

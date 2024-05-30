@@ -41,15 +41,10 @@ const Features = () => {
     <div id="features" className="py-12 sm:py-24">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-muted-foreground">
-            Everything you need
-          </h2>
-          <p className="mt-2 text-5xl font-bold tracking-tight sm:text-4xl">
-            Automate Conversations and Save Time
-          </p>
+          <h2 className="text-base font-semibold leading-7 text-muted-foreground">Everything you need</h2>
+          <p className="mt-2 text-5xl font-bold tracking-tight sm:text-4xl">Automate Conversations and Save Time</p>
           <p className="mt-6 text-lg leading-8">
-            KBaseBot offers a wide range of features to enhance your chatbot
-            experience:
+            KBaseBot offers a wide range of features to enhance your chatbot experience:
           </p>
         </div>
 
@@ -61,17 +56,12 @@ const Features = () => {
               {features.map((feature) => (
                 <div key={feature.icon} className="flex items-start gap-4">
                   <span className="shrink-0 rounded-lg p-1">
-                    <Icon
-                      className={"text-4xl rounded-lg text-black p-2 " + gradients.SEAFOAM}
-                      icon={feature.icon}
-                    />
+                    <Icon className={"text-4xl rounded-lg text-black p-2 " + gradients.SEAFOAM} icon={feature.icon} />
                   </span>
 
                   <div>
                     <h2 className="text-lg font-bold">{feature.title}</h2>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                      {feature.desc}
-                    </p>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{feature.desc}</p>
                   </div>
                 </div>
               ))}

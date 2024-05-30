@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Icon, LoadingIcon } from "@/components/ui/icons";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -19,7 +14,6 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Logo from "@/components/landing/logo";
 import { Metadata } from "next";
-
 
 const Page = ({ searchParams }) => {
   const supabase = createClientComponentClient();
@@ -68,12 +62,7 @@ const Page = ({ searchParams }) => {
           {isLoading ? (
             <LoadingDots className="!w-16 !h-16" />
           ) : (
-            <Button
-              onClick={() => handleOAuth("google")}
-              className="w-full"
-              variant="outline"
-              size="lg"
-            >
+            <Button onClick={() => handleOAuth("google")} className="w-full" variant="outline" size="lg">
               <Icon className="mr-2 text-xl" icon={"flat-color-icons:google"} />
               Login with Google
             </Button>
@@ -82,10 +71,7 @@ const Page = ({ searchParams }) => {
       </Card>
       <Link
         href="/"
-        className={cn(
-          buttonVariants({ variant: "ghost", size: "sm" }),
-          "absolute right-4 top-4 md:right-8 md:top-8",
-        )}
+        className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "absolute right-4 top-4 md:right-8 md:top-8")}
       >
         Go back
       </Link>

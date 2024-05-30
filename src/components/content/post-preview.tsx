@@ -14,11 +14,7 @@ type Props = {
 
 const DEFAULT_IMAGE_HEIGHT = 250;
 
-function PostPreview({
-  post = {},
-  preloadImage,
-  imageHeight,
-}: React.PropsWithChildren<Props>) {
+function PostPreview({ post = {}, preloadImage, imageHeight }: React.PropsWithChildren<Props>) {
   const { title, image, date, readingTime, description } = post;
   const height = imageHeight ?? DEFAULT_IMAGE_HEIGHT;
 
@@ -28,11 +24,7 @@ function PostPreview({
         {(imageUrl) => (
           <div className="relative mb-2 w-full" style={{ height }}>
             <Link href={post.url}>
-              <CoverImage
-                preloadImage={preloadImage}
-                title={title}
-                src={imageUrl}
-              />
+              <CoverImage preloadImage={preloadImage} title={title} src={imageUrl} />
             </Link>
           </div>
         )}
@@ -54,14 +46,10 @@ function PostPreview({
 
           <span className="text-gray-600 dark:text-gray-300">·</span>
 
-          <span className="text-gray-600 dark:text-gray-300">
-            {readingTime} mins reading
-          </span>
+          <span className="text-gray-600 dark:text-gray-300">{readingTime} mins reading</span>
         </div>
 
-        <p className="mb-4 px-1 text-sm leading-relaxed dark:text-gray-300">
-          {description}
-        </p>
+        <p className="mb-4 px-1 text-sm leading-relaxed dark:text-gray-300">{description}</p>
       </div>
     </div>
   );

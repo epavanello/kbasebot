@@ -20,7 +20,6 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
           <ProgressBar
             options={{
               showSpinner: false,
-              
             }}
             color="#006694"
           />

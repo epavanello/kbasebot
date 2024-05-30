@@ -20,9 +20,7 @@ export async function GET() {
       return NextResponse.redirect(`${NEXT_PUBLIC_URL}/auth`);
     }
 
-    const subscription = (
-      await supabase.from("subscriptions").select().maybeSingle().throwOnError()
-    ).data;
+    const subscription = (await supabase.from("subscriptions").select().maybeSingle().throwOnError()).data;
 
     if (!subscription?.customer_id) {
       throw new Error("No customer ID found");
@@ -46,9 +44,6 @@ export async function GET() {
     }
   } catch (e) {
     console.error(e);
-    return NextResponse.json(
-      { error: getDevErrorMessage(e, "Subscription portal error") },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: getDevErrorMessage(e, "Subscription portal error") }, { status: 500 });
   }
 }

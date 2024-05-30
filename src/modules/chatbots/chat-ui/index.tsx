@@ -32,7 +32,7 @@ export interface ChatProps extends React.ComponentProps<"div"> {
 
 export default function ChatUi({
   id,
-    user_id,
+  user_id,
   className,
   chatContainerClass,
   welcome_message,
@@ -47,12 +47,10 @@ export default function ChatUi({
 
   const { supabase } = useSupabaseAuth();
 
-  const [conversation_id, setConversationId] = useLocalStorage<
-    string | undefined
-  >("conversation_id", undefined);
+  const [conversation_id, setConversationId] = useLocalStorage<string | undefined>("conversation_id", undefined);
 
   // FIXME: need to validate this section
-  function resetChat(uid?:string) {
+  function resetChat(uid?: string) {
     setConversationId(uid || uuid());
   }
 
@@ -104,19 +102,14 @@ export default function ChatUi({
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
-          description:
-            data.error ||
-            "There was a problem with your request. please try again",
+          description: data.error || "There was a problem with your request. please try again",
         });
       } else {
         setResponseIsStarted(true);
       }
     },
     // onFinish() {},
-    initialMessages: convesationLogToInitialMessages(
-      conversations,
-      welcome_message,
-    ) as Message[],
+    initialMessages: convesationLogToInitialMessages(conversations, welcome_message) as Message[],
   });
 
   // set response is complete to false when the loading state changes
@@ -148,17 +141,13 @@ export default function ChatUi({
           </div>
         )}
         {!isDataLoading && !!messages.length && (
-          <div
-            className={cn("w-full overflow-y-auto", chatContainerClass || "")}
-          >
+          <div className={cn("w-full overflow-y-auto", chatContainerClass || "")}>
             <ChatList chatbotLogo={chatbotLogo} messages={messages} />
             <ChatScrollAnchor area={chatArea} trackVisibility={isLoading} />
           </div>
         )}
         {isLoading && !responseIsStarted && (
-          <ChatMessage
-            message={{ role: "assistant", content: "", id: "loading" }}
-          >
+          <ChatMessage message={{ role: "assistant", content: "", id: "loading" }}>
             <LoadingDots className="!w-2 !h-2" />
           </ChatMessage>
         )}

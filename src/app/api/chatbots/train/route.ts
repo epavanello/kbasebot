@@ -32,8 +32,7 @@ export async function POST(req: NextRequest) {
 
     const { file = "", text = "", url = "", notion = "" } = body;
 
-    if (!file.length && !text.length && !url.length && !notion.length)
-      throw new Error("no-datasource-found");
+    if (!file.length && !text.length && !url.length && !notion.length) throw new Error("no-datasource-found");
 
     const supabaseServerClient = createRouteHandlerClient<Database>({
       cookies,
@@ -47,14 +46,8 @@ export async function POST(req: NextRequest) {
       throw new Error("unauthorized");
     }
 
-    const chatbot = (
-      await supabaseServerClient
-        .from("chatbots")
-        .select()
-        .eq("id", chatbot_id)
-        .single()
-        .throwOnError()
-    ).data;
+    const chatbot = (await supabaseServerClient.from("chatbots").select().eq("id", chatbot_id).single().throwOnError())
+      .data;
 
     if (!chatbot) {
       throw new Error("chatbot-not-found");
@@ -140,9 +133,7 @@ export async function POST(req: NextRequest) {
           .throwOnError()
       ).data!;
 
-      documentCollection.push(
-        await loadText(chatbotNotion.name + "\n\n" + chatbotNotion.content),
-      );
+      documentCollection.push(await loadText(chatbotNotion.name + "\n\n" + chatbotNotion.content));
 
       knowledgeBaseRef = {
         ...knowledgeBaseRef,
@@ -215,19 +206,12 @@ export async function POST(req: NextRequest) {
     }
 
     if (Object.keys(chatbotChanges).length) {
-      await supabaseServerClient
-        .from("chatbots")
-        .update(chatbotChanges)
-        .eq("id", chatbot_id)
-        .throwOnError();
+      await supabaseServerClient.from("chatbots").update(chatbotChanges).eq("id", chatbot_id).throwOnError();
     }
 
     return NextResponse.json({ status: "done" });
   } catch (e) {
     console.error(e);
-    return NextResponse.json(
-      { error: getDevErrorMessage(e, "Chatbot upload error") },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: getDevErrorMessage(e, "Chatbot upload error") }, { status: 500 });
   }
 }

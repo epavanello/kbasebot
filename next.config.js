@@ -15,12 +15,7 @@ const nextConfig = {
   },
   images: {
     dangerouslyAllowSVG: true,
-    domains: [
-      "gcevngqhykuaxuphcgxw.supabase.co",
-      "api.producthunt.com",
-      "images.tango.us",
-      "localhost",
-    ],
+    domains: ["gcevngqhykuaxuphcgxw.supabase.co", "api.producthunt.com", "images.tango.us", "localhost"],
   },
 };
 

@@ -22,9 +22,7 @@ export async function GET(request: NextRequest) {
     const plan: Plan = searchParams.get("plan") as Plan;
     const interval = searchParams.get("interval") as BillingInterval;
 
-    const price = plans
-      .find((p) => p.id === plan)
-      ?.prices.find((p) => p.interval === interval);
+    const price = plans.find((p) => p.id === plan)?.prices.find((p) => p.interval === interval);
 
     if (!price) {
       throw new Error("Price not found");
@@ -33,11 +31,7 @@ export async function GET(request: NextRequest) {
     if (session) {
       const subscription = await getSubscription(supabase, session.user.id);
 
-      if (
-        isPaidUser(subscription) &&
-        subscription?.plan === plan &&
-        subscription.billing_interval === interval
-      ) {
+      if (isPaidUser(subscription) && subscription?.plan === plan && subscription.billing_interval === interval) {
         return NextResponse.redirect(`${NEXT_PUBLIC_URL}/app`);
       }
     }
@@ -76,9 +70,6 @@ export async function GET(request: NextRequest) {
     }
   } catch (e) {
     console.error(e);
-    return NextResponse.json(
-      { error: getDevErrorMessage(e, "Checkout error") },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: getDevErrorMessage(e, "Checkout error") }, { status: 500 });
   }
 }

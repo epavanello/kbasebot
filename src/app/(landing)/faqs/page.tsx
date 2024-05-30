@@ -1,12 +1,7 @@
 import Container from "@/components/ui/container";
 import Heading from "@/components/ui/heading";
 import SubHeading from "@/components/ui/sub-heading";
-import {
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  Accordion,
-} from "@/components/ui/accordion";
+import { AccordionContent, AccordionItem, AccordionTrigger, Accordion } from "@/components/ui/accordion";
 
 export const metadata = {
   title: "FAQs - KBaseBot",
@@ -75,19 +70,13 @@ const FAQPage = () => {
             <SubHeading>Frequently Asked Questions</SubHeading>
           </div>
 
-          <div
-            className={
-              "m-auto flex w-full max-w-2xl items-center justify-center"
-            }
-          >
+          <div className={"m-auto flex w-full max-w-2xl items-center justify-center"}>
             <div className="flex w-full flex-col">
               <Accordion type="single" collapsible>
                 {DATA.map((item) => (
                   <AccordionItem key={item.question} value={item.question}>
                     <AccordionTrigger>{item.question}</AccordionTrigger>
-                    <AccordionContent className="px-2">
-                      {item.answer}
-                    </AccordionContent>
+                    <AccordionContent className="px-2">{item.answer}</AccordionContent>
                   </AccordionItem>
                 ))}
               </Accordion>

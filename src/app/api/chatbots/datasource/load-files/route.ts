@@ -22,9 +22,7 @@ export async function POST(req: NextRequest) {
       cookies,
     });
 
-    const file: File | null = (await req.formData()).get(
-      "file",
-    ) as unknown as File;
+    const file: File | null = (await req.formData()).get("file") as unknown as File;
 
     if (!file) {
       throw new Error("file-not-found");

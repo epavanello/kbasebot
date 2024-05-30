@@ -8,16 +8,8 @@ export interface ILeads {
 }
 
 const templates = {
-  basic({
-    knowledgeBase,
-    context,
-  }: {
-    knowledgeBase?: string;
-    context: string;
-  }) {
-    return (
-      context + "\n\n" + this.searchResults({ results: knowledgeBase || "" })
-    );
+  basic({ knowledgeBase, context }: { knowledgeBase?: string; context: string }) {
+    return context + "\n\n" + this.searchResults({ results: knowledgeBase || "" });
   },
 
   searchResults({ results }: { results: string }) {

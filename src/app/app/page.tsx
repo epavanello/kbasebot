@@ -15,11 +15,7 @@ const ChatbotIndex = () => {
 
   return (
     <DashboardShell className="container gap-0 mt-4">
-      <DashboardHeader
-        heading={sayGreeting()}
-        text="Manage your chatbots here"
-        className="justify-between items-start"
-      >
+      <DashboardHeader heading={sayGreeting()} text="Manage your chatbots here" className="justify-between items-start">
         <NewChatbotModal chatbotsCreated={chatbots.length} className="w-full sm:w-auto" />
       </DashboardHeader>
 
@@ -30,11 +26,7 @@ const ChatbotIndex = () => {
       ) : (
         <NoItemsCard
           title={loading ? "Loading chatbots..." : "Create your first Chatbot"}
-          text={
-            !loading
-              ? ""
-              : "You can train your bot with your knowledge base from different sources"
-          }
+          text={!loading ? "" : "You can train your bot with your knowledge base from different sources"}
         >
           {loading ? (
             <div className="mt-4">

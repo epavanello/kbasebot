@@ -52,18 +52,12 @@ export default function NavLinks({
         })}
       >
         {user?.id ? (
-          <Link
-            href="/app"
-            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-          >
+          <Link href="/app" className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
             Dashboard
           </Link>
         ) : (
           <>
-            <Link
-              href="/auth"
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-            >
+            <Link href="/auth" className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
               Login
             </Link>
           </>

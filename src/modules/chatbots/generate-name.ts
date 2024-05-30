@@ -9,16 +9,9 @@ const openai = new OpenAi({
   apiKey: OPENAI_API_KEY,
 });
 
-export const generateName = async (
-  chatbotId: string,
-  supabaseServerClient: SupabaseClientTyped,
-) => {
+export const generateName = async (chatbotId: string, supabaseServerClient: SupabaseClientTyped) => {
   // Get Name of the chatbot
-  const context = await searchKnowledgeBase(
-    "name of the topic",
-    chatbotId,
-    supabaseServerClient,
-  );
+  const context = await searchKnowledgeBase("name of the topic", chatbotId, supabaseServerClient);
 
   const prompt: ChatCompletionRequestMessage[] = [
     {

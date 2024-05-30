@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { createRef, useLayoutEffect, useMemo, useState } from 'react';
+import { createRef, useLayoutEffect, useMemo, useState } from "react";
 
 /**
  * @description Render a component lazily based on the IntersectionObserver
@@ -26,12 +26,11 @@ const LazyRender: React.FCC<{
     }
 
     const options = {
-      rootMargin: rootMargin ?? '0px',
+      rootMargin: rootMargin ?? "0px",
       threshold: threshold ?? 1,
     };
 
-    const isIntersecting = (entry: IntersectionObserverEntry) =>
-      entry.isIntersecting || entry.intersectionRatio > 0;
+    const isIntersecting = (entry: IntersectionObserverEntry) => entry.isIntersecting || entry.intersectionRatio > 0;
 
     const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {

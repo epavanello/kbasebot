@@ -19,22 +19,8 @@ interface IImagePickerToolbarProps {
   bucket?: string;
 }
 
-const ImagePicker = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & IImagePickerToolbarProps
->(
-  (
-    {
-      value,
-      onChange,
-      bucket = "chatbot_assets",
-      label,
-      imgClass,
-      imgWrapperClass,
-      imageUploading,
-    },
-    ref,
-  ) => {
+const ImagePicker = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & IImagePickerToolbarProps>(
+  ({ value, onChange, bucket = "chatbot_assets", label, imgClass, imgWrapperClass, imageUploading }, ref) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const imageRef = useRef<HTMLImageElement | null>(null);
 
@@ -70,12 +56,10 @@ const ImagePicker = React.forwardRef<
               throw new Error("Please upload an square image");
             }
 
-            const { data, error } = await supabase.storage
-              .from(bucket)
-              .upload(`${user?.id}/${file.name}`, file, {
-                cacheControl: "3600",
-                upsert: true,
-              });
+            const { data, error } = await supabase.storage.from(bucket).upload(`${user?.id}/${file.name}`, file, {
+              cacheControl: "3600",
+              upsert: true,
+            });
 
             if (error) throw new Error("File upload failed");
 
@@ -93,10 +77,7 @@ const ImagePicker = React.forwardRef<
             console.log({ error });
             toast({
               title: "Error uploading image",
-              description: getErrorMessage(
-                error,
-                "Something went wrong, please try again",
-              ),
+              description: getErrorMessage(error, "Something went wrong, please try again"),
               variant: "destructive",
             });
           }
@@ -107,10 +88,7 @@ const ImagePicker = React.forwardRef<
         console.error(error);
         toast({
           title: "Error uploading image",
-          description: getErrorMessage(
-            error,
-            "Something went wrong, please try again",
-          ),
+          description: getErrorMessage(error, "Something went wrong, please try again"),
           variant: "destructive",
         });
       } finally {
@@ -140,31 +118,20 @@ const ImagePicker = React.forwardRef<
             ) : (
               <>
                 <span className="flex items-center space-x-2">
-                  <Icon
-                    className="text-2xl text-gray-700"
-                    icon="ic:outline-cloud-upload"
-                  />{" "}
+                  <Icon className="text-2xl text-gray-700" icon="ic:outline-cloud-upload" />{" "}
                   <span className="font-medium text-gray-700">
                     Drop Image to {imageUrl ? "Change" : "Attach"}, or{" "}
                     <span className="text-blue-600 underline">Browse</span>
                   </span>
                 </span>
                 {imageUrl && (
-                  <div
-                    className={cn(
-                      "relative mt-4 overflow-hidden w-full h-16",
-                      imgWrapperClass || "",
-                    )}
-                  >
+                  <div className={cn("relative mt-4 overflow-hidden w-full h-16", imgWrapperClass || "")}>
                     <NextImage
                       alt="image selected"
                       fill={true}
                       ref={imageRef}
                       src={imageUrl}
-                      className={cn(
-                        "rounded-full object-contain",
-                        imgClass || "",
-                      )}
+                      className={cn("rounded-full object-contain", imgClass || "")}
                     />
                   </div>
                 )}

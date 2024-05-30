@@ -1,12 +1,7 @@
 import { NextResponse } from "next/server";
 
 import type { NextRequest } from "next/server";
-import {
-  loadMultiUrl,
-  loadSingleUrl,
-  loadSiteMap,
-  loadWebsites,
-} from "@/modules/datasource/load-websites";
+import { loadMultiUrl, loadSingleUrl, loadSiteMap, loadWebsites } from "@/modules/datasource/load-websites";
 import { Document } from "langchain/document";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/lib/types/database.types";
@@ -25,10 +20,7 @@ interface AdjustedContent {
   url: string;
 }
 
-function adjustDocuments(
-  documents: Document<Record<string, any>>[],
-  content: AdjustedContent[] = [],
-) {
+function adjustDocuments(documents: Document<Record<string, any>>[], content: AdjustedContent[] = []) {
   return (
     [
       ...documents.filter(Boolean).map((i) => ({
@@ -88,10 +80,7 @@ export async function POST(req: NextRequest) {
       }
       // filter out previous extracted urls
       sites.filter((site) => !adjustedContent.find((i) => i.url === site));
-      adjustedContent = adjustDocuments(
-        await loadMultiUrl(sites),
-        adjustedContent,
-      );
+      adjustedContent = adjustDocuments(await loadMultiUrl(sites), adjustedContent);
     }
     if (url) {
       adjustedContent = adjustDocuments(await loadSingleUrl(url));
@@ -116,11 +105,7 @@ export async function POST(req: NextRequest) {
       )
       .throwOnError();
 
-    return NextResponse.json(
-      adjustedContent.map(
-        (url) => ({ chars: url.content.length, url: url.url }) as IUrl,
-      ),
-    );
+    return NextResponse.json(adjustedContent.map((url) => ({ chars: url.content.length, url: url.url }) as IUrl));
   } catch (e) {
     console.error(e);
     return new Response(getDevErrorMessage(e, "Chatbot datasource error"), {

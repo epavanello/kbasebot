@@ -5,11 +5,7 @@ import ChatbotAnalytics from "@/modules/chatbots/chatbot-analytics";
 
 export const dynamic = "force-dynamic";
 
-const Page = async ({
-  params: { chatbot_id },
-}: {
-  params: { chatbot_id: string };
-}) => {
+const Page = async ({ params: { chatbot_id } }: { params: { chatbot_id: string } }) => {
   return (
     <DashboardShell className="container max-w-3xl">
       <DashboardHeader heading={"Analytics"}></DashboardHeader>

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
 type Condition<Value = unknown> = Value | Falsy;
 
@@ -13,7 +13,7 @@ function If<Value = unknown>({
 }>) {
   return useMemo(() => {
     if (condition) {
-      if (typeof children === 'function') {
+      if (typeof children === "function") {
         return <>{children(condition)}</>;
       }
 

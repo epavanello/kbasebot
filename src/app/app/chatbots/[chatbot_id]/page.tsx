@@ -8,11 +8,7 @@ import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-const Page = async ({
-  params: { chatbot_id },
-}: {
-  params: { chatbot_id: string };
-}) => {
+const Page = async ({ params: { chatbot_id } }: { params: { chatbot_id: string } }) => {
   const settings = await getChatbotSettings(chatbot_id, cookies);
 
   return (

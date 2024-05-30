@@ -66,9 +66,7 @@ export const plans: PlanDetails[] = [
       },
       {
         enabled: true,
-        feature: `${
-          PLAN_PERMISSIONS[Plan.BASIC].maxMessages / 1000
-        }k messages/month`,
+        feature: `${PLAN_PERMISSIONS[Plan.BASIC].maxMessages / 1000}k messages/month`,
       },
       { enabled: false, feature: `${prettifyGPTModelName("gpt-4")}` },
       ...commonFeatures,
@@ -96,9 +94,7 @@ export const plans: PlanDetails[] = [
       },
       {
         enabled: true,
-        feature: `${
-          PLAN_PERMISSIONS[Plan.PRO].maxMessages / 1000
-        }k messages/month`,
+        feature: `${PLAN_PERMISSIONS[Plan.PRO].maxMessages / 1000}k messages/month`,
       },
       { enabled: true, feature: `${prettifyGPTModelName("gpt-4")} ✨` },
       ...commonFeatures,

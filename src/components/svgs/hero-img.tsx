@@ -11,43 +11,23 @@ function HeroImg() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1106 553">
       <g id="circle-anim">
-        <g
-          id="center"
-          className="animate-pulse-slow"
-          filter="url(#filter0_f_5_97)"
-        >
+        <g id="center" className="animate-pulse-slow" filter="url(#filter0_f_5_97)">
           <path
             fill="#35957E"
             d="M627 521c0 42.526-30.474 19-73 19-42.526 0-81 23.526-81-19 0-42.526 34.474-77 77-77s77 34.474 77 77z"
           ></path>
         </g>
         <g filter="url(#filter1_d_5_97)">
-          <path
-            id="first-circle"
-            strokeWidth="3"
-            d="M735 574c0-99.964-81.036-181-181-181s-181 81.036-181 181"
-          ></path>
+          <path id="first-circle" strokeWidth="3" d="M735 574c0-99.964-81.036-181-181-181s-181 81.036-181 181"></path>
         </g>
-        <path
-          id="second-circle"
-          strokeWidth="4"
-          d="M894 574c0-187.777-152.223-340-340-340S214 386.223 214 574"
-        ></path>
+        <path id="second-circle" strokeWidth="4" d="M894 574c0-187.777-152.223-340-340-340S214 386.223 214 574"></path>
         <path
           id="third-circle"
           strokeWidth="4"
           d="M1104 574c0-304.309-246.691-551-551-551C248.691 23 2 269.691 2 574"
         ></path>
         <g id="chat-bubble">
-          <rect
-            id="bubble"
-            width="225"
-            height="41"
-            x="479"
-            y="516"
-            fill="#1D2A2E"
-            rx="20.5"
-          ></rect>
+          <rect id="bubble" width="225" height="41" x="479" y="516" fill="#1D2A2E" rx="20.5"></rect>
           <path
             id="text"
             fill="#fff"
@@ -65,15 +45,7 @@ function HeroImg() {
           </g>
         </g>
         <g id="chat-bubble_2">
-          <rect
-            id="bubble_2"
-            width="206"
-            height="41"
-            x="435"
-            y="449"
-            fill="#1D2A2E"
-            rx="20.5"
-          ></rect>
+          <rect id="bubble_2" width="206" height="41" x="435" y="449" fill="#1D2A2E" rx="20.5"></rect>
           <path
             id="text_2"
             fill="#fff"
@@ -97,34 +69,16 @@ function HeroImg() {
         </g>
         <g id="texts">
           <circle className="circle" cx="634" cy="244" r="36"></circle>
-          <g
-            id="galaFileText0"
-            className="icon-stroke"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.75"
-          >
+          <g id="galaFileText0" className="icon-stroke" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.75">
             <path id="galaFileText1" d="M624.308 224.513l-10.627 27.827"></path>
             <path id="galaFileText2" d="M654.527 245.624l-7.442 19.488"></path>
             <path id="galaFileText3" d="M632.003 221.072l13.92 5.316"></path>
             <path id="galaFileText4" d="M617.118 260.048l22.272 8.506"></path>
-            <path
-              id="galaFileText5"
-              d="M647.085 265.112c-1.047 2.787-4.911 4.505-7.695 3.442"
-            ></path>
-            <path
-              id="galaFileText6"
-              d="M613.676 252.354c-1.063 2.784.658 6.631 3.442 7.694"
-            ></path>
-            <path
-              id="galaFileText7"
-              d="M624.31 224.509c1.062-2.78 4.885-4.438 7.693-3.437"
-            ></path>
+            <path id="galaFileText5" d="M647.085 265.112c-1.047 2.787-4.911 4.505-7.695 3.442"></path>
+            <path id="galaFileText6" d="M613.676 252.354c-1.063 2.784.658 6.631 3.442 7.694"></path>
+            <path id="galaFileText7" d="M624.31 224.509c1.062-2.78 4.885-4.438 7.693-3.437"></path>
             <path id="galaFileText8" d="M654.507 245.631l-8.584-19.243"></path>
-            <path
-              id="galaFileText9"
-              d="M642.733 234.74c-1.048 2.772.669 6.636 3.442 7.695"
-            ></path>
+            <path id="galaFileText9" d="M642.733 234.74c-1.048 2.772.669 6.636 3.442 7.695"></path>
             <path id="galaFileTexta" d="M642.733 234.74l3.19-8.352"></path>
             <path id="galaFileTextb" d="M646.175 242.434l8.352 3.19"></path>
             <path id="galaFileTextc" d="M622.028 255.543l5.568 2.127"></path>
@@ -155,20 +109,8 @@ function HeroImg() {
           </g>
         </g>
         <g id="website">
-          <circle
-            className="circle"
-            cx="364.987"
-            cy="46.987"
-            r="43"
-            transform="rotate(5.594 364.987 46.987)"
-          ></circle>
-          <g
-            id="Group_2"
-            className="icon-stroke"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2.75"
-          >
+          <circle className="circle" cx="364.987" cy="46.987" r="43" transform="rotate(5.594 364.987 46.987)"></circle>
+          <g id="Group_2" className="icon-stroke" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.75">
             <path
               id="Vector_5"
               d="M345.871 60.752a23.395 23.395 0 0021.571 9.086 23.396 23.396 0 0018.657-14.134m-43.142-18.172a23.392 23.392 0 0118.657-14.135 23.39 23.39 0 0121.571 9.086"
@@ -246,15 +188,8 @@ function HeroImg() {
           filterUnits="userSpaceOnUse"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
-          <feBlend
-            in="SourceGraphic"
-            in2="BackgroundImageFix"
-            result="shape"
-          ></feBlend>
-          <feGaussianBlur
-            result="effect1_foregroundBlur_5_97"
-            stdDeviation="28"
-          ></feGaussianBlur>
+          <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+          <feGaussianBlur result="effect1_foregroundBlur_5_97" stdDeviation="28"></feGaussianBlur>
         </filter>
         <filter
           id="filter1_d_5_97"
@@ -275,15 +210,8 @@ function HeroImg() {
           <feGaussianBlur stdDeviation="4"></feGaussianBlur>
           <feComposite in2="hardAlpha" operator="out"></feComposite>
           <feColorMatrix values="0 0 0 0 0.189306 0 0 0 0 0.7801 0 0 0 0 0.966667 0 0 0 0.4 0"></feColorMatrix>
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_5_97"
-          ></feBlend>
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_5_97"
-            result="shape"
-          ></feBlend>
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_5_97"></feBlend>
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_5_97" result="shape"></feBlend>
         </filter>
         <filter
           id="filter2_d_5_97"
@@ -304,15 +232,8 @@ function HeroImg() {
           <feGaussianBlur stdDeviation="4.5"></feGaussianBlur>
           <feComposite in2="hardAlpha" operator="out"></feComposite>
           <feColorMatrix values="0 0 0 0 0.189306 0 0 0 0 0.7801 0 0 0 0 0.966667 0 0 0 0.4 0"></feColorMatrix>
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_5_97"
-          ></feBlend>
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_5_97"
-            result="shape"
-          ></feBlend>
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_5_97"></feBlend>
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_5_97" result="shape"></feBlend>
         </filter>
         <filter
           id="filter3_d_5_97"
@@ -333,15 +254,8 @@ function HeroImg() {
           <feGaussianBlur stdDeviation="4.5"></feGaussianBlur>
           <feComposite in2="hardAlpha" operator="out"></feComposite>
           <feColorMatrix values="0 0 0 0 0.189306 0 0 0 0 0.7801 0 0 0 0 0.966667 0 0 0 0.4 0"></feColorMatrix>
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_5_97"
-          ></feBlend>
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_5_97"
-            result="shape"
-          ></feBlend>
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_5_97"></feBlend>
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_5_97" result="shape"></feBlend>
         </filter>
         <filter
           id="filter4_d_5_97"
@@ -362,15 +276,8 @@ function HeroImg() {
           <feGaussianBlur stdDeviation="4.5"></feGaussianBlur>
           <feComposite in2="hardAlpha" operator="out"></feComposite>
           <feColorMatrix values="0 0 0 0 0.189306 0 0 0 0 0.7801 0 0 0 0 0.966667 0 0 0 0.4 0"></feColorMatrix>
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_5_97"
-          ></feBlend>
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_5_97"
-            result="shape"
-          ></feBlend>
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_5_97"></feBlend>
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_5_97" result="shape"></feBlend>
         </filter>
         <filter
           id="filter5_d_5_97"
@@ -391,15 +298,8 @@ function HeroImg() {
           <feGaussianBlur stdDeviation="4.5"></feGaussianBlur>
           <feComposite in2="hardAlpha" operator="out"></feComposite>
           <feColorMatrix values="0 0 0 0 0.189306 0 0 0 0 0.7801 0 0 0 0 0.966667 0 0 0 0.4 0"></feColorMatrix>
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_5_97"
-          ></feBlend>
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_5_97"
-            result="shape"
-          ></feBlend>
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_5_97"></feBlend>
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_5_97" result="shape"></feBlend>
         </filter>
         <filter
           id="filter6_d_5_97"
@@ -420,15 +320,8 @@ function HeroImg() {
           <feGaussianBlur stdDeviation="4.5"></feGaussianBlur>
           <feComposite in2="hardAlpha" operator="out"></feComposite>
           <feColorMatrix values="0 0 0 0 0.189306 0 0 0 0 0.7801 0 0 0 0 0.966667 0 0 0 0.4 0"></feColorMatrix>
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_5_97"
-          ></feBlend>
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_5_97"
-            result="shape"
-          ></feBlend>
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_5_97"></feBlend>
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_5_97" result="shape"></feBlend>
         </filter>
         <filter
           id="filter7_d_5_97"
@@ -449,15 +342,8 @@ function HeroImg() {
           <feGaussianBlur stdDeviation="4.5"></feGaussianBlur>
           <feComposite in2="hardAlpha" operator="out"></feComposite>
           <feColorMatrix values="0 0 0 0 0.189306 0 0 0 0 0.7801 0 0 0 0 0.966667 0 0 0 0.4 0"></feColorMatrix>
-          <feBlend
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_5_97"
-          ></feBlend>
-          <feBlend
-            in="SourceGraphic"
-            in2="effect1_dropShadow_5_97"
-            result="shape"
-          ></feBlend>
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow_5_97"></feBlend>
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow_5_97" result="shape"></feBlend>
         </filter>
       </defs>
     </svg>

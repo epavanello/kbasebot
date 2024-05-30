@@ -16,12 +16,7 @@ interface Props<T> {
   onDelete: (item: Item<T>) => void;
   onDeleteAll?: () => void;
 }
-export default function ContentList<T>({
-  items,
-  title,
-  onDelete,
-  onDeleteAll,
-}: Props<T>) {
+export default function ContentList<T>({ items, title, onDelete, onDeleteAll }: Props<T>) {
   return (
     <div className="w-full bg-secondary p-4 border border-dashed max-h-[50vh] overflow-auto">
       {onDeleteAll && (
@@ -51,19 +46,10 @@ export default function ContentList<T>({
               <Icon icon="ph:check" className="text-green-500" />
             ) : (
               // cloud
-              <Icon
-                icon="material-symbols:cloud-outline"
-                className="text-yellow-500"
-              />
+              <Icon icon="material-symbols:cloud-outline" className="text-yellow-500" />
             )}
 
-            <Button
-              type="button"
-              onClick={() => onDelete(item)}
-              variant="ghost"
-              size={"sm"}
-              className="text-red-500"
-            >
+            <Button type="button" onClick={() => onDelete(item)} variant="ghost" size={"sm"} className="text-red-500">
               <Icon icon={"ph:trash"} />
             </Button>
           </li>
