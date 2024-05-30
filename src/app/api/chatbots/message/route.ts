@@ -1,40 +1,18 @@
-import {
-  ChatCompletionFunctions,
-  ChatCompletionRequestMessage,
-  Configuration,
-  OpenAIApi,
-} from "openai-edge";
+import { ChatCompletionFunctions, ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai-edge";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 import { ConversationLog } from "@/modules/chatbots/conversation-log";
-import {
-  TokenCounter,
-  searchKnowledgeBase,
-  tokenLimits,
-} from "@/modules/chatbots/context";
+import { TokenCounter, searchKnowledgeBase, tokenLimits } from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { ILeads, templates } from "@/modules/chatbots/templates";
 import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import { getErrorMessage } from "@/lib/utils";
-import {
-  Chatbot,
-  Settings,
-  countMonthlyConversationUsage,
-  getSubscription,
-} from "@/lib/supabase";
+import { Chatbot, Settings, countMonthlyConversationUsage, getSubscription } from "@/lib/supabase";
 import { getPermissions } from "@/lib/permissions/plans";
-import {
-  GPTModel,
-  GPTModels,
-  prettifyGPTModelName,
-} from "@/modules/chatbots/helpers";
-import {
-  callStoreLeads,
-  FUNC_STORE_LEAD,
-  storeLeadSchema,
-} from "@/modules/chatbots/function-call/store-leads";
+import { GPTModel, GPTModels, prettifyGPTModelName } from "@/modules/chatbots/helpers";
+import { callStoreLeads, FUNC_STORE_LEAD, storeLeadSchema } from "@/modules/chatbots/function-call/store-leads";
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge";
@@ -42,11 +20,7 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    const {
-      messages: clientMessages,
-      conversationId,
-      chatbotId,
-    } = await req.json();
+    const { messages: clientMessages, conversationId, chatbotId } = await req.json();
 
     if (!conversationId) {
       throw new Error("conversationId is required");
@@ -54,12 +28,9 @@ export async function POST(req: NextRequest) {
 
     const supabaseAdminClient = getSupabaseClientAdmin();
 
-    const userPrompt = clientMessages?.length
-      ? clientMessages[clientMessages.length - 1]
-      : [];
+    const userPrompt = clientMessages?.length ? clientMessages[clientMessages.length - 1] : [];
 
-    if (!userPrompt?.content?.length)
-      throw new Error("Please write a question");
+    if (!userPrompt?.content?.length) throw new Error("Please write a question");
 
     let {
       user_id: ownerId,
@@ -82,9 +53,7 @@ export async function POST(req: NextRequest) {
 
     const isLeadsEnabled =
       chatbot_settings &&
-      (chatbot_settings.leads?.name ||
-        chatbot_settings.leads?.email ||
-        chatbot_settings.leads?.phone);
+      (chatbot_settings.leads?.name || chatbot_settings.leads?.email || chatbot_settings.leads?.phone);
 
     const hasLeads =
       (isLeadsEnabled &&
@@ -98,10 +67,7 @@ export async function POST(req: NextRequest) {
         )?.count) ||
       0 > 0;
 
-    const ownerSubscription = await getSubscription(
-      supabaseAdminClient,
-      ownerId,
-    );
+    const ownerSubscription = await getSubscription(supabaseAdminClient, ownerId);
 
     const permission = getPermissions(ownerSubscription);
 
@@ -109,20 +75,12 @@ export async function POST(req: NextRequest) {
       model = GPTModel.GPT_3;
     }
 
-    if (
-      (await countMonthlyConversationUsage(supabaseAdminClient, ownerId)) >
-      permission.permission.maxMessages
-    ) {
+    if ((await countMonthlyConversationUsage(supabaseAdminClient, ownerId)) > permission.permission.maxMessages) {
       throw new Error("The chatbot has reached the monthly limit");
     }
 
     // Retrieve the conversation log and save the user's prompt
-    const conversationLog = new ConversationLog(
-      conversationId,
-      chatbotId,
-      ownerId,
-      supabaseAdminClient,
-    );
+    const conversationLog = new ConversationLog(conversationId, chatbotId, ownerId, supabaseAdminClient);
 
     await conversationLog.addEntry({
       entry: userPrompt.content as string,
@@ -130,11 +88,7 @@ export async function POST(req: NextRequest) {
     });
 
     // Get the context from the last message
-    const knowledgeBase = await searchKnowledgeBase(
-      userPrompt.content,
-      chatbotId,
-      supabaseAdminClient,
-    );
+    const knowledgeBase = await searchKnowledgeBase(userPrompt.content, chatbotId, supabaseAdminClient);
 
     const functions: ChatCompletionFunctions[] = [];
 
@@ -156,12 +110,7 @@ export async function POST(req: NextRequest) {
 
     // filter out the most old messages if the conversation history is too long
     const historyCounter = new TokenCounter(
-      tokenLimits.history(
-        messages.reduce(
-          (acc, message) => acc + (message.content?.length || 0),
-          0,
-        ),
-      ),
+      tokenLimits.history(messages.reduce((acc, message) => acc + (message.content?.length || 0), 0)),
     );
     let conversationHistory: ChatCompletionRequestMessage[] = (
       await conversationLog.getConversation({
@@ -203,6 +152,7 @@ export async function POST(req: NextRequest) {
       model,
       stream: true,
       messages,
+      temperature: 0,
       max_tokens: tokenLimits.response,
       ...(functions.length && { functions }),
     });
@@ -221,20 +171,11 @@ export async function POST(req: NextRequest) {
           speaker: IConversationSpeaker.Assistant,
         });
       },
-      experimental_onFunctionCall: async (
-        { name, arguments: args },
-        createFunctionCallMessages,
-      ) => {
+      experimental_onFunctionCall: async ({ name, arguments: args }, createFunctionCallMessages) => {
         // if you skip the function call and return nothing, the `function_call`
         // message will be sent to the client for it to handle
         if (name === FUNC_STORE_LEAD) {
-          await callStoreLeads(
-            args,
-            conversationId,
-            ownerId,
-            chatbotId,
-            supabaseAdminClient,
-          );
+          await callStoreLeads(args, conversationId, ownerId, chatbotId, supabaseAdminClient);
 
           // `createFunctionCallMessages` constructs the relevant "assistant" and "function" messages for you
           const newMessages = createFunctionCallMessages(args);
@@ -242,10 +183,7 @@ export async function POST(req: NextRequest) {
           return openai.createChatCompletion({
             model,
             stream: true,
-            messages: [
-              ...messages,
-              ...(newMessages as ChatCompletionRequestMessage[]),
-            ],
+            messages: [...messages, ...(newMessages as ChatCompletionRequestMessage[])],
             max_tokens: tokenLimits.response,
           });
         }
