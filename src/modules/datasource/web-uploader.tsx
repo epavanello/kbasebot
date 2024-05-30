@@ -59,9 +59,12 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
 
   return (
     <div className="flex flex-col items-center gap-4">
+      <p className="w-full text-xs font-bold">
+        Crawl or extract information from sitemaps to gather data for your chatbot.
+      </p>
       <Tabs defaultValue="fromUrl" className="w-full">
         <TabsList className="w-full flex-col sm:w-auto sm:flex-row">
-          <TabsTrigger value="fromUrl">Scrape Website</TabsTrigger>
+          <TabsTrigger value="fromUrl">Crawl Website</TabsTrigger>
           <TabsTrigger value="singleUrl">Single url</TabsTrigger>
           <TabsTrigger value="fromSitemap">Load from Sitemap</TabsTrigger>
         </TabsList>

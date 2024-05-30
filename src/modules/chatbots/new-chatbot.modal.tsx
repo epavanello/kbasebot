@@ -62,7 +62,10 @@ const NewChatbotModal = ({
         className="max-h-full overflow-auto md:max-w-4xl"
       >
         <div className="m-auto w-full">
-          <h1 className="mb-8 text-center text-4xl font-black">Create a New Chatbot</h1>
+          <h1 className="mb-2 text-center text-4xl font-black">Create a New Chatbot</h1>
+          <p className="mb-4 text-center text-sm text-muted-foreground">
+            Configure and load the knowledge base for your chatbot.
+          </p>
           <PaymentBlock isBlocked={isBlocked} text={`You have reached max ${permission.maxChatbots} Chatbot limit`}>
             <UploadContent showGoBack onGoBack={closeDialog} showCreate externalChatbotId={chatbot?.id}></UploadContent>
           </PaymentBlock>

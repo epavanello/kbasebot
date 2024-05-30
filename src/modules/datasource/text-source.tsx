@@ -15,6 +15,7 @@ const TextSource = () => {
 
   return (
     <div className="relative">
+      <p className="mb-4 w-full text-xs font-bold">Enter plain text to provide information to your chatbot.</p>
       <Textarea
         maxLength={MAX_TEXT_INPUT}
         rows={10}

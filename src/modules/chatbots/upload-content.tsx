@@ -92,7 +92,7 @@ export function UploadContent({
         ...(!showCreate
           ? [
               supabase
-                .from("chatbot_training_status")
+                .from("chatbot_urls_status")
                 .select("*")
                 .eq("chatbot_id", externalChatbotId)
                 .then(({ data, error }) => {
@@ -112,8 +112,8 @@ export function UploadContent({
                   );
                 }),
               supabase
-                .from("chatbot_docs")
-                .select("*, knowledge_base(id)")
+                .from("chatbot_docs_status")
+                .select("*")
                 .eq("chatbot_id", externalChatbotId)
                 .then(({ data, error }) => {
                   if (error) {
@@ -125,9 +125,9 @@ export function UploadContent({
                       (item) =>
                         ({
                           id: item.id,
-                          name: item.file_name.split("/").pop() || "",
+                          name: (item.file_name || "").split("/").pop() || "",
                           chars: item.chars,
-                          trained: item.knowledge_base.length > 0,
+                          trained: item.trained,
                         }) as IFile,
                     ),
                   );
@@ -403,7 +403,7 @@ export function UploadContent({
         )}
         {showCreate ? (
           <Button className="text-white" type="submit" size={"lg"} loading={formLoading} disabled={!canTrain}>
-            Create
+            Create Chatbot
           </Button>
         ) : (
           <Button className="text-white" type="submit" size={"lg"} loading={formLoading} disabled={!canTrain}>

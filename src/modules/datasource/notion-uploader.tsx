@@ -75,6 +75,9 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
 
   return (
     <div className="flex flex-col items-center gap-4">
+      <p className="w-full text-xs font-bold">
+        Connect Notion documents to integrate their content into your chatbot&apos;s knowledge base.
+      </p>
       <div className="flex h-16 items-center justify-center">
         <Button
           type={"button"}

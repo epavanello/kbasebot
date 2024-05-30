@@ -12,13 +12,11 @@ import ContentList from "./content-list";
 import axios from "axios";
 
 interface IDocumentUploaderProps {
-  label?: string;
   chatbotId: string;
   single?: boolean;
 }
 
 const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
-  label,
   single = false,
   chatbotId,
 }: IDocumentUploaderProps) => {
@@ -114,7 +112,9 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
 
   return (
     <div className="flex w-full flex-col items-center">
-      {!!label && <label className="text-xs font-bold">{label}</label>}
+      <p className="mb-4 w-full text-xs font-bold">
+        Upload documents that contain the knowledge your chatbot will use.
+      </p>
       <div className="my-1 w-full" {...getRootProps()}>
         <label className="flex w-full cursor-pointer appearance-none flex-col items-center justify-center gap-4 rounded-md border border-dashed border-gray-300 px-4 pb-8 pt-14 text-xs transition hover:border-gray-600 focus:outline-none">
           {uploading ? (
