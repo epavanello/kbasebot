@@ -133,8 +133,8 @@ export function UploadContent({
                   );
                 }),
               supabase
-                .from("chatbot_notion")
-                .select("*, knowledge_base(id)")
+                .from("chatbot_notion_status")
+                .select("*")
                 .eq("chatbot_id", externalChatbotId)
                 .then(({ data, error }) => {
                   if (error) {
@@ -148,7 +148,7 @@ export function UploadContent({
                           id: item.id,
                           name: item.name,
                           chars: item.chars,
-                          trained: item.knowledge_base.length > 0,
+                          trained: item.trained,
                         }) as INotion,
                     ),
                   );
