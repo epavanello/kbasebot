@@ -17,7 +17,7 @@ const PublicChatUi = ({
   onClose,
   className,
   forceTheme,
-  user_id,
+  externalConversationID,
 }: {
   settings: Settings | null;
   chatbot_id: string;
@@ -25,6 +25,7 @@ const PublicChatUi = ({
   className?: string;
   onClose?: () => void;
   forceTheme?: boolean;
+  externalConversationID?: string;
 }) => {
   const {
     primary_color = "#000000",
@@ -87,7 +88,7 @@ const PublicChatUi = ({
         </div>
       </div>
       <ChatUi
-        user_id={user_id}
+        externalConversationID={externalConversationID}
         welcome_message={welcome_message || ""}
         suggested_message={suggested_message || undefined}
         className="min-h-0 flex-1"

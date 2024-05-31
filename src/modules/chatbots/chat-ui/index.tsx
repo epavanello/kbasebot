@@ -28,11 +28,12 @@ export interface ChatProps extends React.ComponentProps<"div"> {
   suggested_message?: string[];
   chatbotLogo?: string;
   resetOnIncrement?: number;
+  externalConversationID?: string;
 }
 
 export default function ChatUi({
   id,
-  user_id,
+  externalConversationID,
   className,
   chatContainerClass,
   welcome_message,
@@ -49,16 +50,15 @@ export default function ChatUi({
 
   const [conversation_id, setConversationId] = useLocalStorage<string | undefined>("conversation_id", undefined);
 
-  // FIXME: need to validate this section
   function resetChat(uid?: string) {
     setConversationId(uid || uuid());
   }
 
   useEffect(() => {
-    if (!conversation_id) {
-      resetChat(user_id);
+    if (externalConversationID) {
+      resetChat(externalConversationID);
     }
-  }, []);
+  }, [externalConversationID]);
 
   useEffect(() => {
     if (resetOnIncrement) {
