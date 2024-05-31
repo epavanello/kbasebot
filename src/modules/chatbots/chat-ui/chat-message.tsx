@@ -7,8 +7,8 @@ import { MemoizedReactMarkdown } from "./markdown";
 import Image from "next/image";
 import React from "react";
 import { MessageAndSources } from "../helpers";
-import { PreviewSources } from "../../datasource/preview-sources";
 import { Icon } from "@/components/ui/icons";
+import { PreviewSources } from "@/modules/datasource/preview-sources";
 
 export interface ChatMessageProps {
   message: MessageAndSources;

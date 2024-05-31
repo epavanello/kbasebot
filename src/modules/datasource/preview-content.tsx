@@ -4,6 +4,7 @@ import { MessageAndSources } from "../chatbots/helpers";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { ChatbotDoc, ChatbotNotion, ChatbotUrl, Chunk, KnowledgeBase } from "@/lib/supabase";
 import { useSupabaseAuth } from "@/lib/store/use-user";
+import { Preview } from "./preview";
 
 const chunkMap = new Map<string, Chunk>();
 
@@ -87,18 +88,20 @@ export const PreviewContent = ({ data, type, id }: PreviewSourcesProps) => {
   }, [data, id, supabase, type, open]);
 
   return (
-    <HoverCard onOpenChange={(isOpen) => setOpen(isOpen)}>
-      <HoverCardTrigger>
-        <Icon icon="material-symbols:info-outline" className="c_text_primary h-4 w-4" />
-      </HoverCardTrigger>
-      <HoverCardContent
-        className="flex max-h-screen w-[512px] flex-col divide-y overflow-auto rounded-lg bg-background"
-        side="left"
-      >
-        {url && (
-          <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">{url.content}</pre>
-        )}
-      </HoverCardContent>
-    </HoverCard>
+    <Preview
+      icon="material-symbols:info-outline"
+      iconClassName="inline-block mr-2"
+      setOpen={(isOpen) => setOpen(isOpen)}
+    >
+      {url && (
+        <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">{url.content}</pre>
+      )}
+      {doc && (
+        <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">{doc.content}</pre>
+      )}
+      {notion && (
+        <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">{notion.content}</pre>
+      )}
+    </Preview>
   );
 };

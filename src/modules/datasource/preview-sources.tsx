@@ -5,6 +5,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { ChatbotUrl, Chunk, KnowledgeBase } from "@/lib/supabase";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { PreviewContent } from "./preview-content";
+import { Preview } from "./preview";
 
 const chunkMap = new Map<string, Chunk>();
 
@@ -51,49 +52,36 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
   }, [messageWithSources.sources, supabase]);
 
   return (
-    <div className="absolute right-0 mr-1 mt-1">
-      <HoverCard>
-        <HoverCardTrigger>
-          <Icon icon="material-symbols:info-outline" className="c_text_primary h-4 w-4" />
-        </HoverCardTrigger>
-        <HoverCardContent
-          className="flex max-h-screen w-[512px] flex-col divide-y overflow-auto rounded-lg bg-background"
-          side="left"
-        >
-          {chunks.map((chunk, index) => (
-            <div key={index} className="flex flex-col gap-1 py-4">
-              <p className="text-xs">
-                <span className="font-semibold">Similarity:</span>
-                <span className="font-mono">
-                  &nbsp;{(messageWithSources.sources || []).find((source) => source.id === chunk.id)?.similarity || 0}
-                </span>
-              </p>
-              <p className="text-xs">
-                <span className="font-semibold">Source:</span>
-                <span className="font-mono">
-                  &nbsp;
-                  {(
-                    <div className="flex flex-row items-center gap-2">
-                      <PreviewContent data={urls.find((url) => url.id === chunk.url_id)} type="url" />
-                      <a
-                        href={urls.find((url) => url.id === chunk.url_id)?.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="underline"
-                      >
-                        {urls.find((url) => url.id === chunk.url_id)?.url}
-                      </a>
-                    </div>
-                  ) || "Unknown"}
-                </span>
-              </p>
-              <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">
-                {chunk.content}
-              </pre>
-            </div>
-          ))}
-        </HoverCardContent>
-      </HoverCard>
-    </div>
+    <Preview icon="material-symbols:info-outline" iconClassName="absolute right-0 mr-1 mt-1">
+      {chunks.map((chunk, index) => (
+        <div key={index} className="flex flex-col gap-1 py-4">
+          <p className="flex flex-row text-xs">
+            <span className="font-semibold">Similarity:&nbsp;</span>
+            <span className="font-mono">
+              {(messageWithSources.sources || []).find((source) => source.id === chunk.id)?.similarity || 0}
+            </span>
+          </p>
+          <p className="flex flex-row text-xs">
+            <span className="font-semibold">Source:&nbsp;</span>
+            <span className="font-mono">
+              {(
+                <div className="inline-flex flex-row items-center gap-2">
+                  <a
+                    href={urls.find((url) => url.id === chunk.url_id)?.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline"
+                  >
+                    <PreviewContent data={urls.find((url) => url.id === chunk.url_id)} type="url" />
+                    {urls.find((url) => url.id === chunk.url_id)?.url}
+                  </a>
+                </div>
+              ) || "Unknown"}
+            </span>
+          </p>
+          <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">{chunk.content}</pre>
+        </div>
+      ))}
+    </Preview>
   );
 };
