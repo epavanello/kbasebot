@@ -53,9 +53,9 @@ const CustomizeForm = ({ chatbotId, settings }: CustomizeFormProps) => {
       chatbot_bubble_logo: input?.chatbot_bubble_logo || "",
       chatbot_logo: input?.chatbot_logo || "",
       display_name: input?.display_name || undefined,
-      primary_color: input?.primary_color || "#000000",
+      primary_color: input?.primary_color || "#4A88AA",
       suggested_message: input?.suggested_message || [],
-      theme: input?.theme || theme || "light",
+      theme: "light",
       welcome_message: input?.welcome_message || "",
     };
   }

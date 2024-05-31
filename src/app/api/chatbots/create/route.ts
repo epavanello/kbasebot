@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
     // @ts-ignore
     await supabaseServerClient.from("chatbot_settings").insert({
       chatbot_bubble_align: "right",
-      primary_color: "#29292d",
+      primary_color: "#4A88AA",
       welcome_message: "Hello there! how can i help?",
       chatbot_id: chatbot.id,
       user_id: user?.id,
