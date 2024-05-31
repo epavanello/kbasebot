@@ -100,5 +100,5 @@ export const tokenLimits = {
     return 12_000 - this.response - used;
   },
   // Size of the chunk for the text splitter
-  chunk: 400,
+  chunk: 1000,
 };

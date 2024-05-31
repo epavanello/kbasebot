@@ -15,6 +15,7 @@ export type PreviewProps = {
 };
 
 export const Preview = ({ icon, children, setOpen, iconClassName, contentClassName }: PreviewProps) => {
+  console.log({ children });
   return (
     <div className={cn(iconClassName)}>
       <HoverCard onOpenChange={(isOpen) => setOpen?.(isOpen)}>
