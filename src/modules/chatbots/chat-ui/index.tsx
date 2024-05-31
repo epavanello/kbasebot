@@ -57,6 +57,8 @@ export default function ChatUi({
   useEffect(() => {
     if (externalConversationID) {
       resetChat(externalConversationID);
+    } else if (!conversation_id) {
+      resetChat();
     }
   }, [externalConversationID]);
 
