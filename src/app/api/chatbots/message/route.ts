@@ -22,6 +22,8 @@ export async function POST(req: NextRequest) {
   try {
     const { messages: clientMessages, conversationId, chatbotId } = await req.json();
 
+    const ip = req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for") || req.ip;
+
     if (!conversationId) {
       throw new Error("conversationId is required");
     }
@@ -66,12 +68,12 @@ export async function POST(req: NextRequest) {
             .throwOnError()
         )?.count) ||
       0 > 0 ||
-      ((req.ip &&
+      ((ip &&
         (
           await supabaseAdminClient
             .from("leads")
             .select("*", { count: "exact" })
-            .eq("ip", req.ip)
+            .eq("ip", ip)
             .maybeSingle()
             .throwOnError()
         )?.count) ||
@@ -205,7 +207,7 @@ export async function POST(req: NextRequest) {
         // message will be sent to the client for it to handle
         if (name === FUNC_STORE_LEAD) {
           if (("name" in args && args.name) || ("email" in args && args.email) || ("phone" in args && args.phone)) {
-            await callStoreLeads(args, conversationId, ownerId, chatbotId, req.ip, supabaseAdminClient);
+            await callStoreLeads(args, conversationId, ownerId, chatbotId, ip, supabaseAdminClient);
           }
 
           const newMessages = createFunctionCallMessages(args as any);
