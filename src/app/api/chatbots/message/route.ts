@@ -9,7 +9,7 @@ import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseClientAdmin } from "@/lib/supabase.server";
 import { getErrorMessage } from "@/lib/utils";
-import { Chatbot, Settings, countMonthlyConversationUsage, getSubscription } from "@/lib/supabase";
+import { Chatbot, countMonthlyConversationUsage, getSubscription } from "@/lib/supabase";
 import { getPermissions } from "@/lib/permissions/plans";
 import { GPTModel, GPTModels, prettifyGPTModelName } from "@/modules/chatbots/helpers";
 import { callStoreLeads, FUNC_STORE_LEAD, storeLeadSchema } from "@/modules/chatbots/function-call/store-leads";
@@ -65,7 +65,17 @@ export async function POST(req: NextRequest) {
             .maybeSingle()
             .throwOnError()
         )?.count) ||
-      0 > 0;
+      0 > 0 ||
+      ((req.ip &&
+        (
+          await supabaseAdminClient
+            .from("leads")
+            .select("*", { count: "exact" })
+            .eq("ip", req.ip)
+            .maybeSingle()
+            .throwOnError()
+        )?.count) ||
+        0) > 0;
 
     const ownerSubscription = await getSubscription(supabaseAdminClient, ownerId);
 
@@ -87,8 +97,28 @@ export async function POST(req: NextRequest) {
       speaker: IConversationSpeaker.User,
     });
 
+    let conversationHistory: ChatCompletionRequestMessage[] = await conversationLog.getConversation({
+      limit: 10,
+    });
+
+    // Count actual tokens to limit the conversation history
+    const embeddingCounter = new TokenCounter(1_000);
+
+    // Add here the previous questions to have a better searching context
     // Get the context from the last message
-    const knowledgeBase = await searchKnowledgeBase(userPrompt.content, chatbotId, supabaseAdminClient);
+    const knowledgeBase = await searchKnowledgeBase(
+      // Get the last 5 user messages from the conversation history
+      conversationHistory
+        .filter((entry) => entry.role === IConversationSpeaker.User)
+        .slice(-5)
+        .reverse()
+        .filter((entry) => embeddingCounter.canAdd(entry.content || ""))
+        .reverse()
+        .map((entry) => entry.content)
+        .join("\n"),
+      chatbotId,
+      supabaseAdminClient,
+    );
 
     const functions: ChatCompletionFunctions[] = [];
 
@@ -115,11 +145,7 @@ export async function POST(req: NextRequest) {
     // filter out the most old messages if the conversation history is too long
     const historyCounter = new TokenCounter(tokenLimits.historyAvailable(messagesCounter.countedTokens));
 
-    let conversationHistory: ChatCompletionRequestMessage[] = (
-      await conversationLog.getConversation({
-        limit: 10,
-      })
-    )
+    conversationHistory = conversationHistory
       .reverse()
       .filter((entry) => historyCounter.canAdd(entry.content || ""))
       .reverse();
@@ -178,10 +204,11 @@ export async function POST(req: NextRequest) {
         // if you skip the function call and return nothing, the `function_call`
         // message will be sent to the client for it to handle
         if (name === FUNC_STORE_LEAD) {
-          await callStoreLeads(args, conversationId, ownerId, chatbotId, supabaseAdminClient);
+          if (("name" in args && args.name) || ("email" in args && args.email) || ("phone" in args && args.phone)) {
+            await callStoreLeads(args, conversationId, ownerId, chatbotId, req.ip, supabaseAdminClient);
+          }
 
-          // `createFunctionCallMessages` constructs the relevant "assistant" and "function" messages for you
-          const newMessages = createFunctionCallMessages(args);
+          const newMessages = createFunctionCallMessages(args as any);
 
           return openai.createChatCompletion({
             model,

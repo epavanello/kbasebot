@@ -1,3 +1,4 @@
+import { SupabaseClientTyped } from "@/lib/supabase";
 import { z, ZodObject } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
@@ -7,6 +8,12 @@ type SchemaFields = {
   name?: boolean;
   email?: boolean;
   phone?: boolean;
+};
+
+export type LeadsFields = {
+  name?: string;
+  email?: string;
+  phone?: string;
 };
 
 const createStoreLeadZodSchema = ({ name, email, phone }: SchemaFields = {}): ZodObject<any> => {
@@ -26,16 +33,25 @@ export const storeLeadSchema = ({ name, email, phone }: SchemaFields = {}) => ({
 
 // type IStoreLead = z.infer<typeof createStoreLeadZodSchema>;
 
-export const callStoreLeads = async (leads, conversation_id, chatbot_owner_id, chatbot_id, supabase) => {
+export const callStoreLeads: (
+  leads: LeadsFields,
+  conversation_id: string,
+  chatbot_owner_id: string,
+  chatbot_id: string,
+  ip: string | undefined,
+  supabase: SupabaseClientTyped,
+) => Promise<void> = async (leads, conversation_id, chatbot_owner_id, chatbot_id, ip, supabase) => {
   try {
-    const { data, error } = await supabase.from("leads").insert({
-      ...leads,
-      conversation_id,
-      chatbot_id,
-      chatbot_owner_id,
-    });
-
-    console.log({ data, error });
+    await supabase
+      .from("leads")
+      .insert({
+        ...leads,
+        conversation_id,
+        chatbot_id,
+        chatbot_owner_id,
+        ip,
+      })
+      .throwOnError();
   } catch (e) {
     console.error(e);
     throw e;

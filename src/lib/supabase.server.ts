@@ -1,7 +1,6 @@
 import { Database } from "@/lib/types/database.types";
-import { createMiddlewareClient, createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import { NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_KEY } from "./env";
-import { cookies as cookiesType } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 

@@ -480,6 +480,7 @@ export type Database = {
           created_at: string
           email: string | null
           id: string
+          ip: string | null
           name: string | null
           phone: string | null
         }
@@ -490,6 +491,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           id?: string
+          ip?: string | null
           name?: string | null
           phone?: string | null
         }
@@ -500,6 +502,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           id?: string
+          ip?: string | null
           name?: string | null
           phone?: string | null
         }
