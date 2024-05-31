@@ -2,18 +2,15 @@
 import { Configuration, CreateEmbeddingResponse, OpenAIApi } from "openai-edge";
 import GPT3Tokenizer from "gpt3-tokenizer";
 import { OPENAI_API_KEY } from "@/lib/env";
-import { SupabaseClientTyped } from "@/lib/supabase";
+import { Chunk, SupabaseClientTyped } from "@/lib/supabase";
+import { Database } from "@/lib/types/database.types";
 
 const config = new Configuration({
   apiKey: OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(config);
 
-export const searchKnowledgeBase = async (
-  search: string,
-  chatbotId: string,
-  supabaseAdminClient: SupabaseClientTyped,
-) => {
+export async function searchKnowledgeBase(search: string, chatbotId: string, supabaseAdminClient: SupabaseClientTyped) {
   // Generate a one-time embedding for the query itself
   const embeddingResponse = await openai.createEmbedding({
     model: "text-embedding-ada-002",
@@ -30,7 +27,7 @@ export const searchKnowledgeBase = async (
   // smaller sections at earlier pre-processing/embedding step.
   const { data: documents = [] } = await supabaseAdminClient
     .rpc("match_documents", {
-      p_query_embedding: embedding,
+      p_query_embedding: embedding as any,
       p_match_count: 10, // Choose the number of matches
       p_chatbot_id: chatbotId,
       p_threshold: 0.6,
@@ -55,28 +52,20 @@ export const searchKnowledgeBase = async (
   //   END;
 
   const counter = new TokenCounter(tokenLimits.knowledgeBase);
-  let contextText = "";
 
-  // Concat matched documents
-  for (let i = 0; documents && i < documents.length; i++) {
-    const document = documents[i];
-    if (document?.content) {
-      const content = document?.content;
-      const source = (document?.metadata as Record<string, string>)["source"];
-      const similarity = document.similarity;
+  return documents!.filter((doc) => doc?.content).filter((doc) => counter.canAdd(doc.content));
+}
 
-      const chunk = `source: ${source || ""}\nsimilarity:${similarity}\ncontent: ${content.trim()}\n\n---\n`;
+export function printChunk(chunk: Chunk) {
+  const content = chunk.content;
+  const source = (chunk.metadata as Record<string, string>)["source"];
+  const similarity = chunk.similarity;
+  return `source: ${source || ""}\nsimilarity:${similarity}\ncontent: ${content.trim()}\n\n---\n`;
+}
 
-      if (!counter.canAdd(chunk)) {
-        break;
-      }
-
-      contextText += chunk;
-    }
-  }
-
-  return contextText;
-};
+export function printKnowledgeBaseResponse(chunks: Chunk[]) {
+  return chunks.map(printChunk).join("");
+}
 
 export class TokenCounter {
   private tokenCount = 0;

@@ -1,8 +1,8 @@
-import { type Message } from "ai";
 import { ChatMessage } from "./chat-message";
+import { MessageAndSources } from "../helpers";
 
 export interface ChatList {
-  messages: Message[];
+  messages: MessageAndSources[];
   chatbotLogo?: string;
 }
 

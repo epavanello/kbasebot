@@ -2,21 +2,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Icon } from "@/components/ui/icons";
 import InputNote from "@/components/ui/input-note";
+import { PreviewContent } from "./preview-content";
 
 export interface Item<T> {
   id: string;
   value: string;
   chars: number;
   trained?: boolean;
-  data?: T;
+  data: T;
 }
 interface Props<T> {
   items: Item<T>[];
   title: string;
   onDelete: (item: Item<T>) => void;
   onDeleteAll?: () => void;
+  type: "url" | "doc" | "notion";
 }
-export default function ContentList<T>({ items, title, onDelete, onDeleteAll }: Props<T>) {
+export default function ContentList<T>({ items, title, onDelete, onDeleteAll, type }: Props<T>) {
   return (
     <div className="max-h-[50vh] w-full overflow-auto border border-dashed bg-secondary p-4">
       {onDeleteAll && (
@@ -38,7 +40,8 @@ export default function ContentList<T>({ items, title, onDelete, onDeleteAll }: 
       <ul className="flex flex-col gap-2 overflow-y-auto p-2">
         {items.map((item) => (
           <li key={item.id} className="flex flex-row items-center gap-2">
-            <div className="relative flex-1">
+            <div className="relative flex flex-1 flex-row items-center gap-2">
+              <PreviewContent id={item.id} type={type} />
               <Input className="h-8 text-sm" value={item.value} readOnly />
               <InputNote>{item.chars} chars</InputNote>
             </div>

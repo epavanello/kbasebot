@@ -2,6 +2,7 @@ import { ChatCompletionRequestMessage } from "openai-edge";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { Conversation } from "@/lib/supabase";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
+import { Message } from "ai";
 
 export const convesationLogToMessages = (
   conv: Pick<Conversation, "speaker" | "entry">[] | null,
@@ -11,18 +12,19 @@ export const convesationLogToMessages = (
     content: entry.entry,
   })) as ChatCompletionRequestMessage[];
 
-export type IMessage = {
-  id: string;
-  createdAt?: Date;
-  content: string;
-  role: IConversationSpeaker;
-  name?: string;
+export type Source = {
+  id: number;
+  similarity: number;
 };
 
+export type MessageAndSources = {
+  sources?: Source[];
+} & Message;
+
 export const convesationLogToInitialMessages = (
-  conv: Pick<Conversation, "speaker" | "entry" | "created_at" | "id">[] | null,
+  conv: Pick<Conversation, "speaker" | "entry" | "created_at" | "id" | "sources">[] | null,
   welcomeMessage?: string,
-): IMessage[] => {
+): MessageAndSources[] => {
   const msgs = welcomeMessage
     ? [
         {
@@ -40,7 +42,8 @@ export const convesationLogToInitialMessages = (
       createdAt: entry.created_at ? new Date(entry.created_at) : undefined,
       role: entry.speaker,
       content: entry.entry,
-    })) as IMessage[]),
+      sources: entry.sources,
+    })) as MessageAndSources[]),
   ];
 };
 

@@ -1,16 +1,17 @@
 import { formatDistance } from "date-fns";
-import { Message } from "ai";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import { cn } from "@/lib/utils";
 import { CodeBlock } from "./codeblock";
 import { MemoizedReactMarkdown } from "./markdown";
-import { Icon } from "@/components/ui/icons";
 import Image from "next/image";
 import React from "react";
+import { MessageAndSources } from "../helpers";
+import { PreviewSources } from "../../datasource/preview-sources";
+import { Icon } from "@/components/ui/icons";
 
 export interface ChatMessageProps {
-  message: Message;
+  message: MessageAndSources;
   chatbotLogo?: string;
   children?: React.ReactNode;
 }
@@ -37,6 +38,7 @@ export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMe
           "text-right": isUser,
         })}
       >
+        {message.sources && <PreviewSources messageWithSources={message} />}
         {children ? (
           <div
             className={cn(
@@ -60,6 +62,22 @@ export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMe
             )}
             remarkPlugins={[remarkGfm, remarkMath]}
             components={{
+              a({ node, children, ...props }) {
+                return (
+                  <a
+                    className="underline"
+                    target="_blank"
+                    rel="noreferrer"
+                    {...props}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(props.href, "_blank");
+                    }}
+                  >
+                    {children}
+                  </a>
+                );
+              },
               p({ children }) {
                 return <p className="mb-2 last:mb-0">{children}</p>;
               },

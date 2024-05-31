@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 export type IUrl = {
+  id: string;
   url: string;
   chars: number;
   trained?: boolean;

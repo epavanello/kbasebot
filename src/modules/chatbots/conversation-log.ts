@@ -1,7 +1,7 @@
 import { ChatCompletionRequestMessage } from "openai-edge";
 import { convesationLogToMessages } from "./helpers";
 import { IConversationSpeaker } from "@/lib/types/common.types";
-import { SupabaseClientTyped } from "@/lib/supabase";
+import { Chunk, SupabaseClientTyped } from "@/lib/supabase";
 
 class ConversationLog {
   constructor(
@@ -15,10 +15,12 @@ class ConversationLog {
     entry,
     speaker,
     metadata,
+    sources,
   }: {
     entry: string;
     speaker: IConversationSpeaker;
     metadata?: Record<string, any>;
+    sources?: Chunk[];
   }) {
     try {
       await this.supabaseAdminClient
@@ -30,6 +32,13 @@ class ConversationLog {
           entry,
           speaker,
           metadata,
+          sources: sources?.map(
+            (source) =>
+              ({
+                id: source.id,
+                similarity: source.similarity,
+              }) || [],
+          ),
         })
         .throwOnError();
     } catch (e) {

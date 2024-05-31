@@ -2,7 +2,7 @@ import { ChatCompletionFunctions, ChatCompletionRequestMessage, Configuration, O
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 import { ConversationLog } from "@/modules/chatbots/conversation-log";
-import { TokenCounter, searchKnowledgeBase, tokenLimits } from "@/modules/chatbots/context";
+import { TokenCounter, printKnowledgeBaseResponse, searchKnowledgeBase, tokenLimits } from "@/modules/chatbots/context";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { ILeads, templates } from "@/modules/chatbots/templates";
 import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
 
     messages.push({
       role: "system",
-      content: templates.searchResults({ results: knowledgeBase }),
+      content: templates.searchResults({ results: printKnowledgeBaseResponse(knowledgeBase) }),
     });
 
     // Count actual tokens to limit the conversation history
@@ -200,6 +200,7 @@ export async function POST(req: NextRequest) {
         await conversationLog.addEntry({
           entry: result,
           speaker: IConversationSpeaker.Assistant,
+          sources: knowledgeBase,
         });
       },
       experimental_onFunctionCall: async ({ name, arguments: args }, createFunctionCallMessages) => {

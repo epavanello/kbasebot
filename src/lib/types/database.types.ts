@@ -318,6 +318,7 @@ export type Database = {
           id: string
           metadata: Json | null
           session_id: string
+          sources: Json[] | null
           speaker: string
         }
         Insert: {
@@ -329,6 +330,7 @@ export type Database = {
           id?: string
           metadata?: Json | null
           session_id?: string
+          sources?: Json[] | null
           speaker: string
         }
         Update: {
@@ -340,6 +342,7 @@ export type Database = {
           id?: string
           metadata?: Json | null
           session_id?: string
+          sources?: Json[] | null
           speaker?: string
         }
         Relationships: [
@@ -468,6 +471,13 @@ export type Database = {
             columns: ["url_id"]
             isOneToOne: false
             referencedRelation: "chatbot_urls"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_base_url_id_fkey"
+            columns: ["url_id"]
+            isOneToOne: false
+            referencedRelation: "chatbot_urls_status"
             referencedColumns: ["id"]
           },
         ]
@@ -679,18 +689,21 @@ export type Database = {
         Row: {
           chars: number | null
           chatbot_id: string | null
+          id: string | null
           trained: boolean | null
           url: string | null
         }
         Insert: {
           chars?: number | null
           chatbot_id?: string | null
+          id?: string | null
           trained?: never
           url?: string | null
         }
         Update: {
           chars?: number | null
           chatbot_id?: string | null
+          id?: string | null
           trained?: never
           url?: string | null
         }

@@ -150,6 +150,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
           trained: doc.trained,
           data: doc,
         }))}
+        type="doc"
         onDelete={(doc) => handleDeleteDoc(doc.data!)}
         onDeleteAll={() => handleDeleteAllDocs()}
       />

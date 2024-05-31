@@ -99,10 +99,11 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
         items={(urls || []).map((url) => ({
           value: url.url,
           chars: url.chars,
-          id: url.url,
+          id: url.id,
           trained: url.trained,
           data: url,
         }))}
+        type="url"
         onDelete={(url) => handleDeleteUrl(url.data!)}
         onDeleteAll={() => handleDeleteAllUrls()}
       />

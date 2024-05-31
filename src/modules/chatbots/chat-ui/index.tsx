@@ -71,7 +71,7 @@ export default function ChatUi({
   const { data: conversations = [], isLoading: isDataLoading } = useQuery(
     supabase
       .from("conversations")
-      .select()
+      .select("speaker, entry, created_at, id")
       .eq("conversation_id", conversation_id || "")
       .eq("chatbot_id", chatbot_id)
       .order("created_at", { ascending: true }),

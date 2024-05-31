@@ -1,4 +1,4 @@
-import { searchKnowledgeBase } from "@/modules/chatbots/context";
+import { printKnowledgeBaseResponse, searchKnowledgeBase } from "@/modules/chatbots/context";
 import { ChatCompletionRequestMessage } from "openai-edge";
 import OpenAi from "openai";
 import { OPENAI_API_KEY } from "@/lib/env";
@@ -16,7 +16,9 @@ export const generateName = async (chatbotId: string, supabaseServerClient: Supa
   const prompt: ChatCompletionRequestMessage[] = [
     {
       role: "system",
-      content: `Respond just with the name for the context: ${context}, Give me the topic name of the context in max 2 words, topic name is?`,
+      content: `Respond just with the name for the context: ${printKnowledgeBaseResponse(
+        context,
+      )}, Give me the topic name of the context in max 2 words, topic name is?`,
     },
   ];
 

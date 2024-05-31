@@ -104,6 +104,7 @@ export function UploadContent({
                     data.map(
                       (item) =>
                         ({
+                          id: item.id,
                           url: item.url,
                           chars: item.chars,
                           trained: item.trained,

@@ -103,6 +103,7 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
               data: n,
             }) as Item<INotion>,
         )}
+        type="notion"
         onDelete={(url) => handleDeleteNotion(url.data!)}
         onDeleteAll={() => handleDeleteAllNotion()}
       />
