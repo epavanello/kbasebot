@@ -20,10 +20,10 @@ function HeroImg() {
         <g filter="url(#filter1_d_5_97)">
           <path id="first-circle" strokeWidth="3" d="M735 574c0-99.964-81.036-181-181-181s-181 81.036-181 181"></path>
         </g>
-        <path id="second-circle" strokeWidth="4" d="M894 574c0-187.777-152.223-340-340-340S214 386.223 214 574"></path>
+        <path id="second-circle" strokeWidth="2" d="M894 574c0-187.777-152.223-340-340-340S214 386.223 214 574"></path>
         <path
           id="third-circle"
-          strokeWidth="4"
+          strokeWidth="1"
           d="M1104 574c0-304.309-246.691-551-551-551C248.691 23 2 269.691 2 574"
         ></path>
         <g id="chat-bubble">

@@ -30,14 +30,14 @@ function HeroImg({ className }) {
         </g>
         <path
           id="second-circle"
-          stroke="#3E3737"
-          strokeWidth="4"
+          stroke="#0ef9c042"
+          strokeWidth="3"
           d="M894 574c0-187.777-152.223-340-340-340S214 386.223 214 574"
         ></path>
         <path
           id="third-circle"
-          stroke="#3E3737"
-          strokeWidth="4"
+          stroke="#0ef9c042"
+          strokeWidth="2"
           d="M1104 574c0-304.309-246.691-551-551-551C248.691 23 2 269.691 2 574"
         ></path>
         <g id="chat-bubble">

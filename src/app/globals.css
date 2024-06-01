@@ -227,7 +227,7 @@
 
 #second-circle,
 #third-circle {
-  @apply stroke-[#d4d4d4] dark:stroke-[#3E3737];
+  @apply stroke-[#d4d4d4] dark:stroke-[#0ef9c042];
 }
 
 .circle {

@@ -22,7 +22,7 @@ export function Footer() {
             </a> */}
             <DarkModeSwitch />
           </div>
-          <p className="text-center text-xs leading-5">© 2023 KBaseBot, Inc. All rights reserved.</p>
+          <p className="text-center text-xs leading-5">© 2024 KBaseBot, Inc. All rights reserved.</p>
           <ul className="justify-around sm:flex md:flex lg:flex xl:flex">
             <li className="mb-3 text-gray-800 hover:text-gray-900 dark:text-white sm:mb-0 md:mb-0 lg:mb-0 xl:mb-0">
               <Link className="text-sm hover:text-gray-500 focus:underline focus:outline-none" href="/privacy">
