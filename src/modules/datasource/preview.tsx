@@ -15,11 +15,10 @@ export type PreviewProps = {
 };
 
 export const Preview = ({ icon, children, setOpen, iconClassName, contentClassName }: PreviewProps) => {
-  console.log({ children });
   return (
-    <div className={cn(iconClassName)}>
+    <div className={cn("leading-none", iconClassName)}>
       <HoverCard onOpenChange={(isOpen) => setOpen?.(isOpen)}>
-        <HoverCardTrigger>
+        <HoverCardTrigger asChild>
           <Icon icon={icon} className="inline-block h-4 w-4 text-black opacity-50 dark:text-white" />
         </HoverCardTrigger>
         <HoverCardContent

@@ -66,7 +66,7 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
   }, [messageWithSources.sources, supabase, open]);
 
   return (
-    <Preview icon="material-symbols:info-outline" iconClassName="absolute right-0 mr-1 mt-1" setOpen={setOpen}>
+    <Preview icon="material-symbols:info-outline" iconClassName="absolute right-0 mr-0.5 mt-0.5" setOpen={setOpen}>
       {!loading &&
         (chunks.length > 0 ? (
           chunks.map((chunk, index) => {
@@ -85,9 +85,9 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
                   <span className="font-semibold">Source:&nbsp;</span>
                   <span>
                     {(url && (
-                      <div className="inline-flex flex-row items-center gap-2">
+                      <div className="inline-block gap-2">
+                        <PreviewContent data={url} type="url" />
                         <a href={url.url} target="_blank" rel="noreferrer" className="underline">
-                          <PreviewContent data={url} type="url" />
                           {url.url}
                         </a>
                       </div>
