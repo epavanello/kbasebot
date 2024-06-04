@@ -183,7 +183,7 @@ export async function POST(req: NextRequest) {
       model,
       stream: true,
       messages,
-      temperature: 0,
+      temperature: 0.1,
       max_tokens: tokenLimits.response,
       ...(functions.length && { functions }),
     });
