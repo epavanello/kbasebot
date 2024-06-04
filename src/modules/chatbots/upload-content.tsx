@@ -16,6 +16,7 @@ import WebUploader from "@/modules/datasource/web-uploader";
 import { toast } from "@/components/ui/use-toast";
 import { Chatbot } from "@/lib/supabase";
 import NotionUploader from "@/modules/datasource/notion-uploader";
+import { formatNumber } from "@/lib/utils";
 
 export function UploadContent({
   showGoBack = false,
@@ -314,28 +315,28 @@ export function UploadContent({
               label: "Text",
               value: "text",
               icon: "fluent:textbox-16-regular",
-              desc: `${text?.content.length || 0} chars`,
+              chars: text?.content.length || 0,
             },
             {
               label: "Files",
               count: docs?.length,
               value: "files",
               icon: "material-symbols:file-copy-outline",
-              desc: `${totalDocChars} chars`,
+              chars: totalDocChars,
             },
             {
               label: "Websites",
               count: urls?.length,
               value: "websites",
               icon: "fluent-mdl2:website",
-              desc: `${totalUrlChars} chars`,
+              chars: totalUrlChars,
             },
             {
               label: "Notion",
               count: notion?.length,
               value: "notion",
               icon: "logos:notion-icon",
-              desc: `${totalNotionChars} chars`,
+              chars: totalNotionChars,
             },
           ].map((item) => (
             <TabsTrigger
@@ -355,7 +356,7 @@ export function UploadContent({
                     item.label
                   )}
                 </span>
-                <small className="text-[10px]">{item.desc}</small>
+                <small className="text-[10px]">{formatNumber(item.chars)} chars</small>
               </div>
             </TabsTrigger>
           ))}

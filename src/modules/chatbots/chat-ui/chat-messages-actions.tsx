@@ -6,6 +6,7 @@ import { CheckIcon, CopyIcon } from "@radix-ui/react-icons";
 
 interface ChatMessageActionsProps extends React.ComponentProps<"div"> {
   message: Message;
+  isUser: boolean;
 }
 
 export function ChatMessageActions({ message, isUser, className, ...props }: ChatMessageActionsProps) {

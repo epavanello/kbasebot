@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Icon } from "@/components/ui/icons";
 import InputNote from "@/components/ui/input-note";
 import { PreviewContent } from "./preview-content";
+import { formatNumber } from "@/lib/utils";
 
 export interface Item<T> {
   id: string;
@@ -43,7 +44,7 @@ export default function ContentList<T>({ items, title, onDelete, onDeleteAll, ty
             <div className="relative flex flex-1 flex-row items-center gap-2">
               <PreviewContent id={item.id} type={type} />
               <Input className="h-8 text-sm" value={item.value} readOnly />
-              <InputNote>{item.chars} chars</InputNote>
+              <InputNote>{formatNumber(item.chars)} chars</InputNote>
             </div>
             {!!item.trained ? (
               <Icon icon="ph:check" className="text-green-500" />

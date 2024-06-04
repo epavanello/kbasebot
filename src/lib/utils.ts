@@ -167,6 +167,28 @@ export const popupCenter = ({ url, title, w, h }) => {
   return newWindow;
 };
 
+export function formatNumber(number: number, decPlaces: number = 0): string {
+  const decFactor = Math.pow(10, decPlaces);
+  const abbrev = ["k", "m", "b", "t"];
+
+  for (let i = abbrev.length - 1; i >= 0; i--) {
+    const size = Math.pow(10, (i + 1) * 3);
+
+    if (size <= number) {
+      let abbreviatedNumber = Math.round((number * decFactor) / size) / decFactor;
+
+      if (abbreviatedNumber === 1000 && i < abbrev.length - 1) {
+        abbreviatedNumber = 1;
+        i++;
+      }
+
+      return `${abbreviatedNumber}${abbrev[i]}`;
+    }
+  }
+
+  return number.toString();
+}
+
 export const NOTION_AUTH_REDIRECT_URL = `${process.env.NEXT_PUBLIC_URL}/auth/notion-connect`;
 
 export const NOTION_AUTH_URL = `${process.env.NEXT_PUBLIC_NOTION_AUTH_URL}${NOTION_AUTH_REDIRECT_URL}`;

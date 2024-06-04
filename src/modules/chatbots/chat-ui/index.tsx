@@ -155,7 +155,7 @@ export default function ChatUi({
         )}
       </div>
       {!!suggested_message?.length && (
-        <div className="no-scrollbar w-full overflow-x-auto border-t pt-2">
+        <div className="custom-scrollbar w-full overflow-x-auto border-t pt-2">
           <div className="flex flex-nowrap justify-start gap-3 px-2">
             {suggested_message.map((item, idx) => (
               <Button
