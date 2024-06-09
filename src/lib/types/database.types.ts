@@ -129,6 +129,45 @@ export type Database = {
           },
         ]
       }
+      chatbot_qa: {
+        Row: {
+          answer: string
+          chatbot_id: string
+          created_at: string
+          id: string
+          question: string
+        }
+        Insert: {
+          answer: string
+          chatbot_id: string
+          created_at?: string
+          id?: string
+          question: string
+        }
+        Update: {
+          answer?: string
+          chatbot_id?: string
+          created_at?: string
+          id?: string
+          question?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_q_and_a_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            isOneToOne: false
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbot_q_and_a_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            isOneToOne: false
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chatbot_settings: {
         Row: {
           chatbot_background: string | null
@@ -387,6 +426,7 @@ export type Database = {
           id: number
           metadata: Json | null
           notion_id: string | null
+          qa_id: string | null
           url_id: string | null
           user_id: string | null
         }
@@ -400,6 +440,7 @@ export type Database = {
           id?: number
           metadata?: Json | null
           notion_id?: string | null
+          qa_id?: string | null
           url_id?: string | null
           user_id?: string | null
         }
@@ -413,6 +454,7 @@ export type Database = {
           id?: number
           metadata?: Json | null
           notion_id?: string | null
+          qa_id?: string | null
           url_id?: string | null
           user_id?: string | null
         }
@@ -464,6 +506,20 @@ export type Database = {
             columns: ["notion_id"]
             isOneToOne: false
             referencedRelation: "chatbot_notion_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_base_q_and_a_id_fkey"
+            columns: ["qa_id"]
+            isOneToOne: false
+            referencedRelation: "chatbot_qa"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "knowledge_base_q_and_a_id_fkey"
+            columns: ["qa_id"]
+            isOneToOne: false
+            referencedRelation: "chatbot_qa_status"
             referencedColumns: ["id"]
           },
           {
@@ -678,6 +734,45 @@ export type Database = {
           },
           {
             foreignKeyName: "chatbot_notion_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            isOneToOne: false
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chatbot_qa_status: {
+        Row: {
+          answer: string | null
+          chatbot_id: string | null
+          id: string | null
+          question: string | null
+          trained: boolean | null
+        }
+        Insert: {
+          answer?: string | null
+          chatbot_id?: string | null
+          id?: string | null
+          question?: string | null
+          trained?: never
+        }
+        Update: {
+          answer?: string | null
+          chatbot_id?: string | null
+          id?: string | null
+          question?: string | null
+          trained?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_q_and_a_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            isOneToOne: false
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbot_q_and_a_chatbot_id_fkey"
             columns: ["chatbot_id"]
             isOneToOne: false
             referencedRelation: "users_chatbots"

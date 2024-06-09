@@ -6,6 +6,7 @@ import {
   STRIPE_PRICE_ID_PRO_YEARLY,
 } from "./env";
 import { PLAN_PERMISSIONS, Plan } from "./permissions/plans";
+import { formatNumber } from "./utils";
 
 export type BillingInterval = "year" | "month";
 
@@ -22,14 +23,27 @@ export interface PlanDetails {
   description?: string;
   priceText?: string;
   prices: Price[];
-  features: { enabled: boolean; feature: string }[];
+  features: { enabled?: boolean; feature: string }[];
   highlight?: boolean;
 }
 
-const commonFeatures = [
-  { enabled: true, feature: "Upload multiple files" },
-  { enabled: true, feature: "View chat history" },
-  { enabled: true, feature: "Embed on your website" },
+function formatValues(value: number) {
+  if (value === -1) return "Unlimited";
+  return formatNumber(value);
+}
+
+const commonFeatures = (plan: Plan) => [
+  { feature: `${formatValues(PLAN_PERMISSIONS[plan].maxChatbots)} Chatbots` },
+  {
+    feature: `${formatValues(PLAN_PERMISSIONS[plan].maxMessages)} messages/month`,
+  },
+  { feature: `${formatValues(PLAN_PERMISSIONS[plan].maxLinksPerChatbot)} links/chatbot` },
+  { feature: `${formatValues(PLAN_PERMISSIONS[plan].maxCharactersToTrain)} characters to train` },
+  { enabled: plan !== Plan.FREE, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)} ✨` },
+  { enabled: PLAN_PERMISSIONS[plan].canCaptureLeads, feature: "Capture leads" },
+  { enabled: PLAN_PERMISSIONS[plan].canIntegrateWebhooks, feature: "Dynamic Webhook integration" },
+  { feature: "View chat history" },
+  { feature: "Embed on your website" },
 ];
 
 export const plans: PlanDetails[] = [
@@ -38,15 +52,7 @@ export const plans: PlanDetails[] = [
     name: "Free",
     priceText: "Start Free",
     prices: [],
-    features: [
-      { enabled: true, feature: "1 Chatbot" },
-      {
-        enabled: true,
-        feature: `${PLAN_PERMISSIONS[Plan.FREE].maxMessages} messages/month`,
-      },
-      { enabled: false, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)}` },
-      ...commonFeatures,
-    ],
+    features: commonFeatures(Plan.FREE),
   },
   {
     id: Plan.BASIC,
@@ -59,18 +65,7 @@ export const plans: PlanDetails[] = [
         unitAmount: 97_90,
       },
     ],
-    features: [
-      {
-        enabled: true,
-        feature: `${PLAN_PERMISSIONS[Plan.BASIC].maxChatbots} Chatbots`,
-      },
-      {
-        enabled: true,
-        feature: `${PLAN_PERMISSIONS[Plan.BASIC].maxMessages / 1000}k messages/month`,
-      },
-      { enabled: false, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)}` },
-      ...commonFeatures,
-    ],
+    features: commonFeatures(Plan.BASIC),
   },
   {
     id: Plan.PRO,
@@ -87,18 +82,7 @@ export const plans: PlanDetails[] = [
         unitAmount: 347_90,
       },
     ],
-    features: [
-      {
-        enabled: true,
-        feature: `${PLAN_PERMISSIONS[Plan.PRO].maxChatbots} Chatbots`,
-      },
-      {
-        enabled: true,
-        feature: `${PLAN_PERMISSIONS[Plan.PRO].maxMessages / 1000}k messages/month`,
-      },
-      { enabled: true, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)} ✨` },
-      ...commonFeatures,
-    ],
+    features: commonFeatures(Plan.PRO),
     highlight: true,
   },
   {
@@ -106,11 +90,6 @@ export const plans: PlanDetails[] = [
     name: "Enterprise",
     priceText: "Let's talk",
     prices: [],
-    features: [
-      { enabled: true, feature: "Unlimited Chatbots" },
-      { enabled: true, feature: "Unlimited messages/month" },
-      { enabled: true, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)} ✨` },
-      ...commonFeatures,
-    ],
+    features: commonFeatures(Plan.ENTERPRISE),
   },
 ];

@@ -6,7 +6,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import DocumentUploader from "@/modules/datasource/doc-uploader";
 import TextSource from "@/modules/datasource/text-source";
-import { IFile, INotion, IUrl, useDatasourceStore } from "@/lib/store/use-datasource-store";
+import { IFile, INotion, IQA, IUrl, useDatasourceStore } from "@/lib/store/use-datasource-store";
 import { MAX_TEXT_INPUT, MIN_TEXT_INPUT } from "@/modules/datasource/docs-constant";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,6 +17,7 @@ import { toast } from "@/components/ui/use-toast";
 import { Chatbot } from "@/lib/supabase";
 import NotionUploader from "@/modules/datasource/notion-uploader";
 import { formatNumber } from "@/lib/utils";
+import QAUploader from "../datasource/qa-uploader";
 
 export function UploadContent({
   showGoBack = false,
@@ -42,13 +43,16 @@ export function UploadContent({
     text,
     urls,
     notion,
+    qas,
     setDocs,
     setText,
     setUrls,
+    setQAs,
     setDocTrained,
     setNotion,
     setNotionTrained,
     setUrlTrained,
+    setQATrained,
     resetDatasource,
     startLoading,
   } = useDatasourceStore((state) => ({
@@ -56,13 +60,16 @@ export function UploadContent({
     text: state.text,
     urls: state.urls,
     notion: state.notion,
+    qas: state.qas,
     setDocs: state.setDocs,
     setText: state.setText,
     setUrls: state.setUrls,
     setNotion: state.setNotion,
+    setQAs: state.setQAs,
     setDocTrained: state.setDocTrained,
     setUrlTrained: state.setUrlTrained,
     setNotionTrained: state.setNotionTrained,
+    setQATrained: state.setQATrained,
     resetDatasource: state.reset,
     startLoading: state.startLoading,
   }));
@@ -155,6 +162,27 @@ export function UploadContent({
                     ),
                   );
                 }),
+              supabase
+                .from("chatbot_qa_status")
+                .select("*")
+                .eq("chatbot_id", externalChatbotId)
+                .then(({ data, error }) => {
+                  if (error) {
+                    console.error(error);
+                    return;
+                  }
+                  setQAs(
+                    data.map(
+                      (item) =>
+                        ({
+                          id: item.id,
+                          question: item.question,
+                          answer: item.answer,
+                          trained: item.trained,
+                        }) as IQA,
+                    ),
+                  );
+                }),
             ]
           : []),
       ])
@@ -172,10 +200,9 @@ export function UploadContent({
   }, [externalChatbotId, supabase]);
 
   const totalDocChars = docs?.reduce((acc, next) => acc + (next.chars || 0), 0) || 0;
-
   const totalUrlChars = urls?.reduce((acc, next) => acc + (next.chars || 0), 0) || 0;
-
   const totalNotionChars = notion?.reduce((acc, next) => acc + (next.chars || 0), 0) || 0;
+  const totalQAChars = qas?.reduce((acc, next) => acc + (next.question.length + next.answer.length), 0) || 0;
 
   const canTrain =
     !loading &&
@@ -183,6 +210,7 @@ export function UploadContent({
     ((docs && docs.filter((doc) => !doc.trained).length > 0) ||
       (urls && urls.filter((url) => !url.trained).length > 0) ||
       (notion && notion.filter((n) => !n.trained).length > 0) ||
+      (qas && qas.filter((qa) => !qa.trained).length > 0) ||
       (text && text.changed && text.content.length >= MIN_TEXT_INPUT && text.content.length < MAX_TEXT_INPUT));
 
   const uploadContent = async (c: Chatbot) => {
@@ -243,6 +271,28 @@ export function UploadContent({
               });
               if (res.status === 200) {
                 setNotionTrained(n);
+              } else {
+                reject(new Error("Training failed"));
+              }
+              resolve();
+            } catch (e) {
+              reject(e);
+            }
+          }),
+        );
+      }
+    }
+
+    for (let qa of qas || []) {
+      if (!qa.trained) {
+        promises.push(
+          new Promise(async (resolve, reject) => {
+            try {
+              const res = await axios.post(uploadPath, {
+                qa: qa.id,
+              });
+              if (res.status === 200) {
+                setQATrained(qa);
               } else {
                 reject(new Error("Training failed"));
               }
@@ -321,22 +371,29 @@ export function UploadContent({
               label: "Files",
               count: docs?.length,
               value: "files",
-              icon: "material-symbols:file-copy-outline",
+              icon: "fa6-regular:file-pdf",
               chars: totalDocChars,
             },
             {
               label: "Websites",
               count: urls?.length,
               value: "websites",
-              icon: "fluent-mdl2:website",
+              icon: "mdi:web",
               chars: totalUrlChars,
             },
             {
               label: "Notion",
               count: notion?.length,
               value: "notion",
-              icon: "logos:notion-icon",
+              icon: "mingcute:notion-fill",
               chars: totalNotionChars,
+            },
+            {
+              label: "Q&A",
+              count: qas?.length,
+              value: "qa",
+              icon: "tabler:messages",
+              chars: totalQAChars,
             },
           ].map((item) => (
             <TabsTrigger
@@ -344,7 +401,7 @@ export function UploadContent({
               key={item.value}
               value={item.value}
             >
-              <Icon icon={item.icon} className="mr-1.5 mt-0.5" />
+              <Icon icon={item.icon} className="mr-1.5 mt-0.5 h-5 w-5" />
               <div className="flex flex-col items-start">
                 <span className="flex flex-row items-center gap-2">
                   {"count" in item ? (
@@ -381,6 +438,11 @@ export function UploadContent({
           {
             Comp: NotionUploader,
             value: "notion",
+            props: { chatbotId: chatbot?.id || "" },
+          },
+          {
+            Comp: QAUploader,
+            value: "qa",
             props: { chatbotId: chatbot?.id || "" },
           },
         ].map((item) => (

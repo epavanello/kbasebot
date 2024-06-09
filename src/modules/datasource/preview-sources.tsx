@@ -2,7 +2,7 @@ import React, { FC, memo, useEffect, useState } from "react";
 import { Icon } from "@/components/ui/icons";
 import { MessageAndSources } from "../chatbots/helpers";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { ChatbotDoc, ChatbotNotion, ChatbotUrl, Chunk, KnowledgeBase } from "@/lib/supabase";
+import { ChatbotDoc, ChatbotNotion, ChatbotQA, ChatbotUrl, Chunk, KnowledgeBase } from "@/lib/supabase";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { PreviewContent } from "./preview-content";
 import { Preview } from "./preview";
@@ -14,6 +14,7 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
   const [urls, setUrls] = useState<ChatbotUrl[]>([]);
   const [docs, setDocs] = useState<ChatbotDoc[]>([]);
   const [notions, setNotions] = useState<ChatbotNotion[]>([]);
+  const [qas, setQAs] = useState<ChatbotQA[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -38,6 +39,7 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
             const urlsIds = data.map((chunk) => chunk.url_id).filter((urlId) => !!urlId) as string[];
             const docsIds = data.map((chunk) => chunk.doc_id).filter((docId) => !!docId) as string[];
             const notionsIds = data.map((chunk) => chunk.notion_id).filter((notionId) => !!notionId) as string[];
+            const qaIds = data.map((chunk) => chunk.qa_id).filter((qaId) => !!qaId) as string[];
 
             Promise.all([
               urlsIds.length > 0
@@ -49,10 +51,14 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
               notionsIds.length > 0
                 ? supabase.from("chatbot_notion").select("*").in("id", notionsIds).throwOnError().abortSignal(ac.signal)
                 : null,
-            ]).then(([urlsData, docsData, notionData]) => {
+              qaIds.length > 0
+                ? supabase.from("chatbot_qa").select("*").in("id", qaIds).throwOnError().abortSignal(ac.signal)
+                : null,
+            ]).then(([urlsData, docsData, notionData, qaData]) => {
               if (urlsData) setUrls(urlsData.data!);
               if (docsData) setDocs(docsData.data!);
               if (notionData) setNotions(notionData.data!);
+              if (qaData) setQAs(qaData.data!);
               setLoading(false);
             });
           }
@@ -73,6 +79,7 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
             const url = urls.find((url) => url.id === chunk.url_id);
             const doc = docs.find((doc) => doc.id === chunk.doc_id);
             const notion = notions.find((notion) => notion.id === chunk.notion_id);
+            const qa = qas.find((qa) => qa.id === chunk.qa_id);
             return (
               <div key={index} className="flex flex-col gap-1 py-4">
                 <p className="flex flex-row text-xs">
@@ -105,6 +112,14 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
                           <p>
                             <PreviewContent data={notion} type="notion" />
                             {notion.name}
+                          </p>
+                        </div>
+                      )) ||
+                      (qa && (
+                        <div className="inline-flex flex-row items-center gap-2">
+                          <p>
+                            <PreviewContent data={qa} type="qa" />
+                            {qa.question}
                           </p>
                         </div>
                       )) ||

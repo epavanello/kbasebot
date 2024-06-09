@@ -17,14 +17,15 @@ interface Props<T> {
   title: string;
   onDelete: (item: Item<T>) => void;
   onDeleteAll?: () => void;
-  type: "url" | "doc" | "notion";
+  type: "url" | "doc" | "notion" | "qa";
 }
 export default function ContentList<T>({ items, title, onDelete, onDeleteAll, type }: Props<T>) {
   return (
-    <div className="max-h-[50vh] w-full overflow-auto border border-dashed bg-secondary p-4">
-      {onDeleteAll && (
-        <div className="flex justify-between gap-4">
-          <h1 className="my-1 text-center font-bold">{title}</h1>
+    <div className="max-h-[50vh] w-full overflow-auto border border-dashed p-4">
+      <div className="flex justify-between gap-4">
+        <h1 className="my-1 text-center font-bold">{title}</h1>
+
+        {onDeleteAll && (
           <Button
             type="button"
             onClick={() => onDeleteAll()}
@@ -35,8 +36,8 @@ export default function ContentList<T>({ items, title, onDelete, onDeleteAll, ty
           >
             <Icon className={"text-md mr-1"} icon={"ph:trash"} /> Delete All
           </Button>
-        </div>
-      )}
+        )}
+      </div>
 
       <ul className="flex flex-col gap-2 overflow-y-auto p-2">
         {items.map((item) => (
@@ -58,6 +59,13 @@ export default function ContentList<T>({ items, title, onDelete, onDeleteAll, ty
             </Button>
           </li>
         ))}
+        {!items.length && (
+          <li className="flex flex-row items-center gap-2">
+            <div className="relative flex flex-1 flex-row items-center gap-2">
+              <p className="text-sm text-gray-500">No content found</p>
+            </div>
+          </li>
+        )}
       </ul>
     </div>
   );

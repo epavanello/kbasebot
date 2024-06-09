@@ -10,29 +10,50 @@ export enum Plan {
 export type Permissions = {
   maxChatbots: number;
   maxMessages: number;
+  // TODO: Limit the number of links per chatbot
+  maxLinksPerChatbot: number;
   maxCharactersToTrain: number;
+  // TODO: Check if the user can capture leads
+  canCaptureLeads: boolean;
+  // TODO: Check if the user can integrate webhooks
+  canIntegrateWebhooks: boolean;
 };
+
+// 0.025$ per gpt-4o message
+// 0.003$ per gpt-3-5 message
 
 export const PLAN_PERMISSIONS: Record<Plan, Permissions> = {
   [Plan.FREE]: {
     maxChatbots: 1,
     maxMessages: 500,
-    maxCharactersToTrain: 500_000,
+    maxLinksPerChatbot: 50,
+    maxCharactersToTrain: 50_000,
+    canCaptureLeads: false,
+    canIntegrateWebhooks: false,
   },
   [Plan.BASIC]: {
-    maxChatbots: 5,
-    maxMessages: 10_000,
-    maxCharactersToTrain: 800_000,
+    maxChatbots: 2,
+    maxMessages: 2_000,
+    maxLinksPerChatbot: 1_000,
+    maxCharactersToTrain: 10_000_000,
+    canCaptureLeads: true,
+    canIntegrateWebhooks: false,
   },
   [Plan.PRO]: {
-    maxChatbots: 20,
-    maxMessages: 20_000,
+    maxChatbots: 5,
+    maxMessages: 10_000,
+    maxLinksPerChatbot: 10_000,
     maxCharactersToTrain: 5_000_000,
+    canCaptureLeads: true,
+    canIntegrateWebhooks: true,
   },
   [Plan.ENTERPRISE]: {
-    maxChatbots: 0,
-    maxMessages: 0,
-    maxCharactersToTrain: 0,
+    maxChatbots: -1,
+    maxMessages: -1,
+    maxLinksPerChatbot: -1,
+    maxCharactersToTrain: -1,
+    canCaptureLeads: true,
+    canIntegrateWebhooks: true,
   },
 };
 

@@ -30,9 +30,9 @@ const features: { icon: string; title: string; desc: string }[] = [
     desc: "KBaseBot can log all conversations, and you can view them.",
   },
   {
-    icon: "octicon:law-16",
-    title: "GDPR Compliant",
-    desc: "KBaseBot is GDPR compliant, and you can delete all data.",
+    icon: "gravity-ui:database-arrow-right",
+    title: "Dynamic Webhook Integration",
+    desc: "KBaseBot can call webhooks with user sessions, providing dynamic responses.",
   },
 ];
 

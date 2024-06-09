@@ -22,6 +22,7 @@ export async function POST(req: NextRequest) {
       text?: string;
       url?: string;
       notion?: string;
+      qa?: string;
     } = await req.json();
 
     const chatbot_id = req.nextUrl.searchParams.get("chatbot_id");
@@ -30,9 +31,11 @@ export async function POST(req: NextRequest) {
       throw new Error("chatbot-id-not-found");
     }
 
-    const { file = "", text = "", url = "", notion = "" } = body;
+    const { file = "", text = "", url = "", notion = "", qa = "" } = body;
 
-    if (!file.length && !text.length && !url.length && !notion.length) throw new Error("no-datasource-found");
+    if (!file.length && !text.length && !url.length && !notion.length && !qa.length) {
+      throw new Error("no-content-found");
+    }
 
     const supabaseServerClient = createRouteHandlerClient<Database>({
       cookies,
@@ -74,6 +77,7 @@ export async function POST(req: NextRequest) {
         .is("file_name", null)
         .is("doc_id", null)
         .is("notion_id", null)
+        .is("qa_id", null)
         .throwOnError();
 
       documentCollection.push(await loadText(text));
@@ -138,6 +142,23 @@ export async function POST(req: NextRequest) {
       knowledgeBaseRef = {
         ...knowledgeBaseRef,
         notion_id: chatbotNotion.id,
+      };
+    } else if (qa) {
+      const chatbotQA = (
+        await supabaseServerClient
+          .from("chatbot_qa")
+          .select()
+          .eq("chatbot_id", chatbot_id)
+          .eq("id", qa)
+          .single()
+          .throwOnError()
+      ).data!;
+
+      documentCollection.push(await loadText(chatbotQA.question + "\n\n" + chatbotQA.answer));
+
+      knowledgeBaseRef = {
+        ...knowledgeBaseRef,
+        qa_id: chatbotQA.id,
       };
     }
 

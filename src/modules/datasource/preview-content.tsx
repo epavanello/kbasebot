@@ -2,7 +2,7 @@ import React, { FC, memo, useEffect, useState } from "react";
 import { Icon } from "@/components/ui/icons";
 import { MessageAndSources } from "../chatbots/helpers";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { ChatbotDoc, ChatbotNotion, ChatbotUrl, Chunk, KnowledgeBase } from "@/lib/supabase";
+import { ChatbotDoc, ChatbotNotion, ChatbotQA, ChatbotUrl, Chunk, KnowledgeBase } from "@/lib/supabase";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { Preview } from "./preview";
 
@@ -23,6 +23,10 @@ export type PreviewSourcesProps = {
       type: "notion";
       data?: ChatbotNotion;
     }
+  | {
+      type: "qa";
+      data?: ChatbotQA;
+    }
 );
 
 export const PreviewContent = ({ data, type, id }: PreviewSourcesProps) => {
@@ -32,6 +36,7 @@ export const PreviewContent = ({ data, type, id }: PreviewSourcesProps) => {
   const [url, setUrl] = useState<ChatbotUrl | null>();
   const [doc, setDoc] = useState<ChatbotDoc | null>();
   const [notion, setNotion] = useState<ChatbotNotion | null>();
+  const [qa, setQA] = useState<ChatbotQA | null>();
 
   useEffect(() => {
     if (open) {
@@ -45,6 +50,9 @@ export const PreviewContent = ({ data, type, id }: PreviewSourcesProps) => {
             break;
           case "notion":
             setNotion(data as ChatbotNotion);
+            break;
+          case "qa":
+            setQA(data as ChatbotQA);
             break;
         }
       } else if (id) {
@@ -82,6 +90,17 @@ export const PreviewContent = ({ data, type, id }: PreviewSourcesProps) => {
                 setNotion(data);
               });
             break;
+          case "qa":
+            supabase
+              .from("chatbot_qa")
+              .select("*")
+              .eq("id", id)
+              .maybeSingle()
+              .throwOnError()
+              .then(({ data }) => {
+                setQA(data);
+              });
+            break;
         }
       }
     }
@@ -101,6 +120,14 @@ export const PreviewContent = ({ data, type, id }: PreviewSourcesProps) => {
       )}
       {notion && (
         <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">{notion.content}</pre>
+      )}
+      {qa && (
+        <>
+          <label className="text-xs font-bold">Question</label>
+          <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">{qa.question}</pre>
+          <label className="text-xs font-bold">Answer</label>
+          <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">{qa.answer}</pre>
+        </>
       )}
     </Preview>
   );

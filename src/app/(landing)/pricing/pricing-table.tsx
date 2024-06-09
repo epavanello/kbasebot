@@ -175,10 +175,10 @@ export default function PricingTable() {
                             {!!features.length &&
                               features.map((item, i) => (
                                 <li key={i} className="flex items-center gap-1 text-sm">
-                                  {item.enabled ? (
-                                    <CheckCircle2 className="h-4 w-4 text-green-500" />
-                                  ) : (
+                                  {item.enabled === false ? (
                                     <XCircle className="h-4 w-4 text-destructive" />
+                                  ) : (
+                                    <CheckCircle2 className="h-4 w-4 text-green-500" />
                                   )}
                                   {item.feature}
                                 </li>

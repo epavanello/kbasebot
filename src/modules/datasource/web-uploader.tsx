@@ -69,7 +69,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
           <TabsTrigger value="fromSitemap">Load from Sitemap</TabsTrigger>
         </TabsList>
         <TabsContent value="fromUrl">
-          <div className="flex w-full max-w-lg items-center space-x-2">
+          <div className="flex w-full items-center space-x-2">
             <Input onChange={(e) => setUrl(e.target.value)} type="url" placeholder="Url" />
             <Button disabled={loading} loading={loading} className="w-64" onClick={() => addLink("crawl")}>
               Get all links
@@ -77,7 +77,7 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
           </div>
         </TabsContent>
         <TabsContent value="singleUrl">
-          <div className="flex w-full max-w-lg items-center space-x-2">
+          <div className="flex w-full items-center space-x-2">
             <Input onChange={(e) => setUrl(e.target.value)} type="url" placeholder="Url" />
             <Button disabled={loading} loading={loading} className="w-64" onClick={() => addLink("url")}>
               Load single url
@@ -85,8 +85,8 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
           </div>
         </TabsContent>
         <TabsContent value="fromSitemap">
-          <div className="flex w-full max-w-lg items-center space-x-2">
-            <Input onChange={(e) => setUrl(e.target.value)} type="url" placeholder="Sitemap Url" />
+          <div className="flex w-full items-center space-x-2">
+            <Input onChange={(e) => setUrl(e.target.value)} value={url} type="url" placeholder="Sitemap Url" />
             <Button disabled={loading} loading={loading} className="w-64" onClick={() => addLink("sitemap")}>
               Load from sitemap
             </Button>
