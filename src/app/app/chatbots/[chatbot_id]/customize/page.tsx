@@ -19,7 +19,7 @@ const Customize = async ({ params }: CustomizeProps) => {
 
   return (
     <DashboardShell className="container mx-auto max-w-2xl">
-      <DashboardHeader heading={"Customize"} />
+      <DashboardHeader heading="Customize your chatbot" text="Here you can customize your chatbot" />
 
       <CustomizeForm chatbotId={chatbot_id} settings={settings} />
     </DashboardShell>

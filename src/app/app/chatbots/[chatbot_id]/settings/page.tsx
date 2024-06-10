@@ -27,7 +27,7 @@ import { Chatbot, Conversation } from "@/lib/supabase";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plan } from "@/lib/permissions/plans";
+import { getPermissions } from "@/lib/permissions/plans";
 import { GPTModel, GPTModels, prettifyGPTModelName } from "@/modules/chatbots/helpers";
 import { Textarea } from "@/components/ui/textarea";
 import InputNote from "@/components/ui/input-note";
@@ -39,6 +39,7 @@ import LeadsSettings from "@/app/app/chatbots/[chatbot_id]/settings/leads-settin
 const Settings = () => {
   const [chatbot, setChatbot] = useState<(Chatbot & { conversations: Conversation[] }) | null>(null);
   const { supabase, subscription } = useSupabaseAuth();
+  const { permission } = getPermissions(subscription);
   const router = useRouter();
   const { toast } = useToast();
   const { chatbot_id } = useParams();
@@ -48,7 +49,7 @@ const Settings = () => {
   const basicContext = useMemo(
     () =>
       templates.defaultContext({
-        model: prettifyGPTModelName(chatbot?.model || ""),
+        model: prettifyGPTModelName((chatbot?.model as GPTModel) || ""),
       }),
     [chatbot?.model],
   );
@@ -169,7 +170,7 @@ const Settings = () => {
                       <SelectItem value={GPTModel.GPT_3_5_Turbo}>
                         {prettifyGPTModelName(GPTModel.GPT_3_5_Turbo)}
                       </SelectItem>
-                      <SelectItem value={GPTModel.GPT_4o} disabled={subscription?.plan !== Plan.PRO}>
+                      <SelectItem value={GPTModel.GPT_4o} disabled={!permission.canUseGPT4o}>
                         {prettifyGPTModelName(GPTModel.GPT_4o)}
                       </SelectItem>
                     </SelectContent>

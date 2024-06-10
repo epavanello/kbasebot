@@ -46,6 +46,11 @@ export const menus = {
       icon: "material-symbols:source-notes-outline-sharp",
     },
     {
+      title: "Customize",
+      href: `/app/chatbots/${chatbotId}/customize`,
+      icon: "clarity:design-line",
+    },
+    {
       title: "Conversations",
       href: `/app/chatbots/${chatbotId}/conversations`,
       icon: "jam:messages-alt",
@@ -59,9 +64,12 @@ export const menus = {
       },
     },
     {
-      title: "Customize",
-      href: `/app/chatbots/${chatbotId}/customize`,
-      icon: "clarity:design-line",
+      title: "Functions",
+      href: `/app/chatbots/${chatbotId}/functions`,
+      icon: "material-symbols:webhook",
+      status: {
+        text: "New",
+      },
     },
     {
       title: "Analytics",

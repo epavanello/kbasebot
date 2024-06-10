@@ -81,13 +81,13 @@ export async function POST(req: NextRequest) {
 
     const ownerSubscription = await getSubscription(supabaseAdminClient, ownerId);
 
-    const permission = getPermissions(ownerSubscription);
+    const { permission, plan } = getPermissions(ownerSubscription);
 
-    if (!GPTModels.includes(model as GPTModel) || permission.plan === "free") {
+    if (!GPTModels.includes(model as GPTModel) || plan === "free") {
       model = GPTModel.GPT_3_5_Turbo;
     }
 
-    if ((await countMonthlyConversationUsage(supabaseAdminClient, ownerId)) > permission.permission.maxMessages) {
+    if ((await countMonthlyConversationUsage(supabaseAdminClient, ownerId)) > permission.maxMessages) {
       throw new Error("The chatbot has reached the monthly limit");
     }
 
@@ -163,6 +163,30 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Load chatbot functions
+    const userFunctions = (
+      (await supabaseAdminClient.from("chatbot_functions").select("*").eq("chatbot_id", chatbotId).throwOnError())
+        .data || []
+    ).filter((f) => f.enabled);
+    if (userFunctions && permission.canIntegrateWebhooks) {
+      userFunctions.forEach((f) => {
+        functions.push({
+          name: f.name,
+          description: f.description,
+          parameters: {
+            type: "object",
+            properties: (f.parameters as { name: string; type: string }[]).reduce(
+              (acc, param) => {
+                acc[param.name] = { type: param.type };
+                return acc;
+              },
+              {} as Record<string, { type: string }>,
+            ),
+          },
+        });
+      });
+    }
+
     const config = new Configuration({
       apiKey: OPENAI_API_KEY,
       basePath: "https://oai.hconeai.com/v1",
@@ -187,6 +211,16 @@ export async function POST(req: NextRequest) {
       max_tokens: tokenLimits.response,
       ...(functions.length && { functions }),
     });
+
+    if (!response.ok) {
+      // check if JSON response is available
+      try {
+        const json = await response.json();
+        throw new Error(json.error.message || response.statusText);
+      } catch {
+        throw new Error(response.statusText);
+      }
+    }
 
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response, {
@@ -219,6 +253,45 @@ export async function POST(req: NextRequest) {
             messages: [...messages, ...(newMessages as ChatCompletionRequestMessage[])],
             max_tokens: tokenLimits.response,
           });
+        } else {
+          const functionCall = userFunctions?.find((f) => f.name === name);
+          if (functionCall) {
+            try {
+              const functionResponse = await fetch(functionCall.webhook, {
+                method: "POST",
+                body: JSON.stringify(args),
+              });
+
+              if (!functionResponse.ok) {
+                throw new Error(`Function call failed with status ${functionResponse.status}`);
+              }
+
+              const response = await functionResponse.json();
+              const newMessages = createFunctionCallMessages(response);
+
+              return openai.createChatCompletion({
+                model,
+                stream: true,
+                messages: [...messages, ...(newMessages as ChatCompletionRequestMessage[])],
+                max_tokens: tokenLimits.response,
+              });
+            } catch (e) {
+              console.error("Function call failed", e);
+
+              return openai.createChatCompletion({
+                model,
+                stream: true,
+                messages: [
+                  ...messages,
+                  {
+                    role: "system",
+                    content: `Function call failed: ${e.message}`,
+                  },
+                ],
+                max_tokens: tokenLimits.response,
+              });
+            }
+          }
         }
       },
     });

@@ -126,6 +126,7 @@ export default function ChatUi({
       top: chatArea?.current.scrollHeight,
       behavior: "smooth",
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages.length, messages.at(-1)?.content.split("\n").length]);
 
   return (

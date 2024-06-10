@@ -15,6 +15,7 @@ export type ChatbotNotion = Database["public"]["Tables"]["chatbot_notion"]["Row"
 export type ChatbotQA = Database["public"]["Tables"]["chatbot_qa"]["Row"];
 export type Conversation = Database["public"]["Tables"]["conversations"]["Row"];
 export type Chunk = Database["public"]["Functions"]["match_documents"]["Returns"][0];
+export type ChatbotFunction = Database["public"]["Tables"]["chatbot_functions"]["Row"];
 
 export function isPaidUser(subscription: Subscription | null) {
   if (!subscription || !subscription.current_period_end) {

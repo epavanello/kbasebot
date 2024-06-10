@@ -32,7 +32,7 @@ const PublicChatUiFull = ({
         }
       });
     }
-  }, [externalSettings]);
+  }, [chatbot_id, externalSettings]);
 
   return (
     settings && (

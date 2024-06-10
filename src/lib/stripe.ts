@@ -39,9 +39,9 @@ const commonFeatures = (plan: Plan) => [
   },
   { feature: `${formatValues(PLAN_PERMISSIONS[plan].maxLinksPerChatbot)} links/chatbot` },
   { feature: `${formatValues(PLAN_PERMISSIONS[plan].maxCharactersToTrain)} characters to train` },
-  { enabled: plan !== Plan.FREE, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)} ✨` },
-  { enabled: PLAN_PERMISSIONS[plan].canCaptureLeads, feature: "Capture leads" },
+  { enabled: PLAN_PERMISSIONS[plan].canUseGPT4o, feature: `${prettifyGPTModelName(GPTModel.GPT_4o)} ✨` },
   { enabled: PLAN_PERMISSIONS[plan].canIntegrateWebhooks, feature: "Dynamic Webhook integration" },
+  { enabled: PLAN_PERMISSIONS[plan].canCaptureLeads, feature: "Capture leads" },
   { feature: "View chat history" },
   { feature: "Embed on your website" },
 ];

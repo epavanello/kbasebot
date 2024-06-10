@@ -84,6 +84,54 @@ export type Database = {
           },
         ]
       }
+      chatbot_functions: {
+        Row: {
+          chatbot_id: string
+          created_at: string
+          description: string
+          enabled: boolean
+          id: string
+          name: string
+          parameters: Json[]
+          webhook: string
+        }
+        Insert: {
+          chatbot_id: string
+          created_at?: string
+          description: string
+          enabled?: boolean
+          id?: string
+          name: string
+          parameters: Json[]
+          webhook: string
+        }
+        Update: {
+          chatbot_id?: string
+          created_at?: string
+          description?: string
+          enabled?: boolean
+          id?: string
+          name?: string
+          parameters?: Json[]
+          webhook?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_functions_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            isOneToOne: false
+            referencedRelation: "chatbots"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chatbot_functions_chatbot_id_fkey"
+            columns: ["chatbot_id"]
+            isOneToOne: false
+            referencedRelation: "users_chatbots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chatbot_notion: {
         Row: {
           chars: number
