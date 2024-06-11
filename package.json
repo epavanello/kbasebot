@@ -69,6 +69,7 @@
     "cmdk": "^0.2.0",
     "cohere-ai": "^6.2.2",
     "contentlayer": "^0.3.4",
+    "d3-dsv": "^3.0.1",
     "date-fns": "^2.30.0",
     "dotenv-expand": "^10.0.0",
     "encoding": "^0.1.13",
