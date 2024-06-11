@@ -101,7 +101,11 @@ export default function ChatUi({
       chatbotId: chatbot_id,
     },
     headers: {
-      "X-Auth-Token": authToken || "",
+      ...(authToken
+        ? {
+            "X-Auth-Token": authToken,
+          }
+        : {}),
     },
     async onResponse(response) {
       if (response.status !== 200) {
