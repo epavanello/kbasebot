@@ -34,7 +34,17 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
           if (error) console.error(error);
 
           if (data) {
-            setChunks(data.map((chunk) => chunk));
+            // set chunks sorted by similarity
+            setChunks(
+              data
+                .map((chunk) => chunk)
+                .sort((a, b) => {
+                  const sourceA = messageWithSources.sources?.find((source) => source.id === a.id);
+                  const sourceB = messageWithSources.sources?.find((source) => source.id === b.id);
+                  return (sourceB?.similarity || 0) - (sourceA?.similarity || 0);
+                })
+                .filter((chunk) => chunk.content),
+            );
 
             const urlsIds = data.map((chunk) => chunk.url_id).filter((urlId) => !!urlId) as string[];
             const docsIds = data.map((chunk) => chunk.doc_id).filter((docId) => !!docId) as string[];
@@ -85,7 +95,11 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
                 <p className="flex flex-row text-xs">
                   <span className="font-semibold">Similarity:&nbsp;</span>
                   <span>
-                    {(messageWithSources.sources || []).find((source) => source.id === chunk.id)?.similarity || 0}
+                    {(
+                      ((messageWithSources.sources || []).find((source) => source.id === chunk.id)?.similarity || 0) *
+                      100
+                    ).toFixed(2)}
+                    %
                   </span>
                 </p>
                 <p className="flex flex-row text-xs">

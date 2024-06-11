@@ -77,7 +77,7 @@ const LeadsSettings = () => {
         )}
       </CardHeader>
       <CardContent className="flex flex-col gap-6">
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-4 md:flex-row">
           {LEADS_FIELDS.map((item) => {
             const isActive = !!leadValues[item.field];
 

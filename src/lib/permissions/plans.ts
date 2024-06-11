@@ -52,11 +52,11 @@ export const PLAN_PERMISSIONS: Record<Plan, UserPermissions> = {
     canIntegrateWebhooks: true,
   },
   [Plan.ENTERPRISE]: {
-    maxChatbots: -1,
-    maxMessages: -1,
+    maxChatbots: -1, // Unlimited
+    maxMessages: -1, // Unlimited
     canUseGPT4o: true,
-    maxLinksPerChatbot: -1,
-    maxCharactersToTrain: -1,
+    maxLinksPerChatbot: -1, // Unlimited
+    maxCharactersToTrain: -1, // Unlimited
     canCaptureLeads: true,
     canIntegrateWebhooks: true,
   },
