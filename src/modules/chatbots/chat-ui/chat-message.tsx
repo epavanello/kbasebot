@@ -9,6 +9,7 @@ import React from "react";
 import { MessageAndSources } from "../helpers";
 import { Icon } from "@/components/ui/icons";
 import { PreviewSources } from "@/modules/datasource/preview-sources";
+import { IConversationSpeaker } from "@/lib/types/common.types";
 
 export interface ChatMessageProps {
   message: MessageAndSources;
@@ -17,7 +18,22 @@ export interface ChatMessageProps {
 }
 
 export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMessageProps) {
-  const isUser = message.role === "user";
+  const isUser = message.role === IConversationSpeaker.User;
+  const isAssistant = message.role === IConversationSpeaker.Assistant;
+  const isFunctionRequest = message.role === IConversationSpeaker.Function;
+  if (!isUser && !isAssistant && !isFunctionRequest) {
+    return null;
+  }
+  if (isFunctionRequest) {
+    return (
+      <div className={cn("mb-2")} {...props}>
+        <p className="text-xs">
+          Function request:&nbsp;
+          <span className="font-bold capitalize">{message.content.split(/[^a-zA-Z0-9À-ž]+/).join(" ")}</span>
+        </p>
+      </div>
+    );
+  }
   return (
     <div className={cn("relative flex w-full flex-col items-stretch gap-1")} {...props}>
       <div

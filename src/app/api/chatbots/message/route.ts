@@ -226,8 +226,8 @@ export async function POST(req: NextRequest) {
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response, {
       async onCompletion(result) {
-        // check if result is a stringfied JSON, if yes skip the addEntry
         try {
+          // Skip json responses
           JSON.parse(result);
           return;
         } catch {}
@@ -272,6 +272,16 @@ export async function POST(req: NextRequest) {
               }
 
               const response = await functionResponse.json();
+
+              await conversationLog.addEntry({
+                entry: name,
+                speaker: IConversationSpeaker.Function,
+                metadata: {
+                  arguments: args,
+                  response,
+                },
+              });
+
               const newMessages = createFunctionCallMessages(response);
 
               return openai.createChatCompletion({
@@ -290,7 +300,7 @@ export async function POST(req: NextRequest) {
                   ...messages,
                   {
                     role: "system",
-                    content: `Function call failed: ${e.message}`,
+                    content: `Function call failed: ${getErrorMessage(e)}`,
                   },
                 ],
                 max_tokens: tokenLimits.response,

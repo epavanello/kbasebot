@@ -19,7 +19,8 @@ export type Source = {
 
 export type MessageAndSources = {
   sources?: Source[];
-} & Message;
+  role: IConversationSpeaker;
+} & Omit<Message, "role">;
 
 export const convesationLogToInitialMessages = (
   conv: Pick<Conversation, "speaker" | "entry" | "created_at" | "id" | "sources">[] | null,

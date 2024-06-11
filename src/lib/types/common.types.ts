@@ -10,4 +10,5 @@ export enum IConversationSpeaker {
   System = "system",
   User = "user",
   Assistant = "assistant",
+  Function = "function",
 }
