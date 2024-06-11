@@ -21,7 +21,7 @@ export function ChatPanel({
 }: ChatPanelProps) {
   return (
     <div>
-      <div className="mx-auto sm:max-w-2xl sm:px-4">
+      <div className="mx-auto sm:max-w-2xl">
         <PromptForm
           onSubmit={async (value) => {
             await append({
