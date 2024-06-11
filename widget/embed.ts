@@ -10,6 +10,7 @@ const img = document.createElement("img");
 const currentScript = document.currentScript as HTMLScriptElement;
 const scriptURL = currentScript.src;
 const chatbot_id = new URL(scriptURL).searchParams.get("chatbot_id") || currentScript.getAttribute("data-chatbot-id");
+const authToken = currentScript.getAttribute("data-auth-token");
 const containterSelector = currentScript.getAttribute("data-container");
 
 if (!chatbot_id) {
@@ -71,6 +72,17 @@ function openChatbot() {
   if (!iframe.src) {
     // set the src of the iframe to the chatbot url
     iframe.src = `${process.env.NEXT_PUBLIC_URL}/c/${chatbot_id}`;
+    if (authToken) {
+      iframe.onload = () => {
+        iframe.contentWindow?.postMessage(
+          {
+            type: "auth",
+            token: authToken,
+          },
+          `${process.env.NEXT_PUBLIC_URL}`,
+        );
+      };
+    }
   }
 
   iframe.style.display = "block";

@@ -29,6 +29,7 @@ export interface ChatProps extends React.ComponentProps<"div"> {
   chatbotLogo?: string;
   resetOnIncrement?: number;
   externalConversationID?: string;
+  authToken?: string;
 }
 
 export default function ChatUi({
@@ -41,6 +42,7 @@ export default function ChatUi({
   chatbotLogo,
   chatbot_id,
   resetOnIncrement,
+  authToken,
 }: ChatProps) {
   const { toast } = useToast();
 
@@ -97,6 +99,9 @@ export default function ChatUi({
     body: {
       conversationId: conversation_id,
       chatbotId: chatbot_id,
+    },
+    headers: {
+      "X-Auth-Token": authToken || "",
     },
     async onResponse(response) {
       if (response.status !== 200) {

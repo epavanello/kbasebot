@@ -13,6 +13,7 @@ import Link from "next/link";
 import { getPermissions } from "@/lib/permissions/plans";
 import { useChatbots } from "@/lib/hooks/use-chatbots";
 import { countMonthlyConversationUsage } from "@/lib/supabase";
+import { formatNumber } from "@/lib/utils";
 
 const Page = () => {
   const { subscription, plan, user, supabase } = useSupabaseAuth();
@@ -119,7 +120,7 @@ const Page = () => {
               Chatbot created: {chatbots.length} / {permission.maxChatbots}
             </div>
             <div className="text-sm font-semibold text-gray-600">
-              Messages/month: {messagesCount} / {permission.maxMessages}
+              Messages/month: {formatNumber(messagesCount)} / {formatNumber(permission.maxMessages)}
             </div>
           </CardContent>
           <CardContent>

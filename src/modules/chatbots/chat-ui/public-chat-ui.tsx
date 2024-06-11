@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ChatUi from "@/modules/chatbots/chat-ui";
 import { Icon } from "@/components/ui/icons";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
@@ -36,7 +36,8 @@ const PublicChatUi = ({
     chatbot_logo,
   } = settings || {};
 
-  const [resetOnIncrement, setResetOnIncrement] = React.useState(0);
+  const [resetOnIncrement, setResetOnIncrement] = useState(0);
+  const [authToken, setAuthToken] = useState("");
 
   const { setTheme } = useTheme();
 
@@ -44,7 +45,21 @@ const PublicChatUi = ({
     if (forceTheme) {
       setTheme(theme || "light");
     }
-  }, [forceTheme, theme]);
+  }, [forceTheme, setTheme, theme]);
+
+  useEffect(() => {
+    const onMessage = (event: MessageEvent) => {
+      // check event.origin
+      if (event.type === "auth") {
+        setAuthToken(event.data.auth);
+      }
+    };
+    window.addEventListener("message", onMessage);
+
+    return () => {
+      window.removeEventListener("message", onMessage);
+    };
+  }, []);
 
   const onCloseCallback =
     onClose ||
@@ -95,6 +110,7 @@ const PublicChatUi = ({
         chatbotLogo={chatbot_logo || undefined}
         chatbot_id={chatbot_id}
         resetOnIncrement={resetOnIncrement}
+        authToken={authToken}
       />
       <footer className="shrink-0 border-t bg-accent px-4 py-2">
         <div className="flex items-center justify-center gap-1.5">

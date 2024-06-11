@@ -30,3 +30,8 @@ Suggested questions:
 What is KBaseBot?
 What is KBaseBot used for?
 What is KBaseBot's pricing?
+
+Track messages with models (20x per gpt4)
+Check count for chatbot deletion
+Conunting/show and limit max chatacters training
+Support refresh reload url

@@ -55,10 +55,6 @@ const Share = ({ params }) => {
    frameBorder="0">
 </iframe>`;
 
-  const scriptTag = `<script async data-chatbot-id="${chatbot_id}"
-src="${NEXT_PUBLIC_URL}/embed.js">
-</script>`;
-
   return (
     <DashboardShell className="container max-w-2xl">
       <DashboardHeader heading={"Share"} />
@@ -67,7 +63,23 @@ src="${NEXT_PUBLIC_URL}/embed.js">
         <CardBlock
           title={"Add to your website"}
           desc={"Paste this code to the end of the body of your website"}
-          code={scriptTag}
+          code={`
+<script 
+        async 
+        data-chatbot-id="${chatbot_id}" 
+        src="${NEXT_PUBLIC_URL}/embed.js">
+</script>`.trim()}
+        />
+        <CardBlock
+          title={"Add to your website with user authentication"}
+          desc={"Paste this code to the end of the body of your website"}
+          code={`
+<script 
+        async 
+        data-chatbot-id="${chatbot_id}" 
+        data-auth-token="YOUR_AUTH_TOKEN"
+        src="${NEXT_PUBLIC_URL}/embed.js">
+</script>`.trim()}
         />
         <CardBlock
           title={"Share your chatbot"}

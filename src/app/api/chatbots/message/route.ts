@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
     const { messages: clientMessages, conversationId, chatbotId } = await req.json();
 
     const ip = req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for") || req.ip;
+    const authTokens = req.headers.get("X-Auth-Token");
 
     if (!conversationId) {
       throw new Error("conversationId is required");
@@ -260,6 +261,10 @@ export async function POST(req: NextRequest) {
               const functionResponse = await fetch(functionCall.webhook, {
                 method: "POST",
                 body: JSON.stringify(args),
+                headers: {
+                  "Content-Type": "application/json",
+                  ...(authTokens && { Authorization: authTokens }),
+                },
               });
 
               if (!functionResponse.ok) {

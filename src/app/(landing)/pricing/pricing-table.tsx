@@ -14,6 +14,8 @@ let tabs: { id: BillingInterval; label: string }[] = [
   { id: "year", label: "Year" },
 ];
 
+// TODO enable SSR
+
 export default function PricingTable() {
   const { subscription } = useSupabaseAuth();
   const [billingInterval, setBillingInterval] = useState<BillingInterval>(tabs[0].id);
