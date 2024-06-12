@@ -83,6 +83,8 @@ export default function ChatUi({
     },
   );
 
+  console.log({ conversations });
+
   const [responseIsStarted, setResponseIsStarted] = React.useState(false);
 
   const {
@@ -95,7 +97,7 @@ export default function ChatUi({
     setInput,
   } = useChat({
     api: "/api/chatbots/message",
-    id: conversation_id,
+    id: `${chatbot_id}-${conversation_id}`,
     body: {
       conversationId: conversation_id,
       chatbotId: chatbot_id,
