@@ -10,14 +10,16 @@ import { MessageAndSources } from "../helpers";
 import { Icon } from "@/components/ui/icons";
 import { PreviewSources } from "@/modules/datasource/preview-sources";
 import { IConversationSpeaker } from "@/lib/types/common.types";
+import { Preview } from "@/modules/datasource/preview";
 
 export interface ChatMessageProps {
   message: MessageAndSources;
   chatbotLogo?: string;
   children?: React.ReactNode;
+  debug?: boolean;
 }
 
-export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMessageProps) {
+export function ChatMessage({ message, chatbotLogo, children, debug, ...props }: ChatMessageProps) {
   const isUser = message.role === IConversationSpeaker.User;
   const isAssistant = message.role === IConversationSpeaker.Assistant;
   const isFunctionRequest = message.role === IConversationSpeaker.Function;
@@ -25,10 +27,22 @@ export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMe
     return null;
   }
   if (isFunctionRequest) {
+    if (!debug) {
+      return null;
+    }
     return (
       <div className={cn("mb-2")} {...props}>
         <p className="text-xs">
-          Function request:&nbsp;
+          <span>
+            <Preview icon="material-symbols:info-outline" iconClassName="inline-block mr-1">
+              <pre>
+                Request: {message.content}({JSON.stringify(message.metadata?.arguments)})
+                <br />
+                Response: {JSON.stringify(message.metadata?.response)}
+              </pre>
+            </Preview>
+            Function request:&nbsp;
+          </span>
           <span className="font-bold capitalize">{message.content.split(/[^a-zA-Z0-9À-ž]+/).join(" ")}</span>
         </p>
       </div>
@@ -55,7 +69,7 @@ export function ChatMessage({ message, chatbotLogo, children, ...props }: ChatMe
         })}
       >
         <div className="relative inline-block">
-          {message.sources && <PreviewSources messageWithSources={message} />}
+          {debug && message.sources && <PreviewSources messageWithSources={message} />}
           {children ? (
             <div
               className={cn(

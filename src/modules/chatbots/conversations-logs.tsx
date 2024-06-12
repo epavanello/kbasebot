@@ -73,7 +73,7 @@ const ConversationsLogs = ({
       <section className="flex h-full flex-1 flex-col overflow-auto p-4" ref={chatArea}>
         {!!conversations?.length && (
           <>
-            <ChatList messages={convesationLogToInitialMessages(conversations)} />
+            <ChatList messages={convesationLogToInitialMessages(conversations)} debug />
             <ChatScrollAnchor trackVisibility={isDataLoading} area={chatArea} />
           </>
         )}

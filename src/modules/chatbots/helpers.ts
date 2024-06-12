@@ -3,6 +3,7 @@ import { IConversationSpeaker } from "@/lib/types/common.types";
 import { Conversation } from "@/lib/supabase";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
 import { Message } from "ai";
+import { metadata } from "@/app/layout";
 
 export const convesationLogToMessages = (
   conv: Pick<Conversation, "speaker" | "entry">[] | null,
@@ -19,11 +20,15 @@ export type Source = {
 
 export type MessageAndSources = {
   sources?: Source[];
+  metadata?: {
+    arguments: Record<string, any>;
+    response: any;
+  };
   role: IConversationSpeaker;
 } & Omit<Message, "role">;
 
 export const convesationLogToInitialMessages = (
-  conv: Pick<Conversation, "speaker" | "entry" | "created_at" | "id" | "sources">[] | null,
+  conv: Pick<Conversation, "speaker" | "entry" | "created_at" | "id" | "sources" | "metadata">[] | null,
   welcomeMessage?: string,
 ): MessageAndSources[] => {
   const msgs = welcomeMessage
@@ -44,6 +49,7 @@ export const convesationLogToInitialMessages = (
       role: entry.speaker,
       content: entry.entry,
       sources: entry.sources,
+      metadata: entry.metadata,
     })) as MessageAndSources[]),
   ];
 };
