@@ -217,8 +217,10 @@ export async function POST(req: NextRequest) {
       // check if JSON response is available
       try {
         const json = await response.json();
+        console.error(json);
         throw new Error(json.error.message || response.statusText);
       } catch {
+        console.error(response);
         throw new Error(response.statusText);
       }
     }
