@@ -102,6 +102,7 @@ export async function POST(req: NextRequest) {
 
     let conversationHistory: ChatCompletionRequestMessage[] = await conversationLog.getConversation({
       limit: 10,
+      skipFunctions: true,
     });
 
     // Count actual tokens to limit the conversation history

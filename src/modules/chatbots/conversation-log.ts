@@ -46,14 +46,26 @@ class ConversationLog {
     }
   }
 
-  public async getConversation({ limit }: { limit: number }): Promise<ChatCompletionRequestMessage[]> {
-    const { data: history } = await this.supabaseAdminClient
+  public async getConversation({
+    limit,
+    skipFunctions,
+  }: {
+    limit: number;
+    skipFunctions: boolean;
+  }): Promise<ChatCompletionRequestMessage[]> {
+    const query = this.supabaseAdminClient
       .from("conversations")
       .select("entry, speaker, created_at")
       .eq("conversation_id", this.conversationId)
       .order("created_at", { ascending: false })
+
       .limit(limit)
       .throwOnError();
+
+    if (skipFunctions) {
+      query.neq("speaker", IConversationSpeaker.Function);
+    }
+    const { data: history } = await query;
 
     const response = history ? convesationLogToMessages(history).reverse() : [];
     return response;

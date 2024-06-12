@@ -3,7 +3,6 @@ import { IConversationSpeaker } from "@/lib/types/common.types";
 import { Conversation } from "@/lib/supabase";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
 import { Message } from "ai";
-import { metadata } from "@/app/layout";
 
 export const convesationLogToMessages = (
   conv: Pick<Conversation, "speaker" | "entry">[] | null,

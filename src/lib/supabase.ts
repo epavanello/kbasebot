@@ -2,6 +2,7 @@ import { Database } from "@/lib/types/database.types";
 import { SupabaseClient, User } from "@supabase/auth-helpers-nextjs";
 import { NEXT_PUBLIC_URL } from "./env";
 import { set } from "date-fns";
+import { IConversationSpeaker } from "./types/common.types";
 
 export type SupabaseClientTyped = SupabaseClient<Database>;
 
@@ -118,6 +119,7 @@ export async function countMonthlyConversationUsage(supabase: SupabaseClientType
         .eq("chatbot_owner_id", userId)
         // Count messages created in the last 30 days
         .gte("created_at", set(new Date(), { date: -30 }).toISOString())
+        .neq("speaker", IConversationSpeaker.Function)
         .throwOnError()
     ).count!
   );
@@ -137,6 +139,7 @@ export async function countMonthlyConversationUsagePerChatbot(
         .eq("chatbot_id", chatbotId)
         // Count messages created in the last 30 days
         .gte("created_at", set(new Date(), { date: -30 }).toISOString())
+        .neq("speaker", IConversationSpeaker.Function)
         .throwOnError()
     ).count!
   );
