@@ -190,7 +190,7 @@ function Leads() {
   const { chatbot_id } = useParams();
   const { supabase } = useSupabaseAuth();
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: "created_at", desc: true }]);
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
@@ -210,8 +210,6 @@ function Leads() {
   // Apply each order condition to the query
   sorting.forEach((sort) => {
     let id = sort.id;
-    if (id === "email") id = "response -> email";
-
     query = query.order(id, { ascending: !sort.desc });
   });
 
