@@ -33,17 +33,17 @@ export function ChatMessage({ message, chatbotLogo, children, debug, ...props }:
     return (
       <div className={cn("mb-2")} {...props}>
         <p className="text-xs">
+          <span>Function request:&nbsp;</span>
           <span>
-            <Preview icon="material-symbols:info-outline" iconClassName="inline-block mr-1">
+            <span className="font-bold capitalize">{message.content.split(/[^a-zA-Z0-9À-ž]+/).join(" ")}</span>
+            <Preview icon="material-symbols:info-outline" iconClassName="inline-block ml-1" contentClassName="w-auto">
               <pre>
                 Request: {message.content}({JSON.stringify(message.metadata?.arguments)})
                 <br />
                 Response: {JSON.stringify(message.metadata?.response)}
               </pre>
             </Preview>
-            Function request:&nbsp;
           </span>
-          <span className="font-bold capitalize">{message.content.split(/[^a-zA-Z0-9À-ž]+/).join(" ")}</span>
         </p>
       </div>
     );
