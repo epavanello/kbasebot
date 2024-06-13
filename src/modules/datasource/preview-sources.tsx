@@ -1,11 +1,10 @@
-import React, { FC, memo, useEffect, useState } from "react";
-import { Icon } from "@/components/ui/icons";
+import React, { useEffect, useState } from "react";
 import { MessageAndSources } from "../chatbots/helpers";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { ChatbotDoc, ChatbotNotion, ChatbotQA, ChatbotUrl, Chunk, KnowledgeBase } from "@/lib/supabase";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { PreviewContent } from "./preview-content";
 import { Preview } from "./preview";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const chunkMap = new Map<string, Chunk>();
 
@@ -83,72 +82,93 @@ export const PreviewSources = ({ messageWithSources }: { messageWithSources: Mes
 
   return (
     <Preview icon="material-symbols:info-outline" iconClassName="absolute right-0 mr-0.5 mt-0.5" setOpen={setOpen}>
-      {!loading &&
-        (chunks.length > 0 ? (
-          chunks.map((chunk, index) => {
-            const url = urls.find((url) => url.id === chunk.url_id);
-            const doc = docs.find((doc) => doc.id === chunk.doc_id);
-            const notion = notions.find((notion) => notion.id === chunk.notion_id);
-            const qa = qas.find((qa) => qa.id === chunk.qa_id);
-            return (
-              <div key={index} className="flex flex-col gap-1 py-4">
-                <p className="flex flex-row text-xs">
-                  <span className="font-semibold">Similarity:&nbsp;</span>
-                  <span>
-                    {(
-                      ((messageWithSources.sources || []).find((source) => source.id === chunk.id)?.similarity || 0) *
-                      100
-                    ).toFixed(2)}
-                    %
-                  </span>
-                </p>
-                <p className="flex flex-row text-xs">
-                  <span className="font-semibold">Source:&nbsp;</span>
-                  <span>
-                    {(url && (
-                      <div className="inline-block gap-2">
-                        <PreviewContent data={url} type="url" />
-                        <a href={url.url} target="_blank" rel="noreferrer" className="underline">
-                          {url.url}
-                        </a>
-                      </div>
-                    )) ||
-                      (doc && (
-                        <div className="inline-flex flex-row items-center gap-2">
-                          <p>
-                            <PreviewContent data={doc} type="doc" />
-                            {doc.file_name.split("/")?.slice(-1)[0]}
-                          </p>
-                        </div>
-                      )) ||
-                      (notion && (
-                        <div className="inline-flex flex-row items-center gap-2">
-                          <p>
-                            <PreviewContent data={notion} type="notion" />
-                            {notion.name}
-                          </p>
-                        </div>
-                      )) ||
-                      (qa && (
-                        <div className="inline-flex flex-row items-center gap-2">
-                          <p>
-                            <PreviewContent data={qa} type="qa" />
-                            {qa.question}
-                          </p>
-                        </div>
-                      )) ||
-                      "Text"}
-                  </span>
-                </p>
-                <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">
-                  {chunk.content}
-                </pre>
-              </div>
-            );
-          })
-        ) : (
-          <p className="text-center text-xs">No sources found.</p>
-        ))}
+      <Accordion type="single" collapsible className="w-full">
+        {!loading &&
+          (chunks.length > 0 ? (
+            chunks.map((chunk, index) => {
+              const url = urls.find((url) => url.id === chunk.url_id);
+              const doc = docs.find((doc) => doc.id === chunk.doc_id);
+              const notion = notions.find((notion) => notion.id === chunk.notion_id);
+              const qa = qas.find((qa) => qa.id === chunk.qa_id);
+              const type = url ? "url" : doc ? "doc" : notion ? "notion" : qa ? "qa" : "text";
+              return (
+                <AccordionItem key={chunk.id} value={chunk.id.toString()}>
+                  <AccordionTrigger>
+                    <div className="flex flex-col no-underline hover:no-underline">
+                      <p className="flex flex-row text-xs">
+                        <span className="font-semibold">Similarity:&nbsp;</span>
+                        <span>
+                          {(
+                            ((messageWithSources.sources || []).find((source) => source.id === chunk.id)?.similarity ||
+                              0) * 100
+                          ).toFixed(2)}
+                          %
+                        </span>
+                      </p>
+                      <p className="flex flex-row text-xs">
+                        <span className="font-semibold">Type:&nbsp;</span>
+                        <span className="font-normal">
+                          {
+                            {
+                              url: "URL",
+                              doc: "Document",
+                              notion: "Notion",
+                              qa: "Q&A",
+                              text: "Text",
+                            }[type]
+                          }
+                        </span>
+                      </p>
+                      <p className="flex flex-row text-left text-xs">
+                        <span className="font-normal">
+                          {(url && (
+                            <div className="inline-block gap-2">
+                              <PreviewContent data={url} type="url" />
+                              <a href={url.url} target="_blank" rel="noreferrer" className="underline">
+                                {url.url}
+                              </a>
+                            </div>
+                          )) ||
+                            (doc && (
+                              <div className="inline-flex flex-row items-center gap-2">
+                                <p>
+                                  <PreviewContent data={doc} type="doc" />
+                                  {doc.file_name.split("/")?.slice(-1)[0]}
+                                </p>
+                              </div>
+                            )) ||
+                            (notion && (
+                              <div className="inline-flex flex-row items-center gap-2">
+                                <p>
+                                  <PreviewContent data={notion} type="notion" />
+                                  {notion.name}
+                                </p>
+                              </div>
+                            )) ||
+                            (qa && (
+                              <div className="inline-flex flex-row items-center gap-2">
+                                <p>
+                                  <PreviewContent data={qa} type="qa" />
+                                  {qa.question}
+                                </p>
+                              </div>
+                            ))}
+                        </span>
+                      </p>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <pre className="whitespace-break-spaces break-words rounded-sm bg-secondary p-2 text-xs">
+                      {chunk.content}
+                    </pre>
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })
+          ) : (
+            <p className="text-center text-xs">No sources found.</p>
+          ))}
+      </Accordion>
     </Preview>
   );
 };
