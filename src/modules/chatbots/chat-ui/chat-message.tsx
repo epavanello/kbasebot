@@ -11,6 +11,7 @@ import { Icon } from "@/components/ui/icons";
 import { PreviewSources } from "@/modules/datasource/preview-sources";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { Preview } from "@/modules/datasource/preview";
+import rehypeRaw from "rehype-raw";
 
 export interface ChatMessageProps {
   message: MessageAndSources;
@@ -92,6 +93,7 @@ export function ChatMessage({ message, chatbotLogo, children, debug, ...props }:
                 },
               )}
               remarkPlugins={[remarkGfm, remarkMath]}
+              rehypePlugins={[rehypeRaw]}
               components={{
                 a({ node, children, ...props }) {
                   return (
