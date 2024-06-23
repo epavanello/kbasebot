@@ -93,7 +93,7 @@ export class TokenCounter {
 }
 
 export const tokenLimits = {
-  context: 500,
+  context: 1_000,
   knowledgeBase: 6_000,
   response: 1_000,
   historyAvailable(used: number) {
