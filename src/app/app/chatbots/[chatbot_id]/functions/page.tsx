@@ -222,6 +222,9 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
                       <FormControl>
                         <Textarea placeholder="What does the function do?" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Explain what the function does and how it can be used by the chatbot.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -237,8 +240,8 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
                         <Input type="text" placeholder="https://example.com/webhook" {...field} />
                       </FormControl>
                       <FormDescription>
-                        The data-auth attribute used to embed the chatbot will be passed as the http Authorization
-                        header
+                        The webhook URL will be called with a POST request from the chatbot.
+                        <br /> The data-auth attribute (if present) will be sent as the Authorization header.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -292,7 +295,9 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
                       </Button>
                     </div>
                   </FormControl>
-                  <FormDescription>What information should the chatbot send to the webhook?</FormDescription>
+                  <FormDescription>
+                    The parameters values will be extracted by the chatbot and sent in the body as JSON.
+                  </FormDescription>
                 </FormItem>
 
                 {fields.map((field, index) => (
