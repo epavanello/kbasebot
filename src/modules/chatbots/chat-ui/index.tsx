@@ -83,8 +83,6 @@ export default function ChatUi({
     },
   );
 
-  console.log({ conversations });
-
   const [responseIsStarted, setResponseIsStarted] = React.useState(false);
 
   const {

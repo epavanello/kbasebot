@@ -14,6 +14,7 @@ import { getPermissions } from "@/lib/permissions/plans";
 import { GPTModel, GPTModels, prettifyGPTModelName } from "@/modules/chatbots/helpers";
 import { callStoreLeads, FUNC_STORE_LEAD, storeLeadSchema } from "@/modules/chatbots/function-call/store-leads";
 import { standardizeQuery } from "@/modules/chatbots/llm-actions";
+import axios from "axios";
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge";
@@ -261,20 +262,21 @@ export async function POST(req: NextRequest) {
           const functionCall = userFunctions?.find((f) => f.name === name);
           if (functionCall) {
             try {
-              const functionResponse = await fetch(functionCall.webhook, {
-                method: "POST",
-                body: JSON.stringify(args),
+              const functionResponse = await axios({
+                url: functionCall.webhook,
+                method: functionCall.request_type,
+                ...(functionCall.request_type === "GET" ? { params: args } : { data: args }),
                 headers: {
                   "Content-Type": "application/json",
                   ...(authTokens && { Authorization: authTokens }),
                 },
               });
 
-              if (!functionResponse.ok) {
+              if (functionResponse.status !== 200) {
                 throw new Error(`Function call failed with status ${functionResponse.status}`);
               }
 
-              const response = await functionResponse.json();
+              const response = functionResponse.data;
 
               await conversationLog.addEntry({
                 entry: name,

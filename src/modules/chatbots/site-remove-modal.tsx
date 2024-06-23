@@ -28,7 +28,7 @@ const SiteRemoveModal = React.forwardRef<HTMLButtonElement>(
 
         return onDelete();
       } catch (e) {
-        console.log({ e });
+        console.error(e);
       } finally {
         setTimeout(() => {
           setLoading(false);

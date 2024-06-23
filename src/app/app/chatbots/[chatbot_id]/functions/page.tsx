@@ -50,6 +50,7 @@ const FunctionSchema = z.object({
     message: "Description must be at least 20 characters long",
   }),
   webhook: z.string().url(),
+  request_type: z.enum(["GET", "POST"]),
   parameters: z.array(z.object({ name: z.string(), type: zodParameters })),
   parameterName: z.string().optional(),
   parameterType: zodParameters.optional(),
@@ -60,6 +61,7 @@ const defaultValues = {
   name: "",
   description: "",
   webhook: "",
+  request_type: "GET",
   parameters: [],
   parameterName: "",
   parameterType: undefined,
@@ -167,12 +169,12 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
   });
 
   function onSubmit(data: z.infer<typeof FunctionSchema>) {
-    console.log("submitting", data, form.formState);
     addFunction.mutate({
       id: data.id,
       chatbot_id,
       name: data.name,
       description: data.description,
+      request_type: data.request_type,
       webhook: data.webhook,
       parameters: data.parameters,
     });
@@ -225,6 +227,29 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
                       <FormDescription>
                         Explain what the function does and how it can be used by the chatbot.
                       </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="request_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Request Type</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="GET">GET</SelectItem>
+                          <SelectItem value="POST">POST</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription></FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
