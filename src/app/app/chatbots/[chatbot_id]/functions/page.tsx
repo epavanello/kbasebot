@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { DashboardShell } from "@/components/ui/dashboard-shell";
 import { DashboardHeader } from "@/components/ui/dashboard-header";
-import { UploadContent } from "@/modules/chatbots/upload-content";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import InputNote from "@/components/ui/input-note";
 import { Button } from "@/components/ui/button";
-import { cn, formatNumber } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -25,8 +23,6 @@ import { ChatbotFunction } from "@/lib/supabase";
 import { Database } from "@/lib/types/database.types";
 import { useToast } from "@/components/ui/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Toggle } from "@/components/ui/toggle";
-import { AccordionHeader } from "@radix-ui/react-accordion";
 import { Switch } from "@/components/ui/switch";
 import { getPermissions } from "@/lib/permissions/plans";
 

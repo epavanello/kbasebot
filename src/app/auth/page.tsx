@@ -10,10 +10,11 @@ import { NEXT_PUBLIC_URL } from "@/lib/env";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import { useRouter } from "next/navigation";
 import LoadingDots from "@/components/ui/loading-dots";
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import Link from "next/link";
 import Logo from "@/components/landing/logo";
-import { Metadata } from "next";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 
 const Page = ({ searchParams }) => {
   const supabase = createClientComponentClient();
@@ -21,6 +22,8 @@ const Page = ({ searchParams }) => {
   const { code } = searchParams;
 
   const { push } = useRouter();
+  const [email, setEmail] = React.useState("");
+  const { toast } = useToast();
 
   const [isLoading, setIsLoading] = React.useState<boolean>(!!code);
 
@@ -34,6 +37,33 @@ const Page = ({ searchParams }) => {
         },
       });
     } catch (e) {
+      throw e;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleMagicLink = async (email: string) => {
+    setIsLoading(true);
+    try {
+      await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${NEXT_PUBLIC_URL}/auth`,
+        },
+      });
+      console.log("Magic link sent");
+      toast({
+        title: "Success",
+        description: "Check your email for the magic link",
+        variant: "default",
+      });
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: getErrorMessage(e),
+        variant: "destructive",
+      });
       throw e;
     } finally {
       setIsLoading(false);
@@ -62,10 +92,32 @@ const Page = ({ searchParams }) => {
           {isLoading ? (
             <LoadingDots className="!h-16 !w-16" />
           ) : (
-            <Button onClick={() => handleOAuth("google")} className="w-full" variant="outline" size="lg">
-              <Icon className="mr-2 text-xl" icon={"flat-color-icons:google"} />
-              Login with Google
-            </Button>
+            <div className="flex w-full flex-col space-y-4">
+              <Button onClick={() => handleOAuth("google")} className="w-full" variant="outline" size="lg">
+                <Icon className="mr-2 text-xl" icon={"flat-color-icons:google"} />
+                Login with Google
+              </Button>
+              <div className="relative flex items-center py-5">
+                <div className="flex-grow border-t"></div>
+                <span className="mx-4 flex-shrink text-xs">Or</span>
+                <div className="flex-grow border-t"></div>
+              </div>
+              <Input
+                className="w-full"
+                placeholder="name@example.com"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Button
+                className="w-full"
+                size="lg"
+                onClick={() => handleMagicLink(email)}
+                disabled={!email || !email.includes("@")}
+              >
+                Login with Magic link
+              </Button>
+            </div>
           )}
         </CardFooter>
       </Card>
