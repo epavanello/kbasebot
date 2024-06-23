@@ -10,7 +10,7 @@ import { getDevErrorMessage } from "@/lib/utils";
 import { Document } from "langchain/document";
 import { Database } from "@/lib/types/database.types";
 import { Chatbot, KnowledgeBase } from "@/lib/supabase";
-import { generateName } from "@/modules/chatbots/generate-name";
+import { generateName } from "@/modules/chatbots/llm-actions";
 
 export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";

@@ -13,6 +13,7 @@ import { Chatbot, countMonthlyConversationUsage, getSubscription } from "@/lib/s
 import { getPermissions } from "@/lib/permissions/plans";
 import { GPTModel, GPTModels, prettifyGPTModelName } from "@/modules/chatbots/helpers";
 import { callStoreLeads, FUNC_STORE_LEAD, storeLeadSchema } from "@/modules/chatbots/function-call/store-leads";
+import { standardizeQuery } from "@/modules/chatbots/llm-actions";
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = "edge";
@@ -110,16 +111,15 @@ export async function POST(req: NextRequest) {
 
     // Add here the previous questions to have a better searching context
     // Get the context from the last message
+    const lastMessages = conversationHistory
+      .filter((entry) => entry.role === IConversationSpeaker.User || entry.role === IConversationSpeaker.Assistant)
+      .slice(-7)
+      .reverse()
+      .filter((entry) => embeddingCounter.canAdd(entry.content || ""))
+      .reverse();
+
     const knowledgeBase = await searchKnowledgeBase(
-      // Get the last 5 user messages from the conversation history
-      conversationHistory
-        .filter((entry) => entry.role === IConversationSpeaker.User)
-        .slice(-5)
-        .reverse()
-        .filter((entry) => embeddingCounter.canAdd(entry.content || ""))
-        .reverse()
-        .map((entry) => entry.content)
-        .join("\n"),
+      await standardizeQuery(lastMessages, chatbotId, conversationId),
       chatbotId,
       supabaseAdminClient,
     );
