@@ -72,11 +72,6 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
 
   const formData = form.watch();
 
-  const { fields, append, remove } = useFieldArray({
-    name: "parameters",
-    control: form.control,
-  });
-
   const { supabase, subscription } = useSupabaseAuth();
   const { permission } = getPermissions(subscription);
 
@@ -159,6 +154,7 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
       request_type: data.request_type,
       webhook: data.webhook,
       parameters: data.parameters,
+      headers: data.headers,
     });
   }
 
@@ -300,6 +296,16 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
                     <Label>Webhook URL</Label>
                     <Input type="text" value={func.webhook} readOnly />
 
+                    <Label>Headers</Label>
+                    <div className="flex flex-col gap-2">
+                      {(func.headers as { key: string; value: string }[]).map((header) => (
+                        <div key={header.key} className="flex flex-row gap-2">
+                          <Input value={header.key} readOnly />
+                          <Input value={header.value} readOnly />
+                        </div>
+                      ))}
+                    </div>
+
                     <Label>Parameters</Label>
                     <div className="flex flex-col gap-2">
                       {(func.parameters as { name: string; type: ParameterTypes }[]).map((param) => (
@@ -319,6 +325,7 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
                             description: func.description,
                             webhook: func.webhook,
                             parameters: func.parameters as { name: string; type: ParameterTypes }[],
+                            headers: func.headers as { key: string; value: string }[],
                           })
                         }
                       >

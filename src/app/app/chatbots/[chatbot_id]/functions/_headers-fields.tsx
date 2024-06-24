@@ -25,20 +25,20 @@ const HeadersFields: React.FC<IHeadersFields> = ({ form, headerKey, headerValue 
       <CardHeader>
         <CardTitle>Headers</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2">
-        <FormItem>
+      <CardContent className="flex flex-col gap-2 px-0 pb-4">
+        <FormItem className="px-6">
           <FormControl>
             <div className="flex flex-row gap-2">
               <FormField
                 control={form.control}
                 name="headerKey"
-                render={({ field }) => <Input className="w-3/5" placeholder="Key" {...field} />}
+                render={({ field }) => <Input className="w-5/12" placeholder="Key" {...field} />}
               />
 
               <FormField
                 control={form.control}
                 name="headerValue"
-                render={({ field }) => <Input className="" placeholder="Value" {...field} />}
+                render={({ field }) => <Input className="w-5/12" placeholder="Value" {...field} />}
               />
 
               <Button
@@ -61,37 +61,41 @@ const HeadersFields: React.FC<IHeadersFields> = ({ form, headerKey, headerValue 
           <FormDescription>The headers defined here will be sent with request headers</FormDescription>
         </FormItem>
 
-        <Separator />
+        {fields.length > 0 && (
+          <>
+            <Separator />
 
-        <div className="flex max-h-48 flex-col gap-2 overflow-y-scroll">
-          {fields.map((field, index) => (
-            <React.Fragment key={field.key}>
-              <div className="flex flex-row items-center gap-2">
-                <FormField
-                  control={form.control}
-                  name={`headers.${index}.key`}
-                  render={({ field }) => <Input placeholder="Key" className="w-3/5" readOnly {...field} />}
-                />
+            <div className="flex max-h-48 flex-col gap-2 overflow-y-auto px-6 py-2">
+              {fields.map((field, index) => (
+                <React.Fragment key={field.key}>
+                  <div className="flex flex-row items-center gap-2">
+                    <FormField
+                      control={form.control}
+                      name={`headers.${index}.key`}
+                      render={({ field }) => <Input placeholder="Key" className="w-5/12" readOnly {...field} />}
+                    />
 
-                <FormField
-                  control={form.control}
-                  name={`headers.${index}.value`}
-                  render={({ field }) => <Input placeholder="Value" className="" readOnly {...field} />}
-                />
+                    <FormField
+                      control={form.control}
+                      name={`headers.${index}.value`}
+                      render={({ field }) => <Input placeholder="Value" className="w-5/12" readOnly {...field} />}
+                    />
 
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size={"sm"}
-                  className="text-red-500"
-                  onClick={() => remove(index)}
-                >
-                  <Icon icon={"ph:trash"} />
-                </Button>
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size={"sm"}
+                      className="text-red-500"
+                      onClick={() => remove(index)}
+                    >
+                      <Icon icon={"ph:trash"} />
+                    </Button>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );

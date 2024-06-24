@@ -32,14 +32,14 @@ const ParametersFields: React.FC<IParametersFields> = ({ form, parameterName, pa
       <CardHeader>
         <CardTitle>Parameters</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col gap-2">
-        <FormItem>
+      <CardContent className="flex flex-col gap-2 px-0 pb-4">
+        <FormItem className="px-6">
           <FormControl>
             <div className="flex flex-row gap-2">
               <FormField
                 control={form.control}
                 name="parameterName"
-                render={({ field }) => <Input className="" placeholder="Name" {...field} />}
+                render={({ field }) => <Input className="w-5/12" placeholder="Name" {...field} />}
               />
               <FormField
                 control={form.control}
@@ -47,7 +47,7 @@ const ParametersFields: React.FC<IParametersFields> = ({ form, parameterName, pa
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} defaultValue={field.value || ""}>
                     <FormControl>
-                      <SelectTrigger className={cn(!field.value && "text-muted-foreground", "max-w-[200px]")}>
+                      <SelectTrigger className={cn(!field.value && "text-muted-foreground", "w-5/12")}>
                         <SelectValue>{field.value ? ParameterLabels[field.value] : "Type"}</SelectValue>
                       </SelectTrigger>
                     </FormControl>
@@ -84,52 +84,56 @@ const ParametersFields: React.FC<IParametersFields> = ({ form, parameterName, pa
           </FormDescription>
         </FormItem>
 
-        <Separator />
+        {fields.length > 0 && (
+          <>
+            <Separator />
 
-        <div className="flex max-h-48 flex-col gap-2 overflow-y-scroll">
-          {fields.map((field, index) => (
-            <React.Fragment key={field.name}>
-              <div className="flex flex-row items-center gap-2">
-                <FormField
-                  control={form.control}
-                  name={`parameters.${index}.name`}
-                  render={({ field }) => <Input placeholder="Name" className="" readOnly {...field} />}
-                />
-                <FormField
-                  control={form.control}
-                  name={`parameters.${index}.type`}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} defaultValue={field.value || ""}>
-                      <FormControl>
-                        <SelectTrigger className={cn(!field.value && "text-muted-foreground", "max-w-[200px]")}>
-                          <SelectValue>{field.value ? ParameterLabels[field.value] : "Type"}</SelectValue>
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {ParameterKeys.map((key) => (
-                          <SelectItem key={key} value={key}>
-                            {ParameterLabels[key]}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
+            <div className="flex max-h-48 flex-col gap-2 overflow-y-auto px-6 py-2">
+              {fields.map((field, index) => (
+                <React.Fragment key={field.name}>
+                  <div className="flex flex-row items-center gap-2">
+                    <FormField
+                      control={form.control}
+                      name={`parameters.${index}.name`}
+                      render={({ field }) => <Input placeholder="Name" className="w-5/12" readOnly {...field} />}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`parameters.${index}.type`}
+                      render={({ field }) => (
+                        <Select onValueChange={field.onChange} defaultValue={field.value || ""}>
+                          <FormControl>
+                            <SelectTrigger className={cn(!field.value && "text-muted-foreground", "w-5/12")}>
+                              <SelectValue>{field.value ? ParameterLabels[field.value] : "Type"}</SelectValue>
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {ParameterKeys.map((key) => (
+                              <SelectItem key={key} value={key}>
+                                {ParameterLabels[key]}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
 
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size={"sm"}
-                  className="text-red-500"
-                  onClick={() => remove(index)}
-                >
-                  <Icon icon={"ph:trash"} />
-                </Button>
-              </div>
-              {index < fields.length - 1 && <Separator />}
-            </React.Fragment>
-          ))}
-        </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size={"sm"}
+                      className="text-red-500"
+                      onClick={() => remove(index)}
+                    >
+                      <Icon icon={"ph:trash"} />
+                    </Button>
+                  </div>
+                  {index < fields.length - 1 && <Separator />}
+                </React.Fragment>
+              ))}
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );

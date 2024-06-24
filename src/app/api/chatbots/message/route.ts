@@ -269,6 +269,14 @@ export async function POST(req: NextRequest) {
                 headers: {
                   "Content-Type": "application/json",
                   ...(authTokens && { Authorization: authTokens }),
+                  ...(functionCall.headers &&
+                    (functionCall.headers as { key: string; value: string }[]).reduce(
+                      (acc, header) => {
+                        acc[header.key] = header.value;
+                        return acc;
+                      },
+                      {} as Record<string, string>,
+                    )),
                 },
               });
 

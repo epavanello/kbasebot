@@ -1,10 +1,12 @@
 "use client";
 import React from "react";
 import Script from "next/script";
+import { isProduction } from "@/lib/utils";
 
 const GA_MEASUREMENT_ID = "G-RC26S8911V";
 
 const Analytics = () => {
+  if (!isProduction) return null;
   return (
     <>
       <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`} />
