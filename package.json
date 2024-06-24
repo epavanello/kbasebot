@@ -19,6 +19,7 @@
     "stripe:listen-local-payment": "stripe listen --forward-to localhost:3000/api/stripe"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^0.0.33",
     "@hookform/resolvers": "^3.2.0",
     "@mozilla/readability": "^0.4.4",
     "@notionhq/client": "^2.2.13",
@@ -59,7 +60,7 @@
     "@types/node": "20.4.9",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
-    "ai": "^2.2.10",
+    "ai": "^3.2.8",
     "autoprefixer": "10.4.14",
     "axios": "^1.5.0",
     "cheerio": "^1.0.0-rc.12",

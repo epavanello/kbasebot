@@ -264,7 +264,7 @@ export async function POST(req: NextRequest) {
             try {
               const functionResponse = await axios({
                 url: functionCall.webhook,
-                method: functionCall.request_type,
+                method: functionCall.request_type || "GET",
                 ...(functionCall.request_type === "GET" ? { params: args } : { data: args }),
                 headers: {
                   "Content-Type": "application/json",

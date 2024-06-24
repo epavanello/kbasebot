@@ -41,7 +41,6 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      console.log("here", event.origin, process.env.NEXT_PUBLIC_URL, event);
       // Verifica l'origine del messaggio
       if (event.origin !== `${process.env.NEXT_PUBLIC_URL}`) return;
 
