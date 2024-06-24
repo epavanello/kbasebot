@@ -90,6 +90,7 @@ export type Database = {
           created_at: string
           description: string
           enabled: boolean
+          headers: Json[]
           id: string
           name: string
           parameters: Json[]
@@ -101,6 +102,7 @@ export type Database = {
           created_at?: string
           description: string
           enabled?: boolean
+          headers: Json[]
           id?: string
           name: string
           parameters: Json[]
@@ -112,6 +114,7 @@ export type Database = {
           created_at?: string
           description?: string
           enabled?: boolean
+          headers?: Json[]
           id?: string
           name?: string
           parameters?: Json[]

@@ -25,42 +25,28 @@ import { useToast } from "@/components/ui/use-toast";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Switch } from "@/components/ui/switch";
 import { getPermissions } from "@/lib/permissions/plans";
-
-const ParameterKeys = ["string", "number", "date"] as const;
-type ParameterTypes = (typeof ParameterKeys)[number];
-
-const ParameterLabels: Record<ParameterTypes, string> = {
-  string: "Text",
-  number: "Number",
-  date: "Date",
-};
-
-const zodParameters = z.enum(ParameterKeys).optional();
-
-const FunctionSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().min(3, {
-    message: "Name must be at least 3 characters long",
-  }),
-  description: z.string().min(20, {
-    message: "Description must be at least 20 characters long",
-  }),
-  webhook: z.string().url(),
-  request_type: z.enum(["GET", "POST"]),
-  parameters: z.array(z.object({ name: z.string(), type: zodParameters })),
-  parameterName: z.string().optional(),
-  parameterType: zodParameters.optional(),
-});
+import HeadersFields from "@/app/app/chatbots/[chatbot_id]/functions/_headers-fields";
+import {
+  FunctionSchema,
+  ParameterKeys,
+  ParameterLabels,
+  ParameterTypes,
+  RequestTypeEnum,
+} from "@/app/app/chatbots/[chatbot_id]/functions/_function-form.scema";
+import ParametersFields from "@/app/app/chatbots/[chatbot_id]/functions/_parameters-fields";
 
 const defaultValues = {
   id: undefined,
   name: "",
   description: "",
   webhook: "",
-  request_type: "GET",
+  request_type: RequestTypeEnum.enum.GET,
   parameters: [],
   parameterName: "",
   parameterType: undefined,
+  headers: [],
+  headerKey: "",
+  headerValue: "",
 };
 
 export default function Sources({ params }: { params: { chatbot_id: string } }) {
@@ -85,11 +71,6 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
   });
 
   const formData = form.watch();
-
-  const { fields, append, remove } = useFieldArray({
-    name: "parameters",
-    control: form.control,
-  });
 
   const { supabase, subscription } = useSupabaseAuth();
   const { permission } = getPermissions(subscription);
@@ -173,6 +154,7 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
       request_type: data.request_type,
       webhook: data.webhook,
       parameters: data.parameters,
+      headers: data.headers,
     });
   }
 
@@ -269,102 +251,12 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
                   )}
                 />
 
-                <FormItem>
-                  <FormLabel>Parameters</FormLabel>
-                  <FormControl>
-                    <div className="flex flex-row gap-2">
-                      <FormField
-                        control={form.control}
-                        name="parameterName"
-                        render={({ field }) => <Input className="max-w-[200px]" placeholder="Name" {...field} />}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="parameterType"
-                        render={({ field }) => (
-                          <Select onValueChange={field.onChange} defaultValue={field.value || ""}>
-                            <FormControl>
-                              <SelectTrigger className={cn(!field.value && "text-muted-foreground", "max-w-[200px]")}>
-                                <SelectValue>{field.value ? ParameterLabels[field.value] : "Type"}</SelectValue>
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {ParameterKeys.map((key) => (
-                                <SelectItem key={key} value={key}>
-                                  {ParameterLabels[key]}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
-
-                      <Button
-                        className="whitespace-nowrap"
-                        type="button"
-                        onClick={() => {
-                          if (formData.parameterName && formData.parameterType) {
-                            append({ name: formData.parameterName, type: formData.parameterType });
-                            form.setValue("parameterName", "");
-                            form.setValue("parameterType", undefined);
-                            form.setFocus("parameterName");
-                          }
-                        }}
-                        disabled={!formData.parameterName || !formData.parameterType}
-                      >
-                        Add
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormDescription>
-                    The parameters values will be extracted by the chatbot and sent in the body as JSON.
-                  </FormDescription>
-                </FormItem>
-
-                {fields.map((field, index) => (
-                  <React.Fragment key={field.name}>
-                    <div className="flex flex-row items-center gap-2">
-                      <FormField
-                        control={form.control}
-                        name={`parameters.${index}.name`}
-                        render={({ field }) => (
-                          <Input placeholder="Name" className="max-w-[200px]" readOnly {...field} />
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`parameters.${index}.type`}
-                        render={({ field }) => (
-                          <Select onValueChange={field.onChange} defaultValue={field.value || ""}>
-                            <FormControl>
-                              <SelectTrigger className={cn(!field.value && "text-muted-foreground", "max-w-[200px]")}>
-                                <SelectValue>{field.value ? ParameterLabels[field.value] : "Type"}</SelectValue>
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {ParameterKeys.map((key) => (
-                                <SelectItem key={key} value={key}>
-                                  {ParameterLabels[key]}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
-
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size={"sm"}
-                        className="text-red-500"
-                        onClick={() => remove(index)}
-                      >
-                        <Icon icon={"ph:trash"} />
-                      </Button>
-                    </div>
-                    {index < fields.length - 1 && <Separator />}
-                  </React.Fragment>
-                ))}
+                <HeadersFields form={form} headerValue={formData.headerValue} headerKey={formData.headerKey} />
+                <ParametersFields
+                  form={form}
+                  parameterName={formData.parameterName}
+                  parameterType={formData.parameterType}
+                />
               </div>
             </div>
           </div>
@@ -404,6 +296,16 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
                     <Label>Webhook URL</Label>
                     <Input type="text" value={func.webhook} readOnly />
 
+                    <Label>Headers</Label>
+                    <div className="flex flex-col gap-2">
+                      {(func.headers as { key: string; value: string }[]).map((header) => (
+                        <div key={header.key} className="flex flex-row gap-2">
+                          <Input value={header.key} readOnly />
+                          <Input value={header.value} readOnly />
+                        </div>
+                      ))}
+                    </div>
+
                     <Label>Parameters</Label>
                     <div className="flex flex-col gap-2">
                       {(func.parameters as { name: string; type: ParameterTypes }[]).map((param) => (
@@ -423,6 +325,7 @@ export default function Sources({ params }: { params: { chatbot_id: string } }) 
                             description: func.description,
                             webhook: func.webhook,
                             parameters: func.parameters as { name: string; type: ParameterTypes }[],
+                            headers: func.headers as { key: string; value: string }[],
                           })
                         }
                       >

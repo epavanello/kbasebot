@@ -140,13 +140,13 @@ export const popupCenter = ({ url, title, w, h }) => {
   const width = window.innerWidth
     ? window.innerWidth
     : document.documentElement.clientWidth
-    ? document.documentElement.clientWidth
-    : screen.width;
+      ? document.documentElement.clientWidth
+      : screen.width;
   const height = window.innerHeight
     ? window.innerHeight
     : document.documentElement.clientHeight
-    ? document.documentElement.clientHeight
-    : screen.height;
+      ? document.documentElement.clientHeight
+      : screen.height;
 
   const systemZoom = width / window.screen.availWidth;
   const left = (width - w) / 2 / systemZoom + dualScreenLeft;
@@ -192,3 +192,9 @@ export function formatNumber(number: number, decPlaces: number = 0): string {
 export const NOTION_AUTH_REDIRECT_URL = `${process.env.NEXT_PUBLIC_URL}/auth/notion-connect`;
 
 export const NOTION_AUTH_URL = `${process.env.NEXT_PUBLIC_NOTION_AUTH_URL}${NOTION_AUTH_REDIRECT_URL}`;
+
+export const buildUrlWithParams = (url: string, params: any) => {
+  const urlObj = new URL(url);
+  Object.keys(params).forEach((key) => urlObj.searchParams.append(key, params[key]));
+  return urlObj.toString();
+};

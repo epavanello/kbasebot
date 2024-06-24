@@ -264,11 +264,19 @@ export async function POST(req: NextRequest) {
             try {
               const functionResponse = await axios({
                 url: functionCall.webhook,
-                method: functionCall.request_type,
+                method: functionCall.request_type || "GET",
                 ...(functionCall.request_type === "GET" ? { params: args } : { data: args }),
                 headers: {
                   "Content-Type": "application/json",
                   ...(authTokens && { Authorization: authTokens }),
+                  ...(functionCall.headers &&
+                    (functionCall.headers as { key: string; value: string }[]).reduce(
+                      (acc, header) => {
+                        acc[header.key] = header.value;
+                        return acc;
+                      },
+                      {} as Record<string, string>,
+                    )),
                 },
               });
 
