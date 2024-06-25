@@ -4,6 +4,7 @@ import { Icon } from "@/components/ui/icons";
 import InputNote from "@/components/ui/input-note";
 import { PreviewContent } from "./preview-content";
 import { formatNumber } from "@/lib/utils";
+import { useState } from "react";
 
 export interface Item<T> {
   id: string;
@@ -15,11 +16,32 @@ export interface Item<T> {
 interface Props<T> {
   items: Item<T>[];
   title: string;
-  onDelete: (item: Item<T>) => void;
-  onDeleteAll?: () => void;
+  onDelete: (item: Item<T>) => Promise<void>;
+  onDeleteAll?: () => Promise<void>;
   type: "url" | "doc" | "notion" | "qa";
 }
 export default function ContentList<T>({ items, title, onDelete, onDeleteAll, type }: Props<T>) {
+  const [deleting, setDeleting] = useState<string[]>([]);
+  const [deletingAll, setDeletingAll] = useState(false);
+
+  const handleDelete = async (item: Item<T>) => {
+    setDeleting((prev) => [...prev, item.id]);
+    try {
+      await onDelete(item);
+    } finally {
+      setDeleting((prev) => prev.filter((id) => id !== item.id));
+    }
+  };
+
+  const handleDeleteAll = async () => {
+    setDeletingAll(true);
+    try {
+      await onDeleteAll?.();
+    } finally {
+      setDeletingAll(false);
+    }
+  };
+
   return (
     <div className="max-h-[50vh] w-full overflow-auto border border-dashed p-4">
       <div className="flex justify-between gap-4">
@@ -28,11 +50,12 @@ export default function ContentList<T>({ items, title, onDelete, onDeleteAll, ty
         {onDeleteAll && (
           <Button
             type="button"
-            onClick={() => onDeleteAll()}
+            onClick={handleDeleteAll}
             variant="destructive"
             size={"sm"}
             className="h-auto bg-none text-xs"
-            disabled={!items.length}
+            disabled={!items.length || deletingAll}
+            loading={deletingAll}
           >
             <Icon className={"text-md mr-1"} icon={"ph:trash"} /> Delete All
           </Button>
@@ -54,9 +77,17 @@ export default function ContentList<T>({ items, title, onDelete, onDeleteAll, ty
               <Icon icon="material-symbols:cloud-outline" className="text-yellow-500" />
             )}
 
-            <Button type="button" onClick={() => onDelete(item)} variant="ghost" size={"sm"} className="text-red-500">
-              <Icon icon={"ph:trash"} />
-            </Button>
+            <Button
+              type="button"
+              onClick={() => handleDelete(item)}
+              variant="ghost"
+              size={"sm"}
+              className="text-red-500"
+              loading={deleting.includes(item.id)}
+              disabled={deleting.includes(item.id)}
+              icon="ph:trash"
+              iconClassName="text-sm"
+            ></Button>
           </li>
         ))}
         {!items.length && (

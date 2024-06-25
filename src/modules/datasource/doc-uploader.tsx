@@ -32,7 +32,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
   const { supabase } = useSupabaseAuth();
 
   const handleUploadFiles = async (files: File[]) => {
-    files.forEach(async (file) => {
+    const uploadPromises = files.map(async (file) => {
       const formData = new FormData();
       formData.append("file", file);
       const res = await axios.post<IFile>(`/api/chatbots/datasource/load-files?chatbot_id=${chatbotId}`, formData, {
@@ -55,6 +55,8 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
         ]);
       }
     });
+
+    await Promise.all(uploadPromises);
   };
 
   const handleDeleteDoc = async (doc: IFile) => {
@@ -63,7 +65,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
   };
 
   const handleDeleteAllDocs = async () => {
-    await supabase.storage.from("files").remove([`${chatbotId}/*`]);
+    await supabase.storage.from("files").remove([...(docs?.map((doc) => `${chatbotId}/${doc.name}`) || [])]);
     deleteAllDocs();
   };
 
@@ -84,12 +86,12 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
         if (docs?.length || 0 > 0) {
           handleDeleteAllDocs();
         }
-        handleUploadFiles(
+        await handleUploadFiles(
           // Filter the files to check if there's any file with duplicate name
           uploadedFiles.filter((uploadedFile) => !docs?.find((f) => f.name === uploadedFile.name)),
         );
       } else {
-        handleUploadFiles(
+        await handleUploadFiles(
           // Filter the files to check if there's any file with duplicate name
           uploadedFiles.filter((uploadedFile) => !docs?.find((f) => f.name === uploadedFile.name)),
         );

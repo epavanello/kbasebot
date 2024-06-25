@@ -73,7 +73,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             icon={loading ? LOADING_ICON : icon || ""}
             className={cn("text-2xl", iconClassName || "", {
               "mr-2": iconAtStart,
-              "ml-2": !iconAtStart,
+              "ml-2": !iconAtStart && children,
             })}
           />
         )}

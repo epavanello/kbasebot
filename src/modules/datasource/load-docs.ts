@@ -1,10 +1,6 @@
-import { SupabaseClientTyped } from "@/lib/supabase";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
-import { MIMEType } from "util";
-import { COMMON_MIME_TYPES } from "file-selector/src/file";
 import { JSONLoader } from "langchain/document_loaders/fs/json";
 import { TextLoader } from "langchain/document_loaders/fs/text";
-import { EPubLoader } from "langchain/document_loaders/fs/epub";
 import { CSVLoader } from "langchain/document_loaders/fs/csv";
 import { DocxLoader } from "langchain/document_loaders/fs/docx";
 
@@ -56,7 +52,9 @@ enum IMimeType {
 const fileLoadersByExt = (file: File) => {
   return {
     [IMimeType.pdf]: () => {
-      const loader = new PDFLoader(file);
+      const loader = new PDFLoader(file, {
+        splitPages: false,
+      });
       return loader.load();
     },
     [IMimeType.docx]: () => {
@@ -83,5 +81,5 @@ const fileLoadersByExt = (file: File) => {
 };
 
 export const loadFIlesByExtension = async (file: File) => {
-  return fileLoadersByExt(file)();
+  return await fileLoadersByExt(file)?.();
 };

@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     const document = await loadFIlesByExtension(file);
 
-    if (document.length === 0) {
+    if (!document || document.length === 0) {
       throw new Error("no-document-found");
     }
 
