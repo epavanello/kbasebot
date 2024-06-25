@@ -8,6 +8,7 @@ import { Tabs } from "@radix-ui/react-tabs";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import ContentList from "./content-list";
 import { useToast } from "@/components/ui/use-toast";
+import { getErrorMessage } from "@/lib/utils";
 
 const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
   const { urls, appendUrls, deleteUrl, deleteAllUrls } = useDatasourceStore((state) => ({
@@ -52,6 +53,11 @@ const WebUploader = ({ chatbotId }: { chatbotId: string }) => {
       }
     } catch (e) {
       console.error(e);
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: getErrorMessage(e),
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,3 @@
-import { ChatCompletionFunctions, ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai-edge";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
 import { ConversationLog } from "@/modules/chatbots/conversation-log";
@@ -13,8 +12,9 @@ import { Chatbot, countMonthlyConversationUsage, getSubscription } from "@/lib/s
 import { getPermissions } from "@/lib/permissions/plans";
 import { GPTModel, GPTModels, prettifyGPTModelName } from "@/modules/chatbots/helpers";
 import { callStoreLeads, FUNC_STORE_LEAD, storeLeadSchema } from "@/modules/chatbots/function-call/store-leads";
-import { standardizeQuery } from "@/modules/chatbots/llm-actions";
+import { chatCompletion, standardizeQuery } from "@/modules/chatbots/llm-actions";
 import axios from "axios";
+import { ChatCompletionCreateParams, ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
       speaker: IConversationSpeaker.User,
     });
 
-    let conversationHistory: ChatCompletionRequestMessage[] = await conversationLog.getConversation({
+    let conversationHistory = await conversationLog.getConversation({
       limit: 10,
       skipFunctions: true,
     });
@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
       .filter((entry) => entry.role === IConversationSpeaker.User || entry.role === IConversationSpeaker.Assistant)
       .slice(-7)
       .reverse()
-      .filter((entry) => embeddingCounter.canAdd(entry.content || ""))
+      .filter((entry) => embeddingCounter.canAdd((entry.content as string) || ""))
       .reverse();
 
     const knowledgeBase = await searchKnowledgeBase(
@@ -124,9 +124,9 @@ export async function POST(req: NextRequest) {
       supabaseAdminClient,
     );
 
-    const functions: ChatCompletionFunctions[] = [];
+    const functions: ChatCompletionCreateParams.Function[] = [];
 
-    const messages: ChatCompletionRequestMessage[] = [
+    const messages: ChatCompletionMessageParam[] = [
       {
         role: "system",
         content:
@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
 
     conversationHistory = conversationHistory
       .reverse()
-      .filter((entry) => historyCounter.canAdd(entry.content || ""))
+      .filter((entry, index) => index === 0 || historyCounter.canAdd((entry.content as string) || ""))
       .reverse();
 
     messages.push(...conversationHistory);
@@ -189,42 +189,19 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const config = new Configuration({
-      apiKey: OPENAI_API_KEY,
-      basePath: "https://oai.hconeai.com/v1",
-      baseOptions: {
-        headers: {
-          "Helicone-Auth": `Bearer ${HELICONE_API_KEY}`,
-          "Helicone-RateLimit-Policy": "1000;w=3600",
-          "Helicone-User-Id": chatbotId,
-          "Helicone-Property-Conversation-Id": conversationId,
-        },
-      },
-    });
-
-    const openai = new OpenAIApi(config);
+    function runCompletion(messagesToSend: ChatCompletionMessageParam[]) {
+      return chatCompletion({
+        chatbotId,
+        conversationId,
+        messages: messagesToSend,
+        maxTokens: tokenLimits.response > 0 ? tokenLimits.response : undefined,
+        model: model as GPTModel,
+        ...(functions.length && { functions }),
+      });
+    }
 
     // Ask OpenAI for a streaming chat completion given the prompt
-    const response = await openai.createChatCompletion({
-      model,
-      stream: true,
-      messages,
-      temperature: 0.1,
-      max_tokens: tokenLimits.response,
-      ...(functions.length && { functions }),
-    });
-
-    if (!response.ok) {
-      // check if JSON response is available
-      try {
-        const json = await response.json();
-        console.error(json);
-        throw new Error(json.error.message || response.statusText);
-      } catch {
-        console.error(response);
-        throw new Error(response.statusText);
-      }
-    }
+    const response = await runCompletion(messages);
 
     // Convert the response into a friendly text-stream
     const stream = OpenAIStream(response, {
@@ -251,12 +228,7 @@ export async function POST(req: NextRequest) {
 
           const newMessages = createFunctionCallMessages(args as any);
 
-          return openai.createChatCompletion({
-            model,
-            stream: true,
-            messages: [...messages, ...(newMessages as ChatCompletionRequestMessage[])],
-            max_tokens: tokenLimits.response,
-          });
+          return await runCompletion([...messages, ...(newMessages as ChatCompletionMessageParam[])]);
         } else {
           const functionCall = userFunctions?.find((f) => f.name === name);
           if (functionCall) {
@@ -296,27 +268,17 @@ export async function POST(req: NextRequest) {
 
               const newMessages = createFunctionCallMessages(response);
 
-              return openai.createChatCompletion({
-                model,
-                stream: true,
-                messages: [...messages, ...(newMessages as ChatCompletionRequestMessage[])],
-                max_tokens: tokenLimits.response,
-              });
+              return await runCompletion([...messages, ...(newMessages as ChatCompletionMessageParam[])]);
             } catch (e) {
               console.error("Function call failed", e);
 
-              return openai.createChatCompletion({
-                model,
-                stream: true,
-                messages: [
-                  ...messages,
-                  {
-                    role: "system",
-                    content: `Function call failed: ${getErrorMessage(e)}`,
-                  },
-                ],
-                max_tokens: tokenLimits.response,
-              });
+              return await runCompletion([
+                ...messages,
+                {
+                  role: "system",
+                  content: `Function call failed: ${getErrorMessage(e)}`,
+                },
+              ]);
             }
           }
         }

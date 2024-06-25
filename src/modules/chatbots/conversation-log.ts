@@ -1,7 +1,7 @@
-import { ChatCompletionRequestMessage } from "openai-edge";
 import { convesationLogToMessages } from "./helpers";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { Chunk, SupabaseClientTyped } from "@/lib/supabase";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 class ConversationLog {
   constructor(
@@ -52,7 +52,7 @@ class ConversationLog {
   }: {
     limit: number;
     skipFunctions: boolean;
-  }): Promise<ChatCompletionRequestMessage[]> {
+  }): Promise<ChatCompletionMessageParam[]> {
     const query = this.supabaseAdminClient
       .from("conversations")
       .select("entry, speaker, created_at")

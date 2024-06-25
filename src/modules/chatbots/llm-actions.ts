@@ -1,12 +1,12 @@
 import { printKnowledgeBaseResponse, searchKnowledgeBase } from "@/modules/chatbots/context";
-import { ChatCompletionRequestMessage } from "openai-edge";
 import { HELICONE_API_KEY, OPENAI_API_KEY } from "@/lib/env";
 import { SupabaseClientTyped } from "@/lib/supabase";
-import OpenAi from "openai";
+import { OpenAI } from "openai";
 import { GPTModel } from "./helpers";
+import { ChatCompletionCreateParams, type ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 export const getOpenAi = (chatbotId: string, conversationId?: string) => {
-  return new OpenAi({
+  return new OpenAI({
     apiKey: OPENAI_API_KEY,
     baseURL: "https://oai.helicone.ai/v1",
     defaultHeaders: {
@@ -44,7 +44,7 @@ export const generateName = async (chatbotId: string, supabaseServerClient: Supa
 };
 
 export const standardizeQuery = async (
-  lastMessages: ChatCompletionRequestMessage[],
+  lastMessages: ChatCompletionMessageParam[],
   chatbotId: string,
   conversationId: string,
 ): Promise<string> => {
@@ -63,8 +63,41 @@ ${lastMessages.map((message) => message.role + " > " + message.content).join("\n
   const newQuery = response?.choices?.[0]?.message?.content;
   if (!newQuery) {
     console.error("Failed to generate a query.");
-    return lastMessages[lastMessages.length - 1].content || "";
+    return (lastMessages[lastMessages.length - 1].content as string) || "";
   }
 
   return newQuery;
+};
+
+export const getEmbedding = async (text: string, chatbotId: string) => {
+  const openai = getOpenAi(chatbotId);
+  const {
+    data: [{ embedding }],
+  } = await openai.embeddings.create({
+    model: "text-embedding-ada-002",
+    input: text,
+  });
+  return embedding;
+};
+
+export const chatCompletion = async (params: {
+  chatbotId: string;
+  conversationId: string;
+  messages: ChatCompletionMessageParam[];
+  maxTokens?: number;
+  model: GPTModel;
+  temperature?: number;
+  functions?: ChatCompletionCreateParams.Function[];
+}) => {
+  const { chatbotId, conversationId, messages, maxTokens, model, temperature = 0.1, functions } = params;
+  const openai = getOpenAi(chatbotId, conversationId);
+  const response = await openai.chat.completions.create({
+    model,
+    messages,
+    max_tokens: maxTokens,
+    temperature,
+    stream: true,
+    functions,
+  });
+  return response;
 };

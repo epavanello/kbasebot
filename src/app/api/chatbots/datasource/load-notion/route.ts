@@ -5,8 +5,9 @@ import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/lib/types/database.types";
 import { cookies } from "next/headers";
 import { INotion } from "@/lib/store/use-datasource-store";
-import { ChatbotNotion } from "@/lib/supabase";
-import { getDevErrorMessage } from "@/lib/utils";
+import { ChatbotNotion, checkMaxCharactersToTrain, getSubscription } from "@/lib/supabase";
+import { getErrorMessage } from "@/lib/utils";
+import { getPermissions } from "@/lib/permissions/plans";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,20 @@ export async function GET(request: NextRequest) {
     const supabaseServerClient = createRouteHandlerClient<Database>({
       cookies,
     });
+
+    const {
+      data: { user },
+    } = await supabaseServerClient.auth.getUser();
+
+    if (!user) {
+      throw new Error("unauthorized");
+    }
+
+    const subscription = await getSubscription(supabaseServerClient, user.id);
+
+    const { permission } = getPermissions(subscription);
+
+    await checkMaxCharactersToTrain(supabaseServerClient, chatbot_id, permission);
 
     const notionAuth = await authenticateNotion(code);
 
@@ -73,7 +88,7 @@ export async function GET(request: NextRequest) {
     );
   } catch (e) {
     console.error(e);
-    return new Response(getDevErrorMessage(e, "Chatbot datasource error"), {
+    return new Response(getErrorMessage(e, "Chatbot datasource error"), {
       status: 500,
     });
   }

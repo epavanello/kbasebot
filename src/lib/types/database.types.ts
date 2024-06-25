@@ -873,6 +873,13 @@ export type Database = {
           },
         ]
       }
+      total_characters_count: {
+        Row: {
+          chatbot_id: string | null
+          total_characters: number | null
+        }
+        Relationships: []
+      }
       users_chatbots: {
         Row: {
           context: string | null

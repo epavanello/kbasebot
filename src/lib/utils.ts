@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { NEXT_PUBLIC_URL } from "./env";
+import { AxiosError } from "axios";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -74,10 +75,16 @@ export function getDevErrorMessage(e: unknown, defaultMessage: string): string {
   }
 }
 
+function isAxiosError(e: unknown): e is AxiosError {
+  return typeof e == "object" && !!e && "response" in e;
+}
+
 export function getErrorMessage(e: unknown, defaultMessage: string = "Unknown error"): string {
   try {
     if (typeof e === "string") {
       return e;
+    } else if (isAxiosError(e) && typeof e.response?.data === "string") {
+      return e.response?.data;
     } else if (e instanceof Error) {
       return e.message;
     } else if (typeof e == "object" && e && "message" in e && typeof e.message == "string") {

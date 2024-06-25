@@ -10,7 +10,7 @@ import ContentList, { Item } from "./content-list";
 import { Icon } from "@/components/ui/icons";
 import { Textarea } from "@/components/ui/textarea";
 import InputNote from "@/components/ui/input-note";
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, getErrorMessage } from "@/lib/utils";
 
 interface IQAUploaderProps {
   chatbotId: string;
@@ -45,6 +45,11 @@ const QAUploader: FunctionComponent<IQAUploaderProps> = ({ chatbotId }: IQAUploa
       }
     } catch (e) {
       console.error(e);
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: getErrorMessage(e),
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }

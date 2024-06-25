@@ -1,16 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { NOTION_AUTH_URL, popupCenter } from "@/lib/utils";
+import { NOTION_AUTH_URL, getErrorMessage, popupCenter } from "@/lib/utils";
 import axios from "axios";
 import ContentList, { Item } from "./content-list";
 import { INotion, useDatasourceStore } from "@/lib/store/use-datasource-store";
 import { useSupabaseAuth } from "@/lib/store/use-user";
+import { useToast } from "@/components/ui/use-toast";
 
 const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
   const [notionCode, setNotionCode] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const { notion, appendNotion, deleteNotion, deleteAllNotion } = useDatasourceStore((state) => ({
     notion: state.notion,
@@ -67,6 +69,11 @@ const NotionUploader = ({ chatbotId }: { chatbotId: string }) => {
       }
     } catch (e) {
       console.error(e);
+      toast({
+        title: "Uh oh! Something went wrong.",
+        description: getErrorMessage(e),
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }

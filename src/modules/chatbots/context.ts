@@ -1,25 +1,11 @@
 // Create an OpenAI API client (that's edge friendly!)
-import { Configuration, CreateEmbeddingResponse, OpenAIApi } from "openai-edge";
-import GPT3Tokenizer from "gpt3-tokenizer";
-import { OPENAI_API_KEY } from "@/lib/env";
+import { encode } from "gpt-tokenizer";
 import { Chunk, SupabaseClientTyped } from "@/lib/supabase";
-import { Database } from "@/lib/types/database.types";
-
-const config = new Configuration({
-  apiKey: OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(config);
+import { getEmbedding } from "./llm-actions";
 
 export async function searchKnowledgeBase(search: string, chatbotId: string, supabaseAdminClient: SupabaseClientTyped) {
   // Generate a one-time embedding for the query itself
-  const embeddingResponse = await openai.createEmbedding({
-    model: "text-embedding-ada-002",
-    input: search,
-  });
-
-  const {
-    data: [{ embedding }],
-  }: CreateEmbeddingResponse = await embeddingResponse.json();
+  const embedding = await getEmbedding(search, chatbotId);
 
   // Fetching whole documents for this simple example.
   //
@@ -28,9 +14,9 @@ export async function searchKnowledgeBase(search: string, chatbotId: string, sup
   const { data: documents = [] } = await supabaseAdminClient
     .rpc("match_documents", {
       p_query_embedding: embedding as any,
-      p_match_count: 10, // Choose the number of matches
+      p_match_count: 20, // Choose the number of matches
       p_chatbot_id: chatbotId,
-      p_threshold: 0.6,
+      p_threshold: 0.4,
     })
     .throwOnError();
 
@@ -69,7 +55,6 @@ export function printKnowledgeBaseResponse(chunks: Chunk[]) {
 
 export class TokenCounter {
   private tokenCount = 0;
-  private tokenizer = new GPT3Tokenizer({ type: "gpt3" });
 
   constructor(private readonly limit: number) {}
 
@@ -79,8 +64,8 @@ export class TokenCounter {
   }
 
   count(text: string) {
-    const encoded = this.tokenizer.encode(text);
-    this.tokenCount += encoded.text.length;
+    const encoded = encode(text);
+    this.tokenCount += encoded.length;
   }
 
   reset() {
@@ -94,10 +79,10 @@ export class TokenCounter {
 
 export const tokenLimits = {
   context: 1_000,
-  knowledgeBase: 6_000,
+  knowledgeBase: 12_000,
   response: 1_000,
   historyAvailable(used: number) {
-    return 12_000 - this.response - used;
+    return 16_000 - this.response - used;
   },
   // Size of the chunk for the text splitter
   chunk: 1000,

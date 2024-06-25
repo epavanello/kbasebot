@@ -1,16 +1,16 @@
-import { ChatCompletionRequestMessage } from "openai-edge";
 import { IConversationSpeaker } from "@/lib/types/common.types";
 import { Conversation } from "@/lib/supabase";
 import { NEXT_PUBLIC_URL } from "@/lib/env";
 import { Message } from "ai";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 export const convesationLogToMessages = (
   conv: Pick<Conversation, "speaker" | "entry">[] | null,
-): ChatCompletionRequestMessage[] =>
+): ChatCompletionMessageParam[] =>
   (conv || []).map((entry) => ({
     role: entry.speaker,
     content: entry.entry,
-  })) as ChatCompletionRequestMessage[];
+  })) as ChatCompletionMessageParam[];
 
 export type Source = {
   id: number;

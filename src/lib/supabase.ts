@@ -3,6 +3,8 @@ import { SupabaseClient, User } from "@supabase/auth-helpers-nextjs";
 import { NEXT_PUBLIC_URL } from "./env";
 import { set } from "date-fns";
 import { IConversationSpeaker } from "./types/common.types";
+import { UserPermissions } from "./permissions/plans";
+import { formatNumber } from "./utils";
 
 export type SupabaseClientTyped = SupabaseClient<Database>;
 
@@ -150,4 +152,23 @@ export async function getSubscription(supabase: SupabaseClientTyped, userId?: st
     return null;
   }
   return (await supabase.from("subscriptions").select("*").eq("id", userId).maybeSingle().throwOnError()).data;
+}
+
+export async function checkMaxCharactersToTrain(
+  supabase: SupabaseClientTyped,
+  chatbotId: string,
+  permissions: UserPermissions,
+) {
+  const characters = await supabase
+    .from("total_characters_count")
+    .select("*")
+    .eq("chatbot_id", chatbotId)
+    .maybeSingle()
+    .throwOnError();
+
+  if ((characters.data?.total_characters || 0) >= permissions.maxCharactersToTrain) {
+    throw new Error(
+      `You have reached the maximum number of characters to train: ${formatNumber(permissions.maxCharactersToTrain)}`,
+    );
+  }
 }

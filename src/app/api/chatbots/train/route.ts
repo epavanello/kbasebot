@@ -105,6 +105,10 @@ export async function POST(req: NextRequest) {
         ...knowledgeBaseRef,
         doc_id: chatbotDoc.id,
       };
+      metadata = {
+        ...metadata,
+        source: chatbotDoc.file_name.split("/")[1],
+      };
     } else if (url) {
       const chatbotUrl = (
         await supabaseServerClient
@@ -162,7 +166,9 @@ export async function POST(req: NextRequest) {
       };
     }
 
-    const embeddings = new OpenAIEmbeddings();
+    const embeddings = new OpenAIEmbeddings({
+      modelName: "text-embedding-ada-002",
+    });
 
     const store = new SupabaseVectorStore(embeddings, {
       client: supabaseServerClient,
@@ -229,6 +235,9 @@ export async function POST(req: NextRequest) {
     if (Object.keys(chatbotChanges).length) {
       await supabaseServerClient.from("chatbots").update(chatbotChanges).eq("id", chatbot_id).throwOnError();
     }
+
+    // Count trained characters
+    supabaseServerClient.from("knowledge_base").select("")
 
     return NextResponse.json({ status: "done" });
   } catch (e) {

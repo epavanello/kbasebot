@@ -4,9 +4,11 @@ import { NextRequest } from "next/server";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/lib/types/database.types";
 import { cookies } from "next/headers";
-import { getDevErrorMessage } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/utils";
 import { IFile } from "@/lib/store/use-datasource-store";
 import { loadFIlesByExtension } from "@/modules/datasource/load-docs";
+import { checkMaxCharactersToTrain, getSubscription } from "@/lib/supabase";
+import { getPermissions } from "@/lib/permissions/plans";
 export const dynamic = "force-dynamic";
 // export const runtime = "nodejs";
 
@@ -21,6 +23,20 @@ export async function POST(req: NextRequest) {
     const supabaseServerClient = createRouteHandlerClient<Database>({
       cookies,
     });
+
+    const {
+      data: { user },
+    } = await supabaseServerClient.auth.getUser();
+
+    if (!user) {
+      throw new Error("unauthorized");
+    }
+
+    const subscription = await getSubscription(supabaseServerClient, user.id);
+
+    const { permission } = getPermissions(subscription);
+
+    await checkMaxCharactersToTrain(supabaseServerClient, chatbot_id, permission);
 
     const file: File | null = (await req.formData()).get("file") as unknown as File;
 
@@ -67,7 +83,7 @@ export async function POST(req: NextRequest) {
     } as IFile);
   } catch (e) {
     console.error(e);
-    return new Response(getDevErrorMessage(e, "Chatbot datasource error"), {
+    return new Response(getErrorMessage(e, "Chatbot datasource error"), {
       status: 500,
     });
   }

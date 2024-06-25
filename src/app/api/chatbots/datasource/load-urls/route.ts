@@ -6,9 +6,10 @@ import { Document } from "langchain/document";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { Database } from "@/lib/types/database.types";
 import { cookies } from "next/headers";
-import { ChatbotUrl } from "@/lib/supabase";
-import { getDevErrorMessage } from "@/lib/utils";
+import { ChatbotUrl, checkMaxCharactersToTrain, getSubscription } from "@/lib/supabase";
+import { getErrorMessage } from "@/lib/utils";
 import { IUrl } from "@/lib/store/use-datasource-store";
+import { getPermissions } from "@/lib/permissions/plans";
 
 export const maxDuration = 300;
 export const dynamic = "force-dynamic";
@@ -53,6 +54,20 @@ export async function POST(req: NextRequest) {
     const supabaseServerClient = createRouteHandlerClient<Database>({
       cookies,
     });
+
+    const {
+      data: { user },
+    } = await supabaseServerClient.auth.getUser();
+
+    if (!user) {
+      throw new Error("unauthorized");
+    }
+
+    const subscription = await getSubscription(supabaseServerClient, user.id);
+
+    const { permission } = getPermissions(subscription);
+
+    await checkMaxCharactersToTrain(supabaseServerClient, chatbot_id, permission);
 
     const body = (await req.json()) as {
       sitemap?: string;
@@ -119,7 +134,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(adjustedContent.map((url) => ({ chars: url.content.length, url: url.url }) as IUrl));
   } catch (e) {
     console.error(e);
-    return new Response(getDevErrorMessage(e, "Chatbot datasource error"), {
+    return new Response(getErrorMessage(e, "Chatbot datasource error"), {
       status: 500,
     });
   }

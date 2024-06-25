@@ -1,4 +1,4 @@
-import { bytesToMb } from "@/lib/utils";
+import { bytesToMb, getErrorMessage } from "@/lib/utils";
 import { Icon } from "@iconify/react";
 import React, { FunctionComponent, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -10,6 +10,7 @@ import { IFile, useDatasourceStore } from "@/lib/store/use-datasource-store";
 import { useSupabaseAuth } from "@/lib/store/use-user";
 import ContentList from "./content-list";
 import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 interface IDocumentUploaderProps {
   chatbotId: string;
@@ -21,6 +22,7 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
   chatbotId,
 }: IDocumentUploaderProps) => {
   const inputRef = useRef<any>();
+  const { toast } = useToast();
 
   const { docs, appendDocs, deleteDoc, deleteAllDocs } = useDatasourceStore((state) => ({
     docs: state.docs,
@@ -35,24 +37,34 @@ const DocumentUploader: FunctionComponent<IDocumentUploaderProps> = ({
     const uploadPromises = files.map(async (file) => {
       const formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post<IFile>(`/api/chatbots/datasource/load-files?chatbot_id=${chatbotId}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      try {
+        const res = await axios.post<IFile>(`/api/chatbots/datasource/load-files?chatbot_id=${chatbotId}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
-      if (res.status !== 200) {
-        throw new Error(res.statusText);
-      }
+        if (res.status !== 200) {
+          throw new Error(res.statusText);
+        }
 
-      if (res.data) {
-        appendDocs([
-          {
-            id: res.data.id,
-            name: res.data.name,
-            chars: res.data.chars,
-          } as IFile,
-        ]);
+        if (res.data) {
+          appendDocs([
+            {
+              id: res.data.id,
+              name: res.data.name,
+              chars: res.data.chars,
+            } as IFile,
+          ]);
+        }
+      } catch (e) {
+        console.error(e);
+
+        toast({
+          title: "Uh oh! Something went wrong.",
+          description: getErrorMessage(e),
+          variant: "destructive",
+        });
       }
     });
 
