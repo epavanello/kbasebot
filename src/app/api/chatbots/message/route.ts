@@ -16,9 +16,8 @@ import { callStoreLeads, FUNC_STORE_LEAD, storeLeadSchema } from "@/modules/chat
 import { standardizeQuery } from "@/modules/chatbots/llm-actions";
 import axios from "axios";
 
-// IMPORTANT! Set the runtime to edge
-export const runtime = "edge";
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
 export async function POST(req: NextRequest) {
   try {
