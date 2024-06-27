@@ -109,25 +109,6 @@ const Actions: React.FC<{ row: any }> = ({ row }) => {
 
 export const columns: ColumnDef<FormSubmission>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "email",
     header: ({ column }) => {
       return (
@@ -197,7 +178,10 @@ function Leads() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   // Initialize query
-  let query = supabase.from("leads").select("*").eq("chatbot_id", chatbot_id);
+  let query = supabase
+    .from("leads")
+    .select("chatbot_id,chatbot_owner_id,conversation_id,created_at,email,id,ip,name,phone")
+    .eq("chatbot_id", chatbot_id);
 
   if (columnFilters?.length) {
     columnFilters.forEach((filter) => {
@@ -341,7 +325,7 @@ function Leads() {
                 <>
                   {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
-                      <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                      <TableRow key={row.id}>
                         {row.getVisibleCells().map((cell) => (
                           <TableCell key={cell.id}>
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -362,10 +346,6 @@ function Leads() {
           </Table>
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
-            selected.
-          </div>
           <div className="space-x-2">
             <Button variant="outline" size="sm" onClick={previousPage} disabled={!previousPage}>
               Previous
