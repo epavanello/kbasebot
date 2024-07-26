@@ -59,6 +59,9 @@ export async function GET(request: NextRequest) {
         },
       },
       mode: "subscription",
+      tax_id_collection: {
+        enabled: true,
+      },
     });
 
     if (stripeSession.url) {
