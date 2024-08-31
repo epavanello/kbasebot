@@ -65,18 +65,18 @@ export const getChatbotPublicId = (id: string, host = NEXT_PUBLIC_URL) => {
 };
 
 export enum GPTModel {
-  GPT_3_5_Turbo = "gpt-3.5-turbo",
+  GPT_4o_mini = "gpt-4o-mini",
   GPT_4o = "gpt-4o",
 }
 
-export const GPTModels = [GPTModel.GPT_3_5_Turbo, GPTModel.GPT_4o];
+export const GPTModels = [GPTModel.GPT_4o_mini, GPTModel.GPT_4o];
 
 export const prettifyGPTModelName = (name: GPTModel) => {
-  switch (GPTModels.includes(name as GPTModel) ? name : GPTModel.GPT_3_5_Turbo) {
+  switch (GPTModels.includes(name as GPTModel) ? name : GPTModel.GPT_4o_mini) {
     case GPTModel.GPT_4o:
       return "GPT-4o";
-    case GPTModel.GPT_3_5_Turbo:
+    case GPTModel.GPT_4o_mini:
     default:
-      return "GPT-3.5 Turbo";
+      return "GPT-4o mini";
   }
 };

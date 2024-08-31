@@ -78,11 +78,11 @@ export class TokenCounter {
 }
 
 export const tokenLimits = {
-  context: 1_000,
+  context: 2_000,
   knowledgeBase: 12_000,
   response: 1_000,
   historyAvailable(used: number) {
-    return 16_000 - this.response - used;
+    return 17_000 - this.response - used;
   },
   // Size of the chunk for the text splitter
   chunk: 1000,

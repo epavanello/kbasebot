@@ -160,16 +160,14 @@ const Settings = () => {
                 <Label htmlFor="model">Model</Label>
                 <div className="flex flex-row items-start gap-2">
                   <Select
-                    value={GPTModels.includes(chatbot.model as GPTModel) ? chatbot.model : GPTModel.GPT_3_5_Turbo}
+                    value={GPTModels.includes(chatbot.model as GPTModel) ? chatbot.model : GPTModel.GPT_4o_mini}
                     onValueChange={(value) => updateChatBot({ model: value })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a model" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={GPTModel.GPT_3_5_Turbo}>
-                        {prettifyGPTModelName(GPTModel.GPT_3_5_Turbo)}
-                      </SelectItem>
+                      <SelectItem value={GPTModel.GPT_4o_mini}>{prettifyGPTModelName(GPTModel.GPT_4o_mini)}</SelectItem>
                       <SelectItem value={GPTModel.GPT_4o} disabled={!permission.canUseGPT4o}>
                         {prettifyGPTModelName(GPTModel.GPT_4o)}
                       </SelectItem>
