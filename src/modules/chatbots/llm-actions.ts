@@ -97,6 +97,9 @@ export const chatCompletion = async (params: {
     max_tokens: maxTokens,
     temperature,
     stream: true,
+    stream_options: {
+      include_usage: true,
+    },
     functions,
   });
   return response;
