@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     }
 
     if ((await countMonthlyConversationUsage(supabaseAdminClient, ownerId)) > permission.maxMessages) {
-      throw new Error("The chatbot has reached the monthly limit");
+      throw new Error("The chatbot has reached the monthly limit, please upgrade to a paid plan");
     }
 
     // Retrieve the conversation log and save the user's prompt

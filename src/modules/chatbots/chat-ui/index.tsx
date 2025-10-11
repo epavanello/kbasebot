@@ -12,7 +12,6 @@ import { v4 as uuid } from "uuid";
 import { useQuery } from "@supabase-cache-helpers/postgrest-swr";
 import { convesationLogToInitialMessages } from "../helpers";
 import * as React from "react";
-import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -44,8 +43,7 @@ export default function ChatUi({
   resetOnIncrement,
   authToken,
 }: ChatProps) {
-  const { toast } = useToast();
-
+  const [error, setError] = React.useState<string | undefined>(undefined);
   const chatArea = useRef<HTMLDivElement | null>(null);
 
   const { supabase } = useSupabaseAuth();
@@ -110,11 +108,7 @@ export default function ChatUi({
     async onResponse(response) {
       if (response.status !== 200) {
         const data = (await response.json()) as { error?: string };
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: data.error || "There was a problem with your request. please try again",
-        });
+        setError(data.error || "There was a problem with your request. please try again");
       } else {
         setResponseIsStarted(true);
       }
@@ -163,6 +157,7 @@ export default function ChatUi({
             <LoadingDots className="!h-2 !w-2" />
           </ChatMessage>
         )}
+        {error && <div className="mt-4 text-xs text-red-400">{error}</div>}
       </div>
       {!!suggested_message?.length && (
         <div className="custom-scrollbar w-full overflow-x-auto border-t pt-2">
@@ -173,8 +168,8 @@ export default function ChatUi({
                 title="Click to ask this"
                 className="h-auto flex-shrink-0 rounded-2xl px-2 py-1 text-[10px]"
                 key={"suggested_message-" + idx.toString()}
-                onClick={async () => {
-                  await append({
+                onClick={() => {
+                  append({
                     id,
                     content: item,
                     role: "user",
