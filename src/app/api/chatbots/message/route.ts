@@ -17,7 +17,7 @@ import axios from "axios";
 import { ChatCompletionCreateParams, ChatCompletionMessageParam } from "openai/resources/chat/completions";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 300;
+export const maxDuration = 60;
 
 export async function POST(req: NextRequest) {
   try {

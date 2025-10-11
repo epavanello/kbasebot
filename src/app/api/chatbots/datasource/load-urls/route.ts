@@ -11,7 +11,7 @@ import { getErrorMessage } from "@/lib/utils";
 import { IUrl } from "@/lib/store/use-datasource-store";
 import { getPermissions } from "@/lib/permissions/plans";
 
-export const maxDuration = 300;
+export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 
 // export const runtime = "nodejs";
