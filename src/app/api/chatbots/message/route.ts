@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     const { permission, plan } = getPermissions(ownerSubscription);
 
     if (!GPTModels.includes(model as GPTModel) || plan === "free") {
-      model = GPTModel.GPT_4o_mini;
+      model = GPTModel.GPT_5_mini;
     }
 
     if ((await countMonthlyConversationUsage(supabaseAdminClient, ownerId)) > permission.maxMessages) {

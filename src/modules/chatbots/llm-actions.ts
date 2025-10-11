@@ -29,7 +29,7 @@ export const generateName = async (chatbotId: string, supabaseServerClient: Supa
   // Ask OpenAI for a streaming chat completion given the prompt
   const openai = getOpenAi(chatbotId);
   const response = await openai.chat.completions.create({
-    model: GPTModel.GPT_4o_mini,
+    model: GPTModel.GPT_5_mini,
     messages: [
       {
         role: "system",
@@ -50,7 +50,7 @@ export const standardizeQuery = async (
 ): Promise<string> => {
   const openai = getOpenAi(chatbotId, conversationId);
   const response = await openai.chat.completions.create({
-    model: GPTModel.GPT_4o_mini,
+    model: GPTModel.GPT_5_mini,
     messages: [
       {
         role: "system",

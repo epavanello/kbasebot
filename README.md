@@ -16,7 +16,7 @@ yarn
 yarn dev
 ```
 
-KBaseBot is a no-code chatbot for knowledge base and customer support, trainable with PDF, DOCX, Notion, and more. It's powered by GPT-4o and GPT-3.5 Turbo.
+KBaseBot is a no-code chatbot for knowledge base and customer support, trainable with PDF, DOCX, Notion, and more. It's powered by GPT-5 and GPT-5-mini.
 It can generate leads, automate conversations, and save time.
 It offers a free plan, is customizable, and can be embedded on your website with a single line of code.
 You can view the conversation logs, and it is GDPR compliant.

@@ -20,8 +20,8 @@ export type UserPermissions = {
   canIntegrateWebhooks: boolean;
 };
 
-// 0.025$ per gpt-4o message
-// 0.003$ per gpt-3-5 message
+// 0.025$ per gpt-5 message
+// 0.003$ per gpt-5-mini message
 
 export const PLAN_PERMISSIONS: Record<Plan, UserPermissions> = {
   [Plan.FREE]: {

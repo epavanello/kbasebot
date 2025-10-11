@@ -58,7 +58,7 @@ const Hero = () => {
             <div className="absolute right-full top-0 mr-4 flex h-full flex-col justify-center whitespace-nowrap">
               <p>
                 <span className="text-sm font-light italic text-muted-foreground">Powered by</span>
-                <span className="font-semibold">&nbsp;&nbsp;GPT-4o ✨</span>
+                <span className="font-semibold">&nbsp;&nbsp;GPT-5 ✨</span>
               </p>
             </div>
             <span className="absolute left-0 top-full mt-2 w-full text-xs text-gray-500">No credit card required</span>

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   description:
     "Turn PDFs, Docx, Notion & websites into dynamic chatbots. Embed on your platform, making static content interactive. Elevate your content into real-time dialogues. Knowledge has never been this alive or accessible.",
-  keywords: "chatbot, knowledge base, customer support, no-code, pdf, docx, notion, gpt-4, gpt-3",
+  keywords: "chatbot, knowledge base, customer support, no-code, pdf, docx, notion, gpt-5, gpt-5-mini",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
