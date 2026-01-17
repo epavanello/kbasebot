@@ -1,33 +1,26 @@
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import { NextResponse } from "next/server";
-
 import type { NextRequest } from "next/server";
-import type { Database } from "@/lib/types/database.types";
-
-const internalPublicRoutes = ["/api/chatbots/message", "/api/chatbots/settings", "/api/stripe"];
 
 export const config = {
-  matcher: [`/app/:path*`, `/api/:path*`],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!_next/static|_next/image|favicon.ico).*)",
+  ],
 };
 
 export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
-  const supabase = createMiddlewareClient<Database>({ req, res });
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const { pathname } = req.nextUrl;
 
-  const url = req.nextUrl;
-  const mainPath = url.pathname.split("/").filter(Boolean)?.[0] || "";
-
-  if (!session) {
-    // handle internal public routes
-    if (internalPublicRoutes.includes(url.pathname)) {
-      return res;
-    } else if (config.matcher.map((i) => i.split("/").filter(Boolean).shift()).includes(mainPath)) {
-      return NextResponse.redirect(new URL("/auth", req.url));
-    }
+  // Allow the maintenance page itself to load
+  if (pathname === "/maintenance") {
+    return NextResponse.next();
   }
 
-  return res;
+  // Redirect all other requests to the maintenance page
+  return NextResponse.redirect(new URL("/maintenance", req.url));
 }
