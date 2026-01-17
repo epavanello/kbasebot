@@ -4,9 +4,12 @@ import { Inter } from "next/font/google";
 import Providers from "@/components/providers";
 import { cn } from "@/lib/utils";
 import Analytics from "@/components/analytics";
-import { NEXT_PUBLIC_URL } from "@/lib/env";
+import { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_URL } from "@/lib/env";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const dynamic = !NEXT_PUBLIC_SUPABASE_URL ? "force-dynamic" : undefined;
+export const revalidate = !NEXT_PUBLIC_SUPABASE_URL ? 0 : undefined;
 
 export const metadata: Metadata = {
   metadataBase: new URL(NEXT_PUBLIC_URL),

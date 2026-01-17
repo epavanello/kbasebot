@@ -6,9 +6,10 @@ import { createPagesBrowserClient, Session, SupabaseClient, User } from "@supaba
 import { Subscription, getSubscription } from "../supabase";
 import { Database } from "../types/database.types";
 import { getPermissions, UserPermissions, Plan, PLAN_PERMISSIONS } from "@/lib/permissions/plans";
+import { NEXT_PUBLIC_SUPABASE_URL } from "../env";
 
 type SuapabaseAuthContextType = {
-  supabase: SupabaseClient<Database>;
+  supabase: SupabaseClient<Database> | null;
   session: null | Session;
   user?: User;
   isLoading: boolean;
@@ -30,7 +31,8 @@ const useSupabaseAuth = () => {
 };
 
 const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [supabase] = useState(() => createPagesBrowserClient<Database>());
+  const hasSupabaseUrl = !!NEXT_PUBLIC_SUPABASE_URL;
+  const [supabase] = useState(() => (hasSupabaseUrl ? createPagesBrowserClient<Database>() : null));
   const [session, setSession] = useState<null | Session>(null);
   const [user, setUser] = useState<undefined | User>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -41,6 +43,8 @@ const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
+    if (!supabase) return;
+
     setIsLoading(true);
     supabase.auth
       .getSession()
@@ -59,9 +63,11 @@ const SupabaseAuthProvider = ({ children }: { children: React.ReactNode }) => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [router, supabase, supabase.auth]);
+  }, [router, supabase, supabase?.auth]);
 
   useEffect(() => {
+    if (!supabase) return;
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
