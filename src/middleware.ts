@@ -8,7 +8,17 @@ import { NEXT_PUBLIC_SUPABASE_URL } from "./lib/env";
 const internalPublicRoutes = ["/api/chatbots/message", "/api/chatbots/settings", "/api/stripe"];
 
 export const config = {
-  matcher: [`/:path*`, `/api/:path*`],
+  matcher: !NEXT_PUBLIC_SUPABASE_URL
+    ? [
+        /*
+         * Match all request paths except for the ones starting with:
+         * - _next/static (static files)
+         * - _next/image (image optimization files)
+         * - favicon.ico (favicon file)
+         */
+        "/((?!_next|favicon.ico).*)",
+      ]
+    : [`/app/:path*`, `/api/:path*`],
 };
 
 export async function middleware(req: NextRequest) {
@@ -17,6 +27,11 @@ export async function middleware(req: NextRequest) {
 
     // Allow the maintenance page itself to load
     if (pathname === "/maintenance") {
+      return NextResponse.next();
+    }
+
+    // Allow Next.js static assets to load
+    if (pathname.startsWith("/_next")) {
       return NextResponse.next();
     }
 
