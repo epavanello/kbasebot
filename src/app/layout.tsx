@@ -8,6 +8,9 @@ import { NEXT_PUBLIC_URL } from "@/lib/env";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   metadataBase: new URL(NEXT_PUBLIC_URL),
   title: "KBaseBot",
